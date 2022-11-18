@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+    client:
+        container_name: prakticum-client
+        image: prakticum-client
+        build:
+            context: .
+            dockerfile: Dockerfile.client
+            args:
+              CLIENT_PORT: ${CLIENT_PORT}
+        restart: always
+        ports:
+            - "${CLIENT_PORT}:80"
+        environment:
+          - CLIENT_PORT=${CLIENT_PORT}
+          - SERVER_PORT=${SERVER_PORT}
+    server:
+        container_name: prakticum-server
+        image: prackicum-server
+        build:
+            context: .
+            dockerfile: Dockerfile.server
+            args:
+              SERVER_PORT: ${SERVER_PORT}
+        restart: always
+        ports:
+            - "${SERVER_PORT}:${SERVER_PORT}"
+        environment:
+          SERVER_PORT: ${SERVER_PORT}
+
+    postgres:
+      image: postgres:14     
+      ports:
+        - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      environment:
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_DB: ${POSTGRES_DB}
+      volumes:
+        - ./tmp/pgdata:/var/lib/postgresql/data
+
