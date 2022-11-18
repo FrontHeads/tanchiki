@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
+import autoprefixer from 'autoprefixer'
+
 dotenv.config()
 
 // https://vitejs.dev/config/

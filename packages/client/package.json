@@ -25,14 +25,19 @@
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "@vitejs/plugin-react": "^2.0.1",
+    "autoprefixer": "^10.4.13",
     "eslint": "^8.23.0",
     "jest": "^28",
     "jest-environment-jsdom": "^29.0.1",
     "lefthook": "^1.1.1",
+    "postcss-custom-properties": "^13.0.0",
+    "postcss-nested": "^6.0.0",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.8",
     "typescript": "^4.8.2",
     "vite": "^3.0.7"
   },
+  "browserslist": "last 2 versions",
   "license": "MIT"
 }
