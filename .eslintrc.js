@@ -13,8 +13,22 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 11,
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'simple-import-sort'],
   rules: {
     '@typescript-eslint/ban-ts-comment': 1,
+    'simple-import-sort/exports': 'warn',
+    'simple-import-sort/imports': 'warn',
+    'eol-last': ['warn', 'always'],
+    'max-len': ['error', 120, 2, { ignoreStrings: true }],
+    'linebreak-style': ['warn', 'unix'],
+    quotes: ['error', 'single', { allowTemplateLiterals: true }],
+    semi: ['error'],
   },
+  ignorePatterns: [
+    '**/client/dist',
+    '**/server/dist',
+    '*.css',
+    '*.scss',
+    '*.json',
+  ],
 }

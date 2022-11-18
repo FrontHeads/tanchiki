@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "format": "prettier --write .",
     "test": "jest ./"
   },
@@ -27,6 +27,7 @@
     "@vitejs/plugin-react": "^2.0.1",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.23.0",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "jest": "^28",
     "jest-environment-jsdom": "^29.0.1",
     "lefthook": "^1.1.1",
