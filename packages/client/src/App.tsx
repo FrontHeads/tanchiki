@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import './App.css'
+import './App.module.css'
+import Hello from './components/Hello'
 
 function App() {
   useEffect(() => {
@@ -12,7 +13,12 @@ function App() {
 
     fetchServerData()
   }, [])
-  return <div className="App">Вот тут будет жить ваше приложение :)</div>
+  return (
+    <div className="App">
+      <div className="text">Вот тут будет жить ваше приложение :)</div>
+      <Hello topic="FrontHeads" />
+    </div>
+  )
 }
 
 export default App

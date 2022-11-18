@@ -1,5 +1,5 @@
 {
-  "name": "client-server-template-with-vite",
+  "name": "tanchiki",
   "private": true,
   "scripts": {
     "bootstrap": "yarn && node init.js && lerna clean && yarn && lerna bootstrap",
