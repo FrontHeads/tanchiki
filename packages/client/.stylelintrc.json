@@ -1,0 +1,12 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
+  "rules": {
+    "color-hex-case": "lower",
+    "declaration-block-single-line-max-declarations": null,
+    "function-url-quotes": null,
+    "function-whitespace-after": null,
+    "selector-pseudo-element-colon-notation": null
+  },
+  "plugins": [],
+  "ignoreFiles": ["dist/*"]
+}
