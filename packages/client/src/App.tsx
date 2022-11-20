@@ -1,6 +1,7 @@
+import './App.css';
+
 import { useEffect } from 'react';
 
-import css from './App.module.css';
 import Hello from './components/Hello';
 
 function App() {
@@ -15,8 +16,8 @@ function App() {
     fetchServerData();
   }, []);
   return (
-    <div className={css.app}>
-      <div className="red text-center">Вот тут будет жить ваше приложение :)</div>
+    <div className="app">
+      <div className="text-center">Вот тут будет жить ваше приложение :)</div>
       <Hello topic="FrontHeads" />
     </div>
   );
