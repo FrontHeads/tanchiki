@@ -1,5 +1,5 @@
 {
-  "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
+  "extends": ["stylelint-config-standard", "stylelint-config-prettier", "stylelint-selector-bem-pattern"],
   "rules": {
     "color-hex-case": "lower",
     "declaration-block-single-line-max-declarations": null,
