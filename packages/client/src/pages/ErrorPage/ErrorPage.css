@@ -1,0 +1,7 @@
+.error-page {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  text-align: center;
+}
