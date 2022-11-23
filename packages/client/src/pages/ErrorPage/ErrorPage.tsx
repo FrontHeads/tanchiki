@@ -4,7 +4,7 @@ import { Link, useRouteError } from 'react-router-dom';
 
 type ErrorType = { status?: number; statusText?: string; message?: string };
 
-const ErrorPage: React.FC = () => {
+export const ErrorPage: React.FC = () => {
   const error = useRouteError() as ErrorType;
 
   return (
@@ -15,5 +15,3 @@ const ErrorPage: React.FC = () => {
     </div>
   );
 };
-
-export default ErrorPage;

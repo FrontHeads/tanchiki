@@ -2,7 +2,7 @@ import './Home.css';
 
 import { useEffect } from 'react';
 
-const Home = () => {
+export const Home = () => {
   useEffect(() => {
     const fetchServerData = async () => {
       const url = `http://localhost:${__SERVER_PORT__}`;
@@ -19,5 +19,3 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;

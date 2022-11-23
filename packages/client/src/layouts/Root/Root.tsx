@@ -2,7 +2,7 @@ import './Root.css';
 
 import { NavLink, Outlet, useNavigation } from 'react-router-dom';
 
-const Layout: React.FC = () => {
+export const Root: React.FC = () => {
   const navigation = useNavigation();
 
   return (
@@ -27,5 +27,3 @@ const Layout: React.FC = () => {
     </div>
   );
 };
-
-export default Layout;

@@ -2,7 +2,7 @@ import './Hello.css';
 
 import { useParams } from 'react-router-dom';
 
-const Hello: React.FC = () => {
+export const Hello: React.FC = () => {
   const { topic } = useParams();
 
   return (
@@ -11,5 +11,3 @@ const Hello: React.FC = () => {
     </div>
   );
 };
-
-export default Hello;
