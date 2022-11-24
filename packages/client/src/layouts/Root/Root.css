@@ -1,0 +1,21 @@
+.layout {
+  height: 100%;
+  display: flex;
+
+  &__nav {
+    flex: 0 0 200px;
+    background: #eee;
+    padding: 10px;
+  }
+
+  &__nav-list {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  &__main {
+    flex: 1;
+    padding: 10px;
+  }
+}
