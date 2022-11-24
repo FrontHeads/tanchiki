@@ -2,7 +2,7 @@
   "name": "tanchiki",
   "private": true,
   "scripts": {
-    "bootstrap": "yarn && node init.js && lerna clean && yarn && lerna bootstrap",
+    "bootstrap": "yarn && node init.js && lerna clean && yarn && lerna bootstrap && git config --local commit.template .gitcommittemplate",
     "build": "lerna run build",
     "dev:client": "lerna run dev --scope=client",
     "dev:server": "lerna run dev --scope=server",
@@ -20,6 +20,8 @@
     "node": ">=15"
   },
   "devDependencies": {
+    "@commitlint/cli": "17.3.0",
+    "@commitlint/config-conventional": "17.3.0",
     "@evilmartians/lefthook": "^1.1.1",
     "lerna": "^5.4.3"
   }
