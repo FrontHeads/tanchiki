@@ -1,12 +1,18 @@
 {
-  "extends": ["stylelint-config-standard", "stylelint-config-prettier", "stylelint-selector-bem-pattern"],
+  "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
   "rules": {
     "color-hex-case": "lower",
     "declaration-block-single-line-max-declarations": null,
     "function-url-quotes": null,
     "function-whitespace-after": null,
+    "selector-class-pattern": [
+      "^(?:(?:o|c|u|t|s|is|has|_|js|qa)-)?[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*(?:__[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*)?(?:--[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*)?(?:\\[.+\\])?$",
+      {
+        "resolveNestedSelectors": true
+      }
+    ],
     "selector-pseudo-element-colon-notation": null
   },
-  "plugins": [],
+  "plugins": ["stylelint-selector-bem-pattern"],
   "ignoreFiles": ["dist/*"]
 }
