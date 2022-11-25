@@ -15,13 +15,13 @@ export const FormField: FC<InputProps> = ({ id, type, value, title, required, pl
         id={id}
         required={required}
         className="input form-field__input"
-        type={type}
+        type={type || 'text'}
         name={id}
         placeholder={placeholder}
         onChange={onChange}
         value={value}
       />
-      {error && <div className="form-field__error"></div>}
+      {error && <div className="form-field__error">{error}</div>}
     </div>
   );
 };
