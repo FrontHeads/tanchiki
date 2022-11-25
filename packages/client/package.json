@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint src --fix",
-    "lint:css": "stylelint '**/*.css' --fix",
+    "lint:css": "stylelint \"**/*.css\" --fix",
     "format": "prettier --write .",
     "test": "jest ./",
     "test:watch": "jest ./ --watch"
@@ -52,6 +52,8 @@
     "typescript": "4.8.2",
     "vite": "3.0.7"
   },
-  "browserslist": "last 2 versions",
+  "browserslist": [
+    "last 2 versions"
+  ],
   "license": "MIT"
 }

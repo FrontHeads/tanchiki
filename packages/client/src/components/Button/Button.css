@@ -1,0 +1,36 @@
+@import url("../../variables.css");
+
+.button {
+  width: 100%;
+  display: flex;
+  border-radius: 10px;
+  font-size: 14px;
+  margin: 24px auto;
+  min-height: 38px;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: "Press Start 2P", cursive;
+
+  &:hover {
+    transition: 0.2s;
+    box-shadow: 0 0 10px $dendy_button_primary;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &_primary {
+    background-color: $dendy_button_primary;
+    color: $font_color_bright;
+    text-shadow: 2px 1px black;
+  }
+
+  &_secondary {
+    background-color: $dendy_button_secondary;
+    color: $font_color_bright;
+    text-shadow: 2px 1px black;
+  }
+}

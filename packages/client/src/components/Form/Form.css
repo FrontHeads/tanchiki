@@ -1,0 +1,47 @@
+@import url("../../variables.css");
+
+.form {
+  background-color: $section_background_color;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  width: 400px;
+
+  @media (max-width: 420px) {
+    max-width: 90%;
+    min-width: 350px;
+    width: auto;
+  }
+
+  &__header {
+    text-align: center;
+  }
+
+  &__input-header {
+    width: 80%;
+    margin: 25px auto 10px;
+  }
+
+  &__buttons-wrapper {
+    width: 80%;
+    margin: 30px auto;
+  }
+
+  &__field {
+    width: 80%;
+    margin: 0 auto 23px;
+  }
+
+  &__round-wrapper {
+    .input {
+      border: 0;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    &-row {
+      width: 100%;
+    }
+  }
+}
