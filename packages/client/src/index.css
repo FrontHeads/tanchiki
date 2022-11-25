@@ -45,7 +45,7 @@ body {
 h1 {
   font-size: 24px;
   font-weight: 400;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   margin: 30px auto;
   text-shadow: 2px 1px $dendy_button_primary;
   line-height: 1.5;
@@ -83,4 +83,3 @@ h1 {
     color: #e69c21;
   }
 }
-

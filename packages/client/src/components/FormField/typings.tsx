@@ -10,7 +10,6 @@ export type InputProps = {
   required?: boolean;
   labelText?: string;
   inputHeader?: string;
-  error?: string //FieldError;
+  error?: string; //FieldError;
   pattern?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
-

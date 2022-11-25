@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
 
   &_full {
     background-color: $dendy_button_primary;
