@@ -14,9 +14,10 @@ describe('Button', () => {
     expect(renderedButton).toBeInTheDocument();
   });
 
-  test('it call callback', async () => {
+  test('it call handle function', async () => {
     const buttonText = 'Кнопка';
     const handleClick = jest.fn();
+
     render(<Button text={buttonText} onClick={handleClick} />);
 
     fireEvent.click(screen.getByText('Кнопка'));

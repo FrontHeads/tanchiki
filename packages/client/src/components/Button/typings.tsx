@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes } from 'react';
 type ButtonProps = {
   text: string;
   type?: string;
-  mod?: string;
+  selector?: string;
   onClick?: () => void;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 

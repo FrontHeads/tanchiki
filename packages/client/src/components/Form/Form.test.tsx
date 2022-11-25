@@ -8,6 +8,7 @@ describe('Form', () => {
   test('it render form header', () => {
     const header = 'Форма';
     const handleClick = jest.fn();
+
     render(<Form header={header} handlerSubmit={handleClick} />);
 
     const renderedForm = screen.getByText(header);
@@ -15,11 +16,11 @@ describe('Form', () => {
     expect(renderedForm).toBeInTheDocument();
   });
 
-  test('it call callback', async () => {
+  test('it call handle function', async () => {
     const handleSubmit = jest.fn();
     const { container } = render(<Form handlerSubmit={handleSubmit} />);
 
-    fireEvent.submit(screen.getByRole('form'));
+    fireEvent.submit(screen.getByTestId('form'));
     expect(container.querySelector('form')).toBeInTheDocument();
     expect(handleSubmit).toHaveBeenCalledTimes(1);
   });

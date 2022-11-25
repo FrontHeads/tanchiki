@@ -1,12 +1,8 @@
 @import url("../../variables.css");
 
 .layout {
+  width: 100%;
   display: flex;
-
-  &__main {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-  }
+  flex-direction: column;
+  margin: auto;
 }

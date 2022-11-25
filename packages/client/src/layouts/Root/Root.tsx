@@ -6,10 +6,8 @@ export const Root: React.FC = () => {
   const navigation = useNavigation();
 
   return (
-    <div className={['layout', `layout_state_${navigation.state}`].join(' ')}>
-      <main className="layout__main">
-        <Outlet />
-      </main>
-    </div>
+    <main className={['layout', `layout_state_${navigation.state}`].join(' ')}>
+      <Outlet />
+    </main>
   );
 };

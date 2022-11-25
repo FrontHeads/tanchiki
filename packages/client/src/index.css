@@ -1,7 +1,6 @@
 @import url("variables.css");
 
 body {
-  margin: 0;
   background-color: $background_color;
   color: $font_color_bright;
   font-family: Roboto, sans-serif;
@@ -17,24 +16,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.root,
 body,
 html {
+  margin: 0;
   min-height: 100%;
   height: 100%;
-}
-
-#root {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.red {
-  color: var(--color-danger);
 }
 
 h1 {
@@ -45,8 +32,8 @@ h1 {
   text-shadow: 2px 1px $dendy_button_primary;
   line-height: 1.5;
 }
-.link {
 
+.link {
   &__tank-wrapper {
     opacity: 0;
     margin-left: 20px;
@@ -59,12 +46,13 @@ h1 {
     left: -65px;
     transform: rotate(180deg);
 
+    &_undecorated {
+      text-decoration: none;
+    }
+
     @media (max-width: 430px) {
       left: auto;
       transform: none;
-    }
-    &_undecorated {
-      text-decoration: none;
     }
   }
 
