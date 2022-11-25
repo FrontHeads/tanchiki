@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
-import { LoginForm } from './typings';
 import { Paths } from '../../config/constants';
+import { LoginForm } from './typings';
 
 export const SignIn: React.FC = () => {
   const formData: LoginForm = { login: '', password: '' };

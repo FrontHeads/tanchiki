@@ -1,6 +1,6 @@
 import './Root.css';
 
-import { NavLink, Outlet, useNavigation } from 'react-router-dom';
+import { Outlet, useNavigation } from 'react-router-dom';
 
 export const Root: React.FC = () => {
   const navigation = useNavigation();

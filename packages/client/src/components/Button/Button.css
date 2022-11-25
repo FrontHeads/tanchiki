@@ -13,6 +13,16 @@
   cursor: pointer;
   font-family: "Press Start 2P", cursive;
 
+
+  &:hover {
+    transition: 0.2s;
+    box-shadow: 0 0 10px $dendy_button_primary;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   &_full {
     background-color: $dendy_button_primary;
     color: $font_color_bright;
@@ -23,14 +33,5 @@
     background-color: $dendy_button_secondary;
     color: $font_color_bright;
     text-shadow: 2px 1px black;
-  }
-
-  &:hover {
-    transition: 0.2s;
-    box-shadow: 0 0 10px $dendy_button_primary;
-  }
-
-  &:last-child {
-    margin-bottom: 0;
   }
 }
