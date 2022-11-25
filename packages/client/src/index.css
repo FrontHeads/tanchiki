@@ -29,3 +29,56 @@ html {
 .red {
   color: var(--color-danger);
 }
+
+body {
+  background-color: $background_color;
+  color: $font_color_bright;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: 'Press Start 2P', cursive;
+  margin: 30px auto;
+  text-shadow: 2px 1px $dendy_button_primary;
+  line-height: 1.5;
+}
+.link {
+  &_undecorated {
+    text-decoration: none;
+  }
+
+  &__tank-wrapper {
+    opacity: 0;
+    margin-left: 20px;
+  }
+
+  &__tank-img {
+    width: 40px;
+    position: absolute;
+    margin-top: -7px;
+    left: -65px;
+    transform: rotate(180deg);
+
+    @media (max-width: 430px) {
+      left: auto;
+      transform: none;
+    }
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  &__with-tank:hover + .link__tank-wrapper {
+    opacity: 1;
+    margin-left: 20px;
+  }
+
+  &__with-tank:hover {
+    color: #e69c21;
+  }
+}
+

@@ -1,4 +1,29 @@
 $red: red;
+$background_color: #020717;
+$section_background_color: #151928;
+$section_light_shadow: #727476;
+
+$accent_color: #ffa825;
+$border_color: #737477;
+$msg_readed_delivered_color: #00aaf3;
+
+$notice_error_background_color: #d66c6c;
+$notice_success_background_color: #9de6a3;
+$notice_font_color: #000;
+
+$font_color_white: #fff;
+$font_color_bright: #e3e4e6;
+$font_color_soft: #afb2b6;
+$font_color_dark: #2d1c09;
+$font_color_red: #ff4e4ec4;
+$font_color_positive: $msg_readed_delivered_color;
+
+$left_shift_wide: 377px;
+$left_shift_slim: 327px;
+
+$dendy_button_primary: #d84000;
+$dendy_button_secondary: #745f2c;
+$dendy_button_third: #2d2719;
 
 :root {
   --color-danger: $red;
