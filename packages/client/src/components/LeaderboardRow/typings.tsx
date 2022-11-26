@@ -1,4 +1,4 @@
-type RatingRowProps = {
+type LeaderboardRowProps = {
   place: number;
   username: string;
   record: number;
@@ -6,4 +6,4 @@ type RatingRowProps = {
   matches: number;
 };
 
-export type { RatingRowProps };
+export type { LeaderboardRowProps };

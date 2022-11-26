@@ -1,6 +1,10 @@
 @import url("../../variables.css");
 
-.rating {
+.leaderboard__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.leaderboard {
   background-color: $section_background_color;
   border-radius: 10px;
   text-align: center;
