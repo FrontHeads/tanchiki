@@ -1,16 +1,15 @@
 @import url("variables.css");
 
 body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   background-color: $background_color;
   color: $font_color_bright;
   font-family: Roboto, sans-serif;
   font-size: 16px;
   display: flex;
-  justify-content: center;
   overflow-x: hidden;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 code {

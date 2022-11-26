@@ -1,5 +1,3 @@
-import './RatingRow.css';
-
 import { FC } from 'react';
 import { RatingRowProps } from './typings';
 
