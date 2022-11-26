@@ -1,0 +1,54 @@
+@import "../../variables.css";
+
+.rating {
+  background-color: $section_background_color;
+  border-radius: 10px;
+  text-align: center;
+  margin: 0 60px 60px;
+
+  @media (max-width: 420px) {
+    margin: 0 0 60px;
+  }
+
+  &__row-header {
+    height: 70px;
+  }
+
+  &__row {
+    height: 40px;
+  }
+
+  &__cell-header {
+    cursor: pointer;
+  }
+
+  &__sort-marker {
+    display: inline-block;
+  }
+
+  &__sort-marker:hover {
+    /* В продакшн версии этот hover не нужен. это чтобы показать как менять элемент при
+    изменении сортировки. */
+    transform: rotate(180deg);
+  }
+
+  &__row:nth-child(even) {
+    background-color: $background_color;
+  }
+
+  &__row:nth-child(2) {
+    background-color: $dendy_button_primary;
+  }
+
+  &__row:nth-child(3) {
+    background-color: $dendy_button_secondary;
+  }
+
+  &__row:nth-child(4) {
+    background-color: $dendy_button_third;
+  }
+}
+
+.no-margin-top {
+  margin-top: 0;
+}
