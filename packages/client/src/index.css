@@ -12,10 +12,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
 #root {
   margin: 0;
   width: 100%;
@@ -38,6 +34,7 @@ h1 {
   text-shadow: 2px 1px $dendy_button_primary;
   line-height: 1.5;
 }
+
 main {
   display: flex;
   flex-direction: column;

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import { RatingRowProps } from './typings';
 
 export const RatingRow: FC<RatingRowProps> = ({ place, username, record, time, matches }) => {

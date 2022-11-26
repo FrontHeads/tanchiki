@@ -1,14 +1,15 @@
 import './Leaderboard.css';
 
 import { FC } from 'react';
-import { DUMMY_LEADERBOARD } from '../../config/constants';
+
 import { RatingRow } from '../../components/RatingRow';
+import { DUMMY_LEADERBOARD } from '../../config/constants';
 
 export const Leaderboard: FC = () => {
   return (
     <main>
       <h1 className="no-margin-top">Рейтинг игроков</h1>
-      <table className="rating">
+      <table border={1} className="rating">
         <thead className="rating__row-header">
           <th className="rating__cell-header">#</th>
           <th className="rating__cell-header">Пользователь</th>
