@@ -1,6 +1,6 @@
-import { DynamicEntity, Tank } from './';
+import { EntityDynamic, Tank } from './';
 
-export class Projectile extends DynamicEntity {
+export class Projectile extends EntityDynamic {
   width = 2;
   height = 2;
   movePace = 1;
@@ -8,7 +8,7 @@ export class Projectile extends DynamicEntity {
   moveStepsTotal = 4;
   shouldExplode = false;
 
-  constructor(props: Partial<DynamicEntity> & Pick<Tank, 'shootSpeed' | 'direction'>) {
+  constructor(props: Partial<EntityDynamic> & Pick<Tank, 'shootSpeed' | 'direction'>) {
     super(props);
     this.color = 'red';
     this.moveSpeed = props.shootSpeed;

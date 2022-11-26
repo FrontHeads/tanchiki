@@ -7,7 +7,7 @@
   - [Controller](#controller)
   - [Entity](#entity)
   - [Terrain](#terrain)
-  - [DynamicEntity](#dynamicentity)
+  - [EntityDynamic](#entitydynamic)
   - [Tank](#Tank)
   - [Projectile](#Projectile)
 - [Вспомогательные классы](#вспомогательные-классы)
@@ -73,7 +73,7 @@
 
 *Нужно будет сделать механику разрушения стен.*
 
-### DynamicEntity
+### EntityDynamic
 
 Абстрактная игровая сущность, которая может двигаться (от неё наследуются танки и снаряды). Содержит свойства и методы, связанные с движением. Основные:
   - moving: должен ли объект двигаться;

@@ -1,7 +1,7 @@
 import type { DirectionT, PosStateT } from '../typings';
 import { Entity } from './';
 
-export class DynamicEntity extends Entity {
+export class EntityDynamic extends Entity {
   moving = false;
   stopping = false;
   canMove = true;

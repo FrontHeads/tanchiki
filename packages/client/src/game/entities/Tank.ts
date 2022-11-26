@@ -1,12 +1,12 @@
 import type { RectT } from '../typings';
-import { DynamicEntity, Projectile } from './';
+import { EntityDynamic, Projectile } from './';
 
-export class Tank extends DynamicEntity {
+export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
   shootSpeed = 3;
 
-  constructor(props: Partial<DynamicEntity>) {
+  constructor(props: Partial<EntityDynamic>) {
     super(props);
     Object.assign(this, props);
     this.color = props.color || 'yellow';

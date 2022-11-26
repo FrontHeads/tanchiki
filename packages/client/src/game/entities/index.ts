@@ -1,7 +1,7 @@
-import { DynamicEntity } from './DynamicEntity';
 import { Entity } from './Entity';
+import { EntityDynamic } from './EntityDynamic';
 import { Projectile } from './Projectile';
 import { Tank } from './Tank';
 import { Terrain } from './Terrain';
 
-export { DynamicEntity, Entity, Projectile, Tank, Terrain };
+export { Entity, EntityDynamic, Projectile, Tank, Terrain };
