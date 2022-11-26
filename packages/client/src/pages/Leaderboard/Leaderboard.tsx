@@ -3,7 +3,7 @@ import './Leaderboard.css';
 import { FC } from 'react';
 
 import { RatingRow } from '../../components/RatingRow';
-import { DUMMY_LEADERBOARD } from '../../config/constants';
+import { DUMMY_LEADERBOARD } from './DummyData';
 
 export const Leaderboard: FC = () => {
   return (
