@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { API_HOST } from '../config/constants';
+import { API_HOST } from '../../config/constants';
 import { buildPath } from './build-path';
 
 enum Method {
@@ -29,7 +29,7 @@ type Response<T> = {
   headers: Record<string, unknown>;
 };
 
-export class request {
+export class Http {
   static get<T>(url: string, options: GetOptionsWithoutMethod = {}): Promise<Response<T>> {
     return this._send(url, { ...options, method: Method.GET });
   }
