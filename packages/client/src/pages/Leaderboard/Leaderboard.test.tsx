@@ -5,12 +5,10 @@ import { render, screen } from '@testing-library/react';
 import { Leaderboard } from './Leaderboard';
 
 describe('Leaderboard', () => {
-  test('it render leaderboard header', () => {
-    const header = 'Рейтинг игроков';
-
+  test('renders', () => {
     render(<Leaderboard />);
 
-    const renderedLeaderboard = screen.getByText(header);
+    const renderedLeaderboard = screen.getByText(/Рейтинг игроков/i);
 
     expect(renderedLeaderboard).toBeInTheDocument();
   });
