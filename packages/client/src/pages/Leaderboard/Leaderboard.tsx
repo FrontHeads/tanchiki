@@ -22,6 +22,7 @@ export const Leaderboard: FC = () => {
         {DUMMY_LEADERBOARD.map(row => {
           return (
             <LeaderboardRow
+              key={row.place}
               place={row.place}
               username={row.username}
               record={row.record}
