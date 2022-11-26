@@ -2,10 +2,15 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: $background_color;
+  color: $font_color_bright;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
 }
 
 code {
@@ -32,16 +37,6 @@ html {
   color: var(--color-danger);
 }
 
-body {
-  background-color: $background_color;
-  color: $font_color_bright;
-  font-family: Roboto, sans-serif;
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-  overflow-x: hidden;
-}
-
 main {
   display: flex;
   flex-direction: column;
@@ -61,6 +56,7 @@ h1 {
   text-shadow: 2px 1px $dendy_button_primary;
   line-height: 1.5;
 }
+
 .link {
   &_undecorated {
     text-decoration: none;
