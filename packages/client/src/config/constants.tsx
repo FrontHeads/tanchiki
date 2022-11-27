@@ -12,3 +12,5 @@ export const PATH = {
   defaultAvatar,
   avatarBase: 'https://ya-praktikum.tech/api/v2/resources',
 };
+
+export const API_HOST = 'https://ya-praktikum.tech/api/v2';
