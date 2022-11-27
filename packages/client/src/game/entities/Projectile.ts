@@ -16,6 +16,7 @@ export class Projectile extends EntityDynamic {
     this.moving = true;
     this.nextDirection = props.direction;
   }
+  
   moveStepCheck() {
     if (this.shouldExplode) {
       this.shouldBeDestroyed = true;

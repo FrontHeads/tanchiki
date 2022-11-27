@@ -5,17 +5,20 @@ export class Zone {
   width = 0;
   height = 0;
   matrix!: Array<Array<Entity | null>>;
+
   constructor({ width, height }: Pick<Zone, 'width' | 'height'>) {
     this.width = width;
     this.height = height;
     this.buildMatrix();
   }
+
   buildMatrix() {
     this.matrix = Array(this.width);
     for (let x = 0; x < this.matrix.length; ++x) {
       this.matrix[x] = Array(this.height).fill(null);
     }
   }
+
   updateMatrix(rect: RectT, value: Entity | null) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
@@ -23,11 +26,13 @@ export class Zone {
       }
     }
   }
+
   writeEntityToMatrix(entity: Entity) {
     if (entity.alignedToGrid) {
       this.updateMatrix(entity.getRect(), entity);
     }
   }
+
   deleteEntityFromMatrix(entity: Entity) {
     if (!entity.lastRect) {
       throw new Error('entity.lastRect is null');
@@ -36,6 +41,7 @@ export class Zone {
       this.updateMatrix(entity.lastRect, null);
     }
   }
+
   destroyEntity(entity: Entity) {
     if (!entity.lastRect || !entity.nextRect) {
       throw new Error('entity.lastRect|nextRect is null');
@@ -47,6 +53,7 @@ export class Zone {
       this.updateMatrix(entity.getRect(), null);
     }
   }
+  
   registerEntity(entity: Entity) {
     entity.on('entityWillHaveNewPos', (posState: PosStateT) => {
       if (!entity.lastRect || !entity.nextRect) {
@@ -70,6 +77,7 @@ export class Zone {
       this.destroyEntity(entity);
     });
   }
+
   isBeyondXAxis(rect: RectT) {
     const offsetX = rect.posX + rect.width;
     if (rect.posX < 0 || offsetX > this.width) {
@@ -77,6 +85,7 @@ export class Zone {
     }
     return false;
   }
+
   isBeyondYAxis(rect: RectT) {
     const offsetY = rect.posY + rect.height;
     if (rect.posY < 0 || offsetY > this.height) {
@@ -84,6 +93,7 @@ export class Zone {
     }
     return false;
   }
+
   hasCollisionsWithMatrix(rect: RectT, entity: Entity) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
@@ -99,6 +109,7 @@ export class Zone {
     }
     return false;
   }
+
   hasCollision(entity: Entity) {
     const rect = entity.nextRect!; // проверка уже есть в registerEntity()
     if (this.isBeyondXAxis(rect) || this.isBeyondYAxis(rect)) {

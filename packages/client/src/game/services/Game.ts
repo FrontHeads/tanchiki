@@ -26,6 +26,7 @@ export class Game {
     this.controllerWasd = new Controller(['wasd']);
     this.controllerArrows = new Controller(['arrows']);
   }
+
   loop() {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
@@ -41,6 +42,7 @@ export class Game {
     }
     this.loopProcess = setTimeout(this.loop.bind(this), nextCycleDelay);
   }
+
   togglePause() {
     if (this.paused) {
       this.startLoop();
@@ -49,15 +51,18 @@ export class Game {
     }
     this.paused = !this.paused;
   }
+
   startLoop() {
     this.stopLoop();
     this.loop();
   }
+
   stopLoop() {
     if (this.loopProcess) {
       clearTimeout(this.loopProcess);
     }
   }
+
   createTank(props: Pick<Entity, 'posX' | 'posY'> & Partial<Tank>) {
     const entity = new Tank(props);
     this.loopEntities.add(entity);
@@ -66,12 +71,14 @@ export class Game {
     entity.spawn(props);
     return entity;
   }
+
   createProjectile(projectile: Projectile) {
     this.loopEntities.add(projectile);
     this.view.bindEntityToLayer(projectile, 'projectiles');
     this.zone.registerEntity(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
   }
+
   createTerrain(props: Pick<Entity, 'type' | 'width' | 'height' | 'posX' | 'posY'>) {
     const entity = new Terrain(props);
     if (props.type === 'trees') {
@@ -83,10 +90,12 @@ export class Game {
     entity.spawn(props);
     return entity;
   }
+
   destroyEntity(entity: Tank | Projectile) {
     entity.despawn();
     this.loopEntities.delete(entity);
   }
+
   init() {
     if (this.inited) {
       return;

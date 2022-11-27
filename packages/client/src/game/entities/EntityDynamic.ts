@@ -15,27 +15,33 @@ export class EntityDynamic extends Entity {
     super(props);
     this.movable = true;
   }
+
   getMoveSteps() {
     return this.moveStepsTotal - this.moveSpeed;
   }
+
   getMoveStepPace() {
     return this.movePace / this.getMoveSteps();
   }
+
   move(direction: DirectionT) {
     this.moving = true;
     this.nextDirection = direction;
   }
+
   stop() {
     this.moving = false;
     if (this.moveStepsProgress) {
       this.stopping = true;
     }
   }
+
   turn(newDirection: DirectionT) {
     if (this.direction !== newDirection) {
       this.setState({ direction: newDirection });
     }
   }
+
   act() {
     if (!this.spawned) {
       return;
@@ -52,11 +58,13 @@ export class EntityDynamic extends Entity {
     }
     this.moveStep();
   }
+
   turnStep() {
     this.turn(this.nextDirection);
     ++this.moveStepsProgress;
     this.canMove = false;
   }
+
   prepareToMove() {
     this.lastRect = this.getRect();
     this.nextRect = { ...this.lastRect, ...this.getNextMove(true) };
@@ -68,6 +76,7 @@ export class EntityDynamic extends Entity {
       this.canMove = false;
     }
   }
+
   getNextMove(fullMove = false) {
     let movePace = 0;
     if (fullMove) {
@@ -86,6 +95,7 @@ export class EntityDynamic extends Entity {
         return { posX: this.posX + movePace };
     }
   }
+
   moveStep() {
     const fullCycle = ++this.moveStepsProgress >= this.getMoveSteps();
     if (fullCycle) {
@@ -103,6 +113,7 @@ export class EntityDynamic extends Entity {
     }
     this.moveStepCheck();
   }
+
   moveStepCheck() {
     // используется в Projectile
   }

@@ -18,6 +18,7 @@ export class Controller extends EventBus {
     Enter: 'SHOOT',
     KeyP: 'PAUSE',
   };
+
   constructor(type: ControllerTypeT) {
     super();
     this.type = type;
@@ -28,6 +29,7 @@ export class Controller extends EventBus {
       this.registerEventsForArrows();
     }
   }
+
   keyPressed(code: keyof Controller['keyBindings']) {
     if (code === 'KeyP') {
       this.emit('pause');
@@ -38,6 +40,7 @@ export class Controller extends EventBus {
       this.emit('move', this.keyBindings[code]);
     }
   }
+
   keyReleased(code: keyof Controller['keyBindings']) {
     if (code !== 'Space' && code !== 'Enter') {
       delete this.pressedKeys[code];
@@ -46,6 +49,7 @@ export class Controller extends EventBus {
       }
     }
   }
+
   registerEventsForWasd() {
     window.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.repeat) {
@@ -75,6 +79,7 @@ export class Controller extends EventBus {
       }
     });
   }
+  
   registerEventsForArrows() {
     window.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.repeat) {

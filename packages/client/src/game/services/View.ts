@@ -26,9 +26,11 @@ export class View {
     this.createLayer('ceiling');
     this.createLayer('overlay').style.position = 'relative';
   }
+
   convertToPixels(value: number) {
     return Math.round(value * this.pixelRatio);
   }
+
   createLayer(id: string) {
     const layer = document.createElement('canvas');
     layer.id = id;
@@ -43,6 +45,7 @@ export class View {
     this.root?.appendChild(layer);
     return layer;
   }
+
   bindEntityToLayer(entity: Entity, layerId: keyof LayerT) {
     this.layers[layerId].entities.add(entity);
     entity.on('entityShouldUpdate', () => {
@@ -56,9 +59,11 @@ export class View {
       this.removeEntityFromLayer(entity, layerId);
     });
   }
+
   removeEntityFromLayer(entity: Entity, layerId: keyof LayerT) {
     this.layers[layerId].entities.delete(entity);
   }
+
   getEntityActualRect(entity: Entity) {
     return [
       this.convertToPixels(entity.posX),
@@ -67,15 +72,18 @@ export class View {
       this.convertToPixels(entity.height),
     ] as const;
   }
+
   drawEntityOnLayer(entity: Entity, layerId: keyof LayerT) {
     const context = this.layers[layerId].context;
     context.fillStyle = entity.color;
     context.fillRect(...this.getEntityActualRect(entity));
   }
+
   eraseEntityFromLayer(entity: Entity, layerId: keyof LayerT) {
     const context = this.layers[layerId].context;
     context.clearRect(...this.getEntityActualRect(entity));
   }
+
   redrawAllEntitiesOnLayer(layerId: keyof LayerT) {
     const { context, entities } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));

@@ -24,14 +24,17 @@ export class Entity extends EventBus {
     super();
     Object.assign(this, props);
   }
+
   setState(newState: Partial<Entity>) {
     this.emit('entityShouldUpdate');
     Object.assign(this, newState);
     this.emit('entityDidUpdate');
   }
+
   getRect() {
     return { posX: this.posX, posY: this.posY, width: this.width, height: this.height };
   }
+
   spawn({ posX, posY }: Pick<Entity, 'posX' | 'posY'>) {
     this.lastRect = { ...this.getRect(), ...{ posX, posY } };
     this.nextRect = { ...this.lastRect };
@@ -42,6 +45,7 @@ export class Entity extends EventBus {
       this.spawned = true;
     }
   }
+  
   despawn() {
     this.emit('entityShouldBeDestroyed');
     this.spawned = false;

@@ -11,11 +11,13 @@ export class Tank extends EntityDynamic {
     Object.assign(this, props);
     this.color = props.color || 'yellow';
   }
+  
   shoot() {
     const projectile = new Projectile({ direction: this.direction, shootSpeed: this.shootSpeed });
     Object.assign(projectile, this.calculateProjectilePos(projectile));
     return projectile;
   }
+
   calculateProjectilePos(projectile: Projectile) {
     let rect: RectT;
     if ((this.moving || this.stopping) && this.nextRect) {
