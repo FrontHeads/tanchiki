@@ -16,6 +16,7 @@ export class Controller extends EventBus {
     ArrowDown: 'DOWN',
     ArrowRight: 'RIGHT',
     Enter: 'SHOOT',
+    KeyP: 'PAUSE',
   };
   constructor(type: ControllerTypeT) {
     super();
@@ -28,7 +29,9 @@ export class Controller extends EventBus {
     }
   }
   keyPressed(code: keyof Controller['keyBindings']) {
-    if (code === 'Space' || code === 'Enter') {
+    if (code === 'KeyP') {
+      this.emit('pause');
+    } else if (code === 'Space' || code === 'Enter') {
       this.emit('shoot');
     } else {
       this.pressedKeys[code] = true;
@@ -54,6 +57,7 @@ export class Controller extends EventBus {
         case 'KeyS':
         case 'KeyD':
         case 'Space':
+        case 'KeyP':
           this.keyPressed(event.code);
           event.preventDefault();
           break;
@@ -82,6 +86,7 @@ export class Controller extends EventBus {
         case 'ArrowDown':
         case 'ArrowRight':
         case 'Enter':
+        case 'KeyP':
           this.keyPressed(event.code);
           event.preventDefault();
           break;

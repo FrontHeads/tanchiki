@@ -5,6 +5,7 @@ import { Controller, View, Zone } from './';
 export class Game {
   static __instance: Game;
   inited = false;
+  paused = false;
   zone: Zone;
   view: View;
   controllerWasd: Controller;
@@ -39,6 +40,14 @@ export class Game {
       nextCycleDelay = 0;
     }
     this.loopProcess = setTimeout(this.loop.bind(this), nextCycleDelay);
+  }
+  togglePause() {
+    if (this.paused) {
+      this.startLoop();
+    } else {
+      this.stopLoop();
+    }
+    this.paused = !this.paused;
   }
   startLoop() {
     this.stopLoop();
@@ -93,6 +102,9 @@ export class Game {
     this.createTerrain({ type: 'trees', width: 16, height: 8, posX: 28, posY: 16 });
     this.createTerrain({ type: 'water', width: 16, height: 4, posX: 28, posY: 32 });
 
+    this.controllerWasd.on('pause', () => {
+      this.togglePause();
+    });
     this.controllerWasd.on('move', (direction: DirectionT) => {
       tank1.move(direction);
     });
@@ -100,6 +112,9 @@ export class Game {
       tank1.stop();
     });
     this.controllerWasd.on('shoot', () => {
+      if (this.paused) {
+        return;
+      }
       this.createProjectile(tank1.shoot());
     });
     this.controllerArrows.on('move', (direction: DirectionT) => {
@@ -109,6 +124,9 @@ export class Game {
       tank2.stop();
     });
     this.controllerArrows.on('shoot', () => {
+      if (this.paused) {
+        return;
+      }
       this.createProjectile(tank2.shoot());
     });
   }
