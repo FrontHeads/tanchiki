@@ -11,7 +11,8 @@
     "lint:css": "stylelint \"**/*.css\" --fix",
     "format": "prettier --write .",
     "test": "jest ./",
-    "test:watch": "jest ./ --watch"
+    "test:watch": "jest ./ --watch",
+    "lint:ts": "npx tsc --noEmit"
   },
   "dependencies": {
     "dotenv": "16.0.2",

@@ -1,3 +1,3 @@
 export type LeaderboardProps = {
-  header: string;
+  header?: string;
 };
