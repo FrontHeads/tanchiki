@@ -9,6 +9,7 @@ export class Tank extends EntityDynamic {
   constructor(props: Partial<EntityDynamic>) {
     super(props);
     Object.assign(this, props);
+    this.type = 'tank';
     this.color = props.color || 'yellow';
   }
   

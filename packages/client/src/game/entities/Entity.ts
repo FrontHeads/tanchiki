@@ -26,9 +26,9 @@ export class Entity extends EventBus {
   }
 
   setState(newState: Partial<Entity>) {
-    this.emit('entityShouldUpdate');
+    this.emit('entityShouldUpdate', newState);
     Object.assign(this, newState);
-    this.emit('entityDidUpdate');
+    this.emit('entityDidUpdate', newState);
   }
 
   getRect() {
@@ -45,7 +45,7 @@ export class Entity extends EventBus {
       this.spawned = true;
     }
   }
-  
+
   despawn() {
     this.emit('entityShouldBeDestroyed');
     this.spawned = false;

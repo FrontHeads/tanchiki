@@ -53,7 +53,7 @@ export class Zone {
       this.updateMatrix(entity.getRect(), null);
     }
   }
-  
+
   registerEntity(entity: Entity) {
     entity.on('entityWillHaveNewPos', (posState: PosStateT) => {
       if (!entity.lastRect || !entity.nextRect) {
@@ -62,15 +62,19 @@ export class Zone {
       if (this.hasCollision(entity)) {
         posState.hasCollision = true;
       } else {
-        if (entity.alignedToGrid) {
-          this.updateMatrix(entity.nextRect, entity);
-        }
+        this.updateMatrix(entity.nextRect, entity);
       }
     });
-    entity.on('entityShouldUpdate', () => {
+    entity.on('entityShouldUpdate', (newState: Partial<Entity>) => {
+      if (!('posX' in newState) || !('posY' in newState)) {
+        return;
+      }
       this.deleteEntityFromMatrix(entity);
     });
-    entity.on('entityDidUpdate', () => {
+    entity.on('entityDidUpdate', (newState: Partial<Entity>) => {
+      if (!('posX' in newState) || !('posY' in newState)) {
+        return;
+      }
       this.writeEntityToMatrix(entity);
     });
     entity.on('entityShouldBeDestroyed', () => {
