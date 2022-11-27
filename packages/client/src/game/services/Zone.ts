@@ -4,7 +4,7 @@ import type { PosStateT, RectT } from '../typings';
 export class Zone {
   width = 0;
   height = 0;
-  matrix: Array<Array<Entity | null>>;
+  matrix!: Array<Array<Entity | null>>;
   constructor({ width, height }: Pick<Zone, 'width' | 'height'>) {
     this.width = width;
     this.height = height;
@@ -29,11 +29,17 @@ export class Zone {
     }
   }
   deleteEntityFromMatrix(entity: Entity) {
+    if (!entity.lastRect) {
+      throw new Error('entity.lastRect is null');
+    }
     if (entity.alignedToGrid) {
       this.updateMatrix(entity.lastRect, null);
     }
   }
   destroyEntity(entity: Entity) {
+    if (!entity.lastRect || !entity.nextRect) {
+      throw new Error('entity.lastRect|nextRect is null');
+    }
     this.updateMatrix(entity.lastRect, null);
     if (!entity.alignedToGrid) {
       this.updateMatrix(entity.nextRect, null);
@@ -43,6 +49,9 @@ export class Zone {
   }
   registerEntity(entity: Entity) {
     entity.on('entityWillHaveNewPos', (posState: PosStateT) => {
+      if (!entity.lastRect || !entity.nextRect) {
+        throw new Error('entity.lastRect|nextRect is null');
+      }
       if (this.hasCollision(entity)) {
         posState.hasCollision = true;
       } else {
@@ -91,7 +100,7 @@ export class Zone {
     return false;
   }
   hasCollision(entity: Entity) {
-    const rect = entity.nextRect;
+    const rect = entity.nextRect!; // проверка уже есть в registerEntity()
     if (this.isBeyondXAxis(rect) || this.isBeyondYAxis(rect)) {
       return true;
     }

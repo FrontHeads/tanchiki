@@ -6,10 +6,10 @@ export class Game {
   static __instance: Game;
   inited = false;
   paused = false;
-  zone: Zone;
-  view: View;
-  controllerWasd: Controller;
-  controllerArrows: Controller;
+  zone!: Zone;
+  view!: View;
+  controllerWasd!: Controller;
+  controllerArrows!: Controller;
   loopProcess: ReturnType<typeof setTimeout> | null = null;
   loopTimeMs = 25;
   loopEntities: Set<Tank | Projectile> = new Set();

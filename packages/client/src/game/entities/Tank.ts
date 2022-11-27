@@ -18,7 +18,7 @@ export class Tank extends EntityDynamic {
   }
   calculateProjectilePos(projectile: Projectile) {
     let rect: RectT;
-    if (this.moving || this.stopping) {
+    if ((this.moving || this.stopping) && this.nextRect) {
       rect = this.nextRect;
     } else {
       rect = this.getRect();

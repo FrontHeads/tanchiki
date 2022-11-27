@@ -9,7 +9,7 @@ export class EntityDynamic extends Entity {
   moveSpeed = 2;
   moveStepsProgress = 0;
   moveStepsTotal = 8;
-  nextDirection: DirectionT;
+  nextDirection: DirectionT = 'UP';
 
   constructor(props: Partial<Entity>) {
     super(props);
@@ -92,7 +92,7 @@ export class EntityDynamic extends Entity {
       this.moveStepsProgress = 0;
       this.alignedToGrid = true;
       this.stopping = false;
-      if (this.canMove) {
+      if (this.canMove && this.nextRect) {
         this.setState(this.nextRect);
       }
     } else {
