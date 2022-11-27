@@ -11,8 +11,7 @@
     "lint:css": "stylelint \"**/*.css\" --fix",
     "format": "prettier --write .",
     "test": "jest ./",
-    "test:watch": "jest ./ --watch",
-    "lint:ts": "npx tsc --noEmit"
+    "test:watch": "jest ./ --watch"
   },
   "dependencies": {
     "axios": "1.2.0",
