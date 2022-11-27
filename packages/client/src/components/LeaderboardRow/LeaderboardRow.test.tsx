@@ -11,7 +11,7 @@ describe('LeaderboardRow', () => {
     time = 20,
     matches = 99;
 
-  test('renders', () => {
+  test('it renders', () => {
     render(
       <table>
         <tbody>
@@ -25,7 +25,7 @@ describe('LeaderboardRow', () => {
     expect(renderedElement).toBeInTheDocument();
   });
 
-  test('renders with props', () => {
+  test('it renders with props', () => {
     render(
       <table>
         <tbody>

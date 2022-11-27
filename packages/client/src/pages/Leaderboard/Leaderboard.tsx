@@ -4,11 +4,14 @@ import { FC } from 'react';
 
 import { LeaderboardRow } from '../../components/LeaderboardRow';
 import { DUMMY_LEADERBOARD } from './DummyData';
+import { LeaderboardProps } from './typings';
 
-export const Leaderboard: FC = () => {
+export const headerText = 'Рейтинг игроков';
+
+export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   return (
     <section className="leaderboard__wrapper">
-      <h1 className="no-margin-top">Рейтинг игроков</h1>
+      <h1 className="no-margin-top">{header}</h1>
       <table border={1} className="leaderboard">
         <thead className="leaderboard__row-header">
           <tr>

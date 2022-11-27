@@ -2,13 +2,13 @@ import '@testing-library/jest-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import { Leaderboard } from './Leaderboard';
+import { headerText, Leaderboard } from './Leaderboard';
 
 describe('Leaderboard', () => {
-  test('renders', () => {
-    render(<Leaderboard />);
+  test('it renders', () => {
+    render(<Leaderboard header={headerText} />);
 
-    const renderedLeaderboard = screen.getByText(/Рейтинг игроков/i);
+    const renderedLeaderboard = screen.getByText(headerText);
 
     expect(renderedLeaderboard).toBeInTheDocument();
   });
