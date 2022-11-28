@@ -26,6 +26,10 @@ export const router = createBrowserRouter([
         element: <Hello />,
       },
       {
+        path: Paths.Game,
+        element: <Hello />,
+      },
+      {
         path: Paths.Leaderboard,
         element: <Leaderboard />,
       },

@@ -1,13 +1,12 @@
 @import url("../../variables.css");
 
 .footer {
-  margin-top: 60px;
   text-align: center;
   font-family: 'Press Start 2P', cursive;
   font-size: 13px;
-  opacity: 0.5;
 
   &__inner {
+    opacity: 0.5;
     display: flex;
     justify-content: center;
     align-items: center;
