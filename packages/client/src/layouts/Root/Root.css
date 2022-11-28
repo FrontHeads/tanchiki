@@ -1,8 +1,12 @@
 @import url("../../variables.css");
 
 .layout {
-  width: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
   margin: auto;
+
+  @media (max-width: 730px) {
+    width: 95%;
+  }
 }

@@ -4,6 +4,7 @@ import { Root } from '../layouts/Root';
 import { ErrorPage } from '../pages/ErrorPage';
 import { Hello } from '../pages/Hello';
 import { Home } from '../pages/Home';
+import { Leaderboard } from '../pages/Leaderboard';
 import { SignIn } from '../pages/SignIn';
 import { Paths } from './constants';
 
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: 'hello/:topic',
         element: <Hello />,
+      },
+      {
+        path: Paths.Leaderboard,
+        element: <Leaderboard />,
       },
     ],
   },
