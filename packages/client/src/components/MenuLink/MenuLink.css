@@ -1,9 +1,16 @@
-@import "../../variables.css";
+@import url("../../variables.css");
 
 .menu {
   &__tank-wrapper {
     transition: 0.2s ease;
     opacity: 0;
+    position: absolute;
+    left: 5px;
+
+    @media (max-width: 430px) {
+      right: -50px;
+      left: auto;
+    }
   }
 
   &__link {
@@ -13,22 +20,13 @@
     &:hover {
       color: $accent_color;
     }
-  }
 
-  &__link:hover + .menu__tank-wrapper {
-    position: absolute;
-    opacity: 1;
-  }
-
-  &__tank-wrapper {
-    position: absolute;
-    left: 5px;
-
-    @media (max-width: 430px) {
-      right: -50px;
-      left: auto;
+    &:hover + .menu__tank-wrapper {
+      position: absolute;
+      opacity: 1;
     }
   }
+
   &__tank-img {
     width: 40px;
     left: auto;
