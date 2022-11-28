@@ -8,6 +8,7 @@ export class Terrain extends Entity {
     switch (this.type) {
       case 'brickWall':
         this.crossable = false;
+        this.hittable = true;
         this.color = 'brown';
         break;
       case 'trees':
