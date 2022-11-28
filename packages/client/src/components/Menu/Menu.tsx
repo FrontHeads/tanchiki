@@ -32,10 +32,13 @@ export const Menu: FC = () => {
 
   return (
     <div data-testid="menu" className="menu">
-      <div className="menu__icon" onClick={openMenu}>
+      <div data-testid="menu-button" className="menu__icon" onClick={openMenu}>
         <img src={menuIcon} alt="menu button" />
       </div>
-      <div className={'menu__list ' + (isOpen ? '' : 'menu__list-hide')}>
+      <div
+        data-testid='menu-list'
+        data-test={isOpen ? 'menu-list-on' : 'menu-list-off'}
+        className={'menu__list ' + (isOpen ? '' : 'menu__list-hide')}>
         <nav className="index-nav">
           <ul className="navigation-list">
             {navigationList.map(({ id, title, to }) => (
