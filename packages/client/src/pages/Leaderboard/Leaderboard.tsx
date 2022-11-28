@@ -4,7 +4,7 @@ import { FC } from 'react';
 
 import { DUMMY_LEADERBOARD } from './DummyData';
 import { LeaderboardRow } from './LeaderboardRow';
-import { LeaderboardProps } from './typings';
+import { LeaderboardProps } from './typing';
 
 export const headerText = 'Рейтинг игроков';
 
@@ -26,16 +26,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
         </thead>
         <tbody>
           {DUMMY_LEADERBOARD.map(row => {
-            return (
-              <LeaderboardRow
-                key={row.place}
-                place={row.place}
-                username={row.username}
-                record={row.record}
-                time={row.time}
-                matches={row.matches}
-              />
-            );
+            return <LeaderboardRow key={row.place} row={row} />;
           })}
         </tbody>
       </table>

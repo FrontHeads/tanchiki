@@ -5,22 +5,18 @@ import { render, screen } from '@testing-library/react';
 import { LeaderboardRow } from './LeaderboardRow';
 
 describe('LeaderboardRow', () => {
-  const place = 1,
-    username = 'John',
-    record = 1234,
-    time = 20,
-    matches = 99;
+  const row = { place: 1, username: 'John', record: 1234, time: 20, matches: 99 };
 
   test('it renders', () => {
     render(
       <table>
         <tbody>
-          <LeaderboardRow place={place} username={username} record={record} time={time} matches={matches} />
+          <LeaderboardRow row={row} />
         </tbody>
       </table>
     );
 
-    const renderedElement = screen.getByText(username);
+    const renderedElement = screen.getByText(row.username);
 
     expect(renderedElement).toBeInTheDocument();
   });
@@ -29,14 +25,14 @@ describe('LeaderboardRow', () => {
     render(
       <table>
         <tbody>
-          <LeaderboardRow place={place} username={username} record={record} time={time} matches={matches} />
+          <LeaderboardRow row={row} />
         </tbody>
       </table>
     );
-    expect(screen.getByText(place)).toBeInTheDocument();
-    expect(screen.getByText(username)).toBeInTheDocument();
-    expect(screen.getByText(record)).toBeInTheDocument();
-    expect(screen.getByText(time)).toBeInTheDocument();
-    expect(screen.getByText(matches)).toBeInTheDocument();
+    expect(screen.getByText(row.place)).toBeInTheDocument();
+    expect(screen.getByText(row.username)).toBeInTheDocument();
+    expect(screen.getByText(row.record)).toBeInTheDocument();
+    expect(screen.getByText(row.time)).toBeInTheDocument();
+    expect(screen.getByText(row.matches)).toBeInTheDocument();
   });
 });

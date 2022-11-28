@@ -1,15 +1,17 @@
+import './LeaderboardRow.css';
+
 import { FC } from 'react';
 
-import { LeaderboardRowProps } from './typings';
+import { LeaderboardRowType } from './typings';
 
-export const LeaderboardRow: FC<LeaderboardRowProps> = ({ place, username, record, time, matches }) => {
+export const LeaderboardRow: FC<LeaderboardRowType> = ({ row }) => {
   return (
     <tr className="leaderboard__row">
-      <td>{place}</td>
-      <td>{username}</td>
-      <td>{record}</td>
-      <td>{time}</td>
-      <td>{matches}</td>
+      <td>{row.place}</td>
+      <td>{row.username}</td>
+      <td>{row.record}</td>
+      <td>{row.time}</td>
+      <td>{row.matches}</td>
     </tr>
   );
 };
