@@ -1,65 +1,13 @@
 @import "../../variables.css";
 
-.navigation-list {
-  &__row {
-    font-size: 1.6rem;
-    position: relative;
-    padding-left: 56px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-
-    @media (max-width: 430px) {
-      padding-left: 0;
-    }
-  }
-}
-
 .menu {
   font-family: "Press Start 2P", cursive;
   padding-top: 10px;
   margin-bottom: 15px;
 
-  &__tank-wrapper {
-    transition: 0.2s ease;
-    opacity: 0;
-  }
-
-  &__link {
-    text-decoration: none;
-    opacity: 1;
-
-    &:hover {
-      color: $accent_color;
-    }
-  }
-
-  &__link:hover + .menu__tank-wrapper {
-    position: absolute;
-    opacity: 1;
-  }
-
-  &__tank-wrapper {
-    position: absolute;
-    left: 5px;
-
-    @media (max-width: 430px) {
-      right: -50px;
-      left: auto;
-    }
-  }
-
-  &__tank-img {
-    width: 40px;
-    left: auto;
-    transform: none;
-
-    @media (max-width: 430px) {
-      transform: rotate(180deg);
-    }
-  }
-
   &__icon {
+    border-radius: 10px;
+    padding: 5px;
     cursor: pointer;
     margin-bottom: 60px;
     position: fixed;
@@ -68,9 +16,11 @@
     transition: 0.2s ease;
 
     &:hover {
-      .menu__icon-line {
-        background-color: $accent_color;
-      }
+      background-color: $accent_color;
+    }
+    &:active {
+      background-color: $background_color;
+      border: 1px $accent_color solid;
     }
 
     &-line {

@@ -2,6 +2,7 @@ import './Menu.css';
 
 import { FC, useState } from 'react';
 
+import menuIcon from '../../assets/img/menu_icon.png';
 import { MenuLink } from '../MenuLink';
 
 const navigationList = [
@@ -30,11 +31,9 @@ export const Menu: FC = () => {
   };
 
   return (
-    <div className="menu">
+    <div data-testid="menu" className="menu">
       <div className="menu__icon" onClick={openMenu}>
-        <div className="menu__icon-line"></div>
-        <div className="menu__icon-line"></div>
-        <div className="menu__icon-line"></div>
+        <img src={menuIcon} alt="menu button" />
       </div>
       <div className={'menu__list ' + (isOpen ? '' : 'menu__list-hide')}>
         <nav className="index-nav">
