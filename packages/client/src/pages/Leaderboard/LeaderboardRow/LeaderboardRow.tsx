@@ -2,9 +2,9 @@ import './LeaderboardRow.css';
 
 import { FC } from 'react';
 
-import { LeaderboardRowType } from './typings';
+import { LeaderboardRecord } from './typings';
 
-export const LeaderboardRow: FC<LeaderboardRowType> = ({ row }) => {
+export const LeaderboardRow: FC<LeaderboardRecord> = ({ row }) => {
   return (
     <tr className="leaderboard__row">
       <td>{row.place}</td>

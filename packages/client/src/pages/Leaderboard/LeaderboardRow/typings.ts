@@ -6,6 +6,6 @@ type LeaderboardRowProps = {
   matches: number;
 };
 
-export type LeaderboardRowType = {
+export type LeaderboardRecord = {
   row: LeaderboardRowProps;
 };
