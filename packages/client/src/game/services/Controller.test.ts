@@ -1,21 +1,21 @@
-import {Controller} from './';
+import { Controller } from './';
 
 function mockKeyDown(...codes: Array<string>) {
   for (const code of codes) {
-    const event = new KeyboardEvent('keydown', { 'code': code });
+    const event = new KeyboardEvent('keydown', { code: code });
     document.dispatchEvent(event);
   }
 }
 
 function mockKeyUp(...codes: Array<string>) {
   for (const code of codes) {
-    const event = new KeyboardEvent('keyup', { 'code': code });
+    const event = new KeyboardEvent('keyup', { code: code });
     document.dispatchEvent(event);
   }
 }
 
 async function sleep(ms = 100) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 describe('game/services/Controller', () => {
@@ -39,7 +39,7 @@ describe('game/services/Controller', () => {
   it('should handle WASD stop binding', () => {
     const controller = new Controller(['wasd']);
     const mockFn = jest.fn();
-  
+
     controller.on('stop', mockFn);
     mockKeyDown('KeyW', 'KeyD');
     sleep();
@@ -74,7 +74,7 @@ describe('game/services/Controller', () => {
   it('should handle arrows stop binding', () => {
     const controller = new Controller(['arrows']);
     const mockFn = jest.fn();
-  
+
     controller.on('stop', mockFn);
     mockKeyDown('ArrowUp', 'ArrowLeft');
     sleep();
