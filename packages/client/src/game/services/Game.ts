@@ -44,6 +44,9 @@ export class Game {
   }
 
   togglePause() {
+    if (!this.inited) {
+      return;
+    }
     if (this.paused) {
       this.startLoop();
     } else {
@@ -60,6 +63,7 @@ export class Game {
   stopLoop() {
     if (this.loopProcess) {
       clearTimeout(this.loopProcess);
+      this.loopProcess = null;
     }
   }
 
