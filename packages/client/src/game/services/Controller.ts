@@ -28,12 +28,11 @@ export class Controller extends EventBus {
     if (type.includes('arrows')) {
       this.registerEventsForArrows();
     }
+    this.registerEventsForPause();
   }
 
   keyPressed(code: keyof Controller['keyBindings']) {
-    if (code === 'KeyP') {
-      this.emit('pause');
-    } else if (code === 'Space' || code === 'Enter') {
+    if (code === 'Space' || code === 'Enter') {
       this.emit('shoot');
     } else {
       this.pressedKeys[code] = true;
@@ -50,8 +49,26 @@ export class Controller extends EventBus {
     }
   }
 
+  preventDefaultEvent(event: KeyboardEvent) {
+    if (!event.ctrlKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+    }
+  }
+
+  registerEventsForPause() {
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.repeat) {
+        return false;
+      }
+      if (event.code === 'KeyP') {
+        this.emit('pause');
+        this.preventDefaultEvent(event);
+      }
+    });
+  }
+
   registerEventsForWasd() {
-    window.addEventListener('keydown', (event: KeyboardEvent) => {
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.repeat) {
         return false;
       }
@@ -61,27 +78,26 @@ export class Controller extends EventBus {
         case 'KeyS':
         case 'KeyD':
         case 'Space':
-        case 'KeyP':
           this.keyPressed(event.code);
-          event.preventDefault();
+          this.preventDefaultEvent(event);
           break;
       }
     });
-    window.addEventListener('keyup', (event: KeyboardEvent) => {
+    document.addEventListener('keyup', (event: KeyboardEvent) => {
       switch (event.code) {
         case 'KeyW':
         case 'KeyA':
         case 'KeyS':
         case 'KeyD':
           this.keyReleased(event.code);
-          event.preventDefault();
+          this.preventDefaultEvent(event);
           break;
       }
     });
   }
-  
+
   registerEventsForArrows() {
-    window.addEventListener('keydown', (event: KeyboardEvent) => {
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.repeat) {
         return false;
       }
@@ -91,20 +107,19 @@ export class Controller extends EventBus {
         case 'ArrowDown':
         case 'ArrowRight':
         case 'Enter':
-        case 'KeyP':
           this.keyPressed(event.code);
-          event.preventDefault();
+          this.preventDefaultEvent(event);
           break;
       }
     });
-    window.addEventListener('keyup', (event: KeyboardEvent) => {
+    document.addEventListener('keyup', (event: KeyboardEvent) => {
       switch (event.code) {
         case 'ArrowUp':
         case 'ArrowLeft':
         case 'ArrowDown':
         case 'ArrowRight':
           this.keyReleased(event.code);
-          event.preventDefault();
+          this.preventDefaultEvent(event);
           break;
       }
     });
