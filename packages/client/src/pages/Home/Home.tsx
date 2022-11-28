@@ -17,15 +17,12 @@ export const Home = () => {
     fetchServerData();
   }, []);
 
-
-  // This is how the dispatch works
+  // This is how the dispatch works. Remove later
   const dispatch = useAppDispatch();
   useEffect(() => {
+    dispatch(appActions.setIsLoading(true));
     setTimeout(() => {
-      dispatch(appActions.setIsLoading(true));
-      setTimeout(() => {
-        dispatch(appActions.setIsLoading(false));
-      }, 2000);
+      dispatch(appActions.setIsLoading(false));
     }, 2000);
   }, []);
 

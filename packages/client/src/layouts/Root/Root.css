@@ -6,7 +6,11 @@
   width: 100%;
   margin: auto;
 
+
+
   @media (max-width: 730px) {
     width: 95%;
   }
 }
+
+
