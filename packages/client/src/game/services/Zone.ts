@@ -59,7 +59,7 @@ export class Zone {
       if (!entity.lastRect || !entity.nextRect) {
         throw new Error('entity.lastRect|nextRect is null');
       }
-      if (this.hasCollision(entity)) {
+      if (this.hasCollision(entity.nextRect, entity)) {
         posState.hasCollision = true;
       } else {
         this.updateMatrix(entity.nextRect, entity);
@@ -80,6 +80,13 @@ export class Zone {
     entity.on('entityShouldBeDestroyed', () => {
       this.destroyEntity(entity);
     });
+  }
+
+  isBeyondMatrix(rect: RectT) {
+    if (this.isBeyondXAxis(rect) || this.isBeyondYAxis(rect)) {
+      return true;
+    }
+    return false;
   }
 
   isBeyondXAxis(rect: RectT) {
@@ -114,12 +121,8 @@ export class Zone {
     return false;
   }
 
-  hasCollision(entity: Entity) {
-    const rect = entity.nextRect!; // проверка уже есть в registerEntity()
-    if (this.isBeyondXAxis(rect) || this.isBeyondYAxis(rect)) {
-      return true;
-    }
-    if (this.hasCollisionsWithMatrix(rect, entity)) {
+  hasCollision(rect: RectT, entity: Entity) {
+    if (this.isBeyondMatrix(rect) || this.hasCollisionsWithMatrix(rect, entity)) {
       return true;
     }
     return false;
