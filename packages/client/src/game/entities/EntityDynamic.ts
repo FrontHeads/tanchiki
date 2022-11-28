@@ -42,7 +42,7 @@ export class EntityDynamic extends Entity {
     }
   }
 
-  act() {
+  step() {
     if (!this.spawned) {
       return;
     }

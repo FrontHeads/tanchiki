@@ -31,7 +31,7 @@ export class Game {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
     for (const entity of this.loopEntities) {
-      entity.act();
+      entity.step();
       if (entity.shouldBeDestroyed) {
         this.destroyEntity(entity);
       }
