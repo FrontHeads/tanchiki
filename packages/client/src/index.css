@@ -5,9 +5,7 @@ body {
   color: $font_color_bright;
   font-family: Roboto, sans-serif;
   font-size: 16px;
-  display: flex;
   overflow-x: hidden;
-  justify-content: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -65,4 +63,12 @@ h1 {
   &__with-tank:hover {
     color: #e69c21;
   }
+}
+
+.delimiter {
+  width: 15%;
+  margin: 0 auto 60px;
+  height: 5px;
+  background-color: $border_color;
+  opacity: 0.7;
 }
