@@ -2,6 +2,7 @@ import './Home.css';
 
 import { useEffect } from 'react';
 
+import { appActions, useAppDispatch } from '../../store';
 import { Http } from '../../utils/Http';
 
 export const Home = () => {
@@ -14,6 +15,18 @@ export const Home = () => {
     };
 
     fetchServerData();
+  }, []);
+
+
+  // This is how the dispatch works
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(appActions.setIsLoading(true));
+      setTimeout(() => {
+        dispatch(appActions.setIsLoading(false));
+      }, 2000);
+    }, 2000);
   }, []);
 
   return (
