@@ -1,4 +1,4 @@
-name: Lint
+name: Checks
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
       - dev
 
 jobs:
-  eslint:
+  lintsAndTests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
