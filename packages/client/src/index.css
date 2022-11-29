@@ -12,17 +12,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
 .root,
 body,
 html {
   margin: 0;
   min-height: 100%;
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
 
 h1 {
@@ -34,37 +30,13 @@ h1 {
   line-height: 1.5;
 }
 
-.link {
-  &__tank-wrapper {
-    opacity: 0;
-    margin-left: 20px;
-  }
+a {
+  color: $font_color_bright;
+}
 
-  &__tank-img {
-    width: 40px;
-    position: absolute;
-    margin-top: -7px;
-    left: -65px;
-    transform: rotate(180deg);
-
-    &_undecorated {
-      text-decoration: none;
-    }
-
-    @media (max-width: 430px) {
-      left: auto;
-      transform: none;
-    }
-  }
-
-  &__with-tank:hover + .link__tank-wrapper {
-    opacity: 1;
-    margin-left: 20px;
-  }
-
-  &__with-tank:hover {
-    color: #e69c21;
-  }
+ul {
+  list-style: none;
+  padding: 0;
 }
 
 .avatar-img {

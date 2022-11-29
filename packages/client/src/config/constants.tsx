@@ -2,6 +2,7 @@ import defaultAvatar from '../assets/default-avatar.png';
 
 export enum Paths {
   Home = '/',
+  Leaderboard = '/leaderboard',
   SignIn = '/sign-in',
   SignUp = '/sign-up',
   UserProfile = '/profile',
