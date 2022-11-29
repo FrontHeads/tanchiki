@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { userProfileInputFields } from './data';
 import { UserProfile } from './UserProfile';
 
-describe('Leaderboard', () => {
+describe('UserProfile page', () => {
   test('it renders', () => {
     render(<UserProfile />);
 

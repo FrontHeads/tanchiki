@@ -18,7 +18,8 @@ export const UserProfile: React.FC = () => {
     second_name: 'FsssTest',
     display_name: 'test',
     login: 'test3',
-    avatar: '/5aa5e90f-1cd3-456b-98d1-8d74e9ec44da/20cacda2-60db-49c0-b671-6f2418e8c493_Z8NbK-ghPi4.jpg',
+    avatar: '',
+    // avatar: '/5aa5e90f-1cd3-456b-98d1-8d74e9ec44da/20cacda2-60db-49c0-b671-6f2418e8c493_Z8NbK-ghPi4.jpg',
     email: 'test3@test.com',
     phone: '89217466666',
   };
