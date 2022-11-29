@@ -1,6 +1,4 @@
-import { Controller } from './Controller';
-import { Game } from './Game';
-import { View } from './View';
-import { Zone } from './Zone';
-
-export { Controller, Game, View, Zone };
+export { Controller } from './Controller';
+export { Game } from './Game';
+export { View } from './View';
+export { Zone } from './Zone';

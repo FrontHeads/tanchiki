@@ -1,3 +1,1 @@
-import { Game } from './services';
-
-export { Game as Tanchiki };
+export { Game as Tanchiki } from './services';

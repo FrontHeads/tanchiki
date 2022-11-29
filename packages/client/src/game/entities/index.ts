@@ -1,7 +1,5 @@
-import { Entity } from './Entity';
-import { EntityDynamic } from './EntityDynamic';
-import { Projectile } from './Projectile';
-import { Tank } from './Tank';
-import { Terrain } from './Terrain';
-
-export { Entity, EntityDynamic, Projectile, Tank, Terrain };
+export { Entity } from './Entity';
+export { EntityDynamic } from './EntityDynamic';
+export { Projectile } from './Projectile';
+export { Tank } from './Tank';
+export { Terrain } from './Terrain';
