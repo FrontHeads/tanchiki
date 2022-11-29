@@ -18,16 +18,16 @@ export const SignUp: FC = () => {
     password: '',
     password_check: '',
   };
-  const [responseBody, setResponseBody] = useState<SignUpForm>(formData);
+  const [requestBody, setRequestBody] = useState<SignUpForm>(formData);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setResponseBody({ ...responseBody, [name]: value });
+    setRequestBody({ ...requestBody, [name]: value });
   };
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(responseBody);
+    console.log(requestBody);
   };
 
   return (
