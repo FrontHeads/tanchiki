@@ -31,7 +31,7 @@ export const SignUp: FC = () => {
   };
 
   return (
-    <Form handlerSubmit={submitHandler} header="Вход">
+    <Form handlerSubmit={submitHandler} header="Регистрация">
       <FormField
         title="Email"
         type="email"
@@ -82,7 +82,7 @@ export const SignUp: FC = () => {
       />
       <FormField
         title="Повторите пароль"
-        type="password_check"
+        type="password"
         id="password_check"
         onChange={inputChangeHandler}
         placeholder="Латинские буквы и цифры"
