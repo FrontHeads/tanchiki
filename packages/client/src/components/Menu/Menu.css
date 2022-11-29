@@ -26,7 +26,7 @@
 
       &_open {
         &:nth-child(1) {
-          transform: rotate(45deg) translate(50%, 50%);
+          transform: rotate(45deg) translate(50%, 25%);
           transition: ease-out 0.5s;
         }
         &:nth-child(2) {
@@ -34,7 +34,7 @@
           transition: ease-out 0.5s;
         }
         &:nth-child(3) {
-          transform: rotate(-45deg) translate(50%, -50%);
+          transform: rotate(-45deg) translate(50%, -25%);
           transition: ease-out 0.5s;
         }
       }
