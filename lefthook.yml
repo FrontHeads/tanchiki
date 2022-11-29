@@ -1,9 +1,12 @@
 pre-commit:
   parallel: true
   commands:
+    prettier:
+      run: yarn prettier --write {staged_files}
     lint:
       glob: '*.{ts,tsx}'
       run: yarn eslint {staged_files}
+
 commit-msg:
   commands:
     commitlint:
