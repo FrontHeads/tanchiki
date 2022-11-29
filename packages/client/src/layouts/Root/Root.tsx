@@ -3,6 +3,7 @@ import './Root.css';
 import { Outlet, useNavigation } from 'react-router-dom';
 
 import { Loader } from '../../components/Loader';
+import { Menu } from '../../components/Menu';
 import { appSelectors, useAppSelector } from '../../store';
 
 export const Root: React.FC = () => {
@@ -12,6 +13,7 @@ export const Root: React.FC = () => {
 
   return (
     <main className={['layout', `layout_state_${isLoading ? 'loading' : 'idle'}`].join(' ')}>
+      <Menu />
       <Outlet />
       {isLoading && <Loader />}
     </main>
