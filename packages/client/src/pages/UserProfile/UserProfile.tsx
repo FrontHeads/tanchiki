@@ -33,22 +33,22 @@ export const UserProfile: React.FC = () => {
     oldPassword: '',
     newPassword: '',
   };
-  const [responseBody, setResponseBody] = useState<UserProfileForm>(formData);
+  const [requestBody, setRequestBody] = useState<UserProfileForm>(formData);
 
   const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     event => {
       const { name, value } = event.target;
-      setResponseBody({ ...responseBody, [name]: value });
+      setRequestBody({ ...requestBody, [name]: value });
     },
-    [responseBody]
+    [requestBody]
   );
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = useCallback(
     event => {
       event.preventDefault();
-      console.log(responseBody);
+      console.log(requestBody);
     },
-    [responseBody]
+    [requestBody]
   );
 
   const avatarPath = userProfile.avatar ? PATH.avatarBase + userProfile.avatar : PATH.defaultAvatar;
@@ -70,7 +70,7 @@ export const UserProfile: React.FC = () => {
 
             const fieldKey = field.id as keyof UserProfileForm;
             return (
-              <FormField key={field.id} {...field} onChange={inputChangeHandler} value={responseBody[fieldKey] || ''} />
+              <FormField key={field.id} {...field} onChange={inputChangeHandler} value={requestBody[fieldKey] || ''} />
             );
           })}
         </>
