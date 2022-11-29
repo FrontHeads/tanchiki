@@ -15,7 +15,6 @@
 
   &__link {
     text-decoration: none;
-    opacity: 1;
 
     &:hover {
       color: $accent_color;
@@ -40,15 +39,20 @@
 
 .navigation-list {
   &__row {
-    font-size: 1.6rem;
-    position: relative;
-    padding-left: 56px;
-    display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    padding-left: 56px;
+    list-style-type: none;
+    margin: 45px 0;
+    font-size: 1.6rem;
+    display: flex;
+    position: relative;
 
     @media (max-width: 430px) {
-      padding-left: 0;
+      font-size: 1.2rem;
     }
+  }
+
+  &__row:nth-child(1) {
+    margin: 0 0 45px;
   }
 }

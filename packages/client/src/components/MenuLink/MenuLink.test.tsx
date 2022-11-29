@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { MenuLink } from './MenuLink';
 
-describe('Menu', () => {
+describe('MenuLink', () => {
   test('it renders', () => {
     const handleNavigate = jest.fn();
 

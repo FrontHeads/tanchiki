@@ -17,6 +17,18 @@ describe('Menu', () => {
 
     expect(renderedMenu).toBeInTheDocument();
   });
+
+  test('it renders all menu links', () => {
+    render(
+      <BrowserRouter>
+        <Menu />
+      </BrowserRouter>
+    );
+    const menuLinks = screen.getAllByTestId('menulink');
+    const amount = menuLinks.length;
+    expect(amount).toBe(10);
+  });
+
   test('it opens menu', () => {
     const { container } = render(
       <BrowserRouter>
@@ -26,9 +38,9 @@ describe('Menu', () => {
 
     const testState = getByTestId(container, 'menu');
 
-    const button = getByTestId(testState, 'menu-button');
+    const button = getByTestId(testState, 'menu__icon');
 
-    const menuList = getByTestId(testState, 'menu-list');
+    const menuList = getByTestId(testState, 'menu__list');
 
     expect(menuList.getAttribute('data-test')).toBe('menu-list-off');
 
