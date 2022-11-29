@@ -2,23 +2,16 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '../../store';
 import { authThunks } from './authThunks';
-
-export interface AuthState {
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  error: string;
-}
-
-const initialState: AuthState = {
-  isLoading: false,
-  isAuthenticated: false,
-  error: '',
-};
+import { AuthState } from './typings';
 
 // Slice
 export const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    isLoading: false,
+    isAuthenticated: false,
+    error: '',
+  } as AuthState,
   reducers: {},
   extraReducers: builder => {
     builder

@@ -2,20 +2,14 @@ import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { UserProfile } from '../../../app.typings';
 import { RootState } from '../../store';
-
-export interface AppState {
-  isLoading: boolean;
-  userProfile: UserProfile | null;
-}
-
-const initialState: AppState = {
-  isLoading: false,
-  userProfile: null,
-};
+import { AppState } from './typings';
 
 export const appSlice = createSlice({
   name: 'app',
-  initialState,
+  initialState: {
+    isLoading: false,
+    userProfile: null,
+  } as AppState,
   reducers: {
     setIsLoading: (state, { payload }: PayloadAction<boolean>) => {
       state.isLoading = payload;

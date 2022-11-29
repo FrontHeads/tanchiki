@@ -10,7 +10,7 @@ describe('Redux app state', () => {
 
   test('should contain correct values', () => {
     store.dispatch(appActions.setIsLoading(true));
-    
+
     const state = store.getState().app;
     expect(state.isLoading).toEqual(true);
   });
