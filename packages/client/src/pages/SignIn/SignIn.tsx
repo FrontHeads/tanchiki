@@ -37,7 +37,7 @@ export const SignIn: React.FC = () => {
     <Form handlerSubmit={submitHandler} header="Вход">
       <FormField
         title="Логин"
-        type="login"
+        type="text"
         id="login"
         onChange={inputChangeHandler}
         placeholder="ivanIvanov"
