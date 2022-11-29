@@ -7,7 +7,7 @@ import { Button } from '../../components/Button';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { PATH } from '../../config/constants';
-import { inputFields } from './data';
+import { userProfileInputFields } from './data';
 import { UserProfileForm } from './typings';
 
 export const UserProfile: React.FC = () => {
@@ -59,9 +59,13 @@ export const UserProfile: React.FC = () => {
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
       <Form handlerSubmit={submitHandler} header={header}>
         <>
-          {inputFields.map(field => {
+          {userProfileInputFields.map(field => {
             if ('heading' in field) {
-              return <h3 className="form__input-header">{field.heading}</h3>;
+              return (
+                <h3 key={field.heading} data-testid="form-input-header" className="form__input-header">
+                  {field.heading}
+                </h3>
+              );
             }
 
             const fieldKey = field.id as keyof UserProfileForm;

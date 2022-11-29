@@ -6,7 +6,7 @@ import { InputProps } from './typings';
 
 export const FormField: FC<InputProps> = ({ id, type, value, title, required, placeholder, error, onChange }) => {
   return (
-    <div className="form__field form-field">
+    <div className="form__field form-field" data-testid="form-field">
       <label className="form-field__label" htmlFor={id}>
         {title}
         {required && <em>*</em>}
