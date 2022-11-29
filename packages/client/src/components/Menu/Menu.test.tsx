@@ -4,6 +4,7 @@ import { fireEvent, getByTestId, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Menu } from './Menu';
+import { navigationList } from './MenuData';
 
 describe('Menu', () => {
   test('it renders', () => {
@@ -26,7 +27,7 @@ describe('Menu', () => {
     );
     const menuLinks = screen.getAllByTestId('menulink');
     const amount = menuLinks.length;
-    expect(amount).toBe(10);
+    expect(amount).toBe(navigationList.length);
   });
 
   test('it opens menu', () => {

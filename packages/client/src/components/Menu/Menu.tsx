@@ -9,7 +9,7 @@ export const Menu: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const openMenu = () => {
+  const toggleMenu = () => {
     setIsOpen(prevState => {
       return !prevState;
     });
@@ -31,7 +31,7 @@ export const Menu: FC = () => {
 
   return (
     <div data-testid="menu" className="menu" ref={menuRef}>
-      <div data-testid="menu__icon" className="menu__icon" onClick={openMenu}>
+      <div data-testid="menu__icon" className="menu__icon" onClick={toggleMenu}>
         <div className="menu__icon-line"></div>
         <div className="menu__icon-line"></div>
         <div className="menu__icon-line"></div>

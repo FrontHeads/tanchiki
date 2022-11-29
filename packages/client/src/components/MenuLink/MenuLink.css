@@ -2,10 +2,13 @@
 
 .menu {
   &__tank-wrapper {
+    display: flex;
+    align-items: center;
     transition: 0.2s ease;
     opacity: 0;
     position: absolute;
     left: 5px;
+    margin-left: 20;
 
     @media (max-width: 430px) {
       right: -50px;
@@ -21,14 +24,14 @@
     }
 
     &:hover + .menu__tank-wrapper {
-      position: absolute;
       opacity: 1;
     }
   }
 
   &__tank-img {
+    position: absolute;
     width: 40px;
-    left: auto;
+    left: -65px;
     transform: none;
 
     @media (max-width: 430px) {
@@ -39,12 +42,11 @@
 
 .navigation-list {
   &__row {
+    display: flex;
     align-items: center;
-    padding-left: 56px;
     list-style-type: none;
     margin: 45px 0;
     font-size: 1.6rem;
-    display: flex;
     position: relative;
 
     @media (max-width: 430px) {
