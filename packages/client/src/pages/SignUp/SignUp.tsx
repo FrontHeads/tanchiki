@@ -34,7 +34,7 @@ export const SignUp: FC = () => {
     <Form handlerSubmit={submitHandler} header="Регистрация">
       <FormField
         title="Email"
-        type="text"
+        type="email"
         id="email"
         onChange={inputChangeHandler}
         placeholder="ivanIvanov@yandex.ru"
@@ -66,7 +66,7 @@ export const SignUp: FC = () => {
       />
       <FormField
         title="Телефон"
-        type="text"
+        type="tel"
         id="phone"
         onChange={inputChangeHandler}
         placeholder="+7 800 555 35 35"
