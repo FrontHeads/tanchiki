@@ -1,11 +1,11 @@
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import { buildPath } from './build-path';
+import { buildPath } from './buildPath';
 import { Http } from './Http';
+import { axios } from './httpClient';
 
 const mock = new MockAdapter(axios);
-const baseUrl = 'http://localhost:1234';
+const baseUrl = `http://localhost:${__SERVER_PORT__}`;
 const data = { response: true };
 
 describe('Request util', () => {

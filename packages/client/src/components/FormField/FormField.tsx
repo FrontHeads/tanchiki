@@ -4,7 +4,17 @@ import { FC } from 'react';
 
 import { InputProps } from './typings';
 
-export const FormField: FC<InputProps> = ({ id, type, value, title, required, placeholder, error, onChange }) => {
+export const FormField: FC<InputProps> = ({
+  id,
+  type,
+  value,
+  title,
+  required,
+  placeholder,
+  error,
+  onChange,
+  disabled,
+}) => {
   return (
     <div className="form__field form-field">
       <label className="form-field__label" htmlFor={id}>
@@ -20,6 +30,7 @@ export const FormField: FC<InputProps> = ({ id, type, value, title, required, pl
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        disabled={disabled}
       />
       {error && <div className="form-field__error"></div>}
     </div>
