@@ -34,7 +34,7 @@ export const SignUp: FC = () => {
     <Form handlerSubmit={submitHandler} header="Регистрация">
       <FormField
         title="Email"
-        type="email"
+        type="text"
         id="email"
         onChange={inputChangeHandler}
         placeholder="ivanIvanov@yandex.ru"
@@ -42,7 +42,7 @@ export const SignUp: FC = () => {
       />
       <FormField
         title="Логин"
-        type="login"
+        type="text"
         id="login"
         onChange={inputChangeHandler}
         placeholder="ivanIvanov"
@@ -50,7 +50,7 @@ export const SignUp: FC = () => {
       />
       <FormField
         title="Имя"
-        type="first_name"
+        type="text"
         id="first_name"
         onChange={inputChangeHandler}
         placeholder="Иван"
@@ -58,7 +58,7 @@ export const SignUp: FC = () => {
       />
       <FormField
         title="Фамилия"
-        type="last_name"
+        type="text"
         id="last_name"
         onChange={inputChangeHandler}
         placeholder="Иванов"
@@ -66,7 +66,7 @@ export const SignUp: FC = () => {
       />
       <FormField
         title="Телефон"
-        type="phone"
+        type="text"
         id="phone"
         onChange={inputChangeHandler}
         placeholder="+7 800 555 35 35"
