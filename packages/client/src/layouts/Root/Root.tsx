@@ -13,7 +13,7 @@ export const Root: React.FC = () => {
   return (
     <main className={['layout', `layout_state_${navigation.state}`].join(' ')}>
       {location?.pathname !== Paths.Game && (
-        <header>
+        <header data-testid="header">
           <Logo />
           <div className="delimiter" />
         </header>
