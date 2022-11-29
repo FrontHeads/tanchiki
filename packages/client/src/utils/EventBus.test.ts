@@ -1,4 +1,4 @@
-import { EventBus } from './';
+import { EventBus } from './EventBus';
 
 describe('utils/EventBus', () => {
   it('should subscribe to and publish custom events', () => {

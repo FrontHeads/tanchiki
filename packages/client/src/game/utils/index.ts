@@ -1,3 +1,1 @@
-import { EventBus } from './EventBus';
-
-export { EventBus };
+export { EventBus } from '../../utils/EventBus';
