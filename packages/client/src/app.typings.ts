@@ -1,3 +1,9 @@
+import { FormFieldProps } from './components/FormField/typings';
+
+export type FormHeading = { heading: string };
+
+export type FormInputAndHeadingList = (FormFieldProps | FormHeading)[];
+
 export type UserProfile = {
   first_name?: string;
   avatar?: string;

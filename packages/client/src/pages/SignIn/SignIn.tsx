@@ -2,6 +2,7 @@ import { FC, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
+import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
@@ -57,8 +58,8 @@ export const SignIn: FC = () => {
 
       <div className="form__buttons-wrapper">
         {error && `Error: ${error}`}
-        <Button text="Войти" type="submit" selector="button_primary" disabled={isLoading} />
-        <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} selector="button_secondary" />
+        <Button text="Войти" type="submit" variant={ButtonVariant.primary} disabled={isLoading} />
+        <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.secondary} />
       </div>
     </Form>
   );

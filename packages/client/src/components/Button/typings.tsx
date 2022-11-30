@@ -1,9 +1,14 @@
 import { ButtonHTMLAttributes } from 'react';
 
+export enum ButtonVariant {
+  primary = 'primary',
+  secondary = 'secondary',
+}
+
 type ButtonProps = {
   text: string;
   type?: string;
-  selector?: string;
+  variant?: ButtonVariant;
   onClick?: () => void;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
