@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
@@ -8,7 +8,7 @@ import { Paths } from '../../config/constants';
 import { authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { LoginForm } from './typings';
 
-export const SignIn: React.FC = () => {
+export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -18,19 +18,19 @@ export const SignIn: React.FC = () => {
   }
 
   const formData: LoginForm = { login: '', password: '' };
-  const [responseBody, setResponseBody] = useState<LoginForm>(formData);
+  const [requestBody, setRequestBody] = useState<LoginForm>(formData);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setResponseBody({ ...responseBody, [name]: value });
+    setRequestBody({ ...requestBody, [name]: value });
   };
 
   const submitHandler = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      await dispatch(authThunks.signIn(responseBody));
+      await dispatch(authThunks.signIn(requestBody));
     },
-    [responseBody]
+    [requestBody]
   );
 
   return (
