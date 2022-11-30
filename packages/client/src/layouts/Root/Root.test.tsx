@@ -13,22 +13,18 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Root', () => {
-  test('it render header and footer', async () => {
+  test('it render logo and footer', async () => {
     const { user } = renderWithRouter(<TestApp />);
-
-    expect(screen.getByText('Вы на домашней странице')).toBeInTheDocument();
 
     await user.click(screen.getByText('Not game'));
-    expect(screen.queryByTestId('header')).toBeDefined();
-    expect(screen.queryByTestId('footer')).toBeDefined();
+    expect(screen.queryByTestId('logo')).toBeInTheDocument();
+    expect(screen.queryByTestId('footer')).toBeInTheDocument();
   });
-  test('it not render header and footer on Game path', async () => {
+  test('it not render logo and footer on Game path', async () => {
     const { user } = renderWithRouter(<TestApp />);
 
-    expect(screen.getByText('Вы на домашней странице')).toBeInTheDocument();
-
     await user.click(screen.getByText('Game'));
-    expect(screen.queryByTestId('header')).toBeNull();
+    expect(screen.queryByTestId('logo')).toBeNull();
     expect(screen.queryByTestId('footer')).toBeNull();
   });
 });

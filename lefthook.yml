@@ -2,6 +2,7 @@ pre-commit:
   parallel: true
   commands:
     prettier:
+      glob: '*.{ts,tsx,css}'
       run: yarn prettier --write {staged_files}
     lint:
       glob: '*.{ts,tsx}'
