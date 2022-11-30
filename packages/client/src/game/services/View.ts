@@ -36,6 +36,7 @@ export class View {
     layer.id = id;
     layer.width = this.convertToPixels(this.width);
     layer.height = this.convertToPixels(this.height);
+    layer.style.display = 'block';
     layer.style.position = 'absolute';
     layer.style.zIndex = (this.layerZIndexCount++).toString();
     this.layers[id] = {
