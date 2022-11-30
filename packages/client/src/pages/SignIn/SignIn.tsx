@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
@@ -6,43 +6,59 @@ import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
+import { authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { LoginForm } from './typings';
 
-export const SignIn: React.FC = () => {
+export const SignIn: FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
+  if (isAuthenticated) {
+    navigate(Paths.Home);
+  }
+
   const formData: LoginForm = { login: '', password: '' };
-  const [responseBody, setResponseBody] = useState<LoginForm>(formData);
+  const [requestBody, setRequestBody] = useState<LoginForm>(formData);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setResponseBody({ ...responseBody, [name]: value });
+    setRequestBody({ ...requestBody, [name]: value });
   };
 
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(responseBody);
-  };
+  const submitHandler = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      dispatch(authThunks.signIn(requestBody));
+    },
+    [requestBody]
+  );
 
   return (
     <Form handlerSubmit={submitHandler} header="Вход">
       <FormField
         title="Логин"
-        type="login"
+        type="text"
         id="login"
         onChange={inputChangeHandler}
         placeholder="ivanIvanov"
+        disabled={isLoading}
         required={true}
       />
+
       <FormField
         title="Пароль"
         type="password"
         id="password"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="Латинские буквы и цифры"
         required={true}
       />
+
       <div className="form__buttons-wrapper">
-        <Button text="Войти" type="submit" variant={ButtonVariant.primary} />
+        {error && `Error: ${error}`}
+        <Button text="Войти" type="submit" variant={ButtonVariant.primary} disabled={isLoading} />
         <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.secondary} />
       </div>
     </Form>

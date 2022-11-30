@@ -1,4 +1,4 @@
-import { buildPath } from './build-path';
+import { buildPath } from './buildPath';
 
 const baseUrl = 'http://localhost/';
 
