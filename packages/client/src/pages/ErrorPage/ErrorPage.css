@@ -1,7 +1,29 @@
-.error-page {
+@import url("../../variables.css");
+
+.web-error {
+  height: 70vh;
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  height: 100%;
-  text-align: center;
+  justify-content: center;
+
+  &__paragraph {
+    text-align: center;
+  }
+
+  &__header {
+    font-size: 50px;
+    margin: 0;
+    font-family: "Press Start 2P", cursive;
+    text-shadow: 2px 1px $dendy_button_primary;
+  }
+
+  &__msg {
+    font-size: 20px;
+  }
+
+  &__link {
+    margin: 70px auto;
+    width: 200px;
+    color: $font_color_bright;
+  }
 }
