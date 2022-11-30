@@ -1,9 +1,10 @@
 import './ErrorPage.css';
 
 import { FC } from 'react';
-import { Link, useNavigate, useRouteError } from 'react-router-dom';
+import { useNavigate, useRouteError } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
+import { ButtonVariant } from '../../components/Button/typings';
 import { Paths } from '../../config/constants';
 import { Root } from '../../layouts/Root';
 import { ErrorType } from './typings';
@@ -24,7 +25,7 @@ export const ErrorPage: FC = () => {
         <h1 className="web-error__paragraph web-error__header">{error.status}</h1>
         <p className="web-error__paragraph web-error__msg">{messageText}</p>
         <p className="web-error__paragraph web-error__link">
-          <Button text="На главную" onClick={() => navigate(Paths.Home)} selector="button_secondary" />
+          <Button text="На главную" onClick={() => navigate(Paths.Home)} variant={ButtonVariant.secondary} />
         </p>
       </div>
     </Root>
