@@ -6,18 +6,23 @@ import { Footer } from '../../components/Footer';
 import { Logo } from '../../components/Logo';
 import { Paths } from '../../config/constants';
 
+import { Menu } from '../../components/Menu';
+
 export const Root: React.FC = () => {
   const navigation = useNavigation();
   const location = useLocation();
 
   return (
     <main className={['layout', `layout_state_${navigation.state}`].join(' ')}>
-      {location?.pathname !== Paths.Game && (
-        <header data-testid="header">
-          <Logo />
-          <div className="delimiter" />
-        </header>
-      )}
+      <header>
+        <Menu />
+        {location?.pathname !== Paths.Game && (
+          <>
+            <Logo />
+            <div className="delimiter" />
+          </>
+        )}
+      </header>
       <Outlet />
       {location?.pathname !== Paths.Game && <Footer />}
     </main>
