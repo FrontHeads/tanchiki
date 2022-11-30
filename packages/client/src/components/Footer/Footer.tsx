@@ -2,7 +2,7 @@ import './Footer.css';
 
 import { FC } from 'react';
 
-import fhLogo from '../../assets/images/fh_logo.png';
+import fhLogo from '../../assets/img/fh_logo.png';
 
 export const Footer: FC = () => {
   return (

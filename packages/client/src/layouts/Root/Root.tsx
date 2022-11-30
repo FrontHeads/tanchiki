@@ -1,14 +1,14 @@
 import './Root.css';
 
+import { FC } from 'react';
 import { Outlet, useLocation, useNavigation } from 'react-router-dom';
 
 import { Footer } from '../../components/Footer';
 import { Logo } from '../../components/Logo';
+import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
 
-import { Menu } from '../../components/Menu';
-
-export const Root: React.FC = () => {
+export const Root: FC = () => {
   const navigation = useNavigation();
   const location = useLocation();
 
