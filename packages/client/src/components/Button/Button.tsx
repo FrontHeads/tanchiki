@@ -5,18 +5,13 @@ import { FC } from 'react';
 
 import { ButtonProps } from './typings';
 
-export const Button: FC<ButtonProps> = ({ type = 'button', text, onClick, className, testId, variant }) => {
+export const Button: FC<ButtonProps> = ({ type = 'button', text, className, variant, testId, ...rest }) => {
   const buttonClassNames = cn('button', className, { [`button_${variant}`]: variant });
 
-  const props: Record<string, unknown> = {
-    onClick: onClick,
-    type: type,
-    className: buttonClassNames,
-  };
-
-  if (testId) {
-    props['data-testid'] = testId;
-  }
-
-  return <button {...props}>{text}</button>;
+  return (
+    <button {...rest} type={type} className={buttonClassNames} data-testid={testId}>
+      {text}
+    </button>
+  );
+  // return <button {...props}>{text}</button>;
 };

@@ -1,6 +1,5 @@
 import { API_HOST } from '../../config/constants';
-import { buildPath } from './buildPath';
-import { axios } from './httpClient';
+import { axios, buildPath } from './';
 
 enum Method {
   GET = 'GET',
