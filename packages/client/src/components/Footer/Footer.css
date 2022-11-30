@@ -1,0 +1,20 @@
+@import url("../../variables.css");
+
+.footer {
+  text-align: center;
+  font-family: "Press Start 2P", cursive;
+  font-size: 13px;
+
+  &__inner {
+    opacity: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  &__logo {
+    width: 50px;
+    margin-right: 17px;
+  }
+}
