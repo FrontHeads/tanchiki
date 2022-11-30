@@ -8,7 +8,7 @@ export class Entity extends EventBus {
   height = 0;
   direction: DirectionT = 'UP';
   role: 'player1' | 'player2' | 'enemy' | 'neutral' = 'neutral';
-  type: 'tank' | 'flag' | 'brickWall' | 'conreteWall' | 'trees' | 'water' | 'ice' | 'custom' = 'custom';
+  type: 'tank' | 'flag' | 'brickWall' | 'concreteWall' | 'trees' | 'water' | 'ice' | 'custom' = 'custom';
   alignedToGrid = true;
   spawned = false;
   movable = false;
