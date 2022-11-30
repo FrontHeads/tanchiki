@@ -22,10 +22,18 @@ export const ErrorPage: FC = () => {
   return (
     <Root>
       <div className="web-error">
-        <h1 className="web-error__paragraph web-error__header">{error.status}</h1>
+        <h1 className="web-error__paragraph web-error__header" data-testid="web-error__header">
+          {error.status}
+        </h1>
         <p className="web-error__paragraph web-error__msg">{messageText}</p>
+
         <p className="web-error__paragraph web-error__link">
-          <Button text="На главную" onClick={() => navigate(Paths.Home)} variant={ButtonVariant.secondary} />
+          <Button
+            testId="web-error__button"
+            text="На главную"
+            onClick={() => navigate(Paths.Home)}
+            variant={ButtonVariant.secondary}
+          />
         </p>
       </div>
     </Root>
