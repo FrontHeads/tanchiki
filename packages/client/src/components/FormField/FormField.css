@@ -26,4 +26,10 @@
       box-shadow: 0 0 20px $accent_color;
     }
   }
+
+  &_input-padding_lg {
+    .form-field__input {
+      padding: 30px 5px;
+    }
+  }
 }
