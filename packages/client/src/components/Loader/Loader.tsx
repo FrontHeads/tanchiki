@@ -1,6 +1,8 @@
 import './Loader.css';
 
-export const Loader: React.FC = () => {
+import { FC } from 'react';
+
+export const Loader: FC = () => {
   return (
     <div className="loader" data-testid="loader">
       <div className="loader__circle"></div>

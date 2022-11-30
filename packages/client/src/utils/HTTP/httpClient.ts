@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 import { APIError } from '../../api/typings';
-import { apiHasError } from './../api-utils';
+import { apiHasError } from '../api-utils';
 
 // Check if error response body contains reason of error
 axios.interceptors.response.use(

@@ -28,7 +28,7 @@ type Response<T> = {
   headers: Record<string, unknown>;
 };
 
-export class Http {
+export class HTTP {
   static get<T>(url: string, options: GetOptionsWithoutMethod = {}): Promise<Response<T>> {
     return this._send(url, { ...options, method: Method.GET });
   }

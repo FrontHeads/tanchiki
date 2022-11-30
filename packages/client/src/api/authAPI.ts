@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '../config/constants';
-import { Http } from '../utils/Http';
+import { HTTP } from '../utils/HTTP';
 import { UserDTO } from './typings';
 
 export type SigninRequestData = {
@@ -21,11 +21,11 @@ type SignupResponseData = { id: number };
 type UserResponseData = UserDTO;
 
 export const authAPI = {
-  signin: (data: SigninRequestData) => Http.post<SigninResponseData>(API_ENDPOINTS.AUTH.SIGNIN, { data }),
+  signin: (data: SigninRequestData) => HTTP.post<SigninResponseData>(API_ENDPOINTS.AUTH.SIGNIN, { data }),
 
-  signup: (data: SignupRequestData) => Http.post<SignupResponseData>(API_ENDPOINTS.AUTH.SIGNUP, { data }),
+  signup: (data: SignupRequestData) => HTTP.post<SignupResponseData>(API_ENDPOINTS.AUTH.SIGNUP, { data }),
 
-  me: () => Http.get<UserResponseData>(API_ENDPOINTS.AUTH.ME),
+  me: () => HTTP.get<UserResponseData>(API_ENDPOINTS.AUTH.ME),
 
-  logout: () => Http.post(API_ENDPOINTS.AUTH.LOGOUT),
+  logout: () => HTTP.post(API_ENDPOINTS.AUTH.LOGOUT),
 };

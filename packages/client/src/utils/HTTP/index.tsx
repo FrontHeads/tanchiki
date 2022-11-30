@@ -1,3 +1,3 @@
 export { buildPath } from './buildPath';
-export { Http } from './Http';
+export { HTTP } from './HTTP';
 export { axios } from './httpClient';

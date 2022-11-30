@@ -27,9 +27,9 @@ export const SignIn: FC = () => {
   };
 
   const submitHandler = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
+    (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      await dispatch(authThunks.signIn(requestBody));
+      dispatch(authThunks.signIn(requestBody));
     },
     [requestBody]
   );

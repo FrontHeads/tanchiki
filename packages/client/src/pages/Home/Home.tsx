@@ -3,12 +3,12 @@ import './Home.css';
 import { useEffect } from 'react';
 
 import { appActions, useAppDispatch } from '../../store';
-import { Http } from '../../utils/Http';
+import { HTTP } from '../../utils/HTTP';
 
 export const Home = () => {
   useEffect(() => {
     const fetchServerData = async () => {
-      const data = await Http.get<Record<string, unknown>>('/', {
+      const data = await HTTP.get<Record<string, unknown>>('/', {
         baseUrl: `http://localhost:${__SERVER_PORT__}`,
       });
       console.log(data.data);

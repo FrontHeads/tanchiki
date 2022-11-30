@@ -17,8 +17,13 @@ export const Root: FC = () => {
   const isLoading = navigation.state !== 'idle' || isAppLoading;
   const location = useLocation();
 
+  const rootElementClassNames = cn('layout', {
+    layout_state_loading: isLoading,
+    layout_state_idle: !isLoading,
+  });
+
   return (
-    <main className={cn('layout', `layout_state_${isLoading ? 'loading' : 'idle'}`)}>
+    <main className={rootElementClassNames}>
       <header>
         <Menu />
         {location?.pathname !== Paths.Game && (
