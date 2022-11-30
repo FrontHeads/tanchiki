@@ -5,6 +5,7 @@ export enum Paths {
   Leaderboard = '/leaderboard',
   SignIn = '/sign-in',
   SignUp = '/sign-up',
+  Game = '/game',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
 }
