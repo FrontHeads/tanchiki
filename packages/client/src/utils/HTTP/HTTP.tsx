@@ -1,7 +1,6 @@
-import axios from 'axios';
-
 import { API_HOST } from '../../config/constants';
-import { buildPath } from './build-path';
+import { buildPath } from './buildPath';
+import { axios } from './httpClient';
 
 enum Method {
   GET = 'GET',
@@ -29,7 +28,7 @@ type Response<T> = {
   headers: Record<string, unknown>;
 };
 
-export class Http {
+export class HTTP {
   static get<T>(url: string, options: GetOptionsWithoutMethod = {}): Promise<Response<T>> {
     return this._send(url, { ...options, method: Method.GET });
   }
@@ -55,7 +54,7 @@ export class Http {
 
     const url = buildPath(baseUrl, path);
 
-    return axios({ headers, method, url, ...rest }).then(({ data, status, headers }) => {
+    return axios({ headers, method, url, withCredentials: true, ...rest }).then(({ data, status, headers }) => {
       return { data, status, headers: { ...headers } };
     });
   }

@@ -14,6 +14,7 @@ export const FormField: FC<FormFieldProps> = ({
   placeholder,
   error,
   onChange,
+  disabled,
   className,
 }) => {
   return (
@@ -31,6 +32,7 @@ export const FormField: FC<FormFieldProps> = ({
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        disabled={disabled}
       />
       {error && <div className="form-field__error">{error}</div>}
     </div>
