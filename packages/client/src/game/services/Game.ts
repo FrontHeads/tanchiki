@@ -77,10 +77,13 @@ export class Game {
   }
 
   createProjectile(projectile: Projectile) {
-    this.loopEntities.add(projectile);
+    const loopEntitiesArray = Array.from(this.loopEntities);
+    loopEntitiesArray.unshift(projectile);
+    this.loopEntities = new Set(loopEntitiesArray);
     this.view.bindEntityToLayer(projectile, 'projectiles');
     this.zone.registerEntity(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
+    projectile.step();
   }
 
   createTerrain(props: Pick<Entity, 'type' | 'width' | 'height' | 'posX' | 'posY'>) {
