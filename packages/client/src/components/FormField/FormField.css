@@ -27,7 +27,9 @@
     }
   }
 
-  #avatar {
-    padding: 30px 5px;
+  &_input-padding_lg {
+    .form-field__input {
+      padding: 30px 5px;
+    }
   }
 }

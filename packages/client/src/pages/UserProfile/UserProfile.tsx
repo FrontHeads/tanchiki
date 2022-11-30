@@ -1,16 +1,17 @@
 import './UserProfile.css';
 
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { UserProfile as UserProfileType } from '../../app.typings';
 import { Button } from '../../components/Button';
+import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { PATH } from '../../config/constants';
 import { userProfileInputFields } from './data';
 import { UserProfileForm } from './typings';
 
-export const UserProfile: React.FC = () => {
+export const UserProfile: FC = () => {
   // TODO: replace with the real data
   const userProfile: UserProfileType = {
     id: 13441,
@@ -58,6 +59,7 @@ export const UserProfile: React.FC = () => {
   return (
     <div className="user-profile">
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
+
       <Form handlerSubmit={submitHandler} header={header}>
         <>
           {userProfileInputFields.map(field => {
@@ -76,7 +78,7 @@ export const UserProfile: React.FC = () => {
           })}
         </>
         <div className="form__buttons-wrapper">
-          <Button text="Сохранить изменения" type="submit" selector="button_primary" />
+          <Button text="Сохранить изменения" type="submit" variant={ButtonVariant.primary} />
         </div>
       </Form>
     </div>

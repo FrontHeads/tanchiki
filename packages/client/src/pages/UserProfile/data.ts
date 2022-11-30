@@ -61,5 +61,6 @@ export const userProfileInputFields: FormInputAndHeadingList = [
     title: 'Фото',
     type: 'file',
     id: 'avatar',
+    className: 'form-field_input-padding_lg',
   },
 ];
