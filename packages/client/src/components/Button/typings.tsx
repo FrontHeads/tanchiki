@@ -9,6 +9,7 @@ type ButtonProps = {
   text: string;
   type?: string;
   variant?: ButtonVariant;
+  testId?: string;
   onClick?: () => void;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
