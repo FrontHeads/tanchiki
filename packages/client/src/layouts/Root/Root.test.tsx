@@ -13,14 +13,15 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Root', () => {
-  test('it render logo and footer', async () => {
+  test('it renders logo and footer', async () => {
     const { user } = renderWithRouter(<TestApp />);
 
     await user.click(screen.getByText('Not game'));
     expect(screen.queryByTestId('logo')).toBeInTheDocument();
     expect(screen.queryByTestId('footer')).toBeInTheDocument();
   });
-  test('it not render logo and footer on Game path', async () => {
+
+  test(`it doesn't render logo and footer on Game path`, async () => {
     const { user } = renderWithRouter(<TestApp />);
 
     await user.click(screen.getByText('Game'));
