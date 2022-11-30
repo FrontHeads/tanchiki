@@ -1,0 +1,6 @@
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: auto;
+}

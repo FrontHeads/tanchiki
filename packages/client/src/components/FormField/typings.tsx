@@ -1,6 +1,6 @@
 // import { FieldError } from 'react-hook-form';
 
-export type InputProps = {
+export type FormFieldProps = {
   title: string;
   type: string;
   id: string;
