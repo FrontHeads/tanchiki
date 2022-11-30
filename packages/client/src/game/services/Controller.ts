@@ -43,8 +43,11 @@ export class Controller extends EventBus {
   keyReleased(code: keyof Controller['keyBindings']) {
     if (code !== 'Space' && code !== 'Enter') {
       delete this.pressedKeys[code];
-      if (!Object.keys(this.pressedKeys).length) {
+      const pressedKeys = Object.keys(this.pressedKeys);
+      if (!pressedKeys.length) {
         this.emit('stop', 'STOP');
+      } else {
+        this.keyPressed(pressedKeys[0] as keyof Controller['keyBindings']);
       }
     }
   }
