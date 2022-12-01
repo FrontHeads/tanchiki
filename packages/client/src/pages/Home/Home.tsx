@@ -2,7 +2,9 @@ import './Home.css';
 
 import { useEffect } from 'react';
 
-import { appActions, useAppDispatch } from '../../store';
+import promoImg from '../../assets/img/tankettes_game.png';
+import { navigationList } from '../../components/Menu/MenuData';
+import { MenuLink } from '../../components/MenuLink';
 import { HTTP } from '../../utils/HTTP';
 
 export const Home = () => {
@@ -17,18 +19,17 @@ export const Home = () => {
     fetchServerData();
   }, []);
 
-  // This is how the dispatch works. Remove later
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(appActions.setIsLoading(true));
-    setTimeout(() => {
-      dispatch(appActions.setIsLoading(false));
-    }, 2000);
-  }, []);
-
   return (
-    <div className="app">
-      <div className="text-center">Вот тут будет жить ваше приложение :)</div>
+    <div className="menu">
+      <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />
+      <div className="delimiter" />
+      <nav className="menu-nav">
+        <ul className="navigation-list">
+          {navigationList.map(({ id, title, to }) => (
+            <MenuLink key={id} title={title} to={to} />
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 };
