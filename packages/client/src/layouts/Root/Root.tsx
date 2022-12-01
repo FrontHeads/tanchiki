@@ -10,8 +10,9 @@ import { Logo } from '../../components/Logo';
 import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
 import { appSelectors, useAppSelector } from '../../store';
+import { RootProps } from './typings';
 
-export const Root: FC = () => {
+export const Root: FC<RootProps> = ({ children }) => {
   const navigation = useNavigation();
   const isAppLoading = useAppSelector(appSelectors.isLoading);
   const isLoading = navigation.state !== 'idle' || isAppLoading;
@@ -34,6 +35,7 @@ export const Root: FC = () => {
         )}
       </header>
       <Outlet />
+      {children}
       {location?.pathname !== Paths.Game && <Footer />}
       {isLoading && <Loader />}
     </main>

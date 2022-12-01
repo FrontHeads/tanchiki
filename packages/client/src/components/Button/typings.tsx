@@ -1,8 +1,8 @@
 import { ButtonHTMLAttributes } from 'react';
 
 export enum ButtonVariant {
-  primary = 'primary',
-  secondary = 'secondary',
+  Primary = 'primary',
+  Secondary = 'secondary',
 }
 
 type ButtonProps = {

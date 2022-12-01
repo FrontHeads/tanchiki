@@ -1,8 +1,7 @@
 import MockAdapter from 'axios-mock-adapter';
 
 import { UserDTO } from '../../../api/typings';
-import { buildPath } from '../../../utils/HTTP';
-import { axios } from '../../../utils/HTTP/httpClient';
+import { axios, buildPath } from '../../../utils/HTTP';
 import { store } from '../../store';
 import { API_ENDPOINTS, API_HOST } from './../../../config/constants';
 import { authThunks } from './authThunks';

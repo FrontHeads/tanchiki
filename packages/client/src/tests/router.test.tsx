@@ -8,6 +8,7 @@ import { LocationDisplay, TestApp } from './TestApp';
 jest.mock('react-router-dom', () => {
   return {
     ...jest.requireActual('react-router-dom'),
+    useRouteError: () => ({ url: '' }),
     useNavigation: jest.fn(() => ({ state: '' })),
   };
 });
@@ -24,7 +25,8 @@ describe('Router', () => {
 
   test('it catches wrong route', () => {
     renderWithRouter(<TestApp />, { route: '/bad/route' });
-    expect(screen.getByText('Не найдено')).toBeInTheDocument();
+    expect(screen.queryByTestId('web-error__header')).toBeTruthy();
+    expect(screen.queryByTestId('web-error__button')).toBeTruthy();
   });
 
   test('it renders a component that uses useLocation', () => {

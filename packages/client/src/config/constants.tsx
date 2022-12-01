@@ -2,12 +2,12 @@ import defaultAvatar from '../assets/img/default-avatar.png';
 
 export enum Paths {
   Home = '/',
-  Leaderboard = '/leaderboard',
   SignIn = '/sign-in',
   SignUp = '/sign-up',
   Game = '/game',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
+  Leaderboard = '/leaderboard',
 }
 
 export const PATH = {
