@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { Root } from '../layouts/Root';
 import { ErrorPage } from '../pages/ErrorPage';
+import { Game } from '../pages/Game';
 import { Home } from '../pages/Home';
 import { Leaderboard } from '../pages/Leaderboard';
 import { SignIn } from '../pages/SignIn';
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: Paths.Leaderboard,
         element: <Leaderboard />,
+      },
+      {
+        path: Paths.Game,
+        element: <Game />,
       },
     ],
   },
