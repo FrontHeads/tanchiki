@@ -8,7 +8,7 @@ type KeyBinding = ['move' | 'shoot' | 'pause', Direction];
 export class Controller extends EventEmitter {
   type: ControllerType;
   enabled = false;
-  pressedKeys: Partial<Record<Direction, boolean>> = {};
+  activeDirection: Partial<Record<Direction, boolean>> = {};
   keyBindingsWasd = {
     KeyW: ['move', Direction.UP],
     KeyA: ['move', Direction.LEFT],
@@ -33,6 +33,18 @@ export class Controller extends EventEmitter {
     this.registerEvents();
   }
 
+  registerEvents() {
+    this.keydown = this.keydown.bind(this);
+    this.keyup = this.keyup.bind(this);
+    document.addEventListener('keydown', this.keydown);
+    document.addEventListener('keyup', this.keyup);
+  }
+
+  disable() {
+    document.removeEventListener('keydown', this.keydown);
+    document.removeEventListener('keyup', this.keyup);
+  }
+
   getKeyBinding(code: string) {
     if (isKeyOfObject(code, this.keyBindingsShared)) {
       return this.keyBindingsShared[code];
@@ -44,21 +56,40 @@ export class Controller extends EventEmitter {
     return null;
   }
 
+  keydown(event: KeyboardEvent) {
+    if (event.repeat) {
+      return false;
+    }
+    const keyBinding = this.getKeyBinding(event.code);
+    if (keyBinding) {
+      this.keyPressed(keyBinding);
+      this.preventDefaultEvent(event);
+    }
+  }
+
+  keyup(event: KeyboardEvent) {
+    const keyBinding = this.getKeyBinding(event.code);
+    if (keyBinding) {
+      this.keyReleased(keyBinding);
+      this.preventDefaultEvent(event);
+    }
+  }
+
   keyPressed([action, direction]: KeyBinding) {
     if (action === 'move') {
-      this.pressedKeys[direction] = true;
+      this.activeDirection[direction] = true;
     }
     this.emit(action, direction);
   }
 
   keyReleased([action, direction]: KeyBinding) {
     if (action === 'move') {
-      delete this.pressedKeys[direction];
-      const pressedKeys = Object.keys(this.pressedKeys);
-      if (!pressedKeys.length) {
+      delete this.activeDirection[direction];
+      const activeDirection = Object.keys(this.activeDirection);
+      if (!activeDirection.length) {
         this.emit('stop');
       } else {
-        this.emit(action, pressedKeys[0]);
+        this.emit(action, activeDirection[0]);
       }
     }
   }
@@ -67,25 +98,5 @@ export class Controller extends EventEmitter {
     if (!event.ctrlKey && !event.shiftKey && !event.altKey) {
       event.preventDefault();
     }
-  }
-
-  registerEvents() {
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (event.repeat) {
-        return false;
-      }
-      const keyBinding = this.getKeyBinding(event.code);
-      if (keyBinding) {
-        this.keyPressed(keyBinding);
-        this.preventDefaultEvent(event);
-      }
-    });
-    document.addEventListener('keyup', (event: KeyboardEvent) => {
-      const keyBinding = this.getKeyBinding(event.code);
-      if (keyBinding) {
-        this.keyReleased(keyBinding);
-        this.preventDefaultEvent(event);
-      }
-    });
   }
 }

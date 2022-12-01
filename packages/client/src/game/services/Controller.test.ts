@@ -120,4 +120,17 @@ describe('game/services/Controller', () => {
 
     expect(mockFn).toBeCalledTimes(1);
   });
+
+  it('should disable', () => {
+    const controller = new Controller(['wasd', 'arrows']);
+    const mockFn = jest.fn();
+
+    controller.on('move', mockFn);
+    controller.on('shoot', mockFn);
+    controller.on('pause', mockFn);
+    controller.disable();
+    mockKeyDown('KeyP', 'KeyW', 'KeyS', 'KeyA', 'KeyD', 'Space');
+
+    expect(mockFn).not.toHaveBeenCalled();
+  });
 });

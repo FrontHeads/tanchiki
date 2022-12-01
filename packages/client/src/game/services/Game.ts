@@ -152,5 +152,7 @@ export class Game {
 
   exit() {
     this.stopLoop();
+    this.controllerWasd.disable();
+    this.controllerArrows.disable();
   }
 }
