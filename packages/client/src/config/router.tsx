@@ -41,4 +41,8 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '/500',
+    element: <ErrorPage status="500" message="Что-то пошло не так" />,
+  },
 ]);
