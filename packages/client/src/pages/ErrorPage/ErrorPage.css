@@ -1,7 +1,6 @@
 @import url("../../variables.css");
 
 .web-error {
-  height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
