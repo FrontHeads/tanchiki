@@ -1,53 +1,64 @@
-import { EventBus } from '../utils';
+import { Direction } from '../typings';
+import { EventEmitter, isKeyOfObject } from '../utils';
 
-export type ControllerTypeT = Array<'wasd' | 'arrows'>;
+export type ControllerType = Array<'wasd' | 'arrows'>;
 
-export class Controller extends EventBus {
-  type: ControllerTypeT;
-  pressedKeys: Partial<Record<keyof Controller['keyBindings'], boolean>> = {};
-  keyBindings = {
-    KeyW: 'UP',
-    KeyA: 'LEFT',
-    KeyS: 'DOWN',
-    KeyD: 'RIGHT',
-    Space: 'SHOOT',
-    ArrowUp: 'UP',
-    ArrowLeft: 'LEFT',
-    ArrowDown: 'DOWN',
-    ArrowRight: 'RIGHT',
-    Enter: 'SHOOT',
-    KeyP: 'PAUSE',
+type KeyBinding = ['move' | 'shoot' | 'pause', Direction];
+
+export class Controller extends EventEmitter {
+  type: ControllerType;
+  enabled = false;
+  pressedKeys: Partial<Record<Direction, boolean>> = {};
+  keyBindingsWasd = {
+    KeyW: ['move', Direction.UP],
+    KeyA: ['move', Direction.LEFT],
+    KeyS: ['move', Direction.DOWN],
+    KeyD: ['move', Direction.RIGHT],
+    Space: ['shoot'],
+  };
+  keyBindingsArrows = {
+    ArrowUp: ['move', Direction.UP],
+    ArrowLeft: ['move', Direction.LEFT],
+    ArrowDown: ['move', Direction.DOWN],
+    ArrowRight: ['move', Direction.RIGHT],
+    Enter: ['shoot'],
+  };
+  keyBindingsShared = {
+    KeyP: ['pause'],
   };
 
-  constructor(type: ControllerTypeT) {
+  constructor(type: ControllerType) {
     super();
     this.type = type;
-    if (type.includes('wasd')) {
-      this.registerEventsForWasd();
-    }
-    if (type.includes('arrows')) {
-      this.registerEventsForArrows();
-    }
-    this.registerEventsForPause();
+    this.registerEvents();
   }
 
-  keyPressed(code: keyof Controller['keyBindings']) {
-    if (code === 'Space' || code === 'Enter') {
-      this.emit('shoot');
-    } else {
-      this.pressedKeys[code] = true;
-      this.emit('move', this.keyBindings[code]);
+  getKeyBinding(code: string) {
+    if (isKeyOfObject(code, this.keyBindingsShared)) {
+      return this.keyBindingsShared[code];
+    } else if (this.type.includes('wasd') && isKeyOfObject(code, this.keyBindingsWasd)) {
+      return this.keyBindingsWasd[code];
+    } else if (this.type.includes('arrows') && isKeyOfObject(code, this.keyBindingsArrows)) {
+      return this.keyBindingsArrows[code];
     }
+    return null;
   }
 
-  keyReleased(code: keyof Controller['keyBindings']) {
-    if (code !== 'Space' && code !== 'Enter') {
-      delete this.pressedKeys[code];
+  keyPressed([action, direction]: KeyBinding) {
+    if (action === 'move') {
+      this.pressedKeys[direction] = true;
+    }
+    this.emit(action, direction);
+  }
+
+  keyReleased([action, direction]: KeyBinding) {
+    if (action === 'move') {
+      delete this.pressedKeys[direction];
       const pressedKeys = Object.keys(this.pressedKeys);
       if (!pressedKeys.length) {
-        this.emit('stop', 'STOP');
+        this.emit('stop');
       } else {
-        this.keyPressed(pressedKeys[0] as keyof Controller['keyBindings']);
+        this.emit(action, pressedKeys[0]);
       }
     }
   }
@@ -58,72 +69,22 @@ export class Controller extends EventBus {
     }
   }
 
-  registerEventsForPause() {
+  registerEvents() {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.repeat) {
         return false;
       }
-      if (event.code === 'KeyP') {
-        this.emit('pause');
+      const keyBinding = this.getKeyBinding(event.code);
+      if (keyBinding) {
+        this.keyPressed(keyBinding);
         this.preventDefaultEvent(event);
       }
     });
-  }
-
-  registerEventsForWasd() {
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (event.repeat) {
-        return false;
-      }
-      switch (event.code) {
-        case 'KeyW':
-        case 'KeyA':
-        case 'KeyS':
-        case 'KeyD':
-        case 'Space':
-          this.keyPressed(event.code);
-          this.preventDefaultEvent(event);
-          break;
-      }
-    });
     document.addEventListener('keyup', (event: KeyboardEvent) => {
-      switch (event.code) {
-        case 'KeyW':
-        case 'KeyA':
-        case 'KeyS':
-        case 'KeyD':
-          this.keyReleased(event.code);
-          this.preventDefaultEvent(event);
-          break;
-      }
-    });
-  }
-
-  registerEventsForArrows() {
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (event.repeat) {
-        return false;
-      }
-      switch (event.code) {
-        case 'ArrowUp':
-        case 'ArrowLeft':
-        case 'ArrowDown':
-        case 'ArrowRight':
-        case 'Enter':
-          this.keyPressed(event.code);
-          this.preventDefaultEvent(event);
-          break;
-      }
-    });
-    document.addEventListener('keyup', (event: KeyboardEvent) => {
-      switch (event.code) {
-        case 'ArrowUp':
-        case 'ArrowLeft':
-        case 'ArrowDown':
-        case 'ArrowRight':
-          this.keyReleased(event.code);
-          this.preventDefaultEvent(event);
-          break;
+      const keyBinding = this.getKeyBinding(event.code);
+      if (keyBinding) {
+        this.keyReleased(keyBinding);
+        this.preventDefaultEvent(event);
       }
     });
   }
