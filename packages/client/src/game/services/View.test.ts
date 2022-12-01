@@ -28,21 +28,25 @@ describe('game/services/View', () => {
     entity.emit('entityShouldUpdate');
     entity.emit('entityDidUpdate');
 
-    expect(view.layers['tanks'].entities.has(entity)).toBe(true);
     expect(view.eraseEntityFromLayer).toHaveBeenCalledTimes(1);
     expect(view.drawEntityOnLayer).toHaveBeenCalledTimes(1);
   });
 
   it('should subscribe to entity destruction', () => {
     const view = new View({ width: 10, height: 10, root: document.body });
+    view.drawEntityOnLayer = jest.fn();
     view.eraseEntityFromLayer = jest.fn();
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     view.bindEntityToLayer(entity, 'tanks');
+    const layerObjectsCount1 = Array.from(view.layers['tanks'].objects).length;
     entity.emit('entityShouldBeDestroyed');
+    entity.emit('entityDidUpdate');
+    const layerObjectsCount2 = Array.from(view.layers['tanks'].objects).length;
 
-    expect(view.layers['tanks'].entities.has(entity)).toBe(false);
+    expect(layerObjectsCount1).not.toBe(layerObjectsCount2);
     expect(view.eraseEntityFromLayer).toHaveBeenCalled();
+    expect(view.drawEntityOnLayer).not.toHaveBeenCalled();
   });
 
   it('should calculate entity rect in pixels', () => {

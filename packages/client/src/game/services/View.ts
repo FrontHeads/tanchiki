@@ -5,9 +5,14 @@ type Layer = Record<
   string,
   {
     context: CanvasRenderingContext2D;
-    entities: Set<Entity>;
+    objects: Set<LayerObject>;
   }
 >;
+
+type LayerObject = {
+  instance: Entity;
+  listeners: Record<string, () => void>;
+};
 
 export class View {
   width = 0;
@@ -49,28 +54,48 @@ export class View {
     layer.style.zIndex = (this.layerZIndexCount++).toString();
     this.layers[id] = {
       context: layer.getContext('2d') as CanvasRenderingContext2D,
-      entities: new Set(),
+      objects: new Set(),
     };
     this.root?.appendChild(layer);
     return layer;
   }
 
   bindEntityToLayer(entity: Entity, layerId: keyof Layer) {
-    this.layers[layerId].entities.add(entity);
-    entity.on('entityShouldUpdate', () => {
-      this.eraseEntityFromLayer(entity, layerId);
-    });
-    entity.on('entityDidUpdate', () => {
-      this.drawEntityOnLayer(entity, layerId);
-    });
-    entity.on('entityShouldBeDestroyed', () => {
-      this.eraseEntityFromLayer(entity, layerId);
-      this.removeEntityFromLayer(entity, layerId);
-    });
+    const layerObject = {
+      instance: entity,
+      listeners: {
+        entityShouldUpdate: () => {
+          this.eraseEntityFromLayer(entity, layerId);
+        },
+        entityDidUpdate: () => {
+          this.drawEntityOnLayer(entity, layerId);
+        },
+        entityShouldBeDestroyed: () => {
+          this.eraseEntityFromLayer(entity, layerId);
+          this.removeEntityFromLayer(entity, layerId);
+        },
+      },
+    };
+    this.layers[layerId].objects.add(layerObject);
+
+    for (const [eventName, callback] of Object.entries(layerObject.listeners)) {
+      entity.on(eventName, callback);
+    }
   }
 
   removeEntityFromLayer(entity: Entity, layerId: keyof Layer) {
-    this.layers[layerId].entities.delete(entity);
+    let layerObjectToDelete: LayerObject | null = null;
+    for (const layerObject of this.layers[layerId].objects) {
+      if (layerObject.instance === entity) {
+        layerObjectToDelete = layerObject;
+      }
+    }
+    if (layerObjectToDelete) {
+      this.layers[layerId].objects.delete(layerObjectToDelete);
+      for (const [eventName, callback] of Object.entries(layerObjectToDelete.listeners)) {
+        entity.off(eventName, callback);
+      }
+    }
   }
 
   getEntityActualRect(entity: Entity) {
@@ -94,10 +119,10 @@ export class View {
   }
 
   redrawAllEntitiesOnLayer(layerId: keyof Layer) {
-    const { context, entities } = this.layers[layerId];
+    const { context, objects } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
-    for (const entity of entities) {
-      this.drawEntityOnLayer(entity, layerId);
+    for (const layerObject of objects) {
+      this.drawEntityOnLayer(layerObject.instance, layerId);
     }
   }
 }
