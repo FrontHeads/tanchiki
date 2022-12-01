@@ -8,6 +8,8 @@ import { SignIn } from '../pages/SignIn';
 import { SignUp } from '../pages/SignUp';
 import { UserProfile } from '../pages/UserProfile';
 import { Paths } from './constants';
+import { Forum } from '../pages/Forum';
+import { ForumSection } from '../pages/Forum/ForumSection';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +35,16 @@ export const router = createBrowserRouter([
       {
         path: Paths.Leaderboard,
         element: <Leaderboard />,
+      },
+      {
+        path: Paths.Forum,
+        element: <Forum />,
+        children: [
+          {
+            path: `${Paths.Forum}/${Paths.Section}/:id`,
+            element: <ForumSection />,
+          },
+        ],
       },
     ],
   },

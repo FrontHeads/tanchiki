@@ -5,6 +5,9 @@ export enum Paths {
   Leaderboard = '/leaderboard',
   SignIn = '/sign-in',
   SignUp = '/sign-up',
+  Forum = '/forum',
+  Topic = '/topic',
+  Section = '/forum/section',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
 }

@@ -1,0 +1,59 @@
+@import url("../../variables.css");
+
+.forum {
+  background-color: $section_background_color;
+  border-radius: 10px;
+  margin: 0 60px 60px;
+  text-align: center;
+
+  /* Теги TD, TBODY желательно убрать задав соответствующие классы элементам. */
+  &__cell-header,
+  td {
+    padding: 0 20px;
+  }
+
+  tbody {
+    font-size: 18px;
+  }
+
+  @media (max-width: 420px) {
+    margin: 0 0 60px;
+
+    tbody {
+      font-size: 15px;
+    }
+
+    &__cell-header,
+    td {
+      padding: 0 7px;
+    }
+  }
+
+  &__theme {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  &__cell-header:nth-child(1) {
+    width: 70%;
+    text-align: left;
+  }
+
+  &__row-header {
+    height: 100px;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+
+    @media (max-width: 420px) {
+      font-size: 15px;
+    }
+  }
+
+  &__row {
+    height: 70px;
+  }
+
+  &__row:nth-child(odd) {
+    background-color: $background_color;
+  }
+}
