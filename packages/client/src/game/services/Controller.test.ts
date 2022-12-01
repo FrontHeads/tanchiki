@@ -1,4 +1,5 @@
 import { Controller } from './';
+import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
 function mockKeyDown(...codes: Array<string>) {
   for (const code of codes) {
@@ -20,7 +21,7 @@ async function sleep(ms = 100) {
 
 describe('game/services/Controller', () => {
   it('should handle WASD + space move & shoot bindings', () => {
-    const controller = new Controller(['wasd']);
+    const controller = new Controller(KeyBindingsWasd);
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -37,7 +38,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle WASD stop binding', () => {
-    const controller = new Controller(['wasd']);
+    const controller = new Controller(KeyBindingsWasd);
     const mockFn = jest.fn();
 
     controller.on('stop', mockFn);
@@ -55,7 +56,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows + enter move & shoot bindings', () => {
-    const controller = new Controller(['arrows']);
+    const controller = new Controller(KeyBindingsArrows);
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -72,7 +73,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows stop binding', () => {
-    const controller = new Controller(['arrows']);
+    const controller = new Controller(KeyBindingsArrows);
     const mockFn = jest.fn();
 
     controller.on('stop', mockFn);
@@ -90,7 +91,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle arrow keys clicks if WASD is chosen', () => {
-    const controller = new Controller(['wasd']);
+    const controller = new Controller(KeyBindingsWasd);
     const mockFn = jest.fn();
 
     controller.on('move', mockFn);
@@ -101,7 +102,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle WASD keys clicks if arrows are chosen', () => {
-    const controller = new Controller(['arrows']);
+    const controller = new Controller(KeyBindingsArrows);
     const mockFn = jest.fn();
 
     controller.on('move', mockFn);
@@ -111,26 +112,33 @@ describe('game/services/Controller', () => {
     expect(mockFn).not.toHaveBeenCalled();
   });
 
-  it('should handle pause binding', () => {
-    const controller = new Controller(['wasd', 'arrows']);
-    const mockFn = jest.fn();
+  const variants = [
+    ['arrow', KeyBindingsArrows],
+    ['wasd', KeyBindingsWasd],
+  ] as const;
 
-    controller.on('pause', mockFn);
-    mockKeyDown('KeyP');
+  variants.forEach(([name, bindings]) => {
+    it(`${name}: should handle pause binding`, () => {
+      const controller = new Controller(bindings);
+      const mockFn = jest.fn();
 
-    expect(mockFn).toBeCalledTimes(1);
-  });
+      controller.on('pause', mockFn);
+      mockKeyDown('KeyP');
 
-  it('should disable', () => {
-    const controller = new Controller(['wasd', 'arrows']);
-    const mockFn = jest.fn();
+      expect(mockFn).toBeCalledTimes(1);
+    });
 
-    controller.on('move', mockFn);
-    controller.on('shoot', mockFn);
-    controller.on('pause', mockFn);
-    controller.disable();
-    mockKeyDown('KeyP', 'KeyW', 'KeyS', 'KeyA', 'KeyD', 'Space');
+    it(`${name}: should disable`, () => {
+      const controller = new Controller(bindings);
+      const mockFn = jest.fn();
 
-    expect(mockFn).not.toHaveBeenCalled();
+      controller.on('move', mockFn);
+      controller.on('shoot', mockFn);
+      controller.on('pause', mockFn);
+      controller.disable();
+      mockKeyDown('KeyP', 'KeyW', 'KeyS', 'KeyA', 'KeyD', 'Space');
+
+      expect(mockFn).not.toHaveBeenCalled();
+    });
   });
 });
