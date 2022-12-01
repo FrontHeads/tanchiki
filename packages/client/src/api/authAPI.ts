@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '../config/constants';
-import { HTTP } from '../utils/Http';
+import { HTTP } from '../utils/HTTP';
 import { UserDTO } from './typings';
 
 export type SigninRequestData = {

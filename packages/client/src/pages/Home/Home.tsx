@@ -3,7 +3,7 @@ import './Home.css';
 import { useEffect } from 'react';
 
 import { appActions, useAppDispatch } from '../../store';
-import { HTTP } from '../../utils/Http';
+import { HTTP } from '../../utils/HTTP';
 
 export const Home = () => {
   useEffect(() => {
