@@ -4,7 +4,7 @@ import { FC } from 'react';
 
 import { DUMMY_LEADERBOARD } from './DummyData';
 import { LeaderboardRow } from './LeaderboardRow';
-import { LeaderboardProps } from './typing';
+import { LeaderboardProps } from './typings';
 
 export const headerText = 'Рейтинг игроков';
 

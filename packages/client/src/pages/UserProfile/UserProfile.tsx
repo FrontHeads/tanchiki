@@ -78,7 +78,7 @@ export const UserProfile: FC = () => {
           })}
         </>
         <div className="form__buttons-wrapper">
-          <Button text="Сохранить изменения" type="submit" variant={ButtonVariant.primary} />
+          <Button text="Сохранить изменения" type="submit" variant={ButtonVariant.Primary} />
         </div>
       </Form>
     </div>
