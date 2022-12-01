@@ -10,6 +10,7 @@ import { UserProfile } from '../pages/UserProfile';
 import { Paths } from './constants';
 import { Forum } from '../pages/Forum';
 import { ForumSection } from '../pages/Forum/ForumSection';
+import { ForumTopic } from '../pages/Forum/ForumTopic';
 
 export const router = createBrowserRouter([
   {
@@ -38,11 +39,23 @@ export const router = createBrowserRouter([
       },
       {
         path: Paths.Forum,
-        element: <Forum />,
         children: [
           {
-            path: `${Paths.Forum}/${Paths.Section}/:id`,
-            element: <ForumSection />,
+            index: true,
+            element: <Forum />,
+          },
+          {
+            path: `${Paths.Section}/:sectionId`,
+            children: [
+              {
+                index: true,
+                element: <ForumSection />,
+              },
+              {
+                path: `${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`,
+                element: <ForumTopic />,
+              },
+            ],
           },
         ],
       },

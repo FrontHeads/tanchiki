@@ -1,59 +1,66 @@
 @import url("../../variables.css");
 
+.forum__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .forum {
   background-color: $section_background_color;
   border-radius: 10px;
-  margin: 0 60px 60px;
   text-align: center;
+  margin: 0 60px 60px;
 
-  /* Теги TD, TBODY желательно убрать задав соответствующие классы элементам. */
-  &__cell-header,
   td {
     padding: 0 20px;
   }
 
-  tbody {
-    font-size: 18px;
-  }
-
-  @media (max-width: 420px) {
-    margin: 0 0 60px;
-
-    tbody {
-      font-size: 15px;
-    }
-
-    &__cell-header,
-    td {
-      padding: 0 7px;
-    }
-  }
-
-  &__theme {
-    font-weight: bold;
-    text-align: left;
-  }
-
-  &__cell-header:nth-child(1) {
-    width: 70%;
-    text-align: left;
+  &__title {
+    margin-top: 0;
+    text-align: center;
   }
 
   &__row-header {
     height: 100px;
     text-align: center;
-    font-family: 'Press Start 2P', cursive;
+    font-family: "Press Start 2P", cursive;
 
     @media (max-width: 420px) {
       font-size: 15px;
     }
   }
 
-  &__row {
-    height: 70px;
+  &__cell-header {
+    padding: 0 20px;
+
+    &:nth-child(1) {
+      width: 70%;
+      text-align: left;
+    }
   }
 
-  &__row:nth-child(odd) {
-    background-color: $background_color;
+  &__body {
+    font-size: 18px;
+  }
+
+  &__row {
+    height: 70px;
+
+    &:nth-child(odd) {
+      background-color: $background_color;
+    }
+  }
+
+  &__section {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  @media (max-width: 420px) {
+    margin: 0 0 60px;
+
+    &__body {
+      font-size: 15px;
+    }
   }
 }

@@ -1,3 +1,3 @@
 export type ForumSectionProps = {
-  header: string;
+  name?: string;
 };

@@ -1,0 +1,20 @@
+@import url("../../../../variables.css");
+
+.forum-message {
+  padding: 16px 16px 8px;
+  font-size: 14px;
+
+  &__username {
+    font-weight: bold;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  &__options {
+    fill: $border_color;
+  }
+}

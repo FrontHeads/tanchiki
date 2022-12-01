@@ -3,26 +3,32 @@ import './ForumSection.css';
 import { FC } from 'react';
 
 import { ForumSectionProps } from './typings';
+import { Link, useParams } from 'react-router-dom';
+import { DUMMY_SECTION } from '../DummyData';
+import { Paths } from '../../../config/constants';
 
-export const ForumSection: FC<ForumSectionProps> = ({ name }) => {
+export const ForumSection: FC<ForumSectionProps> = () => {
+  const { sectionId } = useParams();
   return (
-    <section className="leaderboard__wrapper">
-      <h1 className="no-margin-top">{name}</h1>
-      <table border={1} className="leaderboard">
-        <thead className="leaderboard__row-header">
+    <section className="forum__wrapper">
+      <h1 className="forum__title">Раздел {sectionId}</h1>
+      <table border={1} className="forum">
+        <thead className="forum__row-header">
           <tr>
-            <th className="leaderboard__cell-header">#</th>
-            <th className="leaderboard__cell-header">Пользователь</th>
-            <th className="leaderboard__cell-header">
-              Рекорд <div className="leaderboard__sort-marker">▾</div>
-            </th>
-            <th className="leaderboard__cell-header">Время</th>
-            <th className="leaderboard__cell-header">Матчи</th>
+            <th className="forum__cell-header">Темы</th>
+            <th className="forum__cell-header">Ответы</th>
           </tr>
         </thead>
-        <tbody>
-          {DUMMY_LEADERBOARD.map(row => {
-            return <ForumTopic key={row.place} row={row} />;
+        <tbody className="forum__body">
+          {DUMMY_SECTION.map(row => {
+            return (
+              <tr key={row.id} className="forum__row">
+                <td className="forum__section">
+                  <Link to={`${Paths.Section}/${sectionId}${Paths.Topic}/${row.id}`}>{row.name}</Link>
+                </td>
+                <td>{row.messages}</td>
+              </tr>
+            );
           })}
         </tbody>
       </table>

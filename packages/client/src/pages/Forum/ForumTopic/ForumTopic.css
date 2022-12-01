@@ -1,5 +1,72 @@
-.leaderboard {
+@import url("../../../variables.css");
+
+.topic {
+  border: 2px double $border_color;
+  border-radius: 10px;
+  margin: 60px 10px;
+  border-collapse: separate;
+  box-sizing: border-box;
+  border-spacing: 2px;
+  padding: 10px;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 100%;
+    max-width: 920px;
+  }
+
+  td {
+    padding: 0 20px;
+  }
+
+  &__title {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  &__row-header {
+    height: 100px;
+    text-align: center;
+    font-family: "Press Start 2P", cursive;
+
+    @media (max-width: 420px) {
+      font-size: 15px;
+    }
+  }
+
+  &__cell-header {
+    padding: 0 20px;
+
+    &:nth-child(1) {
+      width: 70%;
+      text-align: left;
+    }
+  }
+
+  &__body {
+    font-size: 18px;
+  }
+
   &__row {
-    height: 40px;
+    height: 70px;
+
+    &:nth-child(odd) {
+      background-color: $background_color;
+    }
+  }
+
+  &__section {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  @media (max-width: 420px) {
+    margin: 0 0 60px;
+
+    &__body {
+      font-size: 15px;
+    }
   }
 }

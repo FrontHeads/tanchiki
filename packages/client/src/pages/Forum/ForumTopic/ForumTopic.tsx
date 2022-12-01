@@ -2,16 +2,21 @@ import './ForumTopic.css';
 
 import { FC } from 'react';
 
-import { LeaderboardRowProps } from './typings';
+import { ForumTopicRowProps } from './typings';
+import { useParams } from 'react-router-dom';
+import { DUMMY_TOPIC } from '../DummyData';
+import { ForumMessage } from './ForumMessage';
 
-export const ForumTopic: FC<LeaderboardRowProps> = ({ row: { name, username, record, time, matches } }) => {
+export const ForumTopic: FC<ForumTopicRowProps> = () => {
+  const { topicId } = useParams();
   return (
-    <tr className="leaderboard__row">
-      <td>{place}</td>
-      <td>{username}</td>
-      <td>{record}</td>
-      <td>{time}</td>
-      <td>{matches}</td>
-    </tr>
+    <section className="topic__wrapper">
+      <h1 className="topic__title">Топик {topicId}</h1>
+      <div className="topic">
+        {DUMMY_TOPIC.map(row => {
+          return <ForumMessage key={row.id} {...row} />;
+        })}
+      </div>
+    </section>
   );
 };

@@ -13,7 +13,7 @@ export const headerText = 'Рейтинг игроков';
 export const Forum: FC<ForumProps> = () => {
   return (
     <section className="forum__wrapper">
-      <h1 className="no-margin-top">Форум</h1>
+      <h1 className="forum__title">Форум</h1>
       <table border={1} className="forum">
         <thead className="forum__row-header">
           <tr>
@@ -22,11 +22,11 @@ export const Forum: FC<ForumProps> = () => {
             <th className="forum__cell-header">Ответы</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="forum__body">
           {DUMMY_FORUM.map(row => {
             return (
-              <tr>
-                <td>
+              <tr key={row.id} className="forum__row">
+                <td className="forum__section">
                   <Link to={`${Paths.Section}/${row.id}`}>{row.name}</Link>
                 </td>
                 <td>{row.topicCount}</td>
