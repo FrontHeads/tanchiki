@@ -7,23 +7,30 @@ import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Paths } from '../../config/constants';
 import { Root } from '../../layouts/Root';
-import { ErrorType } from './typings';
+import { ErrorPageProps, ErrorType } from './typings';
 
-export const ErrorPage: FC = () => {
-  const error = useRouteError() as ErrorType;
+export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Возникла ошибка' }) => {
   const navigate = useNavigate();
+  let statusCode, messageText;
 
-  let messageText = error.statusText || error.message || 'Возникла ошибка';
+  if (status) {
+    statusCode = status;
+    messageText = message;
+  } else {
+    const { status, statusText, message: routerErrorMessage } = useRouteError() as ErrorType;
+    statusCode = status;
+    messageText = statusText || routerErrorMessage || message;
 
-  if (error.statusText === 'Not Found') {
-    messageText = 'Не туда попали';
+    if (statusText === 'Not Found') {
+      messageText = 'Не туда попали';
+    }
   }
 
   return (
     <Root>
       <div className="web-error">
         <h1 className="web-error__paragraph web-error__header" data-testid="web-error__header">
-          {error.status}
+          {statusCode}
         </h1>
         <p className="web-error__paragraph web-error__msg">{messageText}</p>
 
@@ -32,7 +39,7 @@ export const ErrorPage: FC = () => {
             data-testid="web-error__button"
             text="На главную"
             onClick={() => navigate(Paths.Home)}
-            variant={ButtonVariant.Secondary}
+            variant={ButtonVariant.secondary}
           />
         </p>
       </div>
