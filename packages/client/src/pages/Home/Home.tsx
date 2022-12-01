@@ -23,8 +23,8 @@ export const Home = () => {
     <div className="menu">
       <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />
       <div className="delimiter" />
-      <nav className="menu-nav">
-        <ul className="navigation-list">
+      <nav role="nav" data-testid="nav" className="menu-nav">
+        <ul role="nav-list" className="navigation-list">
           {navigationList.map(({ id, title, to }) => (
             <MenuLink key={id} title={title} to={to} />
           ))}
