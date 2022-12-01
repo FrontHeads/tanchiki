@@ -1,10 +1,14 @@
 import { ButtonHTMLAttributes } from 'react';
-// import { FieldError } from 'react-hook-form';
+
+export enum ButtonVariant {
+  Primary = 'primary',
+  Secondary = 'secondary',
+}
 
 type ButtonProps = {
   text: string;
   type?: string;
-  selector?: string;
+  variant?: ButtonVariant;
   onClick?: () => void;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 

@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
+import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
@@ -89,8 +90,8 @@ export const SignUp: FC = () => {
         required={true}
       />
       <div className="form__buttons-wrapper">
-        <Button text="Зарегистрироваться" type="submit" selector="button_primary" />
-        <Button text="Вход" onClick={() => navigate(Paths.SignIn)} selector="button_secondary" />
+        <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} />
+        <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />
       </div>
     </Form>
   );
