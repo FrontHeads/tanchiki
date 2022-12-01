@@ -7,6 +7,7 @@ import { Leaderboard } from '../pages/Leaderboard';
 import { SignIn } from '../pages/SignIn';
 import { SignUp } from '../pages/SignUp';
 import { UserProfile } from '../pages/UserProfile';
+import { Game } from '../pages/Game';
 import { Paths } from './constants';
 
 export const router = createBrowserRouter([
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: Paths.Leaderboard,
         element: <Leaderboard />,
+      },
+      {
+        path: Paths.Game,
+        element: <Game />,
       },
     ],
   },
