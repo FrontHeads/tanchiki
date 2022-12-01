@@ -1,12 +1,12 @@
-import type { DirectionT, PosStateT, RectT } from '../typings';
-import { EventBus } from '../utils';
+import { Direction, EntitySettings, Pos, PosState, Rect } from '../typings';
+import { EventEmitter } from '../utils';
 
-export class Entity extends EventBus {
+export class Entity extends EventEmitter {
   posX = 0;
   posY = 0;
   width = 0;
   height = 0;
-  direction: DirectionT = 'UP';
+  direction = Direction.UP;
   role: 'player1' | 'player2' | 'enemy' | 'neutral' = 'neutral';
   type: 'tank' | 'flag' | 'brickWall' | 'concreteWall' | 'trees' | 'water' | 'ice' | 'custom' = 'custom';
   alignedToGrid = true;
@@ -15,12 +15,12 @@ export class Entity extends EventBus {
   flying = false;
   crossable = false;
   hittable = true;
-  lastRect: RectT | null = null;
-  nextRect: RectT | null = null;
+  lastRect: Rect | null = null;
+  nextRect: Rect | null = null;
   color = 'grey';
   shouldBeDestroyed = false;
 
-  constructor(props: Partial<Entity>) {
+  constructor(props: EntitySettings) {
     super();
     Object.assign(this, props);
   }
@@ -35,10 +35,10 @@ export class Entity extends EventBus {
     return { posX: this.posX, posY: this.posY, width: this.width, height: this.height };
   }
 
-  spawn({ posX, posY }: Pick<Entity, 'posX' | 'posY'>) {
-    this.lastRect = { ...this.getRect(), ...{ posX, posY } };
+  spawn({ posX, posY }: Pos) {
+    this.lastRect = { ...this.getRect(), posX, posY };
     this.nextRect = { ...this.lastRect };
-    const posState: PosStateT = { hasCollision: false };
+    const posState: PosState = { hasCollision: false };
     this.emit('entityWillHaveNewPos', posState);
     if (!posState.hasCollision) {
       this.setState({ posX, posY });

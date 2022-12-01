@@ -1,5 +1,5 @@
 import type { Entity } from '../entities';
-import type { PosStateT, RectT } from '../typings';
+import type { PosState, Rect } from '../typings';
 
 export class Zone {
   width = 0;
@@ -19,7 +19,7 @@ export class Zone {
     }
   }
 
-  updateMatrix(rect: RectT, value: Entity | null) {
+  updateMatrix(rect: Rect, value: Entity | null) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         this.matrix[x][y] = value;
@@ -55,7 +55,7 @@ export class Zone {
   }
 
   registerEntity(entity: Entity) {
-    entity.on('entityWillHaveNewPos', (posState: PosStateT) => {
+    entity.on('entityWillHaveNewPos', (posState: PosState) => {
       if (!entity.lastRect || !entity.nextRect) {
         throw new Error('entity.lastRect|nextRect is null');
       }
@@ -82,14 +82,14 @@ export class Zone {
     });
   }
 
-  isBeyondMatrix(rect: RectT) {
+  isBeyondMatrix(rect: Rect) {
     if (this.isBeyondXAxis(rect) || this.isBeyondYAxis(rect)) {
       return true;
     }
     return false;
   }
 
-  isBeyondXAxis(rect: RectT) {
+  isBeyondXAxis(rect: Rect) {
     const offsetX = rect.posX + rect.width;
     if (rect.posX < 0 || offsetX > this.width) {
       return true;
@@ -97,7 +97,7 @@ export class Zone {
     return false;
   }
 
-  isBeyondYAxis(rect: RectT) {
+  isBeyondYAxis(rect: Rect) {
     const offsetY = rect.posY + rect.height;
     if (rect.posY < 0 || offsetY > this.height) {
       return true;
@@ -105,7 +105,7 @@ export class Zone {
     return false;
   }
 
-  hasCollisionsWithMatrix(rect: RectT, entity: Entity) {
+  hasCollisionsWithMatrix(rect: Rect, entity: Entity) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const cell = this.matrix[x][y];
@@ -121,7 +121,7 @@ export class Zone {
     return false;
   }
 
-  hasCollision(rect: RectT, entity: Entity) {
+  hasCollision(rect: Rect, entity: Entity) {
     if (this.isBeyondMatrix(rect) || this.hasCollisionsWithMatrix(rect, entity)) {
       return true;
     }

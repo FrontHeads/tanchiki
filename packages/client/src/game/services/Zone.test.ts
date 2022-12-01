@@ -1,10 +1,10 @@
 import type { Entity } from '../entities';
-import type { RectT } from '../typings';
-import { EventBus } from '../utils';
+import type { Rect } from '../typings';
+import { EventEmitter } from '../utils';
 import { Zone } from './';
 
-function mockEntity(rect: RectT) {
-  const entity = new EventBus() as Entity;
+function mockEntity(rect: Rect) {
+  const entity = new EventEmitter() as Entity;
   Object.assign(entity, rect);
   entity.alignedToGrid = true;
   entity.lastRect = rect;

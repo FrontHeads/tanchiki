@@ -1,8 +1,9 @@
+import { Direction } from '../typings';
 import { Projectile, Tank } from './';
 
 describe('game/entities/Tank', () => {
   it('should shoot', () => {
-    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: 'DOWN' });
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
 
     const projectile = tank.shoot();
 
@@ -10,7 +11,7 @@ describe('game/entities/Tank', () => {
   });
 
   it('should determine projectile starting position', () => {
-    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: 'DOWN' });
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
 
     const projectile = tank.shoot();
 

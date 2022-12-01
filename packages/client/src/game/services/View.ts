@@ -1,6 +1,7 @@
 import type { Entity } from '../entities';
+import type { GameSettings } from '../typings';
 
-type LayerT = Record<
+type Layer = Record<
   string,
   {
     context: CanvasRenderingContext2D;
@@ -13,22 +14,29 @@ export class View {
   height = 0;
   pixelRatio = 8;
   layerZIndexCount = 0;
-  layers: LayerT = {};
-  root: HTMLElement | null;
+  layers: Layer = {};
+  root: HTMLElement;
 
-  constructor({ width, height }: Pick<View, 'width' | 'height'>, root: HTMLElement | null) {
+  constructor({ width, height, root }: GameSettings) {
+    if (root === null) {
+      throw new Error('proper DOM root for the game should be set');
+    }
+    this.root = root;
     this.width = width;
     this.height = height;
-    this.root = root;
+    this.buildLayers();
+  }
+
+  convertToPixels(value: number) {
+    return Math.round(value * this.pixelRatio);
+  }
+
+  buildLayers() {
     this.createLayer('floor').style.background = '#000';
     this.createLayer('tanks');
     this.createLayer('projectiles');
     this.createLayer('ceiling');
     this.createLayer('overlay').style.position = 'relative';
-  }
-
-  convertToPixels(value: number) {
-    return Math.round(value * this.pixelRatio);
   }
 
   createLayer(id: string) {
@@ -47,7 +55,7 @@ export class View {
     return layer;
   }
 
-  bindEntityToLayer(entity: Entity, layerId: keyof LayerT) {
+  bindEntityToLayer(entity: Entity, layerId: keyof Layer) {
     this.layers[layerId].entities.add(entity);
     entity.on('entityShouldUpdate', () => {
       this.eraseEntityFromLayer(entity, layerId);
@@ -61,7 +69,7 @@ export class View {
     });
   }
 
-  removeEntityFromLayer(entity: Entity, layerId: keyof LayerT) {
+  removeEntityFromLayer(entity: Entity, layerId: keyof Layer) {
     this.layers[layerId].entities.delete(entity);
   }
 
@@ -74,18 +82,18 @@ export class View {
     ] as const;
   }
 
-  drawEntityOnLayer(entity: Entity, layerId: keyof LayerT) {
+  drawEntityOnLayer(entity: Entity, layerId: keyof Layer) {
     const context = this.layers[layerId].context;
     context.fillStyle = entity.color;
     context.fillRect(...this.getEntityActualRect(entity));
   }
 
-  eraseEntityFromLayer(entity: Entity, layerId: keyof LayerT) {
+  eraseEntityFromLayer(entity: Entity, layerId: keyof Layer) {
     const context = this.layers[layerId].context;
     context.clearRect(...this.getEntityActualRect(entity));
   }
 
-  redrawAllEntitiesOnLayer(layerId: keyof LayerT) {
+  redrawAllEntitiesOnLayer(layerId: keyof Layer) {
     const { context, entities } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
     for (const entity of entities) {

@@ -6,7 +6,7 @@ export const Game = () => {
   const gameRoot = useRef(null);
 
   useEffect(() => {
-    const game = new Tanchiki(gameRoot.current);
+    const game = Tanchiki.create({ root: gameRoot.current });
     game.init();
   }, []);
 

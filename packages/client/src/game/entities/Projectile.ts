@@ -1,20 +1,21 @@
-import { EntityDynamic, Tank } from './';
+import type { EntityDynamicSettings } from '../typings';
+import { EntityDynamic } from './';
 
 export class Projectile extends EntityDynamic {
   width = 2;
   height = 2;
   movePace = 1;
-  moveSpeed = 4;
+  moveSpeed = 3;
   moveStepsTotal = 4;
   shouldExplode = false;
 
-  constructor(props: Partial<EntityDynamic> & Pick<Tank, 'shootSpeed' | 'direction'>) {
+  constructor(props: EntityDynamicSettings) {
     super(props);
+    Object.assign(this, props);
     this.color = 'red';
-    this.moveSpeed = props.shootSpeed;
     this.flying = true;
     this.moving = true;
-    this.nextDirection = props.direction;
+    this.nextDirection = this.direction;
   }
 
   moveStepCheck() {

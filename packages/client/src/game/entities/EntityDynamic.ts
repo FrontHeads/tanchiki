@@ -1,4 +1,4 @@
-import type { DirectionT, PosStateT } from '../typings';
+import { Direction, EntityDynamicSettings, PosState } from '../typings';
 import { Entity } from './';
 
 export class EntityDynamic extends Entity {
@@ -9,9 +9,9 @@ export class EntityDynamic extends Entity {
   moveSpeed = 2;
   moveStepsProgress = 0;
   moveStepsTotal = 8;
-  nextDirection: DirectionT = 'UP';
+  nextDirection = Direction.UP;
 
-  constructor(props: Partial<Entity>) {
+  constructor(props: EntityDynamicSettings) {
     super(props);
     this.movable = true;
   }
@@ -24,7 +24,7 @@ export class EntityDynamic extends Entity {
     return this.movePace / this.getMoveSteps();
   }
 
-  move(direction: DirectionT) {
+  move(direction: Direction) {
     this.moving = true;
     this.nextDirection = direction;
   }
@@ -36,7 +36,7 @@ export class EntityDynamic extends Entity {
     }
   }
 
-  turn(newDirection: DirectionT) {
+  turn(newDirection: Direction) {
     if (this.direction !== newDirection) {
       this.setState({ direction: newDirection });
     }
@@ -68,7 +68,7 @@ export class EntityDynamic extends Entity {
   prepareToMove() {
     this.lastRect = this.getRect();
     this.nextRect = { ...this.lastRect, ...this.getNextMove(true) };
-    const posState: PosStateT = { hasCollision: false };
+    const posState: PosState = { hasCollision: false };
     this.emit('entityWillHaveNewPos', posState);
     if (!posState.hasCollision) {
       this.canMove = true;
@@ -93,6 +93,8 @@ export class EntityDynamic extends Entity {
         return { posX: this.posX - movePace };
       case 'RIGHT':
         return { posX: this.posX + movePace };
+      default:
+        return {}; // чтобы не ругался тайпскрипт (из-за enum Direction)
     }
   }
 

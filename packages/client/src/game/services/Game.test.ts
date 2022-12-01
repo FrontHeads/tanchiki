@@ -7,14 +7,14 @@ async function sleep(ms = 100) {
 
 describe('game/services/Game', () => {
   it('should be singleton', () => {
-    const game1 = new Game(null);
-    const game2 = new Game(null);
+    const game1 = Game.create({ root: document.body });
+    const game2 = Game.create({ root: document.body });
 
     expect(game1).toBe(game2);
   });
 
   it('should use loop', () => {
-    const game = new Game(null);
+    const game = Game.create({ root: document.body });
     game.loopTimeMs = 100;
     const entity = { step: jest.fn() } as unknown as Tank;
     game.loopEntities.add(entity);
@@ -27,7 +27,7 @@ describe('game/services/Game', () => {
   });
 
   it('should stop loop', () => {
-    const game = new Game(null);
+    const game = Game.create({ root: document.body });
 
     game.startLoop();
     game.stopLoop();
@@ -36,7 +36,7 @@ describe('game/services/Game', () => {
   });
 
   it('should pause', () => {
-    const game = new Game(null);
+    const game = Game.create({ root: document.body });
     game.inited = true;
 
     game.startLoop();
@@ -47,7 +47,7 @@ describe('game/services/Game', () => {
   });
 
   it('should create tank', () => {
-    const game = new Game(null);
+    const game = Game.create({ root: document.body });
 
     const tank = game.createTank({ posX: 1, posY: 1 });
 
@@ -59,7 +59,7 @@ describe('game/services/Game', () => {
   });
 
   it('should destroy entity', () => {
-    const game = new Game(null);
+    const game = Game.create({ root: document.body });
 
     const tank = game.createTank({ posX: 1, posY: 1 });
     game.destroyEntity(tank);

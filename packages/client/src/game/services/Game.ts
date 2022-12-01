@@ -1,5 +1,5 @@
-import { Entity, Projectile, Tank, Terrain } from '../entities';
-import type { DirectionT } from '../typings';
+import { Projectile, Tank, Terrain } from '../entities';
+import type { Direction, EntityDynamicSettings, EntitySettings, GameSettings } from '../typings';
 import { Controller, View, Zone } from './';
 
 export class Game {
@@ -13,18 +13,21 @@ export class Game {
   loopProcess: ReturnType<typeof setTimeout> | null = null;
   loopTimeMs = 25;
   loopEntities: Set<Tank | Projectile> = new Set();
-  settings = { width: 52, height: 52 };
+  settings: GameSettings = { width: 52, height: 52, root: null };
 
-  constructor(root: HTMLElement | null) {
-    if (Game.__instance) {
-      return Game.__instance;
-    }
-    Game.__instance = this;
-
+  private constructor(settings: Pick<GameSettings, 'root'>) {
+    this.settings = { ...this.settings, ...settings };
     this.zone = new Zone(this.settings);
-    this.view = new View(this.settings, root);
+    this.view = new View(this.settings);
     this.controllerWasd = new Controller(['wasd']);
     this.controllerArrows = new Controller(['arrows']);
+  }
+
+  static create(settings: Pick<GameSettings, 'root'>) {
+    if (!Game.__instance) {
+      Game.__instance = new Game(settings);
+    }
+    return Game.__instance;
   }
 
   loop() {
@@ -67,7 +70,7 @@ export class Game {
     }
   }
 
-  createTank(props: Pick<Entity, 'posX' | 'posY'> & Partial<Tank>) {
+  createTank(props: EntityDynamicSettings) {
     const entity = new Tank(props);
     this.loopEntities.add(entity);
     this.view.bindEntityToLayer(entity, 'tanks');
@@ -86,7 +89,7 @@ export class Game {
     projectile.step();
   }
 
-  createTerrain(props: Pick<Entity, 'type' | 'width' | 'height' | 'posX' | 'posY'>) {
+  createTerrain(props: EntitySettings) {
     const entity = new Terrain(props);
     if (props.type === 'trees') {
       this.view.bindEntityToLayer(entity, 'ceiling');
@@ -121,7 +124,7 @@ export class Game {
     this.controllerWasd.on('pause', () => {
       this.togglePause();
     });
-    this.controllerWasd.on('move', (direction: DirectionT) => {
+    this.controllerWasd.on('move', (direction: Direction) => {
       tank1.move(direction);
     });
     this.controllerWasd.on('stop', () => {
@@ -133,7 +136,7 @@ export class Game {
       }
       this.createProjectile(tank1.shoot());
     });
-    this.controllerArrows.on('move', (direction: DirectionT) => {
+    this.controllerArrows.on('move', (direction: Direction) => {
       tank2.move(direction);
     });
     this.controllerArrows.on('stop', () => {
@@ -145,5 +148,9 @@ export class Game {
       }
       this.createProjectile(tank2.shoot());
     });
+  }
+
+  exit() {
+    this.stopLoop();
   }
 }

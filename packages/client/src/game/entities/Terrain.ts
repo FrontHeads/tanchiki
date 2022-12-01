@@ -1,7 +1,8 @@
+import type { EntitySettings } from '../typings';
 import { Entity } from './';
 
 export class Terrain extends Entity {
-  constructor(props: Pick<Entity, 'width' | 'height' | 'type'>) {
+  constructor(props: EntitySettings) {
     super(props);
     Object.assign(this, props);
     this.role = 'neutral';

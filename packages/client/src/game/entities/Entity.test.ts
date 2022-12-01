@@ -2,7 +2,7 @@ import { Entity } from './';
 
 describe('game/entities/Entity', () => {
   it('should set state', () => {
-    const entity = new Entity({ width: 4, height: 4 });
+    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
     const mockFn = jest.fn();
     const state = { posX: 111, posY: 222 };
 

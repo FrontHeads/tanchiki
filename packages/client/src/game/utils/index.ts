@@ -1,1 +1,2 @@
-export { EventBus } from '../../utils/EventBus';
+export { EventEmitter } from './EventEmitter';
+export { isKeyOfObject } from './isKeyOfObject';
