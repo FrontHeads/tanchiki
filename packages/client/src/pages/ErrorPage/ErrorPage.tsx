@@ -32,7 +32,7 @@ export const ErrorPage: FC = () => {
             data-testid="web-error__button"
             text="На главную"
             onClick={() => navigate(Paths.Home)}
-            variant={ButtonVariant.secondary}
+            variant={ButtonVariant.Secondary}
           />
         </p>
       </div>

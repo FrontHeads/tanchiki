@@ -58,8 +58,8 @@ export const SignIn: FC = () => {
 
       <div className="form__buttons-wrapper">
         {error && `Error: ${error}`}
-        <Button text="Войти" type="submit" variant={ButtonVariant.primary} disabled={isLoading} />
-        <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.secondary} />
+        <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
+        <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
       </div>
     </Form>
   );

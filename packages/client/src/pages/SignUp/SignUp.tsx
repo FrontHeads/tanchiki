@@ -90,8 +90,8 @@ export const SignUp: FC = () => {
         required={true}
       />
       <div className="form__buttons-wrapper">
-        <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.primary} />
-        <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.secondary} />
+        <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} />
+        <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />
       </div>
     </Form>
   );

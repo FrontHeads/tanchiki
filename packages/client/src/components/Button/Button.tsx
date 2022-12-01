@@ -7,8 +7,8 @@ import { ButtonProps, ButtonVariant } from './typings';
 
 export const Button: FC<ButtonProps> = ({ text, variant, type = 'button', ...props }) => {
   const buttonClassNames = cn('button', {
-    button_primary: variant === ButtonVariant.primary,
-    button_secondary: variant === ButtonVariant.secondary,
+    button_primary: variant === ButtonVariant.Primary,
+    button_secondary: variant === ButtonVariant.Secondary,
   });
 
   return (
