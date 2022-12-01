@@ -1,12 +1,12 @@
 import type { Entity } from '../entities';
-import type { PosState, Rect } from '../typings';
+import type { PosState, Rect, Size } from '../typings';
 
 export class Zone {
   width = 0;
   height = 0;
   matrix!: Array<Array<Entity | null>>;
 
-  constructor({ width, height }: Pick<Zone, 'width' | 'height'>) {
+  constructor({ width, height }: Size) {
     this.width = width;
     this.height = height;
     this.buildMatrix();
