@@ -29,7 +29,7 @@ export const ErrorPage: FC = () => {
 
         <p className="web-error__paragraph web-error__link">
           <Button
-            testId="web-error__button"
+            data-testid="web-error__button"
             text="На главную"
             onClick={() => navigate(Paths.Home)}
             variant={ButtonVariant.secondary}
