@@ -1,6 +1,7 @@
 import { Projectile, Tank, Terrain } from '../entities';
 import type { Direction, EntityDynamicSettings, EntitySettings, GameSettings } from '../typings';
 import { Controller, View, Zone } from './';
+import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
 export class Game {
   static __instance: Game;
@@ -19,8 +20,8 @@ export class Game {
     this.settings = { ...this.settings, ...settings };
     this.zone = new Zone(this.settings);
     this.view = new View(this.settings);
-    this.controllerWasd = new Controller(['wasd']);
-    this.controllerArrows = new Controller(['arrows']);
+    this.controllerWasd = new Controller(KeyBindingsWasd);
+    this.controllerArrows = new Controller(KeyBindingsArrows);
   }
 
   static create(settings: Pick<GameSettings, 'root'>) {
