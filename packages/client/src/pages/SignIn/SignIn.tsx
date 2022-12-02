@@ -26,10 +26,12 @@ export const SignIn: FC = () => {
     }
   }, [isAuthenticated]);
 
-  if (error) {
-    dispatch(authActions.setError(''));
-    toast.error(error);
-  }
+  useEffect(() => {
+    if (error) {
+      dispatch(authActions.setError(''));
+      toast.error(error);
+    }
+  }, [error]);
 
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
