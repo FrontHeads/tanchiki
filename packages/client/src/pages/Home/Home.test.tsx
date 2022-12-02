@@ -45,10 +45,14 @@ describe('Home page', () => {
     const nav = screen.getByTestId('nav');
     const logo = screen.getByTestId('logo');
     const footer = screen.getByTestId('footer');
+    const image = screen.getByAltText('Игра Танчики на Денди');
+    const burger = screen.getByTestId('menu');
 
     expect(nav).toBeInTheDocument();
     expect(logo).toBeInTheDocument();
     expect(footer).toBeInTheDocument();
+    expect(image).toBeInTheDocument();
+    expect(burger).toBeInTheDocument();
   });
 
   test('it renders all links', () => {
