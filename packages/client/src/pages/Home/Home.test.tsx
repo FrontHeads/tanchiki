@@ -3,9 +3,11 @@ import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { Provider } from 'react-redux';
 
 import { navigationList } from '../../components/Menu/MenuData';
 import { Root } from '../../layouts/Root';
+import { store } from '../../store';
 import { buildPath } from '../../utils/HTTP';
 import { renderWithRouter } from '../../utils/testing-utils';
 import { Home } from './Home';
@@ -17,15 +19,6 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('react-redux', () => {
-  const ActualReactRedux = jest.requireActual('react-redux');
-  return {
-    ...ActualReactRedux,
-    useSelector: jest.fn().mockImplementation(() => {
-      return 'mock';
-    }),
-  };
-});
 describe('Home page', () => {
   beforeAll(() => {
     const mock = new MockAdapter(axios);
@@ -42,13 +35,20 @@ describe('Home page', () => {
 
   test('it renders all page components', () => {
     renderWithRouter(
-      <Root>
-        <Home />
-      </Root>
+      <Provider store={store}>
+        <Root>
+          <Home />
+        </Root>
+      </Provider>
     );
 
     const nav = screen.getByTestId('nav');
+    const logo = screen.getByTestId('logo');
+    const footer = screen.getByTestId('footer');
+
     expect(nav).toBeInTheDocument();
+    expect(logo).toBeInTheDocument();
+    expect(footer).toBeInTheDocument();
   });
 
   test('it renders all links', () => {
