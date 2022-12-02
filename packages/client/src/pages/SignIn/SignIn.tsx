@@ -7,6 +7,7 @@ import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
 import { authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { signInInputFields } from './data';
 import { LoginForm } from './typings';
 
 export const SignIn: FC = () => {
@@ -21,10 +22,13 @@ export const SignIn: FC = () => {
   const formData: LoginForm = { login: '', password: '' };
   const [requestBody, setRequestBody] = useState<LoginForm>(formData);
 
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setRequestBody({ ...requestBody, [name]: value });
-  };
+  const inputChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setRequestBody({ ...requestBody, [name]: value });
+    },
+    [requestBody]
+  );
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,27 +40,14 @@ export const SignIn: FC = () => {
 
   return (
     <Form handlerSubmit={submitHandler} header="Вход">
-      <FormField
-        title="Логин"
-        type="text"
-        id="login"
-        onChange={inputChangeHandler}
-        placeholder="ivanIvanov"
-        disabled={isLoading}
-        required={true}
-      />
-
-      <FormField
-        title="Пароль"
-        type="password"
-        id="password"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="Латинские буквы и цифры"
-        required={true}
-      />
+      <>
+        {signInInputFields.map(field => (
+          <FormField key={field.id} {...field} onChange={inputChangeHandler} disabled={isLoading} />
+        ))}
+      </>
 
       <div className="form__buttons-wrapper">
+        {/* TODO: push error message to toast when it'll be ready */}
         {error && `Error: ${error}`}
         <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />

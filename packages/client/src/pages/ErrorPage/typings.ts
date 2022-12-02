@@ -3,3 +3,8 @@ export type ErrorType = {
   statusText?: string;
   message?: string;
 };
+
+export type ErrorPageProps = {
+  status?: string;
+  message?: string;
+};
