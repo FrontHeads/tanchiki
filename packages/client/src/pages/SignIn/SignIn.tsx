@@ -1,12 +1,13 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
-import { authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { signInInputFields } from './data';
 import { LoginForm } from './typings';
 
@@ -15,12 +16,22 @@ export const SignIn: FC = () => {
   const navigate = useNavigate();
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
-  if (isAuthenticated) {
-    navigate(Paths.Home);
-  }
-
   const formData: LoginForm = { login: '', password: '' };
   const [requestBody, setRequestBody] = useState<LoginForm>(formData);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success('С возвращением!');
+      navigate(Paths.Home);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (error) {
+      dispatch(authActions.setError(''));
+      toast.error(error);
+    }
+  }, [error]);
 
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +58,6 @@ export const SignIn: FC = () => {
       </>
 
       <div className="form__buttons-wrapper">
-        {/* TODO: push error message to toast when it'll be ready */}
-        {error && `Error: ${error}`}
         <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
       </div>
