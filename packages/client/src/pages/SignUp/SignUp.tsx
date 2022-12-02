@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
@@ -6,18 +6,26 @@ import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
+import { authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { SignUpForm } from './typings';
 
 export const SignUp: FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
+  if (isAuthenticated) {
+    navigate(Paths.Home);
+  }
+
   const formData: SignUpForm = {
-    email: '',
     login: '',
-    first_name: '',
-    last_name: '',
-    phone: '',
     password: '',
     password_check: '',
+    first_name: '',
+    second_name: '',
+    email: '',
+    phone: '',
   };
   const [requestBody, setRequestBody] = useState<SignUpForm>(formData);
 
@@ -26,10 +34,13 @@ export const SignUp: FC = () => {
     setRequestBody({ ...requestBody, [name]: value });
   };
 
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(requestBody);
-  };
+  const submitHandler = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      dispatch(authThunks.signUp(requestBody));
+    },
+    [requestBody]
+  );
 
   return (
     <Form handlerSubmit={submitHandler} header="Регистрация">
@@ -38,6 +49,7 @@ export const SignUp: FC = () => {
         type="email"
         id="email"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="ivanIvanov@yandex.ru"
         required={true}
       />
@@ -46,6 +58,7 @@ export const SignUp: FC = () => {
         type="text"
         id="login"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="ivanIvanov"
         required={true}
       />
@@ -54,14 +67,16 @@ export const SignUp: FC = () => {
         type="text"
         id="first_name"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="Иван"
         required={false}
       />
       <FormField
         title="Фамилия"
         type="text"
-        id="last_name"
+        id="second_name"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="Иванов"
         required={false}
       />
@@ -70,6 +85,7 @@ export const SignUp: FC = () => {
         type="tel"
         id="phone"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="+7 800 555 35 35"
         required={false}
       />
@@ -78,6 +94,7 @@ export const SignUp: FC = () => {
         type="password"
         id="password"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="Латинские буквы и цифры"
         required={true}
       />
@@ -86,11 +103,13 @@ export const SignUp: FC = () => {
         type="password"
         id="password_check"
         onChange={inputChangeHandler}
+        disabled={isLoading}
         placeholder="Латинские буквы и цифры"
         required={true}
       />
       <div className="form__buttons-wrapper">
-        <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} />
+        {error && `Error: ${error}`}
+        <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />
       </div>
     </Form>
