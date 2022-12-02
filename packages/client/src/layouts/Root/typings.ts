@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 export type RootProps = {
-  children?: JSX.Element | JSX.Element[];
+  children?: ReactElement | ReactElement[];
 };
