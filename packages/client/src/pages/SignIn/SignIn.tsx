@@ -7,7 +7,7 @@ import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
-import { authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { signInInputFields } from './data';
 import { LoginForm } from './typings';
 
@@ -28,6 +28,7 @@ export const SignIn: FC = () => {
 
   useEffect(() => {
     if (error) {
+      dispatch(authActions.setError(''));
       toast.error(error);
     }
   }, [error]);

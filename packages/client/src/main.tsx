@@ -11,10 +11,8 @@ import { router } from './config/router';
 import { store } from './store';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-      <ToastContainer theme="dark" position={toast.POSITION.TOP_CENTER} />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+    <ToastContainer theme="dark" position={toast.POSITION.TOP_CENTER} />
+  </Provider>
 );
