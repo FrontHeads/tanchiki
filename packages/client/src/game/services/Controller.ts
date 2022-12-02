@@ -1,35 +1,12 @@
 import { Direction } from '../typings';
-import { EventEmitter, isKeyOfObject } from '../utils';
-
-export type ControllerType = Array<'wasd' | 'arrows'>;
-
-type KeyBinding = ['move' | 'shoot' | 'pause', Direction];
+import { EventEmitter } from '../utils';
+import { BindingConfig, KeyBinding } from './KeyBindings';
 
 export class Controller extends EventEmitter {
-  type: ControllerType;
-  enabled = false;
   activeDirection: Partial<Record<Direction, boolean>> = {};
-  keyBindingsWasd = {
-    KeyW: ['move', Direction.UP],
-    KeyA: ['move', Direction.LEFT],
-    KeyS: ['move', Direction.DOWN],
-    KeyD: ['move', Direction.RIGHT],
-    Space: ['shoot'],
-  };
-  keyBindingsArrows = {
-    ArrowUp: ['move', Direction.UP],
-    ArrowLeft: ['move', Direction.LEFT],
-    ArrowDown: ['move', Direction.DOWN],
-    ArrowRight: ['move', Direction.RIGHT],
-    Enter: ['shoot'],
-  };
-  keyBindingsShared = {
-    KeyP: ['pause'],
-  };
 
-  constructor(type: ControllerType) {
+  constructor(private keyBindings: BindingConfig) {
     super();
-    this.type = type;
     this.registerEvents();
   }
 
@@ -46,14 +23,7 @@ export class Controller extends EventEmitter {
   }
 
   getKeyBinding(code: string) {
-    if (isKeyOfObject(code, this.keyBindingsShared)) {
-      return this.keyBindingsShared[code];
-    } else if (this.type.includes('wasd') && isKeyOfObject(code, this.keyBindingsWasd)) {
-      return this.keyBindingsWasd[code];
-    } else if (this.type.includes('arrows') && isKeyOfObject(code, this.keyBindingsArrows)) {
-      return this.keyBindingsArrows[code];
-    }
-    return null;
+    return this.keyBindings[code] || null;
   }
 
   keydown(event: KeyboardEvent) {
