@@ -1,13 +1,13 @@
 import './Home.css';
 
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
 import promoImg from '../../assets/img/tankettes_game.png';
 import { navigationList } from '../../components/Menu/MenuData';
 import { MenuLink } from '../../components/MenuLink';
 import { HTTP } from '../../utils/HTTP';
 
-export const Home = () => {
+export const Home: FC = () => {
   useEffect(() => {
     const fetchServerData = async () => {
       const data = await HTTP.get<Record<string, unknown>>('/', {
