@@ -1,5 +1,6 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
@@ -16,6 +17,7 @@ export const SignIn: FC = () => {
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
   if (isAuthenticated) {
+    toast.success('С возвращением!');
     navigate(Paths.Home);
   }
 
@@ -38,6 +40,12 @@ export const SignIn: FC = () => {
     [requestBody]
   );
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
   return (
     <Form handlerSubmit={submitHandler} header="Вход">
       <>
@@ -47,8 +55,6 @@ export const SignIn: FC = () => {
       </>
 
       <div className="form__buttons-wrapper">
-        {/* TODO: push error message to toast when it'll be ready */}
-        {error && `Error: ${error}`}
         <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
       </div>
