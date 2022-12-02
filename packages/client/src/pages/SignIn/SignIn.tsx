@@ -16,13 +16,21 @@ export const SignIn: FC = () => {
   const navigate = useNavigate();
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
-  if (isAuthenticated) {
-    toast.success('С возвращением!');
-    navigate(Paths.Home);
-  }
-
   const formData: LoginForm = { login: '', password: '' };
   const [requestBody, setRequestBody] = useState<LoginForm>(formData);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success('С возвращением!');
+      navigate(Paths.Home);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,12 +47,6 @@ export const SignIn: FC = () => {
     },
     [requestBody]
   );
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
 
   return (
     <Form handlerSubmit={submitHandler} header="Вход">
