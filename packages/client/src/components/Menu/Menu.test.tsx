@@ -33,7 +33,7 @@ describe('Menu', () => {
     );
     const menuLinks = screen.getAllByTestId('menulink');
     const amount = menuLinks.length;
-    expect(amount).toBe(navigationList.length + 1);
+    expect(amount).toBe(navigationList.length);
   });
 
   test('it opens menu', () => {
