@@ -16,7 +16,6 @@ describe('MenuLink', () => {
     );
 
     const renderedMenu = screen.getByTestId('menulink');
-    console.log(typeof renderedMenu);
 
     expect(renderedMenu).toBeInTheDocument();
   });

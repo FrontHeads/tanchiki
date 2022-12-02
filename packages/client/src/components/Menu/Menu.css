@@ -2,8 +2,6 @@
 
 .menu {
   font-family: "Press Start 2P", cursive;
-  padding-top: 10px;
-  margin-bottom: 15px;
   overflow-y: hidden;
 
   &__icon {

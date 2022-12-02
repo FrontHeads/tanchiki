@@ -20,16 +20,18 @@ export const Home: FC = () => {
   }, []);
 
   return (
-    <div className="menu">
+    <>
       <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />
-      <div className="delimiter" />
-      <nav role="nav" data-testid="nav" className="menu-nav">
-        <ul role="nav-list" className="navigation-list">
-          {navigationList.map(({ id, title, to }) => (
-            <MenuLink key={id} title={title} to={to} />
-          ))}
-        </ul>
-      </nav>
-    </div>
+      <div className="menu">
+        <div className="delimiter" />
+        <nav role="nav" data-testid="nav" className="menu-nav">
+          <ul role="nav-list" className="navigation-list">
+            {navigationList.map(({ id, title, to }) => (
+              <MenuLink key={id} title={title} to={to} />
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </>
   );
 };

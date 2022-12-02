@@ -11,7 +11,7 @@ export const headerText = 'Рейтинг игроков';
 export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   return (
     <section className="leaderboard__wrapper">
-      <h1 className="no-margin-top">{header}</h1>
+      <h1 className="no-margin-top leaderboard__header">{header}</h1>
       <table border={1} className="leaderboard">
         <thead className="leaderboard__row-header">
           <tr>

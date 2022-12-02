@@ -1,17 +1,21 @@
 import '@testing-library/jest-dom';
 
 import { fireEvent, getByTestId, render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
+import { store } from '../../store';
 import { Menu } from './Menu';
 import { navigationList } from './MenuData';
 
 describe('Menu', () => {
   test('it renders', () => {
     render(
-      <BrowserRouter>
-        <Menu />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Menu />
+        </BrowserRouter>
+      </Provider>
     );
 
     const renderedMenu = screen.getByTestId('menu');
@@ -21,20 +25,24 @@ describe('Menu', () => {
 
   test('it renders all menu links', () => {
     render(
-      <BrowserRouter>
-        <Menu />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Menu />
+        </BrowserRouter>
+      </Provider>
     );
     const menuLinks = screen.getAllByTestId('menulink');
     const amount = menuLinks.length;
-    expect(amount).toBe(navigationList.length);
+    expect(amount).toBe(navigationList.length + 1);
   });
 
   test('it opens menu', () => {
     const { container } = render(
-      <BrowserRouter>
-        <Menu />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Menu />
+        </BrowserRouter>
+      </Provider>
     );
 
     const testState = getByTestId(container, 'menu');
