@@ -3,10 +3,13 @@ import './Menu.css';
 import cn from 'classnames';
 import { FC, useEffect, useRef, useState } from 'react';
 
+import { authThunks, useAppDispatch } from '../../store';
 import { MenuLink } from '../MenuLink';
-import { navigationList } from './MenuData';
+import { logoutItem, navigationList } from './MenuData';
 
 export const Menu: FC = () => {
+  const dispatch = useAppDispatch();
+
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -17,6 +20,10 @@ export const Menu: FC = () => {
   const menuListClassName = cn('menu__list ', {
     menu__list_hide: !isOpen,
   });
+
+  const logoutHandler = () => {
+    dispatch(authThunks.logout());
+  };
 
   const toggleMenu = () => {
     setIsOpen(prevState => {
@@ -38,6 +45,14 @@ export const Menu: FC = () => {
     return () => document.removeEventListener('mousedown', handler);
   });
 
+  const menuLinks = navigationList.map(({ id, title, to }) => (
+    <MenuLink handleNavigate={closeMenu} key={id} title={title} to={to} />
+  ));
+
+  const logoutLink = (
+    <MenuLink handleNavigate={logoutHandler} key={logoutItem.id} title={logoutItem.title} to={logoutItem.to} />
+  );
+
   return (
     <div data-testid="menu" className="menu" ref={menuRef}>
       <div data-testid="menu__icon" className="menu__icon" onClick={toggleMenu}>
@@ -48,9 +63,10 @@ export const Menu: FC = () => {
       <div data-testid="menu__list" data-test={isOpen ? 'menu-list-on' : 'menu-list-off'} className={menuListClassName}>
         <nav className="menu-nav">
           <ul className="navigation-list">
-            {navigationList.map(({ id, title, to }) => (
-              <MenuLink handleNavigate={closeMenu} key={id} title={title} to={to} />
-            ))}
+            <>
+              {menuLinks}
+              {logoutLink}
+            </>
           </ul>
         </nav>
       </div>

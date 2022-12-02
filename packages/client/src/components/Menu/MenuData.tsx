@@ -8,5 +8,5 @@ export const navigationList = [
   { id: 7, title: 'Профиль игрока', to: '/settings' },
   { id: 8, title: 'Ошибка 404', to: '/404' },
   { id: 9, title: 'Ошибка 404', to: '/500' },
-  { id: 10, title: 'Выход', to: '/logout' },
 ];
+export const logoutItem = { id: 10, title: 'Выход', to: '#' };
