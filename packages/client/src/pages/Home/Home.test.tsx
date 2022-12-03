@@ -40,6 +40,6 @@ describe('Home page', () => {
     const menuLinks = screen.getAllByTestId('navigation-list__row');
 
     const amount = menuLinks.length;
-    expect(amount).toBe(navigationList.length);
+    expect(amount).toBe(navigationList.length + 1);
   });
 });
