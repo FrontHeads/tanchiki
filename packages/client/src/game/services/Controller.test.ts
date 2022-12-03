@@ -25,6 +25,7 @@ describe('game/services/Controller', () => {
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
+    controller.load();
     controller.on('move', mockMoveFn);
     controller.on('shoot', mockShootFn);
     mockKeyDown('KeyW', 'KeyS', 'KeyA', 'KeyD', 'Space');
@@ -41,6 +42,7 @@ describe('game/services/Controller', () => {
     const controller = new Controller(KeyBindingsWasd);
     const mockFn = jest.fn();
 
+    controller.load();
     controller.on('stop', mockFn);
     mockKeyDown('KeyW', 'KeyD');
     sleep();
@@ -60,6 +62,7 @@ describe('game/services/Controller', () => {
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
+    controller.load();
     controller.on('move', mockMoveFn);
     controller.on('shoot', mockShootFn);
     mockKeyDown('ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter');
@@ -76,6 +79,7 @@ describe('game/services/Controller', () => {
     const controller = new Controller(KeyBindingsArrows);
     const mockFn = jest.fn();
 
+    controller.load();
     controller.on('stop', mockFn);
     mockKeyDown('ArrowUp', 'ArrowLeft');
     sleep();
@@ -94,6 +98,7 @@ describe('game/services/Controller', () => {
     const controller = new Controller(KeyBindingsWasd);
     const mockFn = jest.fn();
 
+    controller.load();
     controller.on('move', mockFn);
     controller.on('shoot', mockFn);
     mockKeyDown('ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter');
@@ -105,6 +110,7 @@ describe('game/services/Controller', () => {
     const controller = new Controller(KeyBindingsArrows);
     const mockFn = jest.fn();
 
+    controller.load();
     controller.on('move', mockFn);
     controller.on('shoot', mockFn);
     mockKeyDown('KeyW', 'KeyS', 'KeyA', 'KeyD', 'Space');
@@ -122,6 +128,7 @@ describe('game/services/Controller', () => {
       const controller = new Controller(bindings);
       const mockFn = jest.fn();
 
+      controller.load();
       controller.on('pause', mockFn);
       mockKeyDown('KeyP');
 
@@ -132,10 +139,11 @@ describe('game/services/Controller', () => {
       const controller = new Controller(bindings);
       const mockFn = jest.fn();
 
+      controller.load();
       controller.on('move', mockFn);
       controller.on('shoot', mockFn);
       controller.on('pause', mockFn);
-      controller.disable();
+      controller.unload();
       mockKeyDown('KeyP', 'KeyW', 'KeyS', 'KeyA', 'KeyD', 'Space');
 
       expect(mockFn).not.toHaveBeenCalled();
