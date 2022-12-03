@@ -30,6 +30,7 @@ export type EntityRole = 'player1' | 'player2' | 'enemy' | 'neutral';
 
 export type EntityType =
   | 'tank'
+  | 'projectile'
   | 'flag'
   | 'boundary'
   | 'brickWall'
@@ -37,6 +38,7 @@ export type EntityType =
   | 'trees'
   | 'water'
   | 'ice'
+  | 'powerup'
   | 'custom';
 
 export type EntitySettings = Pos &
@@ -46,6 +48,7 @@ export type EntitySettings = Pos &
     type: EntityType;
     role: EntityRole;
     color: string;
+    img: HTMLImageElement;
   }>;
 
 export type EntityDynamicSettings = EntitySettings & Partial<Pick<EntityDynamic, 'moveSpeed'>>;
@@ -56,4 +59,5 @@ export type UIElementSettings = Pos &
     text: string;
     align: CanvasTextAlign;
     color: string;
+    img: HTMLImageElement;
   }>;

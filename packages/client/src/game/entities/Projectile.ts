@@ -12,6 +12,7 @@ export class Projectile extends EntityDynamic {
   constructor(props: EntityDynamicSettings) {
     super(props);
     Object.assign(this, props);
+    this.type = 'projectile';
     this.color = 'red';
     this.flying = true;
     this.moving = true;
