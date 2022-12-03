@@ -25,7 +25,7 @@ describe('Home page', () => {
       </Provider>
     );
 
-    const nav = screen.getByTestId('nav');
+    const nav = screen.getByTestId('menu-nav-home');
     const logo = screen.getByTestId('logo');
     const footer = screen.getByTestId('footer');
     const image = screen.getByAltText('Игра Танчики на Денди');

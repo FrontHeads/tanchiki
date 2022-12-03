@@ -31,7 +31,7 @@ describe('Menu', () => {
         </BrowserRouter>
       </Provider>
     );
-    const menuLinks = screen.getAllByTestId('menulink');
+    const menuLinks = screen.getAllByTestId('navigation-list__row');
     const amount = menuLinks.length;
     expect(amount).toBe(navigationList.length);
   });

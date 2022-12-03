@@ -24,8 +24,8 @@ export const Home: FC = () => {
       <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />
       <div className="menu">
         <div className="delimiter" />
-        <nav role="nav" data-testid="nav" className="menu-nav">
-          <ul role="nav-list" className="navigation-list">
+        <nav data-testid="menu-nav-home" className="menu-nav">
+          <ul className="navigation-list">
             {navigationList.map(({ id, title, to }) => (
               <MenuLink key={id} title={title} to={to} />
             ))}
