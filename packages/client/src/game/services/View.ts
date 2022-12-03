@@ -1,6 +1,7 @@
 import type { Entity } from '../entities';
 import type { Size } from '../typings';
 import type { UIElement } from '../ui';
+import { EventEmitter } from '../utils';
 
 type Layer = Record<
   string,
@@ -15,17 +16,30 @@ type LayerObject = {
   listeners: Record<string, () => void>;
 };
 
-export class View {
+export class View extends EventEmitter {
   width = 0;
   height = 0;
   pixelRatio = 10;
   layerZIndexCount = 0;
   layers: Layer = {};
   root!: HTMLElement;
+  brickBg!: HTMLImageElement;
 
   constructor({ width, height }: Size) {
+    super();
     this.width = width;
     this.height = height;
+  }
+
+  loadAssets() {
+    this.brickBg = new Image();
+    this.brickBg.src = '/src/assets/img/bricks.png';
+    this.brickBg.onload = () => {
+      this.emit('assetsLoaded');
+    };
+    this.brickBg.onerror = () => {
+      this.emit('assetsLoaded');
+    };
   }
 
   isRootEmpty() {
@@ -36,7 +50,14 @@ export class View {
     return Math.round(value * this.pixelRatio);
   }
 
+  reset() {
+    for (const id of Object.keys(this.layers)) {
+      this.eraseAllEntitiesOnLayer(id);
+    }
+  }
+
   build(root: HTMLElement | null) {
+    this.loadAssets();
     if (root === null) {
       throw new Error('proper DOM root for the game should be set');
     }
@@ -69,6 +90,28 @@ export class View {
       };
     }
     return layer;
+  }
+
+  add(entity: Entity | UIElement) {
+    let layer = '';
+    switch (entity.type) {
+      case 'custom':
+        layer = 'overlay';
+        break;
+      case 'tank':
+        layer = 'tanks';
+        break;
+      case 'projectile':
+        layer = 'projectiles';
+        break;
+      case 'trees':
+        layer = 'ceiling';
+        break;
+      default:
+        layer = 'floor';
+        break;
+    }
+    this.bindEntityToLayer(entity, layer);
   }
 
   bindEntityToLayer(entity: Entity | UIElement, layerId: keyof Layer) {
@@ -126,7 +169,14 @@ export class View {
     context.font = `${this.convertToPixels(elem.height)}px "Press Start 2P"`;
     context.textAlign = elem.align;
     context.textBaseline = 'top';
-    context.fillStyle = elem.color;
+    if (elem.img) {
+      const pattern = context.createPattern(elem.img, 'repeat');
+      if (pattern !== null) {
+        context.fillStyle = pattern;
+      }
+    } else {
+      context.fillStyle = elem.color;
+    }
     let posX = elem.posX;
     if (elem.align === 'center') {
       posX += Math.round(elem.width / 2);

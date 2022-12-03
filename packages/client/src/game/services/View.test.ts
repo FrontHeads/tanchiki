@@ -5,6 +5,7 @@ import { View } from './';
 
 function mockEntity(rect: Rect) {
   const entity = new EventEmitter() as Entity;
+  entity.type = 'tank';
   Object.assign(entity, rect);
   return entity;
 }
@@ -31,7 +32,7 @@ describe('game/services/View', () => {
     view.eraseEntityFromLayer = jest.fn();
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
-    view.bindEntityToLayer(entity, 'tanks');
+    view.add(entity);
     entity.emit('entityShouldUpdate');
     entity.emit('entityDidUpdate');
 
@@ -47,7 +48,7 @@ describe('game/services/View', () => {
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     view.build(root);
-    view.bindEntityToLayer(entity, 'tanks');
+    view.add(entity);
     const layerObjectsCount1 = Array.from(view.layers['tanks'].objects).length;
     entity.emit('entityShouldBeDestroyed');
     entity.emit('entityDidUpdate');
