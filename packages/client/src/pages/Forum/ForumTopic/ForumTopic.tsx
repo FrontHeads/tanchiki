@@ -4,7 +4,7 @@ import { FC } from 'react';
 
 import { ForumTopicRowProps } from './typings';
 import { useParams } from 'react-router-dom';
-import { DUMMY_TOPIC } from '../DummyData';
+import { DUMMY_TOPIC as topicList } from '../DummyData';
 import { ForumMessage } from './ForumMessage';
 
 export const ForumTopic: FC<ForumTopicRowProps> = () => {
@@ -13,9 +13,9 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
     <section className="topic__wrapper">
       <h1 className="topic__title">Топик {topicId}</h1>
       <div className="topic">
-        {DUMMY_TOPIC.map(row => {
-          return <ForumMessage key={row.id} {...row} />;
-        })}
+        {topicList.map(row => (
+          <ForumMessage key={row.id} {...row} />
+        ))}
       </div>
     </section>
   );
