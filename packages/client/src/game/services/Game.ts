@@ -18,7 +18,7 @@ export class Game {
   loopTimeMs = 25;
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56 };
-  mode: 'menu' | 'game' = 'menu';
+  mode: 'loading' | 'menu' | 'game' = 'loading';
   mainMenuState = 0;
 
   private constructor() {
@@ -37,6 +37,35 @@ export class Game {
     return Game.__instance;
   }
 
+  init(root: HTMLElement | null) {
+    this.unload();
+
+    this.load(root);
+
+    this.initMenu();
+  }
+
+  load(root: HTMLElement | null) {
+    this.createView(root);
+    this.startLoop();
+    this.controllerAll.load();
+    this.controllerWasd.load();
+    this.controllerArrows.load();
+    this.inited = true;
+  }
+
+  unload() {
+    this.stopLoop();
+    this.controllerAll.unload();
+    this.controllerWasd.unload();
+    this.controllerArrows.unload();
+    this.inited = false;
+  }
+
+  createView(root: HTMLElement | null) {
+    this.view.build(root);
+  }
+
   loop() {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
@@ -53,14 +82,18 @@ export class Game {
     this.loopProcess = setTimeout(this.loop.bind(this), nextCycleDelay);
   }
 
-  togglePause() {
+  togglePause(newState: boolean | null = null) {
     if (!this.inited) {
       return;
     }
-    if (this.paused) {
+    if (newState === false || this.paused) {
       this.startLoop();
-    } else {
+      this.controllerWasd.load();
+      this.controllerArrows.load();
+    } else if (newState === true || !this.paused) {
       this.stopLoop();
+      this.controllerWasd.unload();
+      this.controllerArrows.unload();
     }
     this.paused = !this.paused;
   }
@@ -77,12 +110,23 @@ export class Game {
     }
   }
 
-  createTank(props: EntityDynamicSettings) {
+  createTank(props: EntityDynamicSettings, controller: Controller | null = null) {
     const entity = new Tank(props);
     this.loopEntities.add(entity);
-    this.view.bindEntityToLayer(entity, 'tanks');
-    this.zone.registerEntity(entity);
+    this.view.add(entity);
+    this.zone.add(entity);
     entity.spawn(props);
+    if (controller) {
+      controller.on('move', (direction: Direction) => {
+        entity.move(direction);
+      });
+      controller.on('stop', () => {
+        entity.stop();
+      });
+      controller.on('shoot', () => {
+        this.createProjectile(entity.shoot());
+      });
+    }
     return entity;
   }
 
@@ -90,26 +134,28 @@ export class Game {
     const loopEntitiesArray = Array.from(this.loopEntities);
     loopEntitiesArray.unshift(projectile);
     this.loopEntities = new Set(loopEntitiesArray);
-    this.view.bindEntityToLayer(projectile, 'projectiles');
-    this.zone.registerEntity(projectile);
+    this.view.add(projectile);
+    this.zone.add(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
     projectile.step();
   }
 
   createTerrain(props: EntitySettings) {
     const entity = new Terrain(props);
-    if (props.type === 'trees') {
-      this.view.bindEntityToLayer(entity, 'ceiling');
-    } else {
-      this.view.bindEntityToLayer(entity, 'floor');
-    }
-    this.zone.registerEntity(entity);
+    this.view.add(entity);
+    this.zone.add(entity);
     entity.spawn(props);
     return entity;
   }
 
   createBoundaries() {
-    this.createTerrain({ type: 'boundary', width: this.settings.width, height: 2, posX: 0, posY: 0 });
+    this.createTerrain({
+      type: 'boundary',
+      width: this.settings.width,
+      height: 2,
+      posX: 0,
+      posY: 0,
+    });
     this.createTerrain({
       type: 'boundary',
       width: this.settings.width,
@@ -117,7 +163,13 @@ export class Game {
       posX: 0,
       posY: this.settings.height - 2,
     });
-    this.createTerrain({ type: 'boundary', width: 2, height: this.settings.height - 4, posX: 0, posY: 2 });
+    this.createTerrain({
+      type: 'boundary',
+      width: 2,
+      height: this.settings.height - 4,
+      posX: 0,
+      posY: 2,
+    });
     this.createTerrain({
       type: 'boundary',
       width: 2,
@@ -132,19 +184,20 @@ export class Game {
     this.loopEntities.delete(entity);
   }
 
-  createView(root: HTMLElement | null) {
-    this.view.build(root);
-  }
+  initMenu() {
+    this.overlay.showLoading();
+    this.mode = 'loading';
 
-  init(root: HTMLElement | null) {
-    this.createView(root);
+    this.view.offAll('assetsLoaded');
+    this.view.on('assetsLoaded', () => {
+      setTimeout(() => {
+        this.overlay.showMainMenu();
+        this.mode = 'menu';
+      }, 500);
+    });
 
-    if (this.inited) {
-      return;
-    }
-    this.inited = true;
+    this.controllerAll.reset();
 
-    this.overlay.showMainMenu();
     this.controllerAll.on('move', (direction: Direction) => {
       if (this.mode !== 'menu') {
         return;
@@ -162,61 +215,32 @@ export class Game {
         return;
       }
       if (this.mainMenuState === 0) {
-        this.mode = 'game';
-        this.overlay.showStartScreen('УРОВЕНЬ  1');
+        this.initScenario();
       }
     });
+  }
 
-    this.startLoop();
+  initScenario() {
+    this.mode = 'game';
+    this.view.reset();
+    this.zone.reset();
+    this.controllerWasd.reset();
+    this.controllerArrows.reset();
+
+    this.overlay.showStartScreen('УРОВЕНЬ  1');
 
     this.createBoundaries();
 
-    const tank1 = this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 });
-    const tank2 = this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' });
+    const tank1 = this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
+    const tank2 = this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
 
     this.createTerrain({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
     this.createTerrain({ type: 'trees', width: 16, height: 8, posX: 30, posY: 18 });
     this.createTerrain({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
 
+    this.controllerAll.offAll('pause');
     this.controllerAll.on('pause', () => {
       this.togglePause();
     });
-    this.controllerWasd.on('move', (direction: Direction) => {
-      if (this.mode !== 'game') {
-        return;
-      }
-      tank1.move(direction);
-    });
-    this.controllerWasd.on('stop', () => {
-      tank1.stop();
-    });
-    this.controllerWasd.on('shoot', () => {
-      if (this.mode !== 'game' || this.paused) {
-        return;
-      }
-      this.createProjectile(tank1.shoot());
-    });
-    this.controllerArrows.on('move', (direction: Direction) => {
-      if (this.mode !== 'game') {
-        return;
-      }
-      tank2.move(direction);
-    });
-    this.controllerArrows.on('stop', () => {
-      tank2.stop();
-    });
-    this.controllerArrows.on('shoot', () => {
-      if (this.mode !== 'game' || this.paused) {
-        return;
-      }
-      this.createProjectile(tank2.shoot());
-    });
-  }
-
-  exit() {
-    this.stopLoop();
-    this.controllerWasd.disable();
-    this.controllerArrows.disable();
-    this.inited = false;
   }
 }

@@ -15,23 +15,46 @@ export class Overlay {
 
   createElement(props: UIElementSettings) {
     const elem = new UIElement(props);
-    this.view.bindEntityToLayer(elem, 'overlay');
+    this.view.add(elem);
     elem.render();
     return elem;
+  }
+
+  showLoading() {
+    this.renderBlackScreen();
+    this.createElement({
+      posX: 0,
+      posY: 26,
+      width: this.view.width,
+      height: 4,
+      color: 'white',
+      text: 'ЗАГРУЗКА...',
+      align: 'center',
+    });
   }
 
   showMainMenu() {
     this.updateMainMenuState(0);
   }
 
+  renderBlackScreen() {
+    this.createElement({
+      posX: 0,
+      posY: 0,
+      width: this.view.width,
+      height: this.view.height,
+      color: 'black',
+    });
+  }
+
   renderMainMenu() {
-    this.createElement({ posX: 0, posY: 0, width: this.view.width, height: this.view.height, color: 'black' });
+    this.renderBlackScreen();
     this.createElement({
       posX: 0,
       posY: 12,
       width: this.view.width,
       height: 6,
-      color: '#B73239',
+      img: this.view.brickBg,
       text: 'ТАНЧИКИ',
       align: 'center',
     });
@@ -40,12 +63,26 @@ export class Overlay {
       posY: 20,
       width: this.view.width,
       height: 6,
-      color: '#B73239',
+      img: this.view.brickBg,
       text: '2023',
       align: 'center',
     });
-    this.createElement({ posX: 20, posY: 30, width: 20, height: 2, color: 'white', text: '1 ИГРОК' });
-    this.createElement({ posX: 20, posY: 34, width: 20, height: 2, color: 'white', text: '2 ИГРОКА' });
+    this.createElement({
+      posX: 20,
+      posY: 30,
+      width: 20,
+      height: 2,
+      color: 'white',
+      text: '1 ИГРОК',
+    });
+    this.createElement({
+      posX: 20,
+      posY: 34,
+      width: 20,
+      height: 2,
+      color: 'white',
+      text: '2 ИГРОКА',
+    });
 
     this.createElement({
       posX: 0,
@@ -78,7 +115,13 @@ export class Overlay {
         posY = 30;
         break;
     }
-    this.createElement({ posX: 16, posY, width: 2, height: 2, color: 'yellow' });
+    this.createElement({
+      posX: 16,
+      posY,
+      width: 2,
+      height: 2,
+      color: 'yellow',
+    });
   }
 
   showStartScreen(title: string) {
@@ -86,8 +129,22 @@ export class Overlay {
     const width = this.view.width;
     const height = Math.round(this.view.height / 2);
 
-    this.createElement({ posX: 0, posY: 0, width, height: this.view.height, color: 'grey' });
-    this.createElement({ posX: 0, posY: height, width, height: 2, color: 'black', text: title, align: 'center' });
+    this.createElement({
+      posX: 0,
+      posY: 0,
+      width,
+      height: this.view.height,
+      color: 'grey',
+    });
+    this.createElement({
+      posX: 0,
+      posY: height - 2,
+      width,
+      height: 2,
+      color: 'black',
+      text: title,
+      align: 'center',
+    });
 
     setTimeout(this.animateStartScreen.bind(this), initialDelay);
   }
@@ -112,8 +169,20 @@ export class Overlay {
     }
 
     this.clearScreen();
-    this.createElement({ posX: 0, posY: 0, width, height, color: 'grey' });
-    this.createElement({ posX: 0, posY: height + stage * 2, width, height, color: 'grey' });
+    this.createElement({
+      posX: 0,
+      posY: 0,
+      width,
+      height,
+      color: 'grey',
+    });
+    this.createElement({
+      posX: 0,
+      posY: height + stage * 2,
+      width,
+      height,
+      color: 'grey',
+    });
 
     return true;
   }
