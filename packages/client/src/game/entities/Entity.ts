@@ -1,4 +1,4 @@
-import { Direction, EntitySettings, Pos, PosState, Rect } from '../typings';
+import { Direction, EntityRole, EntitySettings, EntityType, Pos, PosState, Rect } from '../typings';
 import { EventEmitter } from '../utils';
 
 export class Entity extends EventEmitter {
@@ -7,8 +7,8 @@ export class Entity extends EventEmitter {
   width = 0;
   height = 0;
   direction = Direction.UP;
-  role: 'player1' | 'player2' | 'enemy' | 'neutral' = 'neutral';
-  type: 'tank' | 'flag' | 'brickWall' | 'concreteWall' | 'trees' | 'water' | 'ice' | 'custom' = 'custom';
+  role: EntityRole = 'neutral';
+  type: EntityType = 'custom';
   alignedToGrid = true;
   spawned = false;
   movable = false;
