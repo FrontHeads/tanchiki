@@ -10,5 +10,6 @@ export const navigationList = [
   { id: 7, title: 'Профиль игрока', to: Paths.UserProfile },
   { id: 8, title: 'Ошибка 404', to: Paths.Error404 },
   { id: 9, title: 'Ошибка 500', to: Paths.Error500 },
+  //TODO: добавить механизм logout
   { id: 10, title: 'Выход', to: '#' },
 ];
