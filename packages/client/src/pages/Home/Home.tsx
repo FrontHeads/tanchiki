@@ -1,11 +1,11 @@
 import './Home.css';
 
 import { FC, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import promoImg from '../../assets/img/tankettes_game.png';
-import { logoutItem, navigationList } from '../../components/Menu/MenuData';
-import { MenuLink } from '../../components/MenuLink';
-import { authThunks, useAppDispatch } from '../../store';
+import { Navigation } from '../../components/Navigation';
+import { useAppDispatch } from '../../store';
 import { HTTP } from '../../utils/HTTP';
 
 export const Home: FC = () => {
@@ -22,16 +22,6 @@ export const Home: FC = () => {
     fetchServerData();
   }, []);
 
-  const logoutHandler = () => {
-    dispatch(authThunks.logout());
-  };
-
-  const menuLinks = navigationList.map(({ id, title, to }) => <MenuLink key={id} title={title} to={to} />);
-
-  const logoutLink = (
-    <MenuLink handleNavigate={logoutHandler} key={logoutItem.id} title={logoutItem.title} to={logoutItem.to} />
-  );
-
   return (
     <>
       <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />
@@ -39,10 +29,7 @@ export const Home: FC = () => {
         <div className="delimiter" />
         <nav data-testid="menu-nav-home" className="menu-nav">
           <ul className="navigation-list">
-            <>
-              {menuLinks}
-              {logoutLink}
-            </>
+            <Navigation />
           </ul>
         </nav>
       </div>

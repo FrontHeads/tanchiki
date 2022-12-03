@@ -29,6 +29,7 @@ export const SignUp: FC = () => {
     email: '',
     phone: '',
   };
+
   const [requestBody, setRequestBody] = useState<SignUpForm>(formData);
 
   const inputChangeHandler = useCallback(
@@ -43,7 +44,6 @@ export const SignUp: FC = () => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       dispatch(authThunks.signUp(requestBody));
-      window.scrollTo(0, 0);
     },
     [requestBody]
   );

@@ -1,7 +1,7 @@
 type MenuLinkProps = {
   title: string;
   to: string;
-  handleNavigate?: () => void;
+  clickHandler?: () => Promise<void>;
 };
 
 export type { MenuLinkProps };

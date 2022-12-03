@@ -1,0 +1,12 @@
+.menu-nav {
+  margin: 0 auto;
+
+  .navigation-list {
+    padding: 0;
+    margin: 0 0 60px;
+
+    &__row:nth-child(1) {
+      margin: 0 0 45px;
+    }
+  }
+}

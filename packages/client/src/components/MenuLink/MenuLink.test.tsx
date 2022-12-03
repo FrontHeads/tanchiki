@@ -7,11 +7,11 @@ import { MenuLink } from './MenuLink';
 
 describe('MenuLink', () => {
   test('it renders', () => {
-    const handleNavigate = jest.fn();
+    const clickHandler = jest.fn();
 
     render(
       <BrowserRouter>
-        <MenuLink handleNavigate={handleNavigate} title="test" to="test" />
+        <MenuLink clickHandler={clickHandler} title="test" to="test" />
       </BrowserRouter>
     );
 

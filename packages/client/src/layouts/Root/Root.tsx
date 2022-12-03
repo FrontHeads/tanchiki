@@ -2,12 +2,12 @@ import './Root.css';
 
 import cn from 'classnames';
 import { FC } from 'react';
-import { Outlet, useLocation, useNavigation } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useLocation, useNavigation } from 'react-router-dom';
 
+import { BurgerMenu } from '../../components/BurgerMenu';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
-import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
 import { appSelectors, useAppSelector } from '../../store';
 import { RootProps } from './typings';
@@ -25,8 +25,9 @@ export const Root: FC<RootProps> = ({ children }) => {
 
   return (
     <main className={rootElementClassNames}>
+      {/* <ScrollRestoration /> */}
       <header>
-        <Menu />
+        <BurgerMenu />
         {location?.pathname !== Paths.Game && (
           <>
             <Logo />

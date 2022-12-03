@@ -57,21 +57,9 @@ ul {
 }
 
 .menu {
+  font-family: "Press Start 2P", cursive;
   display: flex;
   flex-direction: column;
   padding-top: 10px;
   margin-bottom: 15px;
-}
-
-.menu-nav {
-  margin: 0 auto;
-
-  .navigation-list {
-    padding: 0;
-    margin: 0 0 60px;
-
-    &__row:nth-child(1) {
-      margin: 0 0 45px;
-    }
-  }
 }
