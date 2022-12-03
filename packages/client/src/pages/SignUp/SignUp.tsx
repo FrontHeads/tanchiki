@@ -1,12 +1,14 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
-import { authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { signUpInputFields } from './data';
 import { SignUpForm } from './typings';
 
 export const SignUp: FC = () => {
@@ -29,86 +31,45 @@ export const SignUp: FC = () => {
   };
   const [requestBody, setRequestBody] = useState<SignUpForm>(formData);
 
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setRequestBody({ ...requestBody, [name]: value });
-  };
+  const inputChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setRequestBody({ ...requestBody, [name]: value });
+    },
+    [requestBody]
+  );
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       dispatch(authThunks.signUp(requestBody));
+      window.scrollTo(0, 0);
     },
     [requestBody]
   );
 
+  const inputFields = signUpInputFields.map(field => {
+    return <FormField key={field.id} {...field} onChange={inputChangeHandler} disabled={isLoading} />;
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success('Успех! Теперь одним танкистом больше!');
+      navigate(Paths.Home);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (error) {
+      dispatch(authActions.setError(''));
+      toast.error(error);
+    }
+  }, [error]);
+
   return (
     <Form handlerSubmit={submitHandler} header="Регистрация">
-      <FormField
-        title="Email"
-        type="email"
-        id="email"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="ivanIvanov@yandex.ru"
-        required={true}
-      />
-      <FormField
-        title="Логин"
-        type="text"
-        id="login"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="ivanIvanov"
-        required={true}
-      />
-      <FormField
-        title="Имя"
-        type="text"
-        id="first_name"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="Иван"
-        required={false}
-      />
-      <FormField
-        title="Фамилия"
-        type="text"
-        id="second_name"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="Иванов"
-        required={false}
-      />
-      <FormField
-        title="Телефон"
-        type="tel"
-        id="phone"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="+7 800 555 35 35"
-        required={false}
-      />
-      <FormField
-        title="Пароль"
-        type="password"
-        id="password"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="Латинские буквы и цифры"
-        required={true}
-      />
-      <FormField
-        title="Повторите пароль"
-        type="password"
-        id="password_check"
-        onChange={inputChangeHandler}
-        disabled={isLoading}
-        placeholder="Латинские буквы и цифры"
-        required={true}
-      />
+      <>{inputFields}</>
       <div className="form__buttons-wrapper">
-        {error && `Error: ${error}`}
         <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />
       </div>
