@@ -10,6 +10,7 @@ export type SigninRequestData = {
 export type SignupRequestData = {
   login: string;
   password: string;
+  password_check: string;
   first_name: string;
   second_name: string;
   email: string;

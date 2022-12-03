@@ -67,7 +67,9 @@ describe('Redux auth state', () => {
   });
 
   test('should correct set values after dispatch "signUp" thunk', async () => {
-    await store.dispatch(authThunks.signUp({ ...fakeUserProfile, password: 'fakePassword' }));
+    await store.dispatch(
+      authThunks.signUp({ ...fakeUserProfile, password: 'fakePassword', password_check: 'fakePassword' })
+    );
 
     const state = store.getState();
 

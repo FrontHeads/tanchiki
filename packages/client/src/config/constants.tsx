@@ -8,6 +8,9 @@ export enum Paths {
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
   Leaderboard = '/leaderboard',
+  Forum = '/forum',
+  Error404 = '404',
+  Error500 = '500',
 }
 
 export const PATH = {

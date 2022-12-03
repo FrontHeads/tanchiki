@@ -1,3 +1,13 @@
-.home {
-  margin: 0;
+.promo-img {
+  width: 40%;
+  align-self: center;
+  margin-bottom: 60px;
+
+  @media (max-width: 730px) {
+    width: 60%;
+  }
+
+  @media (max-width: 430px) {
+    width: 90%;
+  }
 }
