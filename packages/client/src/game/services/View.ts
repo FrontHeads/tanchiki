@@ -1,5 +1,6 @@
 import type { Entity } from '../entities';
-import type { GameSettings } from '../typings';
+import type { Size } from '../typings';
+import type { UIElement } from '../ui';
 
 type Layer = Record<
   string,
@@ -17,31 +18,36 @@ type LayerObject = {
 export class View {
   width = 0;
   height = 0;
-  pixelRatio = 8;
+  pixelRatio = 10;
   layerZIndexCount = 0;
   layers: Layer = {};
-  root: HTMLElement;
+  root!: HTMLElement;
 
-  constructor({ width, height, root }: GameSettings) {
-    if (root === null) {
-      throw new Error('proper DOM root for the game should be set');
-    }
-    this.root = root;
+  constructor({ width, height }: Size) {
     this.width = width;
     this.height = height;
-    this.buildLayers();
+  }
+
+  isRootEmpty() {
+    return this.root.innerHTML.trim() === '';
   }
 
   convertToPixels(value: number) {
     return Math.round(value * this.pixelRatio);
   }
 
-  buildLayers() {
-    this.createLayer('floor').style.background = '#000';
-    this.createLayer('tanks');
-    this.createLayer('projectiles');
-    this.createLayer('ceiling');
-    this.createLayer('overlay').style.position = 'relative';
+  build(root: HTMLElement | null) {
+    if (root === null) {
+      throw new Error('proper DOM root for the game should be set');
+    }
+    this.root = root;
+    if (this.isRootEmpty()) {
+      this.createLayer('floor').style.background = '#000';
+      this.createLayer('tanks');
+      this.createLayer('projectiles');
+      this.createLayer('ceiling');
+      this.createLayer('overlay').style.position = 'relative';
+    }
   }
 
   createLayer(id: string) {
@@ -52,15 +58,20 @@ export class View {
     layer.style.display = 'block';
     layer.style.position = 'absolute';
     layer.style.zIndex = (this.layerZIndexCount++).toString();
-    this.layers[id] = {
-      context: layer.getContext('2d') as CanvasRenderingContext2D,
-      objects: new Set(),
-    };
-    this.root?.appendChild(layer);
+    this.root.appendChild(layer);
+    if (this.layers[id]) {
+      this.layers[id].context = layer.getContext('2d') as CanvasRenderingContext2D;
+      this.redrawAllEntitiesOnLayer(id);
+    } else {
+      this.layers[id] = {
+        context: layer.getContext('2d') as CanvasRenderingContext2D,
+        objects: new Set(),
+      };
+    }
     return layer;
   }
 
-  bindEntityToLayer(entity: Entity, layerId: keyof Layer) {
+  bindEntityToLayer(entity: Entity | UIElement, layerId: keyof Layer) {
     const layerObject = {
       instance: entity,
       listeners: {
@@ -69,6 +80,9 @@ export class View {
         },
         entityDidUpdate: () => {
           this.drawEntityOnLayer(entity, layerId);
+        },
+        entityShouldRenderText: () => {
+          this.drawTextOnLayer(entity as UIElement, layerId);
         },
         entityShouldBeDestroyed: () => {
           this.eraseEntityFromLayer(entity, layerId);
@@ -107,6 +121,19 @@ export class View {
     ] as const;
   }
 
+  drawTextOnLayer(elem: UIElement, layerId: keyof Layer) {
+    const context = this.layers[layerId].context;
+    context.font = `${this.convertToPixels(elem.height)}px "Press Start 2P"`;
+    context.textAlign = elem.align;
+    context.textBaseline = 'top';
+    context.fillStyle = elem.color;
+    let posX = elem.posX;
+    if (elem.align === 'center') {
+      posX += Math.round(elem.width / 2);
+    }
+    context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY));
+  }
+
   drawEntityOnLayer(entity: Entity, layerId: keyof Layer) {
     const context = this.layers[layerId].context;
     context.fillStyle = entity.color;
@@ -119,10 +146,15 @@ export class View {
   }
 
   redrawAllEntitiesOnLayer(layerId: keyof Layer) {
-    const { context, objects } = this.layers[layerId];
-    context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
+    const { objects } = this.layers[layerId];
+    this.eraseAllEntitiesOnLayer(layerId);
     for (const layerObject of objects) {
       this.drawEntityOnLayer(layerObject.instance, layerId);
     }
+  }
+
+  eraseAllEntitiesOnLayer(layerId: keyof Layer) {
+    const { context } = this.layers[layerId];
+    context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
   }
 }
