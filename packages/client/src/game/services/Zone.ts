@@ -148,8 +148,10 @@ export class Zone {
           if (secondaryLayerCell !== null) {
             return true;
           }
-        } else if (entity.type === 'projectile') {
+        }
+        if (entity.type === 'projectile') {
           if (mainLayerCell !== null && mainLayerCell.hittable) {
+            mainLayerCell.takeDamage();
             return true;
           }
           if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
