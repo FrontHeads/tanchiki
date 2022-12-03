@@ -13,7 +13,7 @@ export class Overlay {
     this.view.eraseAllEntitiesOnLayer('overlay');
   }
 
-  createElement(props: UIElementSettings) {
+  renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
     this.view.add(elem);
     elem.render();
@@ -22,7 +22,7 @@ export class Overlay {
 
   showLoading() {
     this.renderBlackScreen();
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 26,
       width: this.view.width,
@@ -38,7 +38,7 @@ export class Overlay {
   }
 
   renderBlackScreen() {
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 0,
       width: this.view.width,
@@ -49,7 +49,7 @@ export class Overlay {
 
   renderMainMenu() {
     this.renderBlackScreen();
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 12,
       width: this.view.width,
@@ -58,7 +58,7 @@ export class Overlay {
       text: 'ТАНЧИКИ',
       align: 'center',
     });
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 20,
       width: this.view.width,
@@ -67,7 +67,7 @@ export class Overlay {
       text: '2023',
       align: 'center',
     });
-    this.createElement({
+    this.renderElement({
       posX: 20,
       posY: 30,
       width: 20,
@@ -75,7 +75,7 @@ export class Overlay {
       color: 'white',
       text: '1 ИГРОК',
     });
-    this.createElement({
+    this.renderElement({
       posX: 20,
       posY: 34,
       width: 20,
@@ -84,7 +84,7 @@ export class Overlay {
       text: '2 ИГРОКА',
     });
 
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 50,
       width: this.view.width,
@@ -93,7 +93,7 @@ export class Overlay {
       text: 'WASD ИЛИ СТРЕЛКИ ДЛЯ ДВИЖЕНИЯ',
       align: 'center',
     });
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 52,
       width: this.view.width,
@@ -115,7 +115,7 @@ export class Overlay {
         posY = 30;
         break;
     }
-    this.createElement({
+    this.renderElement({
       posX: 16,
       posY,
       width: 2,
@@ -129,14 +129,14 @@ export class Overlay {
     const width = this.view.width;
     const height = Math.round(this.view.height / 2);
 
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 0,
       width,
       height: this.view.height,
       color: 'grey',
     });
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: height - 2,
       width,
@@ -146,14 +146,16 @@ export class Overlay {
       align: 'center',
     });
 
-    setTimeout(this.animateStartScreen.bind(this), initialDelay);
+    setTimeout(() => {
+      this.animate(this.updateStartScreenStage.bind(this));
+    }, initialDelay);
   }
 
-  animateStartScreen() {
+  animate(animateFunction: (stage: number) => boolean) {
     let stageCount = 0;
     const animateIntervalMs = 20;
     const animateProcess = setInterval(() => {
-      const stageResult = this.updateStartScreenStage(++stageCount);
+      const stageResult = animateFunction(++stageCount);
       if (!stageResult) {
         clearInterval(animateProcess);
       }
@@ -169,19 +171,44 @@ export class Overlay {
     }
 
     this.clearScreen();
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: 0,
       width,
       height,
       color: 'grey',
     });
-    this.createElement({
+    this.renderElement({
       posX: 0,
       posY: height + stage * 2,
       width,
       height,
       color: 'grey',
+    });
+
+    return true;
+  }
+
+  showGameOver() {
+    this.animate(this.updateGameOverStage.bind(this));
+  }
+
+  updateGameOverStage(stage = 0) {
+    const posY = this.view.height - stage;
+
+    if (posY < this.view.height / 2 - 1) {
+      return false;
+    }
+
+    this.clearScreen();
+    this.renderElement({
+      posX: 0,
+      posY,
+      width: this.view.width,
+      height: 2,
+      text: 'ПРОИГРЫШ',
+      color: 'red',
+      align: 'center',
     });
 
     return true;

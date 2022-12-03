@@ -50,4 +50,8 @@ export class Entity extends EventEmitter {
     this.emit('entityShouldBeDestroyed');
     this.spawned = false;
   }
+
+  takeDamage() {
+    this.emit('damaged');
+  }
 }

@@ -1,4 +1,4 @@
-import type { Entity, EntityDynamic } from '../entities';
+import type { EntityDynamic } from '../entities';
 
 export type GameSettings = {
   width: number;
