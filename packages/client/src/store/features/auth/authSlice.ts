@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '../../store';
 import { authThunks } from './authThunks';
@@ -12,7 +12,11 @@ export const authSlice = createSlice({
     isAuthenticated: false,
     error: '',
   } as AuthState,
-  reducers: {},
+  reducers: {
+    setError: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload;
+    },
+  },
   extraReducers: builder => {
     builder
       // SignIn

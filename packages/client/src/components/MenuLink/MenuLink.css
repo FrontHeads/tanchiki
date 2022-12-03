@@ -51,6 +51,8 @@
 
     @media (max-width: 430px) {
       font-size: 1.2rem;
+      max-width: 80%;
+      line-height: 1.5rem;
     }
   }
 

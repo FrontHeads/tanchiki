@@ -15,7 +15,7 @@ describe('MenuLink', () => {
       </BrowserRouter>
     );
 
-    const renderedMenu = screen.getByTestId('menulink');
+    const renderedMenu = screen.getByTestId('navigation-list__row');
 
     expect(renderedMenu).toBeInTheDocument();
   });

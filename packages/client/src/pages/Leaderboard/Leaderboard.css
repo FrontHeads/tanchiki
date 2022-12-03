@@ -11,6 +11,9 @@
   text-align: center;
   margin: 0 60px 60px;
 
+  &__header {
+    text-align: center;
+  }
   @media (max-width: 420px) {
     margin: 0 0 60px;
   }
