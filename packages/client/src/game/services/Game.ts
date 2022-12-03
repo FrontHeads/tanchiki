@@ -1,4 +1,4 @@
-import { Projectile, Tank, Terrain } from '../entities';
+import { Entity, Flag, Projectile, Tank, Terrain } from '../entities';
 import { Direction, EntityDynamicSettings, EntitySettings, GameSettings } from '../typings';
 import { Overlay } from '../ui';
 import { Controller, View, Zone } from './';
@@ -42,7 +42,7 @@ export class Game {
 
     this.load(root);
 
-    this.initMenu();
+    this.initLoading();
   }
 
   load(root: HTMLElement | null) {
@@ -140,8 +140,13 @@ export class Game {
     projectile.step();
   }
 
-  createTerrain(props: EntitySettings) {
-    const entity = new Terrain(props);
+  createEntity(props: EntitySettings) {
+    let entity: Entity;
+    if (props.type === 'flag') {
+      entity = new Flag(props);
+    } else {
+      entity = new Terrain(props);
+    }
     this.view.add(entity);
     this.zone.add(entity);
     entity.spawn(props);
@@ -149,28 +154,28 @@ export class Game {
   }
 
   createBoundaries() {
-    this.createTerrain({
+    this.createEntity({
       type: 'boundary',
       width: this.settings.width,
       height: 2,
       posX: 0,
       posY: 0,
     });
-    this.createTerrain({
+    this.createEntity({
       type: 'boundary',
       width: this.settings.width,
       height: 2,
       posX: 0,
       posY: this.settings.height - 2,
     });
-    this.createTerrain({
+    this.createEntity({
       type: 'boundary',
       width: 2,
       height: this.settings.height - 4,
       posX: 0,
       posY: 2,
     });
-    this.createTerrain({
+    this.createEntity({
       type: 'boundary',
       width: 2,
       height: this.settings.height - 4,
@@ -184,17 +189,21 @@ export class Game {
     this.loopEntities.delete(entity);
   }
 
-  initMenu() {
-    this.overlay.showLoading();
+  initLoading() {
     this.mode = 'loading';
+    this.overlay.showLoading();
 
     this.view.offAll('assetsLoaded');
     this.view.on('assetsLoaded', () => {
       setTimeout(() => {
-        this.overlay.showMainMenu();
-        this.mode = 'menu';
+        this.initMenu();
       }, 500);
     });
+  }
+
+  initMenu() {
+    this.mode = 'menu';
+    this.overlay.showMainMenu();
 
     this.controllerAll.reset();
 
@@ -215,15 +224,31 @@ export class Game {
         return;
       }
       if (this.mainMenuState === 0) {
-        this.initScenario();
+        this.initScenario(1);
+      }
+      if (this.mainMenuState === 1) {
+        this.initScenario(2);
       }
     });
   }
 
-  initScenario() {
+  initGameOver() {
+    this.mode = 'loading';
+    this.overlay.showGameOver();
+
+    this.controllerAll.reset();
+    this.controllerWasd.reset();
+    this.controllerArrows.reset();
+    setTimeout(() => {
+      this.initMenu();
+    }, 3000);
+  }
+
+  initScenario(players = 1) {
     this.mode = 'game';
     this.view.reset();
     this.zone.reset();
+    this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
 
@@ -231,14 +256,22 @@ export class Game {
 
     this.createBoundaries();
 
-    const tank1 = this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
-    const tank2 = this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
+    if (players === 1) {
+      this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerAll);
+    } else {
+      this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
+      this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
+    }
 
-    this.createTerrain({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
-    this.createTerrain({ type: 'trees', width: 16, height: 8, posX: 30, posY: 18 });
-    this.createTerrain({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
+    const flag = this.createEntity({ type: 'flag', width: 4, height: 4, posX: 26, posY: 50 });
+    this.createEntity({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
+    this.createEntity({ type: 'trees', width: 16, height: 8, posX: 30, posY: 18 });
+    this.createEntity({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
 
-    this.controllerAll.offAll('pause');
+    flag.on('damaged', () => {
+      this.initGameOver();
+    });
+
     this.controllerAll.on('pause', () => {
       this.togglePause();
     });
