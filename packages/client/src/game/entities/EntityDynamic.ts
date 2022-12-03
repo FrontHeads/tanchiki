@@ -10,6 +10,7 @@ export class EntityDynamic extends Entity {
   moveStepsProgress = 0;
   moveStepsTotal = 8;
   nextDirection = Direction.UP;
+  shouldExplode = false;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -46,17 +47,24 @@ export class EntityDynamic extends Entity {
     if (!this.spawned) {
       return;
     }
-    if (!this.moving && !this.stopping) {
+    if (!this.moving && !this.stopping && !this.shouldExplode) {
       return;
     }
-    if (this.moveStepsProgress === 0) {
-      if (this.direction !== this.nextDirection) {
-        this.turnStep();
-      } else {
-        this.prepareToMove();
+    if (!this.shouldExplode) {
+      if (this.moveStepsProgress === 0) {
+        if (this.direction !== this.nextDirection) {
+          this.turnStep();
+        } else {
+          this.prepareToMove();
+        }
       }
+      this.moveStep();
     }
-    this.moveStep();
+    this.stateCheck();
+  }
+
+  stateCheck() {
+    // для Projectile
   }
 
   turnStep() {
@@ -113,10 +121,5 @@ export class EntityDynamic extends Entity {
         this.setState(this.getNextMove());
       }
     }
-    this.moveStepCheck();
-  }
-
-  moveStepCheck() {
-    // используется в Projectile
   }
 }
