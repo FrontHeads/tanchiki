@@ -17,4 +17,7 @@ export class EventEmitter {
   off(eventName: string, callback: Fn) {
     this.listeners[eventName] = this.listeners[eventName]?.filter((listener: Fn) => listener !== callback);
   }
+  offAll(eventName: string) {
+    delete this.listeners[eventName];
+  }
 }
