@@ -197,9 +197,11 @@ export class Overlay {
   }
 
   updateGameOverStage(stage = 0) {
+    const fontSize = 5;
     const posY = this.view.height - stage;
+    const middle = (this.view.height - fontSize) / 2;
 
-    if (posY < this.view.height / 2 - 1) {
+    if (posY < middle) {
       return false;
     }
 
@@ -208,7 +210,7 @@ export class Overlay {
       posX: 0,
       posY,
       width: this.view.width,
-      height: 2,
+      height: fontSize,
       text: 'ПОТРАЧЕНО',
       color: 'red',
       align: 'center',
