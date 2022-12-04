@@ -171,14 +171,14 @@ export class Game {
     this.createEntity({
       type: 'boundary',
       width: this.settings.boundarySize,
-      height: this.settings.height - (this.settings.boundarySize * 2),
+      height: this.settings.height - this.settings.boundarySize * 2,
       posX: 0,
       posY: this.settings.boundarySize,
     });
     this.createEntity({
       type: 'boundary',
       width: this.settings.boundarySize,
-      height: this.settings.height - (this.settings.boundarySize * 2),
+      height: this.settings.height - this.settings.boundarySize * 2,
       posX: this.settings.width - this.settings.boundarySize,
       posY: this.settings.boundarySize,
     });
