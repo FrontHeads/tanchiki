@@ -1,8 +1,6 @@
 import './UserProfile.css';
 
-import React, { FC, useCallback, useState } from 'react';
-
-import { UserProfile as UserProfileType } from '../../app.typings';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
@@ -10,35 +8,50 @@ import { FormField } from '../../components/FormField';
 import { PATH } from '../../config/constants';
 import { userProfileInputFields } from './data';
 import { UserProfileForm } from './typings';
+import { appSelectors, authActions, authSelectors, me, useAppDispatch, useAppSelector } from '../../store';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { appThunks } from '../../store/features/app/appThunks';
 
 export const UserProfile: FC = () => {
-  // TODO: replace with the real data
-  const userProfile: UserProfileType = {
-    id: 13441,
-    first_name: 'Test',
-    second_name: 'FsssTest',
-    display_name: 'test',
-    login: 'test3',
-    avatar: '',
-    // avatar: '/5aa5e90f-1cd3-456b-98d1-8d74e9ec44da/20cacda2-60db-49c0-b671-6f2418e8c493_Z8NbK-ghPi4.jpg',
-    email: 'test3@test.com',
-    phone: '89217466666',
-  };
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { error, isAuthenticated } = useAppSelector(authSelectors.all);
+
+  const { userProfile, isLoading } = useAppSelector(appSelectors.all);
 
   const formData: UserProfileForm = {
-    email: userProfile.email ?? '',
-    login: userProfile.login ?? '',
-    first_name: userProfile.first_name ?? '',
-    second_name: userProfile.second_name ?? '',
-    display_name: userProfile.display_name ?? '',
-    phone: userProfile.phone ?? '',
+    email: userProfile?.email ?? '',
+    login: userProfile?.login ?? '',
+    first_name: userProfile?.first_name ?? '',
+    second_name: userProfile?.second_name ?? '',
+    display_name: userProfile?.display_name ?? '',
+    phone: userProfile?.phone ?? '',
     oldPassword: '',
     newPassword: '',
   };
+
   const [requestBody, setRequestBody] = useState<UserProfileForm>(formData);
+
+  useEffect(() => {
+    if (userProfile) {
+      setRequestBody(formData);
+    } else {
+      dispatch(me());
+    }
+  }, [userProfile]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(authActions.setError(''));
+    }
+  }, [error]);
 
   const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     event => {
+      console.log(requestBody);
       const { name, value } = event.target;
       setRequestBody({ ...requestBody, [name]: value });
     },
@@ -46,15 +59,34 @@ export const UserProfile: FC = () => {
   );
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = useCallback(
-    event => {
+    (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      console.log(requestBody);
+
+      // Update avatar
+      if (event.target instanceof HTMLFormElement) {
+        const avatarInput = event.target.querySelector(`#avatar`);
+        if (avatarInput instanceof HTMLInputElement && avatarInput.files && avatarInput.files.length) {
+          dispatch(appThunks.updateProfileAvatar(avatarInput.files[0]));
+        }
+      }
+
+      // Update profile
+      // if (JSON.stringify(requestBody) !== JSON.stringify()) {
+      // }
+      console.log('updProfile');
+      dispatch(appThunks.updateProfile(requestBody));
+
+      // Update password
+      const { oldPassword, newPassword } = requestBody;
+      if (oldPassword.length && newPassword.length) {
+        dispatch(appThunks.updatePassword({ oldPassword, newPassword }));
+      }
     },
     [requestBody]
   );
 
-  const avatarPath = userProfile.avatar ? PATH.avatarBase + userProfile.avatar : PATH.defaultAvatar;
-  const header = userProfile.first_name;
+  const avatarPath = userProfile?.avatar ? PATH.avatarBase + userProfile?.avatar : PATH.defaultAvatar;
+  const header = userProfile?.first_name;
 
   return (
     <div className="user-profile">
