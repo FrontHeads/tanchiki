@@ -10,6 +10,7 @@ export class EntityDynamic extends Entity {
   moveStepsProgress = 0;
   moveStepsTotal = 8;
   nextDirection = Direction.UP;
+  moveLoops = 0;
   shouldExplode = false;
 
   constructor(props: EntityDynamicSettings) {
@@ -40,6 +41,7 @@ export class EntityDynamic extends Entity {
   turn(newDirection: Direction) {
     if (this.direction !== newDirection) {
       this.setState({ direction: newDirection });
+      this.moveLoops = 0;
     }
   }
 
@@ -53,7 +55,12 @@ export class EntityDynamic extends Entity {
     if (!this.shouldExplode) {
       if (this.moveStepsProgress === 0) {
         if (this.direction !== this.nextDirection) {
-          this.turnStep();
+          if (this.moveLoops > 4) {
+            this.turn(this.nextDirection);
+            this.prepareToMove();
+          } else {
+            this.turnStep();
+          }
         } else {
           this.prepareToMove();
         }
@@ -114,11 +121,13 @@ export class EntityDynamic extends Entity {
       this.stopping = false;
       if (this.canMove && this.nextRect) {
         this.setState(this.nextRect);
+        ++this.moveLoops;
       }
     } else {
       this.alignedToGrid = false;
       if (this.canMove) {
         this.setState(this.getNextMove());
+        ++this.moveLoops;
       }
     }
   }
