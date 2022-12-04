@@ -2,8 +2,6 @@
 
 .menu {
   font-family: "Press Start 2P", cursive;
-  padding-top: 10px;
-  margin-bottom: 15px;
   overflow-y: hidden;
 
   &__icon {
@@ -58,24 +56,11 @@
     transition: 0.5s ease-in-out;
 
     @media (max-width: 420px) {
-      padding: 130px 60px 0 20px;
+      padding: 100px 60px 0 20px;
     }
   }
 
   &__list_hide {
     left: -1000px;
-  }
-}
-
-.menu-nav {
-  margin: 0 auto;
-
-  .navigation-list {
-    padding: 0;
-    margin: 0 0 60px;
-
-    &__row:nth-child(1) {
-      margin: 0 0 45px;
-    }
   }
 }

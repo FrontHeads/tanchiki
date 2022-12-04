@@ -28,7 +28,6 @@ export const SignUp: FC = () => {
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(requestBody);
   };
 
   return (
