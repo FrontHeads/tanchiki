@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactElement } from 'react';
 import { Provider } from 'react-redux';
@@ -43,11 +43,8 @@ export const renderWithRouter = ({
 };
 
 export const waitUntilLoaderToBeRemoved = async () => {
-  // TODO: Temporary solution. Fix it later
-  await sleep();
-  // if (screen.getByTestId('fallback-loader')) {
-  //   await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
-  // }
+  await waitFor(() => expect(screen.getByTestId('fallback-loader')).toBeInTheDocument());
+  await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
 };
 
 export const createMemoryRouterRoutes = (routes: JSX.Element, opts?: Parameters<typeof createMemoryRouter>[1]) =>
