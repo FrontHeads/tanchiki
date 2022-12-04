@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { createMemoryRouter, createRoutesFromElements, Link, Outlet, Route, useLocation } from 'react-router-dom';
+import { Link, Outlet, Route, useLocation } from 'react-router-dom';
 
 import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
@@ -31,13 +31,12 @@ export const TestAppLayout: FC = () => (
 );
 
 export const testAppRoutes = (
-  <Route element={<TestAppLayout />}>
+  <Route element={<TestAppLayout />} errorElement={<ErrorPage />}>
     <Route element={<Root />} loader={rootLoader}>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/game" element={<Game />} />
       <Route path="/not-game" element={<NotAGame />} />
     </Route>
-    <Route path="*" element={<ErrorPage />} />
   </Route>
 );

@@ -1,4 +1,4 @@
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactElement } from 'react';
 import { Provider } from 'react-redux';
@@ -18,13 +18,11 @@ export const renderWithRouter = ({
   route?: string;
   wrapWithRootLayout?: boolean;
 } = {}) => {
-  window.history.pushState({}, 'Test page', route);
-
   let routes;
   if (!ui) {
     routes = testAppRoutes;
   } else {
-    routes = <Route path="/" element={ui} />;
+    routes = <Route path={route} element={ui} />;
     if (wrapWithRootLayout) {
       routes = (
         <Route element={<Root />} loader={rootLoader}>
@@ -38,16 +36,23 @@ export const renderWithRouter = ({
     user: userEvent.setup(),
     ...render(
       <Provider store={store}>
-        <RouterProvider router={createMemoryRouterRoutes(routes)} />
+        <RouterProvider router={createMemoryRouterRoutes(routes, { initialEntries: [route] })} />
       </Provider>
     ),
   };
 };
 
 export const waitUntilLoaderToBeRemoved = async () => {
-  if (screen.getByTestId('fallback-loader')) {
-    await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
-  }
+  // TODO: Temporary solution. Fix it later
+  await sleep();
+  // if (screen.getByTestId('fallback-loader')) {
+  //   await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
+  // }
 };
 
-export const createMemoryRouterRoutes = (routes: JSX.Element) => createMemoryRouter(createRoutesFromElements(routes));
+export const createMemoryRouterRoutes = (routes: JSX.Element, opts?: Parameters<typeof createMemoryRouter>[1]) =>
+  createMemoryRouter(createRoutesFromElements(routes), opts);
+
+export const sleep = (ms = 300) => {
+  return new Promise(r => setTimeout(r, ms));
+};

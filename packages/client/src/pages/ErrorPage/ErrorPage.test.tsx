@@ -5,7 +5,7 @@ import { screen } from '@testing-library/react';
 import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
 
 describe('Error Page', () => {
-  test('it render at a wrong path', async () => {
+  test('it renders at a wrong path', async () => {
     const { user } = renderWithRouter();
     await waitUntilLoaderToBeRemoved();
 
@@ -15,7 +15,7 @@ describe('Error Page', () => {
     expect(screen.queryByTestId('web-error__button')).toBeTruthy();
   });
 
-  test('it NOT render at a correct path', async () => {
+  test(`it doesn't render at a correct path`, async () => {
     const { user } = renderWithRouter();
     await waitUntilLoaderToBeRemoved();
 

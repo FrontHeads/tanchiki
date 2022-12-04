@@ -1,7 +1,7 @@
 import './Root.css';
 
 import { FC, Suspense, useEffect } from 'react';
-import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation, useNavigation } from 'react-router-dom';
+import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 
 import { UserDTO } from '../../api/typings';
 import { Footer } from '../../components/Footer';
@@ -11,20 +11,17 @@ import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
 import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
 import { Response } from '../../utils/HTTP';
-import { RootProps } from './typings';
 
-export const Root: FC<RootProps> = ({ children }) => {
+export const Root: FC = () => {
   const isAppLoading = useAppSelector(appSelectors.isAppLoading);
   const location = useLocation();
   const printHeaderAndFooter = location?.pathname !== Paths.Game;
   const dispatch = useAppDispatch();
 
   const data = useLoaderData() as { user: Promise<Response<UserDTO>> };
-  // useEffect(() => {
-  if (data) data.user.then(response => response && dispatch(authActions.setUserProfile(response.data)));
-  // }, [data]);
-
-  console.log('data', data);
+  useEffect(() => {
+    if (data) data.user.then(response => response && dispatch(authActions.setUserProfile(response.data)));
+  }, [data]);
 
   return (
     <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
@@ -36,7 +33,6 @@ export const Root: FC<RootProps> = ({ children }) => {
             {printHeaderAndFooter && <div className="delimiter" />}
           </header>
           <Outlet />
-          {children}
           {printHeaderAndFooter && <Footer />}
           <ScrollRestoration />
           {isAppLoading && <Loader data-testid="app-loader" />}

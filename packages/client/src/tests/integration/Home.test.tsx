@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 
 import { Home } from '../../pages/Home';
 import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
