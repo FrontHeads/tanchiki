@@ -16,14 +16,14 @@ describe('game/services/Game', () => {
   it('should use loop', () => {
     const game = Game.create();
     game.loopTimeMs = 100;
-    const entity = { step: jest.fn() } as unknown as Tank;
+    const entity = { update: jest.fn() } as unknown as Tank;
     game.loopEntities.add(entity);
 
     game.startLoop();
 
     sleep(100);
 
-    expect(entity.step).toHaveBeenCalled();
+    expect(entity.update).toHaveBeenCalled();
   });
 
   it('should stop loop', () => {

@@ -70,7 +70,7 @@ export class Game {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
     for (const entity of this.loopEntities) {
-      entity.step();
+      entity.update();
       if (entity.shouldBeDestroyed) {
         this.destroyEntity(entity);
       }
@@ -137,7 +137,7 @@ export class Game {
     this.view.add(projectile);
     this.zone.add(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
-    projectile.step();
+    projectile.update();
   }
 
   createEntity(props: EntitySettings) {
@@ -233,15 +233,17 @@ export class Game {
   }
 
   initGameOver() {
+    const redirectDelay = 3000;
     this.mode = 'loading';
     this.overlay.showGameOver();
 
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
+
     setTimeout(() => {
       this.initMenu();
-    }, 3000);
+    }, redirectDelay);
   }
 
   initScenario(players = 1) {
