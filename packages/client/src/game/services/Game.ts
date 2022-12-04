@@ -190,6 +190,7 @@ export class Game {
   }
 
   initLoading() {
+    const redirectDelay = 500;
     this.mode = 'loading';
     this.overlay.showLoading();
 
@@ -197,7 +198,7 @@ export class Game {
     this.view.on('assetsLoaded', () => {
       setTimeout(() => {
         this.initMenu();
-      }, 500);
+      }, redirectDelay);
     });
   }
 
