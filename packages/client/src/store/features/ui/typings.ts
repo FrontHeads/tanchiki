@@ -1,3 +1,3 @@
 export interface uiState {
-  isBurgerVisible: boolean;
+  isBurgerMenuVisible: boolean;
 }

@@ -1,4 +1,5 @@
 import { FormFieldProps } from '../../components/FormField/typings';
+import { SignUpForm } from './typings';
 
 export const signUpInputFields: FormFieldProps[] = [
   {
@@ -51,3 +52,13 @@ export const signUpInputFields: FormFieldProps[] = [
     required: true,
   },
 ];
+
+export const formInitialState: SignUpForm = {
+  login: '',
+  password: '',
+  password_check: '',
+  first_name: '',
+  second_name: '',
+  email: '',
+  phone: '',
+};

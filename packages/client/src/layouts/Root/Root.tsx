@@ -23,6 +23,7 @@ export const Root: FC<RootProps> = ({ children }) => {
     layout_state_idle: !isLoading,
   });
 
+  //TODO scrollRestoration убрать здесь и выше в импортах?
   return (
     <main className={rootElementClassNames}>
       {/* <ScrollRestoration /> */}

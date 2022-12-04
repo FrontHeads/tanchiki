@@ -3,6 +3,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { authAPI, SigninRequestData, SignupRequestData } from '../../../api/authAPI';
 import { appActions } from '../app/appSlice';
 
+/**
+ * Thunks - вызывают методы апи и полученные данные автоматически записывают в хранилище.
+ */
+
 export const signIn = createAsyncThunk('auth/signin', async (credentials: SigninRequestData, { dispatch }) => {
   await authAPI.signin(credentials);
   await dispatch(me());
@@ -16,7 +20,6 @@ export const signUp = createAsyncThunk('auth/signup', async (data: SignupRequest
 export const me = createAsyncThunk('auth/me', async (_, { dispatch }) => {
   const { data } = await authAPI.me();
   dispatch(appActions.setUserProfile(data));
-  return data;
 });
 
 export const logout = createAsyncThunk('auth/logout', async (_, { dispatch }) => {

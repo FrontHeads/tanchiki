@@ -8,49 +8,33 @@ import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { signUpInputFields } from './data';
+import { formInitialState, signUpInputFields as signUpFieldList } from './data';
 import { SignUpForm } from './typings';
 
 export const SignUp: FC = () => {
+  // Оборачиваем в константу из-за каррирования в useAppDispatch() и useNavigate()
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
-  if (isAuthenticated) {
-    navigate(Paths.Home);
-  }
 
-  const formData: SignUpForm = {
-    login: '',
-    password: '',
-    password_check: '',
-    first_name: '',
-    second_name: '',
-    email: '',
-    phone: '',
-  };
-
-  const [requestBody, setRequestBody] = useState<SignUpForm>(formData);
+  const [formData, setFormData] = useState<SignUpForm>(formInitialState);
 
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
-      setRequestBody({ ...requestBody, [name]: value });
+      setFormData({ ...formData, [name]: value });
     },
-    [requestBody]
+    [formData]
   );
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      dispatch(authThunks.signUp(requestBody));
+      dispatch(authThunks.signUp(formData));
     },
-    [requestBody]
+    [formData]
   );
-
-  const inputFields = signUpInputFields.map(field => {
-    return <FormField key={field.id} {...field} onChange={inputChangeHandler} disabled={isLoading} />;
-  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -61,14 +45,21 @@ export const SignUp: FC = () => {
 
   useEffect(() => {
     if (error) {
-      dispatch(authActions.setError(''));
       toast.error(error);
+      // Здесь обнуляем поле с ошибкой в хранилище, чтобы она не показывалась дважды в toast.
+      dispatch(authActions.setError(''));
     }
   }, [error]);
 
+  //TODO вынести цикл в отдельный универсальный компонент - FormFieldList
+  // + взять логику из Profile и типизацию оттуда
+  const formFieldList = signUpFieldList.map(field => {
+    return <FormField key={field.id} {...field} onChange={inputChangeHandler} disabled={isLoading} />;
+  });
+
   return (
     <Form handlerSubmit={submitHandler} header="Регистрация">
-      <>{inputFields}</>
+      <>{formFieldList}</>
       <div className="form__buttons-wrapper">
         <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />

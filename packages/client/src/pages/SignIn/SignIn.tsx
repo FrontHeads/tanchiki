@@ -28,8 +28,8 @@ export const SignIn: FC = () => {
 
   useEffect(() => {
     if (error) {
-      dispatch(authActions.setError(''));
       toast.error(error);
+      dispatch(authActions.setError(''));
     }
   }, [error]);
 

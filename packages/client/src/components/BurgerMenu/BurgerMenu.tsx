@@ -9,23 +9,23 @@ import { Navigation } from '../Navigation';
 
 export const BurgerMenu: FC = () => {
   const dispatch = useAppDispatch();
-  const { isBurgerVisible } = useAppSelector(uiSelectors.all);
+  const { isBurgerMenuVisible } = useAppSelector(uiSelectors.all);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const iconLineClassName = cn('menu__button-line ', {
-    'menu__button-line_open': isBurgerVisible,
+    'menu__button-line_open': isBurgerMenuVisible,
   });
 
   const menuListClassName = cn('menu__list ', {
-    menu__list_hide: !isBurgerVisible,
+    menu__list_hide: !isBurgerMenuVisible,
   });
 
   const toggleHandler = () => {
-    dispatch(uiActions.toggleBurger());
+    dispatch(uiActions.toggleBurgerMenu());
   };
 
   const closeHandler = () => {
-    dispatch(uiActions.closeBurger());
+    dispatch(uiActions.closeBurgerMenu());
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export const BurgerMenu: FC = () => {
       </button>
       <div
         data-testid="menu__list"
-        data-test={isBurgerVisible ? 'menu-list-on' : 'menu-list-off'}
+        data-test={isBurgerMenuVisible ? 'menu-list-on' : 'menu-list-off'}
         className={menuListClassName}>
         <Navigation />
       </div>
