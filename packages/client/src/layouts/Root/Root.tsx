@@ -1,43 +1,47 @@
 import './Root.css';
 
-import cn from 'classnames';
-import { FC } from 'react';
-import { Outlet, useLocation, useNavigation } from 'react-router-dom';
+import { FC, Suspense } from 'react';
+import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation, useNavigation } from 'react-router-dom';
 
+import { UserDTO } from '../../api/typings';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
 import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
-import { appSelectors, useAppSelector } from '../../store';
+import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
+import { Response } from '../../utils/HTTP';
 import { RootProps } from './typings';
 
 export const Root: FC<RootProps> = ({ children }) => {
-  const navigation = useNavigation();
-  const isAppLoading = useAppSelector(appSelectors.isLoading);
-  const isLoading = navigation.state !== 'idle' || isAppLoading;
+  const isAppLoading = useAppSelector(appSelectors.isAppLoading);
   const location = useLocation();
+  const printHeaderAndFooter = location?.pathname !== Paths.Game;
 
-  const rootElementClassNames = cn('layout', {
-    layout_state_loading: isLoading,
-    layout_state_idle: !isLoading,
-  });
+  const data = useLoaderData() as { user: Promise<Response<UserDTO>> };
+  const dispatch = useAppDispatch();
+
+  if (data) data.user.then(response => response && dispatch(authActions.setUserProfile(response.data)));
 
   return (
-    <main className={rootElementClassNames}>
-      <header>
-        <Menu />
-        {location?.pathname !== Paths.Game && (
-          <>
-            <Logo />
-            <div className="delimiter" />
-          </>
-        )}
-      </header>
-      <Outlet />
-      {children}
-      {location?.pathname !== Paths.Game && <Footer />}
-      {isLoading && <Loader />}
-    </main>
+    <Suspense fallback={<Loader />}>
+      <Await
+        resolve={(data && data.user) || Promise.resolve()}
+        children={
+          <main className={'layout'}>
+            <header>
+              <Menu />
+              {printHeaderAndFooter && <Logo />}
+              {printHeaderAndFooter && <div className="delimiter" />}
+            </header>
+            <Outlet />
+            {children}
+            {printHeaderAndFooter && <Footer />}
+            <ScrollRestoration />
+            {isAppLoading && <Loader />}
+          </main>
+        }
+      />
+    </Suspense>
   );
 };

@@ -32,8 +32,8 @@ export const TestApp: FC = () => (
           <Route path="/about" element={<About />} />
           <Route path="/game" element={<Game />} />
           <Route path="/not-game" element={<NotAGame />} />
-          <Route path="*" element={<ErrorPage />} />
         </Route>
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
 
       <LocationDisplay />

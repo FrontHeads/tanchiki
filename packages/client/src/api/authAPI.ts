@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from '../config/constants';
+import { YANDEX_API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
 import { UserDTO } from './typings';
 
@@ -22,11 +22,11 @@ type SignupResponseData = { id: number };
 type UserResponseData = UserDTO;
 
 export const authAPI = {
-  signin: (data: SigninRequestData) => HTTP.post<SigninResponseData>(API_ENDPOINTS.AUTH.SIGNIN, { data }),
+  signin: (data: SigninRequestData) => HTTP.post<SigninResponseData>(YANDEX_API_ENDPOINTS.AUTH.SIGNIN, { data }),
 
-  signup: (data: SignupRequestData) => HTTP.post<SignupResponseData>(API_ENDPOINTS.AUTH.SIGNUP, { data }),
+  signup: (data: SignupRequestData) => HTTP.post<SignupResponseData>(YANDEX_API_ENDPOINTS.AUTH.SIGNUP, { data }),
 
-  me: () => HTTP.get<UserResponseData>(API_ENDPOINTS.AUTH.ME),
+  me: () => HTTP.get<UserResponseData>(YANDEX_API_ENDPOINTS.AUTH.ME),
 
-  logout: () => HTTP.post(API_ENDPOINTS.AUTH.LOGOUT),
+  logout: () => HTTP.post(YANDEX_API_ENDPOINTS.AUTH.LOGOUT),
 };

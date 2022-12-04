@@ -6,17 +6,10 @@ import { Provider } from 'react-redux';
 import { Root } from '../../layouts/Root';
 import { Home } from '../../pages/Home';
 import { store } from '../../store';
-import { renderWithRouter } from '../../utils/testing-utils';
-
-jest.mock('react-router-dom', () => {
-  return {
-    ...jest.requireActual('react-router-dom'),
-    useNavigation: jest.fn(() => ({ state: '' })),
-  };
-});
+import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
 
 describe('Home page', () => {
-  test('it renders all page components', () => {
+  test('it renders all page components', async () => {
     renderWithRouter(
       <Provider store={store}>
         <Root>
@@ -24,6 +17,7 @@ describe('Home page', () => {
         </Root>
       </Provider>
     );
+    await waitUntilLoaderToBeRemoved();
 
     const nav = screen.getByTestId('menu-nav-home');
     const logo = screen.getByTestId('logo');

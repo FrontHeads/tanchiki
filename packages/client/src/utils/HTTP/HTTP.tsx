@@ -1,4 +1,4 @@
-import { API_HOST } from '../../config/constants';
+import { YANDEX_API_HOST } from '../../config/constants';
 import { axios, buildPath } from './';
 
 enum Method {
@@ -21,7 +21,7 @@ type Options = {
 type OptionsWithoutMethod = Omit<Options, 'method' | 'params'>;
 type GetOptionsWithoutMethod = Omit<Options, 'method' | 'data'>;
 
-type Response<T> = {
+export type Response<T> = {
   data: T;
   status: number;
   headers: Record<string, unknown>;
@@ -49,7 +49,7 @@ export class HTTP {
   }
 
   private static _send<T>(path: string, options: Options = { method: Method.GET }): Promise<Response<T>> {
-    const { method, headers = { 'Content-Type': 'application/json' }, baseUrl = API_HOST, ...rest } = options;
+    const { method, headers = { 'Content-Type': 'application/json' }, baseUrl = YANDEX_API_HOST, ...rest } = options;
 
     const url = buildPath(baseUrl, path);
 
