@@ -8,7 +8,7 @@ import { MenuLinkProps } from './typings';
 
 export const MenuLink: FC<MenuLinkProps> = ({ title, to, handleNavigate }) => {
   return (
-    <li data-testid="menulink" className="navigation-list__row">
+    <li data-testid="navigation-list__row" className="navigation-list__row">
       <NavLink onClick={handleNavigate} className="menu__link" to={to}>
         {title}
       </NavLink>

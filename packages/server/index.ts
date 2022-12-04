@@ -12,7 +12,7 @@ const clientPort = Number(process.env.CLIENT_PORT) || 3000;
 const port = Number(process.env.SERVER_PORT) || 3001;
 const corsOptions = {
   credentials: true,
-  origin: `http://127.0.0.1:${clientPort}`,
+  origin: [`http://127.0.0.1:${clientPort}`, `http://localhost:${clientPort}`],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
