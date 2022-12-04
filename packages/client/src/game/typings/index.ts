@@ -3,6 +3,7 @@ import type { EntityDynamic } from '../entities';
 export type GameSettings = {
   width: number;
   height: number;
+  boundarySize: number;
 };
 
 export enum Direction {

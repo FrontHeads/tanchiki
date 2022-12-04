@@ -17,7 +17,7 @@ export class Game {
   loopProcess: ReturnType<typeof setTimeout> | null = null;
   loopTimeMs = 25;
   loopEntities: Set<Tank | Projectile> = new Set();
-  settings: GameSettings = { width: 56, height: 56 };
+  settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
   mode: 'loading' | 'menu' | 'game' = 'loading';
   mainMenuState = 0;
 
@@ -157,30 +157,30 @@ export class Game {
     this.createEntity({
       type: 'boundary',
       width: this.settings.width,
-      height: 2,
+      height: this.settings.boundarySize,
       posX: 0,
       posY: 0,
     });
     this.createEntity({
       type: 'boundary',
       width: this.settings.width,
-      height: 2,
+      height: this.settings.boundarySize,
       posX: 0,
-      posY: this.settings.height - 2,
+      posY: this.settings.height - this.settings.boundarySize,
     });
     this.createEntity({
       type: 'boundary',
-      width: 2,
-      height: this.settings.height - 4,
+      width: this.settings.boundarySize,
+      height: this.settings.height - (this.settings.boundarySize * 2),
       posX: 0,
-      posY: 2,
+      posY: this.settings.boundarySize,
     });
     this.createEntity({
       type: 'boundary',
-      width: 2,
-      height: this.settings.height - 4,
-      posX: this.settings.width - 2,
-      posY: 2,
+      width: this.settings.boundarySize,
+      height: this.settings.height - (this.settings.boundarySize * 2),
+      posX: this.settings.width - this.settings.boundarySize,
+      posY: this.settings.boundarySize,
     });
   }
 
