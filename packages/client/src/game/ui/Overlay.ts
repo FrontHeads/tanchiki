@@ -4,6 +4,7 @@ import { UIElement } from '../ui';
 
 export class Overlay {
   view!: View;
+  mainMenuStateYPos = [32, 36];
 
   constructor(view: View) {
     this.view = view;
@@ -65,23 +66,23 @@ export class Overlay {
       posX: 0,
       posY: 12,
       width: this.view.width,
-      height: 6,
+      height: 7,
       img: this.view.brickBg,
       text: 'ТАНЧИКИ',
       align: 'center',
     });
     this.renderElement({
       posX: 0,
-      posY: 20,
+      posY: 21,
       width: this.view.width,
-      height: 6,
+      height: 7,
       img: this.view.brickBg,
       text: '2023',
       align: 'center',
     });
     this.renderElement({
       posX: 20,
-      posY: 30,
+      posY: this.mainMenuStateYPos[0],
       width: 20,
       height: 2,
       color: 'white',
@@ -89,7 +90,7 @@ export class Overlay {
     });
     this.renderElement({
       posX: 20,
-      posY: 34,
+      posY: this.mainMenuStateYPos[1],
       width: 20,
       height: 2,
       color: 'white',
@@ -122,10 +123,10 @@ export class Overlay {
     let posY = 0;
     switch (state) {
       case 1:
-        posY = 34;
+        posY = this.mainMenuStateYPos[1];
         break;
       default:
-        posY = 30;
+        posY = this.mainMenuStateYPos[0];
         break;
     }
     this.renderElement({
@@ -208,7 +209,7 @@ export class Overlay {
       posY,
       width: this.view.width,
       height: 2,
-      text: 'ПРОИГРЫШ',
+      text: 'ПОТРАЧЕНО',
       color: 'red',
       align: 'center',
     });
