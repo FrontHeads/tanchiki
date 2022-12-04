@@ -12,7 +12,6 @@ describe('Router', () => {
 
     expect(screen.getByText('Вы на домашней странице')).toBeInTheDocument();
     await user.click(screen.getByText('О нас'));
-    await waitUntilLoaderToBeRemoved();
     expect(screen.getByText('Вы на странице "О нас"')).toBeInTheDocument();
   });
 
