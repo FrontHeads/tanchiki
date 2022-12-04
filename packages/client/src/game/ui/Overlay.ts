@@ -20,6 +20,27 @@ export class Overlay {
     return elem;
   }
 
+  renderBlackScreen() {
+    this.renderElement({
+      posX: 0,
+      posY: 0,
+      width: this.view.width,
+      height: this.view.height,
+      color: 'black',
+    });
+  }
+
+  animate(animateFunction: (stage: number) => boolean) {
+    let stageCount = 0;
+    const animateIntervalMs = 20;
+    const animateProcess = setInterval(() => {
+      const stageResult = animateFunction(++stageCount);
+      if (!stageResult) {
+        clearInterval(animateProcess);
+      }
+    }, animateIntervalMs);
+  }
+
   showLoading() {
     this.renderBlackScreen();
     this.renderElement({
@@ -37,18 +58,9 @@ export class Overlay {
     this.updateMainMenuState(0);
   }
 
-  renderBlackScreen() {
-    this.renderElement({
-      posX: 0,
-      posY: 0,
-      width: this.view.width,
-      height: this.view.height,
-      color: 'black',
-    });
-  }
-
   renderMainMenu() {
     this.renderBlackScreen();
+
     this.renderElement({
       posX: 0,
       posY: 12,
@@ -106,6 +118,7 @@ export class Overlay {
 
   updateMainMenuState(state = 0) {
     this.renderMainMenu();
+
     let posY = 0;
     switch (state) {
       case 1:
@@ -149,17 +162,6 @@ export class Overlay {
     setTimeout(() => {
       this.animate(this.updateStartScreenStage.bind(this));
     }, initialDelay);
-  }
-
-  animate(animateFunction: (stage: number) => boolean) {
-    let stageCount = 0;
-    const animateIntervalMs = 20;
-    const animateProcess = setInterval(() => {
-      const stageResult = animateFunction(++stageCount);
-      if (!stageResult) {
-        clearInterval(animateProcess);
-      }
-    }, animateIntervalMs);
   }
 
   updateStartScreenStage(stage = 0) {
