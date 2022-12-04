@@ -1,6 +1,6 @@
 import './Root.css';
 
-import { FC, Suspense } from 'react';
+import { FC, Suspense, useEffect } from 'react';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation, useNavigation } from 'react-router-dom';
 
 import { UserDTO } from '../../api/typings';
@@ -17,31 +17,31 @@ export const Root: FC<RootProps> = ({ children }) => {
   const isAppLoading = useAppSelector(appSelectors.isAppLoading);
   const location = useLocation();
   const printHeaderAndFooter = location?.pathname !== Paths.Game;
-
-  const data = useLoaderData() as { user: Promise<Response<UserDTO>> };
   const dispatch = useAppDispatch();
 
+  const data = useLoaderData() as { user: Promise<Response<UserDTO>> };
+  // useEffect(() => {
   if (data) data.user.then(response => response && dispatch(authActions.setUserProfile(response.data)));
+  // }, [data]);
+
+  console.log('data', data);
 
   return (
-    <Suspense fallback={<Loader />}>
-      <Await
-        resolve={(data && data.user) || Promise.resolve()}
-        children={
-          <main className={'layout'}>
-            <header>
-              <Menu />
-              {printHeaderAndFooter && <Logo />}
-              {printHeaderAndFooter && <div className="delimiter" />}
-            </header>
-            <Outlet />
-            {children}
-            {printHeaderAndFooter && <Footer />}
-            <ScrollRestoration />
-            {isAppLoading && <Loader />}
-          </main>
-        }
-      />
+    <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
+      <Await resolve={(data && data.user) || Promise.resolve()}>
+        <main className="layout">
+          <header>
+            <Menu />
+            {printHeaderAndFooter && <Logo />}
+            {printHeaderAndFooter && <div className="delimiter" />}
+          </header>
+          <Outlet />
+          {children}
+          {printHeaderAndFooter && <Footer />}
+          <ScrollRestoration />
+          {isAppLoading && <Loader data-testid="app-loader" />}
+        </main>
+      </Await>
     </Suspense>
   );
 };

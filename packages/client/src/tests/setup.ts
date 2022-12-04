@@ -1,7 +1,9 @@
+import 'jest-fix-undefined';
+
 import MockAdapter from 'axios-mock-adapter';
 
+import { YANDEX_API_ENDPOINTS, YANDEX_API_HOST } from '../config/constants';
 import { axios, buildPath } from '../utils/HTTP';
-import { YANDEX_API_ENDPOINTS, YANDEX_API_HOST } from './../config/constants';
 import { fakeUserProfile } from './data';
 
 const mock = new MockAdapter(axios);
@@ -12,12 +14,12 @@ mock.onPost(buildPath(YANDEX_API_HOST, YANDEX_API_ENDPOINTS.AUTH.SIGNIN)).reply(
 mock.onPost(buildPath(YANDEX_API_HOST, YANDEX_API_ENDPOINTS.AUTH.SIGNUP)).reply(200);
 mock.onPost(buildPath(YANDEX_API_HOST, YANDEX_API_ENDPOINTS.AUTH.LOGOUT)).reply(200);
 
-jest.mock('react-router-dom', () => {
-  return {
-    ...jest.requireActual('react-router-dom'),
-    ScrollRestoration: () => null,
-    useRouteError: () => ({ url: '' }),
-    useNavigation: jest.fn(() => ({ state: '' })),
-    useLoaderData: () => ({ user: Promise.resolve(fakeUserProfile) }),
-  };
-});
+// jest.mock('react-router-dom', () => {
+//   return {
+//     ...jest.requireActual('react-router-dom'),
+//     ScrollRestoration: () => null,
+//     useRouteError: () => ({ url: '' }),
+//     useNavigation: jest.fn(() => ({ state: '' })),
+//     useLoaderData: () => ({ user: Promise.resolve(fakeUserProfile) }),
+//   };
+// });

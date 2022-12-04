@@ -2,12 +2,11 @@ import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
 
-import { TestApp } from '../../tests/TestApp';
 import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
 
 describe('Root', () => {
   test('it renders logo and footer', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+    const { user } = renderWithRouter();
     await waitUntilLoaderToBeRemoved();
 
     await user.click(screen.getByText('Not game'));
@@ -16,7 +15,7 @@ describe('Root', () => {
   });
 
   test(`it doesn't render logo and footer on Game path`, async () => {
-    renderWithRouter(<TestApp />, { route: '/game' });
+    renderWithRouter({ route: '/game' });
     await waitUntilLoaderToBeRemoved();
 
     expect(screen.queryByTestId('logo')).toBeNull();

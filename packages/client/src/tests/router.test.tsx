@@ -3,11 +3,11 @@ import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 
 import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../utils/testing-utils';
-import { LocationDisplay, TestApp } from './TestApp';
+import { LocationDisplay } from './TestApp';
 
 describe('Router', () => {
   test('it correct renders and navigates', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+    const { user } = renderWithRouter();
     await waitUntilLoaderToBeRemoved();
 
     expect(screen.getByText('Вы на домашней странице')).toBeInTheDocument();
@@ -16,7 +16,7 @@ describe('Router', () => {
   });
 
   test('it catches wrong route', async () => {
-    renderWithRouter(<TestApp />, { route: '/bad/route' });
+    renderWithRouter({ route: '/bad/route' });
 
     expect(screen.queryByTestId('web-error__header')).toBeTruthy();
     expect(screen.queryByTestId('web-error__button')).toBeTruthy();
@@ -24,7 +24,7 @@ describe('Router', () => {
 
   test('it renders a component that uses useLocation', async () => {
     const route = '/custom-route';
-    renderWithRouter(<LocationDisplay />, { route });
+    renderWithRouter({ ui: <LocationDisplay />, route });
 
     expect(screen.getByTestId('location-display')).toHaveTextContent(route);
   });

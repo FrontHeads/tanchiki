@@ -2,12 +2,11 @@ import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
 
-import { TestApp } from '../../tests/TestApp';
 import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
 
 describe('Error Page', () => {
   test('it render at a wrong path', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+    const { user } = renderWithRouter();
     await waitUntilLoaderToBeRemoved();
 
     await user.click(screen.getByText('Fake path'));
@@ -17,7 +16,7 @@ describe('Error Page', () => {
   });
 
   test('it NOT render at a correct path', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+    const { user } = renderWithRouter();
     await waitUntilLoaderToBeRemoved();
 
     await user.click(screen.getByText('Game'));
@@ -26,7 +25,7 @@ describe('Error Page', () => {
   });
 
   test('it can return to main page from error page', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+    const { user } = renderWithRouter();
     await waitUntilLoaderToBeRemoved();
 
     await user.click(screen.getByText('Fake path'));
