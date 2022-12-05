@@ -6,7 +6,7 @@ describe('Redux auth state', () => {
   test('should contain correct initial values', () => {
     const state = store.getState().auth;
     expect(state.isLoading).toEqual(false);
-    expect(state.isAuthenticated).toEqual(false);
+    expect(state.userProfile).toEqual(null);
     expect(state.error).toEqual('');
   });
 
@@ -18,7 +18,6 @@ describe('Redux auth state', () => {
     expect(state.app.isAppLoading).toEqual(false);
     expect(state.auth.userProfile).toEqual(fakeUserProfile);
     expect(state.auth.isLoading).toEqual(false);
-    expect(state.auth.isAuthenticated).toEqual(true);
   });
 
   test('should correct set values after dispatch "logout" thunk', async () => {
@@ -28,7 +27,6 @@ describe('Redux auth state', () => {
 
     expect(state.app.isAppLoading).toEqual(false);
     expect(state.auth.userProfile).toEqual(null);
-    expect(state.auth.isAuthenticated).toEqual(false);
     expect(state.auth.isLoading).toEqual(false);
   });
 
@@ -40,7 +38,6 @@ describe('Redux auth state', () => {
     expect(state.app.isAppLoading).toEqual(false);
     expect(state.auth.userProfile).toEqual(fakeUserProfile);
     expect(state.auth.isLoading).toEqual(false);
-    expect(state.auth.isAuthenticated).toEqual(true);
   });
 
   test('should correct set values after dispatch "signUp" thunk', async () => {
@@ -53,6 +50,5 @@ describe('Redux auth state', () => {
     expect(state.app.isAppLoading).toEqual(false);
     expect(state.auth.userProfile).toEqual(fakeUserProfile);
     expect(state.auth.isLoading).toEqual(false);
-    expect(state.auth.isAuthenticated).toEqual(true);
   });
 });

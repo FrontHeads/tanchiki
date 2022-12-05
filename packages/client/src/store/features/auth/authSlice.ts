@@ -10,7 +10,6 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     isLoading: false,
-    isAuthenticated: false,
     error: '',
     userProfile: null,
   } as AuthState,
@@ -20,7 +19,6 @@ export const authSlice = createSlice({
     },
     setUserProfile: (state, { payload }: PayloadAction<Nullable<UserProfile>>) => {
       state.userProfile = payload;
-      state.isAuthenticated = payload !== null;
     },
   },
   extraReducers: builder => {
@@ -52,12 +50,11 @@ export const authSlice = createSlice({
       })
       .addCase(authThunks.me.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.isAuthenticated = true;
         state.userProfile = payload;
       })
       .addCase(authThunks.me.rejected, (state, action) => {
         state.isLoading = false;
-        state.isAuthenticated = false;
+        state.userProfile = null;
         state.error = action.error.message as string;
       })
 
@@ -68,7 +65,6 @@ export const authSlice = createSlice({
       })
       .addCase(authThunks.logout.fulfilled, state => {
         state.isLoading = false;
-        state.isAuthenticated = false;
         state.userProfile = null;
       })
       .addCase(authThunks.logout.rejected, state => {
@@ -81,13 +77,13 @@ export const authSlice = createSlice({
 export const authSelectors = {
   all: (state: RootState) => state.auth,
   isLoading: (state: RootState) => state.auth.isLoading,
-  isAuthenticated: (state: RootState) => state.auth.isAuthenticated,
+  isAuthenticated: (state: RootState) => state.auth.userProfile !== null,
   userProfile: (state: RootState) => state.auth.userProfile,
   error: (state: RootState) => state.auth.error,
   authState: (state: RootState) => ({
     isLoading: state.auth.isLoading,
     error: state.auth.error,
-    isAuthenticated: state.auth.isAuthenticated,
+    isAuthenticated: state.auth.userProfile !== null,
   }),
 };
 
