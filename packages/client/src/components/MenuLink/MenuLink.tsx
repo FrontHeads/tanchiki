@@ -12,8 +12,8 @@ export const MenuLink: FC<MenuLinkProps> = ({ title, to, onClick }) => {
       <NavLink onClick={onClick} className="menu__link" to={to}>
         {title}
       </NavLink>
-      <span className="menu__tank-wrapper">
-        <img src={linkTank} alt=">" className="menu__tank-img" />
+      <span className="menu-link__tank-wrapper">
+        <img src={linkTank} alt=">" className="menu-link__tank-img" />
       </span>
     </li>
   );

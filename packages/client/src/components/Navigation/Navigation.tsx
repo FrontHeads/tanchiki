@@ -30,7 +30,7 @@ export const Navigation: FC = () => {
     }
 
     dispatch(uiActions.closeBurgerMenu());
-    //TODO возможно убрать scroll здесь
+    //TODO убрать здесь scroll после реализации scrollRestoration
     window.scrollTo(0, 0);
   };
 
@@ -41,7 +41,7 @@ export const Navigation: FC = () => {
 
   return (
     <nav className="menu-nav">
-      <ul className="navigation-list">{menuLinks}</ul>
+      <ul className="navigation-list">{menuLinksList}</ul>
     </nav>
   );
 };

@@ -18,7 +18,9 @@ export const FormField: FC<FormFieldProps> = ({
   className,
 }) => {
   return (
-    <div className={cn('form__field', 'form-field', `form__field_id_${id}`, className)} data-testid="form-field">
+    // TODO Папку с компонентом FormField перенести в папку Form
+    // TODO перенести правила .form-field в .form__field (в компоненте Form)
+    <div className={cn('form__field', 'form-field', className)} data-testid="form-field">
       <label className="form-field__label" htmlFor={id}>
         {title}
         {required && <em>*</em>}

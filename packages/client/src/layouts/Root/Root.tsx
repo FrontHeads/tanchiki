@@ -2,7 +2,7 @@ import './Root.css';
 
 import cn from 'classnames';
 import { FC } from 'react';
-import { Outlet, ScrollRestoration, useLocation, useNavigation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigation } from 'react-router-dom';
 
 import { BurgerMenu } from '../../components/BurgerMenu';
 import { Footer } from '../../components/Footer';
@@ -23,10 +23,8 @@ export const Root: FC<RootProps> = ({ children }) => {
     layout_state_idle: !isLoading,
   });
 
-  //TODO scrollRestoration убрать здесь и выше в импортах?
   return (
     <main className={rootElementClassNames}>
-      {/* <ScrollRestoration /> */}
       <header>
         <BurgerMenu />
         {location?.pathname !== Paths.Game && (

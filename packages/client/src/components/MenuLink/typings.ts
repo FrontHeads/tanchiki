@@ -1,5 +1,5 @@
 type MenuLinkProps = {
-  id: string | number;
+  name: string;
   title: string;
   to: string;
   onClick?: () => Promise<void>;
