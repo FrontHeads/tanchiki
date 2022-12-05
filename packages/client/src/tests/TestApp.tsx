@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { Provider } from 'react-redux';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Outlet, Route, useLocation } from 'react-router-dom';
 
+import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
 import { ErrorPage } from '../pages/ErrorPage';
-import { store } from '../store';
 
 const About: FC = () => <div>Вы на странице "О нас"</div>;
 const Home: FC = () => <div>Вы на домашней странице</div>;
@@ -17,26 +16,27 @@ export const LocationDisplay = () => {
   return <div data-testid="location-display">{location.pathname}</div>;
 };
 
-export const TestApp: FC = () => (
-  <Provider store={store}>
-    <div>
-      <Link to="/">Главная</Link>
-      <Link to="/about">О нас</Link>
-      <Link to="/game">Game</Link>
-      <Link to="/not-game">Not game</Link>
-      <Link to="/fake-path">Fake path</Link>
+export const TestAppLayout: FC = () => (
+  <>
+    <Link to="/">Главная</Link>
+    <Link to="/about">О нас</Link>
+    <Link to="/game">Game</Link>
+    <Link to="/not-game">Not game</Link>
+    <Link to="/fake-path">Fake path</Link>
 
-      <Routes>
-        <Route path="/" element={<Root />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/game" element={<Game />} />
-          <Route path="/not-game" element={<NotAGame />} />
-          <Route path="*" element={<ErrorPage />} />
-        </Route>
-      </Routes>
+    <LocationDisplay />
 
-      <LocationDisplay />
-    </div>
-  </Provider>
+    <Outlet />
+  </>
+);
+
+export const testAppRoutes = (
+  <Route element={<TestAppLayout />} errorElement={<ErrorPage />}>
+    <Route element={<Root />} loader={rootLoader}>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/game" element={<Game />} />
+      <Route path="/not-game" element={<NotAGame />} />
+    </Route>
+  </Route>
 );

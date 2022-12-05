@@ -1,12 +1,13 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 
+import { renderWithRouter } from '../../utils/testing-utils';
 import { Logo } from './Logo';
 
 describe('Logo', () => {
   test('it render', () => {
-    render(<Logo />);
+    renderWithRouter({ component: <Logo /> });
 
     const renderedLogo = screen.getByTestId('logo');
 

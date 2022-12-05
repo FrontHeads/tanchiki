@@ -1,29 +1,14 @@
 import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
 
-import { Root } from '../../layouts/Root';
 import { Home } from '../../pages/Home';
-import { store } from '../../store';
-import { renderWithRouter } from '../../utils/testing-utils';
-
-jest.mock('react-router-dom', () => {
-  return {
-    ...jest.requireActual('react-router-dom'),
-    useNavigation: jest.fn(() => ({ state: '' })),
-  };
-});
+import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
 
 describe('Home page', () => {
-  test('it renders all page components', () => {
-    renderWithRouter(
-      <Provider store={store}>
-        <Root>
-          <Home />
-        </Root>
-      </Provider>
-    );
+  test('it renders all page components', async () => {
+    renderWithRouter({ component: <Home />, wrapWithRootLayout: true });
+    await waitUntilLoaderToBeRemoved();
 
     const nav = screen.getByTestId('menu-nav-home');
     const logo = screen.getByTestId('logo');
