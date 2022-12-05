@@ -11,7 +11,7 @@ describe('MenuLink', () => {
 
     render(
       <BrowserRouter>
-        <MenuLink id="test" onClick={onClick} title="test" to="test" />
+        <MenuLink name="test" onClick={onClick} title="test" to="test" />
       </BrowserRouter>
     );
 

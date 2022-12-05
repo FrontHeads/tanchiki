@@ -35,8 +35,8 @@ export const Navigation: FC = () => {
   };
 
   //TODO тут бы тип хорошо добавить для { id, title, to }
-  const menuLinks = NAVIGATION_LIST.map(({ id, title, to }) => (
-    <MenuLink onClick={() => onClick(id)} key={id} id={id} title={title} to={to} />
+  const menuLinksList = NAVIGATION_LIST.map(({ name, title, to }) => (
+    <MenuLink onClick={() => onClick(name)} key={name} name={name} title={title} to={to} />
   ));
 
   return (
