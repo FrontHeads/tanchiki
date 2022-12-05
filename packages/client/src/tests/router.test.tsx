@@ -24,7 +24,7 @@ describe('Router', () => {
 
   test('it renders a component that uses useLocation', async () => {
     const route = '/custom-route';
-    renderWithRouter({ ui: <LocationDisplay />, route });
+    renderWithRouter({ component: <LocationDisplay />, route });
 
     expect(screen.getByTestId('location-display')).toHaveTextContent(route);
   });

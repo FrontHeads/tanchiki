@@ -21,34 +21,34 @@ type Options = {
 type OptionsWithoutMethod = Omit<Options, 'method' | 'params'>;
 type GetOptionsWithoutMethod = Omit<Options, 'method' | 'data'>;
 
-export type Response<T> = {
+export type ResponseType<T> = {
   data: T;
   status: number;
   headers: Record<string, unknown>;
 };
 
 export class HTTP {
-  static get<T>(url: string, options: GetOptionsWithoutMethod = {}): Promise<Response<T>> {
+  static get<T>(url: string, options: GetOptionsWithoutMethod = {}): Promise<ResponseType<T>> {
     return this._send(url, { ...options, method: Method.GET });
   }
 
-  static put<T>(path: string, options: OptionsWithoutMethod = {}): Promise<Response<T>> {
+  static put<T>(path: string, options: OptionsWithoutMethod = {}): Promise<ResponseType<T>> {
     return this._send(path, { ...options, method: Method.PUT });
   }
 
-  static post<T>(path: string, options: OptionsWithoutMethod = {}): Promise<Response<T>> {
+  static post<T>(path: string, options: OptionsWithoutMethod = {}): Promise<ResponseType<T>> {
     return this._send<T>(path, { ...options, method: Method.POST });
   }
 
-  static patch<T>(path: string, options: OptionsWithoutMethod = {}): Promise<Response<T>> {
+  static patch<T>(path: string, options: OptionsWithoutMethod = {}): Promise<ResponseType<T>> {
     return this._send<T>(path, { ...options, method: Method.PATCH });
   }
 
-  static delete<T>(path: string, options: OptionsWithoutMethod = {}): Promise<Response<T>> {
+  static delete<T>(path: string, options: OptionsWithoutMethod = {}): Promise<ResponseType<T>> {
     return this._send<T>(path, { ...options, method: Method.DELETE });
   }
 
-  private static _send<T>(path: string, options: Options = { method: Method.GET }): Promise<Response<T>> {
+  private static _send<T>(path: string, options: Options = { method: Method.GET }): Promise<ResponseType<T>> {
     const { method, headers = { 'Content-Type': 'application/json' }, baseUrl = YANDEX_API_HOST, ...rest } = options;
 
     const url = buildPath(baseUrl, path);

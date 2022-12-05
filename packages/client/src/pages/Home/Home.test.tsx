@@ -8,21 +8,21 @@ import { Home } from './Home';
 
 describe('Home page', () => {
   test('it renders', () => {
-    renderWithRouter({ ui: <Home /> });
+    renderWithRouter({ component: <Home /> });
 
     const nav = screen.getByTestId('menu-nav-home');
     expect(nav).toBeInTheDocument();
   });
 
   test('it renders image', () => {
-    renderWithRouter({ ui: <Home /> });
+    renderWithRouter({ component: <Home /> });
 
     const nav = screen.getByAltText('Игра Танчики на Денди');
     expect(nav).toBeInTheDocument();
   });
 
   test('it renders all links', () => {
-    renderWithRouter({ ui: <Home /> });
+    renderWithRouter({ component: <Home /> });
 
     const menuLinks = screen.getAllByTestId('navigation-list__row');
     const amount = menuLinks.length;

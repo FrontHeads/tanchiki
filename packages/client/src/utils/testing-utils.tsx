@@ -9,20 +9,27 @@ import { Root } from '../layouts/Root';
 import { store } from '../store';
 import { testAppRoutes } from '../tests/TestApp';
 
-export const renderWithRouter = ({
-  ui,
-  route = '/',
-  wrapWithRootLayout = false,
-}: {
-  ui?: ReactElement;
+type renderWithRouterArgs = {
+  component?: ReactElement;
   route?: string;
   wrapWithRootLayout?: boolean;
-} = {}) => {
+};
+
+/**
+ * Renders test app
+ *
+ * @param {Object} obj - Parameters
+ * @param {string} obj.component - Component to render. If not set - renders <TestApp/>
+ * @param {string} obj.wrapWithRootLayout - Sets whether the component should be wrapped with the <Root/> layout or not.
+ * @param {string} obj.route - Initial route
+ */
+export const renderWithRouter = ({ component, route = '/', wrapWithRootLayout = false }: renderWithRouterArgs = {}) => {
   let routes;
-  if (!ui) {
+
+  if (!component) {
     routes = testAppRoutes;
   } else {
-    routes = <Route path={route} element={ui} />;
+    routes = <Route path={route} element={component} />;
     if (wrapWithRootLayout) {
       routes = (
         <Route element={<Root />} loader={rootLoader}>
@@ -32,24 +39,20 @@ export const renderWithRouter = ({
     }
   }
 
-  return {
-    user: userEvent.setup(),
-    ...render(
-      <Provider store={store}>
-        <RouterProvider router={createMemoryRouterRoutes(routes, { initialEntries: [route] })} />
-      </Provider>
-    ),
-  };
-};
+  const renderResult = render(
+    <Provider store={store}>
+      <RouterProvider router={createMemoryRouterRoutes(routes, { initialEntries: [route] })} />
+    </Provider>
+  );
 
-export const waitUntilLoaderToBeRemoved = async () => {
-  await waitFor(() => expect(screen.getByTestId('fallback-loader')).toBeInTheDocument());
-  await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
+  return { user: userEvent.setup(), ...renderResult };
 };
 
 export const createMemoryRouterRoutes = (routes: JSX.Element, opts?: Parameters<typeof createMemoryRouter>[1]) =>
   createMemoryRouter(createRoutesFromElements(routes), opts);
 
-export const sleep = (ms = 300) => {
-  return new Promise(r => setTimeout(r, ms));
+// Waits until the <Loader/> is removed from the user interface and the application loads the real content
+export const waitUntilLoaderToBeRemoved = async () => {
+  await waitFor(() => expect(screen.getByTestId('fallback-loader')).toBeInTheDocument());
+  await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
 };

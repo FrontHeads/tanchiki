@@ -7,7 +7,7 @@ import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testin
 
 describe('Home page', () => {
   test('it renders all page components', async () => {
-    renderWithRouter({ ui: <Home />, wrapWithRootLayout: true });
+    renderWithRouter({ component: <Home />, wrapWithRootLayout: true });
     await waitUntilLoaderToBeRemoved();
 
     const nav = screen.getByTestId('menu-nav-home');

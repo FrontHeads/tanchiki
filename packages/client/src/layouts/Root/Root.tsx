@@ -10,7 +10,7 @@ import { Logo } from '../../components/Logo';
 import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
 import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
-import { Response } from '../../utils/HTTP';
+import { ResponseType } from '../../utils/HTTP';
 
 export const Root: FC = () => {
   const isAppLoading = useAppSelector(appSelectors.isAppLoading);
@@ -18,9 +18,17 @@ export const Root: FC = () => {
   const printHeaderAndFooter = location?.pathname !== Paths.Game;
   const dispatch = useAppDispatch();
 
-  const data = useLoaderData() as { user: Promise<Response<UserDTO>> };
+  const data = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
+
   useEffect(() => {
-    if (data) data.user.then(response => response && dispatch(authActions.setUserProfile(response.data)));
+    if (data) {
+      data.user.then(response => {
+        if (response) {
+          return dispatch(authActions.setUserProfile(response.data));
+        }
+        return null;
+      });
+    }
   }, [data]);
 
   return (
