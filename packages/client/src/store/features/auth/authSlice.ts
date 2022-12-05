@@ -84,6 +84,11 @@ export const authSelectors = {
   isAuthenticated: (state: RootState) => state.auth.isAuthenticated,
   userProfile: (state: RootState) => state.auth.userProfile,
   error: (state: RootState) => state.auth.error,
+  authState: (state: RootState) => ({
+    isLoading: state.auth.isLoading,
+    error: state.auth.error,
+    isAuthenticated: state.auth.isAuthenticated,
+  }),
 };
 
 export const authActions = authSlice.actions;

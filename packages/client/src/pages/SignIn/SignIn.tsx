@@ -15,7 +15,7 @@ export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { error, isLoading } = useAppSelector(authSelectors.all);
+  const { error, isLoading } = useAppSelector(authSelectors.authState);
   const formData: LoginForm = { login: '', password: '' };
   const [requestBody, setRequestBody] = useState<LoginForm>(formData);
 
