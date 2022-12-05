@@ -1,3 +1,3 @@
-export interface uiState {
+export interface UIState {
   isBurgerMenuVisible: boolean;
 }

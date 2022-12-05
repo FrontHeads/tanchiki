@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '../../store';
-import { uiState } from './typings';
+import { UIState } from './typings';
 
 export const uiSlice = createSlice({
   name: 'ui',
-  initialState: { isBurgerMenuVisible: false } as uiState,
+  initialState: { isBurgerMenuVisible: false } as UIState,
   reducers: {
     toggleBurgerMenu(state) {
       state.isBurgerMenuVisible = !state.isBurgerMenuVisible;
