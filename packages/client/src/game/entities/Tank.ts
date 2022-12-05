@@ -15,6 +15,7 @@ export class Tank extends EntityDynamic {
   shoot() {
     const projectile = new Projectile({
       ...this.calculateProjectileInitPos(),
+      role: this.role,
       direction: this.direction,
       moveSpeed: this.shootSpeed,
     });

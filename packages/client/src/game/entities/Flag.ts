@@ -5,7 +5,6 @@ export class Flag extends Entity {
   constructor(props: EntitySettings) {
     super(props);
     Object.assign(this, props);
-    this.role = 'player1';
     this.type = 'flag';
     this.color = 'white';
     this.crossable = false;
