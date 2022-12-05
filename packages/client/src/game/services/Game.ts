@@ -1,5 +1,5 @@
 import { Entity, Flag, Projectile, Tank, Terrain } from '../entities';
-import { Direction, EntityDynamicSettings, EntitySettings, GameSettings } from '../typings';
+import { Direction, EntityDynamicSettings, EntitySettings, GameSettings, MainMenuState } from '../typings';
 import { Overlay } from '../ui';
 import { Controller, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
@@ -19,7 +19,7 @@ export class Game {
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
   mode: 'loading' | 'menu' | 'game' = 'loading';
-  mainMenuState = 0;
+  mainMenuState = MainMenuState.SINGLEPLAYER;
 
   private constructor() {
     this.zone = new Zone(this.settings);
@@ -204,7 +204,7 @@ export class Game {
 
   initMenu() {
     this.mode = 'menu';
-    this.overlay.showMainMenu();
+    this.overlay.showMainMenu(this.mainMenuState);
 
     this.controllerAll.reset();
 
@@ -213,9 +213,9 @@ export class Game {
         return;
       }
       if (direction === Direction.UP) {
-        this.mainMenuState = 0;
+        this.mainMenuState = MainMenuState.SINGLEPLAYER;
       } else if (direction === Direction.DOWN) {
-        this.mainMenuState = 1;
+        this.mainMenuState = MainMenuState.MULTIPLAYER;
       }
       this.overlay.updateMainMenuState(this.mainMenuState);
     });
@@ -224,12 +224,7 @@ export class Game {
       if (this.mode !== 'menu') {
         return;
       }
-      if (this.mainMenuState === 0) {
-        this.initScenario(1);
-      }
-      if (this.mainMenuState === 1) {
-        this.initScenario(2);
-      }
+      this.initScenario(this.mainMenuState);
     });
   }
 
@@ -247,7 +242,7 @@ export class Game {
     }, redirectDelay);
   }
 
-  initScenario(players = 1) {
+  initScenario(option: MainMenuState) {
     this.mode = 'game';
     this.view.reset();
     this.zone.reset();
@@ -259,9 +254,9 @@ export class Game {
 
     this.createBoundaries();
 
-    if (players === 1) {
+    if (option === MainMenuState.SINGLEPLAYER) {
       this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerAll);
-    } else {
+    } else if (option === MainMenuState.MULTIPLAYER) {
       this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
       this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
     }

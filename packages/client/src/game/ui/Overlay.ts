@@ -1,10 +1,13 @@
 import type { View } from '../services';
-import type { UIElementSettings } from '../typings';
+import { MainMenuState, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
 
 export class Overlay {
   view!: View;
-  mainMenuStateYPos = [32, 36];
+  mainMenuStateYPos = {
+    [MainMenuState.SINGLEPLAYER]: 32,
+    [MainMenuState.MULTIPLAYER]: 36,
+  };
 
   constructor(view: View) {
     this.view = view;
@@ -55,8 +58,8 @@ export class Overlay {
     });
   }
 
-  showMainMenu() {
-    this.updateMainMenuState(0);
+  showMainMenu(state: MainMenuState) {
+    this.updateMainMenuState(state);
   }
 
   renderMainMenu() {
@@ -82,7 +85,7 @@ export class Overlay {
     });
     this.renderElement({
       posX: 20,
-      posY: this.mainMenuStateYPos[0],
+      posY: this.mainMenuStateYPos[MainMenuState.SINGLEPLAYER],
       width: 20,
       height: 2,
       color: 'white',
@@ -90,7 +93,7 @@ export class Overlay {
     });
     this.renderElement({
       posX: 20,
-      posY: this.mainMenuStateYPos[1],
+      posY: this.mainMenuStateYPos[MainMenuState.MULTIPLAYER],
       width: 20,
       height: 2,
       color: 'white',
@@ -117,21 +120,12 @@ export class Overlay {
     });
   }
 
-  updateMainMenuState(state = 0) {
+  updateMainMenuState(state: MainMenuState) {
     this.renderMainMenu();
 
-    let posY = 0;
-    switch (state) {
-      case 1:
-        posY = this.mainMenuStateYPos[1];
-        break;
-      default:
-        posY = this.mainMenuStateYPos[0];
-        break;
-    }
     this.renderElement({
       posX: 16,
-      posY,
+      posY: this.mainMenuStateYPos[state],
       width: 2,
       height: 2,
       color: 'yellow',

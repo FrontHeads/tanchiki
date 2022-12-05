@@ -1,5 +1,3 @@
-import type { EntityDynamic } from '../entities';
-
 export type GameSettings = {
   width: number;
   height: number;
@@ -52,7 +50,10 @@ export type EntitySettings = Pos &
     img: HTMLImageElement;
   }>;
 
-export type EntityDynamicSettings = EntitySettings & Partial<Pick<EntityDynamic, 'moveSpeed'>>;
+export type EntityDynamicSettings = EntitySettings &
+  Partial<{
+    moveSpeed: number;
+  }>;
 
 export type UIElementSettings = Pos &
   Size &
@@ -62,3 +63,8 @@ export type UIElementSettings = Pos &
     color: string;
     img: HTMLImageElement;
   }>;
+
+export enum MainMenuState {
+  SINGLEPLAYER,
+  MULTIPLAYER,
+}
