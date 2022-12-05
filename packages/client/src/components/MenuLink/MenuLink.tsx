@@ -9,7 +9,7 @@ import { MenuLinkProps } from './typings';
 export const MenuLink: FC<MenuLinkProps> = ({ title, to, onClick }) => {
   return (
     <li data-testid="navigation-list__row" className="navigation-list__row">
-      <NavLink onClick={onClick} className="menu__link" to={to}>
+      <NavLink onClick={onClick} className="menu-link__item" to={to}>
         {title}
       </NavLink>
       <span className="menu-link__tank-wrapper">

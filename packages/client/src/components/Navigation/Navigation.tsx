@@ -15,9 +15,8 @@ export const Navigation: FC = () => {
   const navigate = useNavigate();
   const error = useAppSelector(authSelectors.error);
 
-  const onClick = async (id: string | number) => {
-    //TODO брать из Enum
-    if (id === 'logout') {
+  const onClick = async (linkName: string) => {
+    if (linkName === 'logout') {
       await dispatch(authThunks.logout());
 
       if (!error) {
@@ -34,9 +33,8 @@ export const Navigation: FC = () => {
     window.scrollTo(0, 0);
   };
 
-  //TODO тут бы тип хорошо добавить для { id, title, to }
-  const menuLinksList = NAVIGATION_LIST.map(({ name, title, to }) => (
-    <MenuLink onClick={() => onClick(name)} key={name} name={name} title={title} to={to} />
+  const menuLinksList = NAVIGATION_LIST.map(link => (
+    <MenuLink onClick={() => onClick(link.name)} key={link.name} {...link} />
   ));
 
   return (
