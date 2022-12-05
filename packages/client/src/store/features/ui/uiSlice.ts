@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { uiState } from './typings';
 
-//TODO файл надо переименовать на uiSlice.ts, т.е. убрать тире.
 export const uiSlice = createSlice({
   name: 'ui',
   initialState: { isBurgerMenuVisible: false } as uiState,
