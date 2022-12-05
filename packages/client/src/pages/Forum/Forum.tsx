@@ -3,11 +3,8 @@ import './Forum.css';
 import { FC } from 'react';
 
 import { DUMMY_FORUM as sectionList } from './DummyData';
-import { ForumProps } from './typing';
-import { ForumTopic } from './ForumTopic';
-import { Link } from 'react-router-dom';
-import { Paths } from '../../config/constants';
 import { ForumSectionList } from './ForumSectionList';
+import { ForumProps } from './typing';
 
 export const headerText = 'Рейтинг игроков';
 

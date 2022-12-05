@@ -57,7 +57,7 @@
   }
 
   @media (max-width: 420px) {
-    margin: 0 0 60px;
+    margin: 0 0 $vertical_margin;
 
     &__body {
       font-size: 15px;

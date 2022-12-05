@@ -3,7 +3,7 @@
 .topic {
   border: 2px double $border_color;
   border-radius: 10px;
-  margin: 0 10px 60px;
+  margin: 0 10px $vertical_margin;
   border-collapse: separate;
   box-sizing: border-box;
   border-spacing: 2px;
@@ -63,7 +63,7 @@
   }
 
   @media (max-width: 420px) {
-    margin: 0 0 60px;
+    margin: 0 0 $vertical_margin;
 
     &__body {
       font-size: 15px;

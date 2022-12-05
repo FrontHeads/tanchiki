@@ -38,7 +38,7 @@ ul {
 
 .delimiter {
   width: 15%;
-  margin: 0 auto 60px;
+  margin: 0 auto $vertical_margin;
   height: 5px;
   background-color: $border_color;
   opacity: 0.7;
@@ -68,7 +68,7 @@ ul {
 
   .navigation-list {
     padding: 0;
-    margin: 0 0 60px;
+    margin: 0 0 $vertical_margin;
 
     &__row:nth-child(1) {
       margin: 0 0 45px;

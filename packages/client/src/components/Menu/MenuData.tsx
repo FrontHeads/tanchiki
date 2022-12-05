@@ -1,5 +1,8 @@
 import { Paths } from '../../config/constants';
 
+export enum navigationNames {
+  Logout = 'logout',
+}
 export const navigationList = [
   { id: 1, title: 'На главную', to: Paths.Home },
   { id: 2, title: 'Игра', to: Paths.Game },
@@ -11,5 +14,5 @@ export const navigationList = [
   { id: 8, title: 'Ошибка 404', to: Paths.Error404 },
   { id: 9, title: 'Ошибка 500', to: Paths.Error500 },
   //TODO: добавить механизм logout
-  { id: 10, title: 'Выход', to: '#' },
+  { id: 10, name: navigationNames.Logout, title: 'Выход', to: '#' },
 ];
