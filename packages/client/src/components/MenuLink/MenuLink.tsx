@@ -9,11 +9,11 @@ import { MenuLinkProps } from './typings';
 export const MenuLink: FC<MenuLinkProps> = ({ title, to, clickHandler }) => {
   return (
     <li data-testid="navigation-list__row" className="navigation-list__row">
-      <NavLink onClick={clickHandler} className="menu__link" to={to}>
+      <NavLink onClick={clickHandler} className="menu-link__item" to={to}>
         {title}
       </NavLink>
-      <span className="menu__tank-wrapper">
-        <img src={linkTank} alt=">" className="menu__tank-img" />
+      <span className="menu-link__tank-wrapper">
+        <img src={linkTank} alt=">" className="menu-link__tank-img" />
       </span>
     </li>
   );

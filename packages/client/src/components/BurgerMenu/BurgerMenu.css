@@ -2,6 +2,11 @@
 
 .menu {
   overflow-y: hidden;
+  font-family: "Press Start 2P", cursive;
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  margin-bottom: 15px;
 
   &__button {
     background: transparent;
