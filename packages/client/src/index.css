@@ -75,3 +75,15 @@ ul {
     }
   }
 }
+
+.breadcrumbs {
+  &_width {
+    &_normal {
+      margin: 10px 15px;
+    }
+
+    &_wide {
+      margin: 10px 60px;
+    }
+  }
+}

@@ -1,10 +1,9 @@
-import './ForumSection.css';
-
 import { FC } from 'react';
+import { useParams } from 'react-router-dom';
 
+import { DUMMY_SECTION as topicList } from '../DummyData';
+import { ForumTopicList } from './ForumTopicList';
 import { ForumSectionProps } from './typings';
-import { Link, useParams } from 'react-router-dom';
-import { DUMMY_SECTION } from '../DummyData';
 import { Paths } from '../../../config/constants';
 
 export const ForumSection: FC<ForumSectionProps> = () => {
@@ -12,6 +11,10 @@ export const ForumSection: FC<ForumSectionProps> = () => {
   return (
     <section className="forum__wrapper">
       <h1 className="forum__title">Раздел {sectionId}</h1>
+      <div className="breadcrumbs breadcrumbs_width_wide">
+        <a href={Paths.Forum}>Forum</a> {'> '}
+        <span>Section {sectionId}</span>
+      </div>
       <table border={1} className="forum">
         <thead className="forum__row-header">
           <tr>
@@ -20,16 +23,7 @@ export const ForumSection: FC<ForumSectionProps> = () => {
           </tr>
         </thead>
         <tbody className="forum__body">
-          {DUMMY_SECTION.map(row => {
-            return (
-              <tr key={row.id} className="forum__row">
-                <td className="forum__section">
-                  <Link to={`${Paths.Section}/${sectionId}${Paths.Topic}/${row.id}`}>{row.name}</Link>
-                </td>
-                <td>{row.messages}</td>
-              </tr>
-            );
-          })}
+          <ForumTopicList topicList={topicList} sectionId={sectionId} />
         </tbody>
       </table>
     </section>

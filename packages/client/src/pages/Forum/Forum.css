@@ -43,7 +43,7 @@
     font-size: 18px;
   }
 
-  &__row {
+  &__item {
     height: 70px;
 
     &:nth-child(odd) {
@@ -51,7 +51,7 @@
     }
   }
 
-  &__section {
+  &__first-column {
     font-weight: bold;
     text-align: left;
   }

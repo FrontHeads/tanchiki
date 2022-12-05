@@ -2,11 +2,12 @@ import './Forum.css';
 
 import { FC } from 'react';
 
-import { DUMMY_FORUM } from './DummyData';
+import { DUMMY_FORUM as sectionList } from './DummyData';
 import { ForumProps } from './typing';
 import { ForumTopic } from './ForumTopic';
 import { Link } from 'react-router-dom';
 import { Paths } from '../../config/constants';
+import { ForumSectionList } from './ForumSectionList';
 
 export const headerText = 'Рейтинг игроков';
 
@@ -23,17 +24,7 @@ export const Forum: FC<ForumProps> = () => {
           </tr>
         </thead>
         <tbody className="forum__body">
-          {DUMMY_FORUM.map(row => {
-            return (
-              <tr key={row.id} className="forum__row">
-                <td className="forum__section">
-                  <Link to={`${Paths.Section}/${row.id}`}>{row.name}</Link>
-                </td>
-                <td>{row.topicCount}</td>
-                <td>{row.messages}</td>
-              </tr>
-            );
-          })}
+          <ForumSectionList sectionList={sectionList} />
         </tbody>
       </table>
     </section>
