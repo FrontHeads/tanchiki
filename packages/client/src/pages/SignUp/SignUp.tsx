@@ -8,11 +8,12 @@ import { Form } from '../../components/Form';
 import { FormField } from '../../components/FormField';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { formInitialState, signUpInputFields as signUpFieldList } from './data';
+import { formInitialState, signUpFieldList } from './data';
 import { SignUpForm } from './typings';
 
 export const SignUp: FC = () => {
   // Оборачиваем в константу из-за каррирования в useAppDispatch() и useNavigate()
+  // + хуки можно вызывать только на верхнем уровне компонента.
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 

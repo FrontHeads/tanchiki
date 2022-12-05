@@ -1,7 +1,7 @@
 import { FormFieldProps } from '../../components/FormField/typings';
 import { SignUpForm } from './typings';
 
-export const signUpInputFields: FormFieldProps[] = [
+export const signUpFieldList: FormFieldProps[] = [
   {
     title: 'Email',
     type: 'email',

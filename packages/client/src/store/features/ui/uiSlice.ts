@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { UIState } from './typings';
 
-export const uiSlice = createSlice({
-  name: 'ui',
+export const UISlice = createSlice({
+  name: 'UI',
   initialState: { isBurgerMenuVisible: false } as UIState,
   reducers: {
     toggleBurgerMenu(state) {
@@ -21,5 +21,5 @@ export const uiSelectors = {
   isBurgerMenuVisible: (state: RootState) => state.ui.isBurgerMenuVisible,
 };
 
-export const uiActions = uiSlice.actions;
-export const uiReducer = uiSlice.reducer;
+export const uiActions = UISlice.actions;
+export const uiReducer = UISlice.reducer;
