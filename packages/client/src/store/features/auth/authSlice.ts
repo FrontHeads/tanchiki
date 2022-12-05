@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { UserProfile } from '../../../app.typings';
 import { RootState } from '../../store';
 import { authThunks } from './authThunks';
 import { AuthState } from './typings';
@@ -9,12 +10,15 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     isLoading: false,
-    isAuthenticated: false,
     error: '',
+    userProfile: null,
   } as AuthState,
   reducers: {
     setError: (state, { payload }: PayloadAction<string>) => {
       state.error = payload;
+    },
+    setUserProfile: (state, { payload }: PayloadAction<Nullable<UserProfile>>) => {
+      state.userProfile = payload;
     },
   },
   extraReducers: builder => {
@@ -44,12 +48,13 @@ export const authSlice = createSlice({
         state.isLoading = true;
         state.error = '';
       })
-      .addCase(authThunks.me.fulfilled, state => {
+      .addCase(authThunks.me.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.isAuthenticated = true;
+        state.userProfile = payload;
       })
       .addCase(authThunks.me.rejected, (state, action) => {
         state.isLoading = false;
+        state.userProfile = null;
         state.error = action.error.message as string;
       })
 
@@ -60,7 +65,7 @@ export const authSlice = createSlice({
       })
       .addCase(authThunks.logout.fulfilled, state => {
         state.isLoading = false;
-        state.isAuthenticated = false;
+        state.userProfile = null;
       })
       .addCase(authThunks.logout.rejected, state => {
         state.isLoading = false;
@@ -72,7 +77,14 @@ export const authSlice = createSlice({
 export const authSelectors = {
   all: (state: RootState) => state.auth,
   isLoading: (state: RootState) => state.auth.isLoading,
+  isAuthenticated: (state: RootState) => state.auth.userProfile !== null,
+  userProfile: (state: RootState) => state.auth.userProfile,
   error: (state: RootState) => state.auth.error,
+  authState: (state: RootState) => ({
+    isLoading: state.auth.isLoading,
+    error: state.auth.error,
+    isAuthenticated: state.auth.userProfile !== null,
+  }),
 };
 
 export const authActions = authSlice.actions;

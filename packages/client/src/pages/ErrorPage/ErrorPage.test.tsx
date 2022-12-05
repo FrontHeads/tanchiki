@@ -2,20 +2,12 @@ import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
 
-import { TestApp } from '../../tests/TestApp';
-import { renderWithRouter } from '../../utils/testing-utils';
-
-jest.mock('react-router-dom', () => {
-  return {
-    ...jest.requireActual('react-router-dom'),
-    useRouteError: () => ({ url: '' }),
-    useNavigation: jest.fn(() => ({ state: '' })),
-  };
-});
+import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
 
 describe('Error Page', () => {
-  test('it render at a wrong path', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+  test('it renders at a wrong path', async () => {
+    const { user } = renderWithRouter();
+    await waitUntilLoaderToBeRemoved();
 
     await user.click(screen.getByText('Fake path'));
 
@@ -23,8 +15,9 @@ describe('Error Page', () => {
     expect(screen.queryByTestId('web-error__button')).toBeTruthy();
   });
 
-  test('it NOT render at a correct path', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+  test(`it doesn't render at a correct path`, async () => {
+    const { user } = renderWithRouter();
+    await waitUntilLoaderToBeRemoved();
 
     await user.click(screen.getByText('Game'));
     expect(screen.queryByTestId('web-error__header')).toBeNull();
@@ -32,13 +25,15 @@ describe('Error Page', () => {
   });
 
   test('it can return to main page from error page', async () => {
-    const { user } = renderWithRouter(<TestApp />);
+    const { user } = renderWithRouter();
+    await waitUntilLoaderToBeRemoved();
 
     await user.click(screen.getByText('Fake path'));
     expect(screen.queryByTestId('web-error__header')).toBeTruthy();
 
     //Клик по кнопке "На главную"
     await user.click(screen.getByTestId('web-error__button'));
+    await waitUntilLoaderToBeRemoved();
     expect(screen.queryByTestId('web-error__header')).toBeNull();
     expect(screen.getByText('Вы на домашней странице')).toBeInTheDocument();
   });

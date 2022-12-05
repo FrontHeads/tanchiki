@@ -11,5 +11,5 @@ export default {
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT || 3001,
   },
-  setupFiles: ['jest-canvas-mock'],
+  setupFiles: ['<rootDir>/src/tests/setup.ts', 'jest-canvas-mock'],
 };

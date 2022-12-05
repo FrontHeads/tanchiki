@@ -5,8 +5,9 @@ import { useNavigate, useRouteError } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
+import { Footer } from '../../components/Footer';
+import { Logo } from '../../components/Logo';
 import { Paths } from '../../config/constants';
-import { Root } from '../../layouts/Root';
 import { ErrorPageProps, ErrorType } from './typings';
 
 export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Возникла ошибка' }) => {
@@ -27,7 +28,9 @@ export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Возник�
   }
 
   return (
-    <Root>
+    <>
+      <Logo />
+      <div className="delimiter" />
       <div className="web-error">
         <h1 className="web-error__paragraph web-error__header" data-testid="web-error__header">
           {statusCode}
@@ -43,6 +46,7 @@ export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Возник�
           />
         </p>
       </div>
-    </Root>
+      <Footer />
+    </>
   );
 };
