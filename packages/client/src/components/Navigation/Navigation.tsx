@@ -15,9 +15,8 @@ export const Navigation: FC = () => {
   const navigate = useNavigate();
   const error = useAppSelector(authSelectors.error);
 
-  const clickHandler = async (id: string | number) => {
-    //TODO брать из Enum
-    if (id === 'logout') {
+  const clickHandler = async (linkName: string) => {
+    if (linkName === 'logout') {
       await dispatch(authThunks.logout());
 
       if (!error) {
@@ -30,18 +29,17 @@ export const Navigation: FC = () => {
     }
 
     dispatch(uiActions.closeBurgerMenu());
-    //TODO возможно убрать scroll здесь
+    //TODO убрать здесь scroll после реализации scrollRestoration
     window.scrollTo(0, 0);
   };
 
-  //TODO тут бы тип хорошо добавить для { id, title, to }
-  const menuLinks = NAVIGATION_LIST.map(({ id, title, to }) => (
-    <MenuLink clickHandler={() => clickHandler(id)} key={id} id={id} title={title} to={to} />
+  const menuLinksList = NAVIGATION_LIST.map(link => (
+    <MenuLink clickHandler={() => clickHandler(link.name)} key={link.name} {...link} />
   ));
 
   return (
     <nav className="menu-nav">
-      <ul className="navigation-list">{menuLinks}</ul>
+      <ul className="navigation-list">{menuLinksList}</ul>
     </nav>
   );
 };
