@@ -1,14 +1,14 @@
 import './Navigation.css';
 
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { uiActions } from '../../store/features/ui/ui-slice';
+import { uiActions } from '../../store/features/ui/uiSlice';
 import { MenuLink } from '../MenuLink';
-import { navigationList } from './data';
+import { NAVIGATION_LIST } from './data';
 
 export const Navigation: FC = () => {
   const dispatch = useAppDispatch();
@@ -35,8 +35,8 @@ export const Navigation: FC = () => {
   };
 
   //TODO тут бы тип хорошо добавить для { id, title, to }
-  const menuLinks = navigationList.map(({ id, title, to }) => (
-    <MenuLink clickHandler={() => clickHandler(id)} key={id} title={title} to={to} />
+  const menuLinks = NAVIGATION_LIST.map(({ id, title, to }) => (
+    <MenuLink clickHandler={() => clickHandler(id)} key={id} id={id} title={title} to={to} />
   ));
 
   return (

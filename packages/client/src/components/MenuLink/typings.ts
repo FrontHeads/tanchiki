@@ -1,4 +1,5 @@
 type MenuLinkProps = {
+  id: string | number;
   title: string;
   to: string;
   clickHandler?: () => Promise<void>;

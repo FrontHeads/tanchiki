@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { FC, useEffect, useRef } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store';
-import { uiActions, uiSelectors } from '../../store/features/ui/ui-slice';
+import { uiActions, uiSelectors } from '../../store/features/ui/uiSlice';
 import { Navigation } from '../Navigation';
 
 export const BurgerMenu: FC = () => {

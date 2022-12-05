@@ -4,7 +4,7 @@ import { screen } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { Provider } from 'react-redux';
 
-import { navigationList } from '../../components/Navigation/data';
+import { NAVIGATION_LIST } from '../../components/Navigation/data';
 import { store } from '../../store';
 import { axios, buildPath } from '../../utils/HTTP';
 import { renderWithRouter } from '../../utils/testing-utils';
@@ -54,6 +54,6 @@ describe('Home page', () => {
     const menuLinks = screen.getAllByTestId('navigation-list__row');
 
     const amount = menuLinks.length;
-    expect(amount).toBe(navigationList.length);
+    expect(amount).toBe(NAVIGATION_LIST.length);
   });
 });

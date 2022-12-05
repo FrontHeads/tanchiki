@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import { store } from '../../store';
-import { navigationList } from '../Navigation/data';
+import { NAVIGATION_LIST } from '../Navigation/data';
 import { BurgerMenu } from './BurgerMenu';
 
 describe('Menu', () => {
@@ -33,7 +33,7 @@ describe('Menu', () => {
     );
     const menuLinks = screen.getAllByTestId('navigation-list__row');
     const amount = menuLinks.length;
-    expect(amount).toBe(navigationList.length);
+    expect(amount).toBe(NAVIGATION_LIST.length);
   });
 
   test('it opens menu', () => {
