@@ -1,16 +1,12 @@
 import './Home.css';
 
 import { FC, useEffect } from 'react';
-import { toast } from 'react-toastify';
 
 import promoImg from '../../assets/img/tankettes_game.png';
 import { Navigation } from '../../components/Navigation';
-import { useAppDispatch } from '../../store';
 import { HTTP } from '../../utils/HTTP';
 
 export const Home: FC = () => {
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
     const fetchServerData = async () => {
       const data = await HTTP.get<Record<string, unknown>>('/', {

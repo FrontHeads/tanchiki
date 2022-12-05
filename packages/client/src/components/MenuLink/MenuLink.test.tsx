@@ -11,7 +11,7 @@ describe('MenuLink', () => {
 
     render(
       <BrowserRouter>
-        <MenuLink clickHandler={clickHandler} title="test" to="test" />
+        <MenuLink id="test" clickHandler={clickHandler} title="test" to="test" />
       </BrowserRouter>
     );
 
