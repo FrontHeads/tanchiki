@@ -6,14 +6,14 @@ import { NavLink } from 'react-router-dom';
 import linkTank from '../../assets/img/link_tank.png';
 import { MenuLinkProps } from './typings';
 
-export const MenuLink: FC<MenuLinkProps> = ({ title, to, handleNavigate }) => {
+export const MenuLink: FC<MenuLinkProps> = ({ title, to, onClick }) => {
   return (
     <li data-testid="navigation-list__row" className="navigation-list__row">
-      <NavLink onClick={handleNavigate} className="menu__link" to={to}>
+      <NavLink onClick={onClick} className="menu-link__item" to={to}>
         {title}
       </NavLink>
-      <span className="menu__tank-wrapper">
-        <img src={linkTank} alt=">" className="menu__tank-img" />
+      <span className="menu-link__tank-wrapper">
+        <img src={linkTank} alt=">" className="menu-link__tank-img" />
       </span>
     </li>
   );

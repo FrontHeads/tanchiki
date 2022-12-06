@@ -38,7 +38,7 @@ ul {
 
 .delimiter {
   width: 15%;
-  margin: 0 auto $vertical_margin;
+  margin: 0 auto 60px;
   height: 5px;
   background-color: $border_color;
   opacity: 0.7;
@@ -53,37 +53,5 @@ ul {
     width: 150px;
     height: 150px;
     margin: 50px auto;
-  }
-}
-
-.menu {
-  display: flex;
-  flex-direction: column;
-  padding-top: 10px;
-  margin-bottom: 15px;
-}
-
-.menu-nav {
-  margin: 0 auto;
-
-  .navigation-list {
-    padding: 0;
-    margin: 0 0 $vertical_margin;
-
-    &__row:nth-child(1) {
-      margin: 0 0 45px;
-    }
-  }
-}
-
-.breadcrumbs {
-  &_margins {
-    &_normal {
-      margin: 10px 15px;
-    }
-
-    &_wide {
-      margin: 10px 60px;
-    }
   }
 }

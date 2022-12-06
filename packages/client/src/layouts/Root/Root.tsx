@@ -1,43 +1,51 @@
 import './Root.css';
 
-import cn from 'classnames';
-import { FC } from 'react';
-import { Outlet, useLocation, useNavigation } from 'react-router-dom';
+import { FC, Suspense, useEffect } from 'react';
+import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 
+import { UserDTO } from '../../api/typings';
+import { BurgerMenu } from '../../components/BurgerMenu';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
-import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
-import { appSelectors, useAppSelector } from '../../store';
-import { RootProps } from './typings';
+import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
+import { ResponseType } from '../../utils/HTTP';
 
-export const Root: FC<RootProps> = ({ children }) => {
-  const navigation = useNavigation();
-  const isAppLoading = useAppSelector(appSelectors.isLoading);
-  const isLoading = navigation.state !== 'idle' || isAppLoading;
+export const Root: FC = () => {
+  const isAppLoading = useAppSelector(appSelectors.isAppLoading);
   const location = useLocation();
+  const printHeaderAndFooter = location?.pathname !== Paths.Game;
+  const dispatch = useAppDispatch();
 
-  const rootElementClassNames = cn('layout', {
-    layout_state_loading: isLoading,
-    layout_state_idle: !isLoading,
-  });
+  const data = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
+
+  useEffect(() => {
+    if (data) {
+      data.user.then(response => {
+        if (response) {
+          return dispatch(authActions.setUserProfile(response.data));
+        }
+        return null;
+      });
+    }
+  }, [data]);
 
   return (
-    <main className={rootElementClassNames}>
-      <header>
-        <Menu />
-        {location?.pathname !== Paths.Game && (
-          <>
-            <Logo />
-            <div className="delimiter" />
-          </>
-        )}
-      </header>
-      <Outlet />
-      {children}
-      {location?.pathname !== Paths.Game && <Footer />}
-      {isLoading && <Loader />}
-    </main>
+    <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
+      <Await resolve={(data && data.user) || Promise.resolve()}>
+        <main className="layout">
+          <header>
+            <BurgerMenu />
+            {printHeaderAndFooter && <Logo />}
+            {printHeaderAndFooter && <div className="delimiter" />}
+          </header>
+          <Outlet />
+          {printHeaderAndFooter && <Footer />}
+          <ScrollRestoration />
+          {isAppLoading && <Loader data-testid="app-loader" />}
+        </main>
+      </Await>
+    </Suspense>
   );
 };

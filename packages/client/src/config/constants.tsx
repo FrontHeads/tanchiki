@@ -20,9 +20,9 @@ export const PATH = {
   avatarBase: 'https://ya-praktikum.tech/api/v2/resources',
 };
 
-export const API_HOST = 'https://ya-praktikum.tech/api/v2';
+export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
-export const API_ENDPOINTS = {
+export const YANDEX_API_ENDPOINTS = {
   AUTH: {
     SIGNIN: 'auth/signin',
     SIGNUP: 'auth/signup',

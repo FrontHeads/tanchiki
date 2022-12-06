@@ -15,21 +15,14 @@ export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
+  const { error, isLoading } = useAppSelector(authSelectors.authState);
   const formData: LoginForm = { login: '', password: '' };
   const [requestBody, setRequestBody] = useState<LoginForm>(formData);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      toast.success('С возвращением!');
-      navigate(Paths.Home);
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
     if (error) {
-      dispatch(authActions.setError(''));
       toast.error(error);
+      dispatch(authActions.setError(''));
     }
   }, [error]);
 

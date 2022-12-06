@@ -11,6 +11,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'simple-import-sort'],
   rules: {
+    '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/ban-ts-comment': 1,
     'simple-import-sort/exports': 'warn',
     'simple-import-sort/imports': 'warn',
