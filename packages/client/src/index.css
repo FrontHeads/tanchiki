@@ -77,7 +77,7 @@ ul {
 }
 
 .breadcrumbs {
-  &_width {
+  &_margins {
     &_normal {
       margin: 10px 15px;
     }

@@ -1,14 +1,16 @@
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
 
 import { headerText, Forum } from './Forum';
-describe('Leaderboard', () => {
+describe('Forum', () => {
   test('it renders', () => {
-    render(<Forum header={headerText} />);
+    render(<Forum />, { wrapper: MemoryRouter });
+    const forumTestId = 'forum';
 
-    const renderedLeaderboard = screen.getByText(headerText);
+    const renderedForum = screen.getByTestId(forumTestId);
 
-    expect(renderedLeaderboard).toBeInTheDocument();
+    expect(renderedForum).toBeInTheDocument();
   });
 });

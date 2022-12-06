@@ -11,7 +11,7 @@ export const ForumSection: FC<ForumSectionProps> = () => {
   return (
     <section className="forum__wrapper">
       <h1 className="forum__title">Раздел {sectionId}</h1>
-      <div className="breadcrumbs breadcrumbs_width_wide">
+      <div className="breadcrumbs breadcrumbs_margins_wide">
         <a href={Paths.Forum}>Forum</a> {'> '}
         <span>Section {sectionId}</span>
       </div>

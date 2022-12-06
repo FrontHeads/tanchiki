@@ -18,14 +18,14 @@ export const DUMMY_TOPIC = [
     id: 1,
     userId: 1,
     username: 'Ivan1990',
-    time: Date(),
+    date: Date(),
     content: 'Здесь что-то не так. Нет такого тэга root. Возможно это опечатка от #root',
   },
   {
     id: 2,
     userId: 2,
     username: 'Marussia',
-    time: Date(),
+    date: Date(),
     content:
       'Тут как раз меняли с #root на .root в другом PR, т.к. хорошая практика не привязывать стили к id, хоть тут и ' +
       'корневой элемент гарантированно один и уникален.',
@@ -34,21 +34,14 @@ export const DUMMY_TOPIC = [
     id: 3,
     userId: 3,
     username: 'Me9aTron',
-    time: Date(),
+    date: Date(),
     content: 'Но в итоге тут ни то и ни другое а явная ошибка в селекторе. А есть этот другой PR?',
-  },
-  {
-    id: 4,
-    userId: 1,
-    username: 'Ivan1990',
-    time: Date(),
-    content: 'Здесь что-то не так. Нет такого тэга root. Возможно это опечатка от #root',
   },
   {
     id: 5,
     userId: 2,
     username: 'Marussia',
-    time: Date(),
+    date: Date(),
     content:
       'Тут как раз меняли с #root на .root в другом PR, т.к. хорошая практика не привязывать стили к id, хоть тут и ' +
       'корневой элемент гарантированно один и уникален.',

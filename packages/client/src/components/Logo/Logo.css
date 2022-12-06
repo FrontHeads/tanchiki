@@ -4,7 +4,7 @@
   font-size: 5.5rem;
   font-family: "Press Start 2P", cursive;
   text-align: center;
-  margin: $vertical_margin 0;
+  margin: 45px 0 $vertical_margin;
   color: $accent_color;
   -webkit-text-fill-color: transparent;
   background: url("/assets/img/bricks.png");

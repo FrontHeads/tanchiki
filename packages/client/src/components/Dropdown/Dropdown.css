@@ -4,17 +4,22 @@
   position: relative;
 
   &__menu {
+    right: 0;
     position: absolute;
+    user-select: none;
     list-style-type: none;
-    margin: 5px 0;
+    margin: 5px;
     padding: 0;
-    border: 1px solid $border_color;
-    width: 150px;
+    box-shadow: 0 0 2px $border_color;
     z-index: 1000;
 
     & > li {
       margin: 0;
       background-color: $background_color;
+      border-bottom: 1px solid $border_dropdown_color;
+      &:last-child {
+        border-bottom: none;
+      }
     }
 
     & > li:hover {
@@ -28,7 +33,7 @@
       background: none;
       color: inherit;
       border: none;
-      padding: 5px;
+      padding: 13px;
       margin: 0;
       font: inherit;
       cursor: pointer;

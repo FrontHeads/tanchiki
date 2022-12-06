@@ -9,7 +9,7 @@ type LeaderboardRecord = {
 export type ForumMessageProps = {
   id: number;
   content: string;
-  time: string;
+  date: string;
   userId: number;
   username: string;
 };

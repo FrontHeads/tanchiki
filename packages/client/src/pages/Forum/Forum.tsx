@@ -12,7 +12,7 @@ export const Forum: FC<ForumProps> = () => {
   return (
     <section className="forum__wrapper">
       <h1 className="forum__title">Форум</h1>
-      <table border={1} className="forum">
+      <table border={1} className="forum" data-testid="forum">
         <thead className="forum__row-header">
           <tr>
             <th className="forum__cell-header">Разделы</th>
