@@ -1,3 +1,3 @@
-export interface AppState {
+export type AppState = {
   isAppLoading: boolean;
-}
+};

@@ -3,8 +3,7 @@ import './Home.css';
 import { FC, useEffect } from 'react';
 
 import promoImg from '../../assets/img/tankettes_game.png';
-import { navigationList } from '../../components/Menu/MenuData';
-import { MenuLink } from '../../components/MenuLink';
+import { Navigation } from '../../components/Navigation';
 import { HTTP } from '../../utils/HTTP';
 
 export const Home: FC = () => {
@@ -26,9 +25,7 @@ export const Home: FC = () => {
         <div className="delimiter" />
         <nav data-testid="menu-nav-home" className="menu-nav">
           <ul className="navigation-list">
-            {navigationList.map(({ id, title, to }) => (
-              <MenuLink key={id} title={title} to={to} />
-            ))}
+            <Navigation />
           </ul>
         </nav>
       </div>

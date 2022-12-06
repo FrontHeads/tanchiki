@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
 
-import { navigationList } from '../../components/Menu/MenuData';
+import { NAVIGATION_LIST } from '../../components/Navigation/data';
 import { renderWithRouter } from '../../utils/testing-utils';
 import { Home } from './Home';
 
@@ -26,6 +26,6 @@ describe('Home page', () => {
 
     const menuLinks = screen.getAllByTestId('navigation-list__row');
     const amount = menuLinks.length;
-    expect(amount).toBe(navigationList.length);
+    expect(amount).toBe(NAVIGATION_LIST.length);
   });
 });

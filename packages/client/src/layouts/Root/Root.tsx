@@ -4,10 +4,10 @@ import { FC, Suspense, useEffect } from 'react';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 
 import { UserDTO } from '../../api/typings';
+import { BurgerMenu } from '../../components/BurgerMenu';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
-import { Menu } from '../../components/Menu';
 import { Paths } from '../../config/constants';
 import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
 import { ResponseType } from '../../utils/HTTP';
@@ -36,7 +36,7 @@ export const Root: FC = () => {
       <Await resolve={(data && data.user) || Promise.resolve()}>
         <main className="layout">
           <header>
-            <Menu />
+            <BurgerMenu />
             {printHeaderAndFooter && <Logo />}
             {printHeaderAndFooter && <div className="delimiter" />}
           </header>

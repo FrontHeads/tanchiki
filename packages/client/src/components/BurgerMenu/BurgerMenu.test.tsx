@@ -5,15 +5,15 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import { store } from '../../store';
-import { Menu } from './Menu';
-import { navigationList } from './MenuData';
+import { NAVIGATION_LIST } from '../Navigation/data';
+import { BurgerMenu } from './BurgerMenu';
 
 describe('Menu', () => {
   test('it renders', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <Menu />
+          <BurgerMenu />
         </BrowserRouter>
       </Provider>
     );
@@ -27,27 +27,27 @@ describe('Menu', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <Menu />
+          <BurgerMenu />
         </BrowserRouter>
       </Provider>
     );
     const menuLinks = screen.getAllByTestId('navigation-list__row');
     const amount = menuLinks.length;
-    expect(amount).toBe(navigationList.length);
+    expect(amount).toBe(NAVIGATION_LIST.length);
   });
 
   test('it opens menu', () => {
     const { container } = render(
       <Provider store={store}>
         <BrowserRouter>
-          <Menu />
+          <BurgerMenu />
         </BrowserRouter>
       </Provider>
     );
 
     const testState = getByTestId(container, 'menu');
 
-    const button = getByTestId(testState, 'menu__icon');
+    const button = getByTestId(testState, 'menu__button');
 
     const menuList = getByTestId(testState, 'menu__list');
 
