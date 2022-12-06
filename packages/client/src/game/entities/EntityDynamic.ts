@@ -61,29 +61,30 @@ export class EntityDynamic extends Entity {
 
   /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
   update() {
-    const isUnmoved = !this.moving && !this.stopping && !this.shouldExplode;
-    const hasNewDirection = this.direction !== this.nextDirection;
-    const hasUnfinishedMove = this.moveStepsProgress !== 0;
-    if (!this.spawned || isUnmoved) {
+    const isStandingStill = !this.moving && !this.stopping && !this.shouldExplode;
+    if (!this.spawned || isStandingStill) {
       return;
     }
+
+    this.stateCheck();
     if (this.shouldExplode) {
-      this.stateCheck();
       return;
     }
+
+    const hasUnfinishedMove = this.moveStepsProgress !== 0;
     if (hasUnfinishedMove) {
       this.moveStep();
-      this.stateCheck();
       return;
     }
+
+    const hasNewDirection = this.direction !== this.nextDirection;
+    const moveStepsForFastTurn = this.getMoveSteps();
     if (hasNewDirection) {
-      //TODO непонятно что такое 4. Надо обернуть в человекопонятную константу.
-      // От чего высчитывается? Зависит ли от moveStepsTotal?
-      this.moveLoops > 4 ? this.turn() : this.turnStep();
+      this.moveLoops >= moveStepsForFastTurn ? this.turn() : this.turnWithInterrupt();
+    } else {
+      this.prepareToMove();
+      this.moveStep();
     }
-    this.prepareToMove();
-    this.moveStep();
-    this.stateCheck();
   }
 
   /** Выполняет проверку в каждом игровом цикле (нужна для определения столкновения у снарядов) */
@@ -92,7 +93,7 @@ export class EntityDynamic extends Entity {
   }
 
   /** Чтобы объект не начал двигаться сразу после поворота; */
-  turnStep() {
+  turnWithInterrupt() {
     this.turn();
     ++this.moveStepsProgress;
     this.canMove = false;
