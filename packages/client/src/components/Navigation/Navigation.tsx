@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Paths } from '../../config/constants';
-import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { authActions, authThunks, useAppDispatch } from '../../store';
 import { uiActions } from '../../store/features/ui/uiSlice';
 import { MenuLink } from '../MenuLink';
 import { NAVIGATION_LIST } from './data';
@@ -13,19 +13,19 @@ import { NAVIGATION_LIST } from './data';
 export const Navigation: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const error = useAppSelector(authSelectors.error);
 
-  const onClick = async (linkName: string) => {
+  const onClick = (linkName: string) => {
     if (linkName === 'logout') {
-      await dispatch(authThunks.logout());
-
-      if (!error) {
-        toast.success('Будем скучать!');
-        return navigate(Paths.Home);
-      } else {
-        toast.error(error);
-        dispatch(authActions.setError(''));
-      }
+      dispatch(authThunks.logout())
+        .unwrap()
+        .then(() => {
+          toast.success('Будем скучать!');
+          return navigate(Paths.Home);
+        })
+        .catch(e => {
+          toast.error(e.message);
+          dispatch(authActions.setError(''));
+        });
     }
 
     dispatch(uiActions.closeBurgerMenu());

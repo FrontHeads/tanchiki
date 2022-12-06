@@ -2,7 +2,7 @@ type MenuLinkProps = {
   name: string;
   title: string;
   to: string;
-  onClick?: () => Promise<void>;
+  onClick?: () => void;
 };
 
 export type { MenuLinkProps };
