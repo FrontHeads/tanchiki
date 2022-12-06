@@ -20,6 +20,7 @@ export class View extends EventEmitter {
   width = 0;
   height = 0;
   pixelRatio = 10;
+  gameBgColor = 'black';
   layerZIndexCount = 0;
   layers: Layer = {};
   root!: HTMLElement;
@@ -63,7 +64,7 @@ export class View extends EventEmitter {
     }
     this.root = root;
     if (this.isRootEmpty()) {
-      this.createLayer('floor').style.background = '#000';
+      this.createLayer('floor').style.background = this.gameBgColor;
       this.createLayer('tanks');
       this.createLayer('projectiles');
       this.createLayer('ceiling');

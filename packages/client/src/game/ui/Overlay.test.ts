@@ -22,8 +22,9 @@ describe('game/ui/Overlay', () => {
     const view = new View({ width: 10, height: 10 });
     const overlay = new Overlay(view);
     const mockFn = jest.fn();
+    const animationTicksCount = 5;
     const animateFunction = (stage: number) => {
-      if (stage > 5) {
+      if (stage > animationTicksCount) {
         return false;
       }
       mockFn();
@@ -34,6 +35,6 @@ describe('game/ui/Overlay', () => {
 
     await sleep(300);
 
-    expect(mockFn).toHaveBeenCalledTimes(5);
+    expect(mockFn).toHaveBeenCalledTimes(animationTicksCount);
   });
 });
