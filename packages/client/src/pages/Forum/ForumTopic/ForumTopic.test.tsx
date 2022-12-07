@@ -1,12 +1,18 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 
+import { renderWithRouter } from '../../../utils/testing-utils';
 import { ForumTopic } from './ForumTopic';
 
 describe('ForumTopic', () => {
+  beforeEach(() => {
+    renderWithRouter({
+      component: <ForumTopic />,
+    });
+  });
+
   test('it renders', () => {
-    render(<ForumTopic />);
     const forumTopicTestId = 'forum-topic';
 
     const renderedForum = screen.getByTestId(forumTopicTestId);
@@ -15,8 +21,6 @@ describe('ForumTopic', () => {
   });
 
   test('it render textarea', () => {
-    render(<ForumTopic />);
-
     const forumTestId = 'topic-textarea';
     const addMessageBtnId = 'add-message';
 
