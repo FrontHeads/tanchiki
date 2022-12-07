@@ -78,9 +78,10 @@ export class EntityDynamic extends Entity {
     }
 
     const hasNewDirection = this.direction !== this.nextDirection;
-    const moveStepsForFastTurn = this.getMoveSteps();
+    const canTurnWithoutInterrupt = this.moveLoops > this.getMoveSteps();
     if (hasNewDirection) {
-      this.moveLoops >= moveStepsForFastTurn ? this.turn() : this.turnWithInterrupt();
+      /** Проверка для того, чтобы объект мог поворачивать на месте без последующего движения в сторону */
+      canTurnWithoutInterrupt ? this.turn() : this.turnWithInterrupt();
     } else {
       this.prepareToMove();
       this.moveStep();
