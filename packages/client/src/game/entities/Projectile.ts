@@ -7,18 +7,18 @@ export class Projectile extends EntityDynamic {
   movePace = 1;
   moveSpeed = 3;
   moveStepsTotal = 4;
-  shouldExplode = false;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
     Object.assign(this, props);
+    this.type = 'projectile';
     this.color = 'red';
     this.flying = true;
     this.moving = true;
     this.nextDirection = this.direction;
   }
 
-  moveStepCheck() {
+  stateCheck() {
     if (this.shouldExplode) {
       this.shouldBeDestroyed = true;
     }

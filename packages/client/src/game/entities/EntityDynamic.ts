@@ -2,24 +2,40 @@ import { Direction, EntityDynamicSettings, PosState } from '../typings';
 import { Entity } from './';
 
 export class EntityDynamic extends Entity {
+  /** Должен ли объект двигаться*/
   moving = false;
+  /** Прекращает ли объект движение (он должен стать по целочисленным координатам)*/
   stopping = false;
+  /** Может ли объект двигаться дальше*/
   canMove = true;
+  /** На сколько клеток за раз перемещается объект*/
   movePace = 2;
+  /** Скорость движения объекта*/
   moveSpeed = 2;
+  /** Сколько игровых циклов хода пройдено*/
   moveStepsProgress = 0;
+  /** За сколько игровых циклов объект совершает один ход*/
   moveStepsTotal = 8;
+  /** Новое направление, по которому объект начнёт движение после завершения полного хода*/
   nextDirection = Direction.UP;
+  /** В этом свойстве подсчитываются циклы движения после последнего поворота.
+   * Если танк едет, то он поворачивает сразу. А если стоит на месте - то при коротком нажатии клавиши
+   * он поворачивает, не двигаясь в сторону.*/
+  moveLoops = 0;
+  /** Должен ли объект взрываться */
+  shouldExplode = false;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
     this.movable = true;
   }
 
+  /** Рассчитывает количество игровых циклов для одного хода с поправкой на скорость */
   getMoveSteps() {
     return this.moveStepsTotal - this.moveSpeed;
   }
 
+  /** Рассчитывает расстояние, на которое объект пересместится за один игровой цикл */
   getMoveStepPace() {
     return this.movePace / this.getMoveSteps();
   }
@@ -36,35 +52,55 @@ export class EntityDynamic extends Entity {
     }
   }
 
-  turn(newDirection: Direction) {
+  turn(newDirection: Direction = this.nextDirection) {
     if (this.direction !== newDirection) {
       this.setState({ direction: newDirection });
+      this.moveLoops = 0;
     }
   }
 
-  step() {
-    if (!this.spawned) {
+  /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
+  update() {
+    const isStandingStill = !this.moving && !this.stopping && !this.shouldExplode;
+    if (!this.spawned || isStandingStill) {
       return;
     }
-    if (!this.moving && !this.stopping) {
+
+    this.stateCheck();
+    if (this.shouldExplode) {
       return;
     }
-    if (this.moveStepsProgress === 0) {
-      if (this.direction !== this.nextDirection) {
-        this.turnStep();
-      } else {
-        this.prepareToMove();
-      }
+
+    const hasUnfinishedMove = this.moveStepsProgress !== 0;
+    if (hasUnfinishedMove) {
+      this.moveStep();
+      return;
     }
-    this.moveStep();
+
+    const hasNewDirection = this.direction !== this.nextDirection;
+    const canTurnWithoutInterrupt = this.moveLoops > this.getMoveSteps();
+    if (hasNewDirection) {
+      /** Проверка для того, чтобы объект мог поворачивать на месте без последующего движения в сторону */
+      canTurnWithoutInterrupt ? this.turn() : this.turnWithInterrupt();
+    } else {
+      this.prepareToMove();
+      this.moveStep();
+    }
   }
 
-  turnStep() {
-    this.turn(this.nextDirection);
+  /** Выполняет проверку в каждом игровом цикле (нужна для определения столкновения у снарядов) */
+  stateCheck() {
+    // для Projectile
+  }
+
+  /** Чтобы объект не начал двигаться сразу после поворота; */
+  turnWithInterrupt() {
+    this.turn();
     ++this.moveStepsProgress;
     this.canMove = false;
   }
 
+  /** Выполняет проверку на то, может ли объект двигаться дальше; */
   prepareToMove() {
     this.lastRect = this.getRect();
     this.nextRect = { ...this.lastRect, ...this.getNextMove(true) };
@@ -77,6 +113,7 @@ export class EntityDynamic extends Entity {
     }
   }
 
+  /** Рассчитывает координаты следующего хода */
   getNextMove(fullMove = false) {
     let movePace = 0;
     if (fullMove) {
@@ -98,6 +135,7 @@ export class EntityDynamic extends Entity {
     }
   }
 
+  /** Выполняет микродвижение за игровой цикл */
   moveStep() {
     const fullCycle = ++this.moveStepsProgress >= this.getMoveSteps();
     if (fullCycle) {
@@ -106,17 +144,14 @@ export class EntityDynamic extends Entity {
       this.stopping = false;
       if (this.canMove && this.nextRect) {
         this.setState(this.nextRect);
+        ++this.moveLoops;
       }
     } else {
       this.alignedToGrid = false;
       if (this.canMove) {
         this.setState(this.getNextMove());
+        ++this.moveLoops;
       }
     }
-    this.moveStepCheck();
-  }
-
-  moveStepCheck() {
-    // используется в Projectile
   }
 }
