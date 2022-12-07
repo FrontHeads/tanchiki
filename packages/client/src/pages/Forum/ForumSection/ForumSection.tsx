@@ -1,8 +1,9 @@
 import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Paths } from '../../../config/constants';
-import { DUMMY_SECTION as topicList } from '../DummyData';
+import { Breadcrumbs } from '../../../components/Breadcrumbs';
+import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/typings';
+import { DUMMY_SECTION as topicList, DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumTopicList } from './ForumTopicList';
 import { ForumSectionProps } from './typings';
 
@@ -11,10 +12,7 @@ export const ForumSection: FC<ForumSectionProps> = () => {
   return (
     <section className="forum__wrapper">
       <h1 className="forum__title">Раздел {sectionId}</h1>
-      <div className="breadcrumbs breadcrumbs_margins_wide">
-        <a href={Paths.Forum}>Forum</a> {'> '}
-        <span>Section {sectionId}</span>
-      </div>
+      <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Wide} />
       <table border={1} className="forum" data-testid="forum-section">
         <thead className="forum__row-header">
           <tr>

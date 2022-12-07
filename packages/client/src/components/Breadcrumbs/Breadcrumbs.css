@@ -1,0 +1,18 @@
+@import url("../../variables.css");
+
+.breadcrumbs {
+  &__item {
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  &_margins {
+    &_normal {
+      margin: 10px 15px;
+    }
+
+    &_wide {
+      margin: 10px 60px;
+    }
+  }
+}

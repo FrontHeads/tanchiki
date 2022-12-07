@@ -55,15 +55,3 @@ ul {
     margin: 50px auto;
   }
 }
-
-.breadcrumbs {
-  &_margins {
-    &_normal {
-      margin: 10px 15px;
-    }
-
-    &_wide {
-      margin: 10px 60px;
-    }
-  }
-}

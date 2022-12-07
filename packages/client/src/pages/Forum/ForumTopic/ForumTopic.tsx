@@ -3,10 +3,11 @@ import './ForumTopic.css';
 import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Breadcrumbs } from '../../../components/Breadcrumbs';
+import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/typings';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/typings';
-import { Paths } from '../../../config/constants';
-import { DUMMY_TOPIC as topicList } from '../DummyData';
+import { DUMMY_TOPIC as topicList, DUMMY_TOPIC_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumMessage } from './ForumMessage';
 import { ForumTopicRowProps } from './typings';
 
@@ -17,11 +18,7 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
   return (
     <section className="forum-topic__wrapper" data-testid="forum-topic">
       <h1 className="forum-topic__title">Топик {topicId}</h1>
-      <div className="breadcrumbs breadcrumbs_margins_normal">
-        <a href={Paths.Forum}>Forum</a> {'> '}
-        <a href="#">Section</a> {'> '}
-        <span>Топик {topicId}</span>
-      </div>
+      <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Normal} />
       <div className="forum-topic__container">
         <div className="forum-topic__messages">
           {topicList.map(row => (

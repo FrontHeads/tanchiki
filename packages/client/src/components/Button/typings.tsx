@@ -5,11 +5,9 @@ export enum ButtonVariant {
   Secondary = 'secondary',
 }
 
-type ButtonProps = {
+export type ButtonProps = {
   text: string;
   type?: string;
   variant?: ButtonVariant;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
-
-export type { ButtonProps };

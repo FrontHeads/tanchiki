@@ -1,3 +1,5 @@
+import { Paths } from '../../config/constants';
+
 export const DUMMY_FORUM = [
   { id: 1, name: 'Ivan1990', topicCount: 2400, messages: 100 },
   { id: 2, name: 'Marussia', topicCount: 1900, messages: 81 },
@@ -46,4 +48,11 @@ export const DUMMY_TOPIC = [
       'Тут как раз меняли с #root на .root в другом PR, т.к. хорошая практика не привязывать стили к id, хоть тут и ' +
       'корневой элемент гарантированно один и уникален.',
   },
+];
+export const DUMMY_SECTION_BREADCRUMBS = [{ href: Paths.Forum, title: 'Forum' }, { title: 'Section' }];
+
+export const DUMMY_TOPIC_BREADCRUMBS = [
+  { href: Paths.Forum, title: 'Forum' },
+  { href: '#', title: 'Section' },
+  { title: 'Как побеждать?' },
 ];
