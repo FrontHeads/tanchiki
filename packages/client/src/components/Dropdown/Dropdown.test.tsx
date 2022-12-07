@@ -4,23 +4,23 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Dropdown } from './Dropdown';
 
-describe('Button', () => {
-  test('it render', () => {
+describe('Dropdown', () => {
+  test('it renders and call handle function', async () => {
     const buttonText = 'Кнопка';
-    render(<Dropdown menu={} trigger={buttonText} />);
-
-    const renderedButton = screen.getByRole('button', { name: buttonText });
-
-    expect(renderedButton).toBeInTheDocument();
-  });
-
-  test('it call handle function', async () => {
-    const buttonText = 'Кнопка';
+    const menuItemText = 'text text';
     const handleClick = jest.fn();
 
-    render(<Dropdown text={buttonText} onClick={handleClick} />);
+    render(
+      <Dropdown
+        trigger={<button>{buttonText}</button>}
+        menu={[<button onClick={handleClick}>{menuItemText}</button>]}
+      />
+    );
 
-    fireEvent.click(screen.getByText('Кнопка'));
-    expect(handleClick).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByText(buttonText));
+    expect(screen.getByText(menuItemText)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText(menuItemText));
+    expect(handleClick).toHaveBeenCalled();
   });
 });

@@ -9,7 +9,7 @@ export const ForumSectionList: FC<ForumSectionListProps> = ({ sectionList }) => 
     <>
       {sectionList.map(item => {
         return (
-          <tr key={item.id} className="forum__item">
+          <tr key={item.id} data-testid={item.id} className="forum__item">
             <td className="forum__first-column">
               <Link to={`${Paths.Section}/${item.id}`}>{item.name}</Link>
             </td>

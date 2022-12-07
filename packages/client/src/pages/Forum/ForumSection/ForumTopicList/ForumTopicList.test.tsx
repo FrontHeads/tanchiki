@@ -1,11 +1,14 @@
 import '@testing-library/jest-dom';
 
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { ForumTopicList } from './ForumTopicList';
+import { ForumTopicItem } from './typings';
 
-describe('LeaderboardSectionList', () => {
-  const topicList = [{ id: 4, name: 'SomeBoy', topicCount: 2400, messages: 81 }];
+describe('ForumTopicList', () => {
+  const topicList = [{ id: 1, name: 'Как побеждать?', messages: 100 } as ForumTopicItem];
+  const topicListItem = topicList[0];
 
   test('it renders', () => {
     render(
@@ -13,12 +16,13 @@ describe('LeaderboardSectionList', () => {
         <tbody>
           <ForumTopicList topicList={topicList} />
         </tbody>
-      </table>
+      </table>,
+      { wrapper: MemoryRouter }
     );
 
-    // const renderedElement = screen.getByText(topicList.name);
+    const renderedElement = screen.getByTestId(topicListItem.id);
 
-    // expect(renderedElement).toBeInTheDocument();
+    expect(renderedElement).toBeInTheDocument();
   });
 
   test('it renders with props', () => {
@@ -27,12 +31,11 @@ describe('LeaderboardSectionList', () => {
         <tbody>
           <ForumTopicList topicList={topicList} />
         </tbody>
-      </table>
+      </table>,
+      { wrapper: MemoryRouter }
     );
-    expect(screen.getByText(topicList.place)).toBeInTheDocument();
-    expect(screen.getByText(topicList.username)).toBeInTheDocument();
-    expect(screen.getByText(topicList.record)).toBeInTheDocument();
-    expect(screen.getByText(topicList.time)).toBeInTheDocument();
-    expect(screen.getByText(topicList.matches)).toBeInTheDocument();
+
+    expect(screen.getByText(topicListItem.name)).toBeInTheDocument();
+    expect(screen.getByText(topicListItem.messages)).toBeInTheDocument();
   });
 });

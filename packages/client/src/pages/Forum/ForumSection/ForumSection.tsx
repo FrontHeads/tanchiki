@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Paths } from '../../../config/constants';
 import { DUMMY_SECTION as topicList } from '../DummyData';
 import { ForumTopicList } from './ForumTopicList';
 import { ForumSectionProps } from './typings';
-import { Paths } from '../../../config/constants';
 
 export const ForumSection: FC<ForumSectionProps> = () => {
   const { sectionId } = useParams();
@@ -15,7 +15,7 @@ export const ForumSection: FC<ForumSectionProps> = () => {
         <a href={Paths.Forum}>Forum</a> {'> '}
         <span>Section {sectionId}</span>
       </div>
-      <table border={1} className="forum">
+      <table border={1} className="forum" data-testid="forum-section">
         <thead className="forum__row-header">
           <tr>
             <th className="forum__cell-header">Темы</th>

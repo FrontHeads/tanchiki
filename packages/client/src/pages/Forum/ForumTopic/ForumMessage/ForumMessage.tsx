@@ -4,8 +4,8 @@ import { FC } from 'react';
 
 import defaultAvatarPath from '../../../../assets/img/default-avatar.png';
 import { Dropdown } from '../../../../components/Dropdown';
-import { ForumMessageProps } from './typings';
 import simplifyDate from '../../../../utils/date-utils';
+import { ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = ({ id, username, content, date }) => {
   const editMessage = () => {
@@ -18,9 +18,9 @@ export const ForumMessage: FC<ForumMessageProps> = ({ id, username, content, dat
   const formattedDate = simplifyDate(date);
 
   return (
-    <div id={`${id}`} className="forum-message">
+    <div id={`${id}`} className="forum-message" data-testid="forum-message">
       <div className="forum-message__avatar">
-        <img className="forum-message__avatar-image" src={defaultAvatarPath} />
+        <img alt={`${username} user avatar`} className="forum-message__avatar-image" src={defaultAvatarPath} />
       </div>
       <div className="forum-message__content">
         <div className="forum-message__meta">

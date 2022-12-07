@@ -15,7 +15,7 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
   const [textareaOpen, setTextareaOpen] = useState(false);
 
   return (
-    <section className="forum-topic__wrapper">
+    <section className="forum-topic__wrapper" data-testid="forum-topic">
       <h1 className="forum-topic__title">Топик {topicId}</h1>
       <div className="breadcrumbs breadcrumbs_margins_normal">
         <a href={Paths.Forum}>Forum</a> {'> '}
@@ -30,7 +30,12 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
         </div>
         {textareaOpen ? (
           <div className="forum-topic__new-message">
-            <textarea className="forum-topic__textarea" rows={4} placeholder="Текст сообщения" />
+            <textarea
+              className="forum-topic__textarea"
+              rows={4}
+              placeholder="Текст сообщения"
+              data-testid="topic-textarea"
+            />
             <div className="forum-topic__buttons-wrapper">
               <Button onClick={() => setTextareaOpen(false)} text="Отмена" variant={ButtonVariant.Secondary} />
               <Button text="Отправить сообщение" variant={ButtonVariant.Primary} />
@@ -38,7 +43,12 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
           </div>
         ) : (
           <div className="forum-topic__add-message">
-            <Button onClick={() => setTextareaOpen(true)} text="Написать сообщение" variant={ButtonVariant.Primary} />
+            <Button
+              data-testid="add-message"
+              onClick={() => setTextareaOpen(true)}
+              text="Написать сообщение"
+              variant={ButtonVariant.Primary}
+            />
           </div>
         )}
       </div>

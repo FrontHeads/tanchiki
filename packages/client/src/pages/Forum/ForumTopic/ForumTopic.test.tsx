@@ -1,38 +1,30 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ForumTopic } from './ForumTopic';
 
-describe('LeaderboardRow', () => {
-  const row = { place: 1, username: 'John', record: 1234, time: 20, matches: 99 };
-
+describe('ForumTopic', () => {
   test('it renders', () => {
-    render(
-      <table>
-        <tbody>
-          <ForumTopic row={row} />
-        </tbody>
-      </table>
-    );
+    render(<ForumTopic />);
+    const forumTopicTestId = 'forum-topic';
 
-    const renderedElement = screen.getByText(row.username);
+    const renderedForum = screen.getByTestId(forumTopicTestId);
 
-    expect(renderedElement).toBeInTheDocument();
+    expect(renderedForum).toBeInTheDocument();
   });
 
-  test('it renders with props', () => {
-    render(
-      <table>
-        <tbody>
-          <ForumTopic row={row} />
-        </tbody>
-      </table>
-    );
-    expect(screen.getByText(row.place)).toBeInTheDocument();
-    expect(screen.getByText(row.username)).toBeInTheDocument();
-    expect(screen.getByText(row.record)).toBeInTheDocument();
-    expect(screen.getByText(row.time)).toBeInTheDocument();
-    expect(screen.getByText(row.matches)).toBeInTheDocument();
+  test('it render textarea', () => {
+    render(<ForumTopic />);
+
+    const forumTestId = 'topic-textarea';
+    const addMessageBtnId = 'add-message';
+
+    const renderedAddMessageBtn = screen.getByTestId(addMessageBtnId);
+
+    fireEvent.click(renderedAddMessageBtn);
+
+    const renderedTextarea = screen.getByTestId(forumTestId);
+    expect(renderedTextarea).toBeInTheDocument();
   });
 });

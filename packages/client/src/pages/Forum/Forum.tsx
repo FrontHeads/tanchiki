@@ -6,8 +6,6 @@ import { DUMMY_FORUM as sectionList } from './DummyData';
 import { ForumSectionList } from './ForumSectionList';
 import { ForumProps } from './typing';
 
-export const headerText = 'Рейтинг игроков';
-
 export const Forum: FC<ForumProps> = () => {
   return (
     <section className="forum__wrapper">

@@ -6,11 +6,11 @@ export const DUMMY_FORUM = [
   { id: 5, name: 'PVH', topicCount: 1900, messages: 95 },
 ];
 export const DUMMY_SECTION = [
-  { id: 1, name: 'Как побеждать?', topicCount: 2400, messages: 100 },
-  { id: 2, name: 'ГСЧ подкручен', topicCount: 1900, messages: 81 },
-  { id: 3, name: 'а сколько вы денег слили на донаты?', topicCount: 500, messages: 95 },
-  { id: 4, name: 'SomeBoy', topicCount: 2400, messages: 81 },
-  { id: 5, name: 'PVH', topicCount: 1900, messages: 95 },
+  { id: 1, name: 'Как побеждать?', messages: 100 },
+  { id: 2, name: 'ГСЧ подкручен', messages: 81 },
+  { id: 3, name: 'а сколько вы денег слили на донаты?', messages: 95 },
+  { id: 4, name: 'SomeBoy', messages: 81 },
+  { id: 5, name: 'PVH', messages: 95 },
 ];
 
 export const DUMMY_TOPIC = [

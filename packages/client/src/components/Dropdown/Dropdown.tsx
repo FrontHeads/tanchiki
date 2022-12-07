@@ -26,6 +26,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menu }) => {
     <div className="dropdown" ref={menuRef}>
       {cloneElement(trigger, {
         onClick: handleOpen,
+        'data-testid': 'dropdown-trigger',
       })}
       {open ? (
         <ul className="dropdown__menu">
