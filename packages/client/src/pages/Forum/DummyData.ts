@@ -49,10 +49,9 @@ export const DUMMY_TOPIC = [
       'корневой элемент гарантированно один и уникален.',
   },
 ];
-export const DUMMY_SECTION_BREADCRUMBS = [{ href: Paths.Forum, title: 'Forum' }, { title: 'Section' }];
+export const DUMMY_SECTION_BREADCRUMBS = [{ href: Paths.Forum, title: 'Forum' }];
 
 export const DUMMY_TOPIC_BREADCRUMBS = [
   { href: Paths.Forum, title: 'Forum' },
   { href: '#', title: 'Section' },
-  { title: 'Как побеждать?' },
 ];

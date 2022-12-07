@@ -3,7 +3,15 @@
 .breadcrumbs {
   &__item {
     display: inline-block;
-    margin-right: 5px;
+
+    &:after {
+      content: '/';
+      padding: 0 5px;
+    }
+
+    &:last-child:after {
+      content: none;
+    }
   }
 
   &_margins {

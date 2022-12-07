@@ -16,13 +16,7 @@ export const Breadcrumbs: FC<BreadcrumbsProps> = ({ data, variant }) => {
     <div className={breadcrumbsClassNames}>
       {data.map(item => (
         <div key={item.title} className="breadcrumbs__item">
-          {item.href ? (
-            <>
-              <Link to={item.href}>{item.title}</Link> {' >'}
-            </>
-          ) : (
-            <span>{item.title}</span>
-          )}
+          {item.href ? <Link to={item.href}>{item.title}</Link> : <span>{item.title}</span>}
         </div>
       ))}
     </div>
