@@ -16,7 +16,8 @@ describe('game/entities/Projectile', () => {
     zone.registerEntity(projectile);
 
     projectile.spawn({ posX: 0, posY: 0 });
-    projectile.step();
+    projectile.update();
+    projectile.update();
 
     expect(projectile).toHaveProperty('shouldExplode', true);
   });

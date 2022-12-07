@@ -7,7 +7,18 @@ export class Controller extends EventEmitter {
 
   constructor(private keyBindings: BindingConfig) {
     super();
+  }
+
+  load() {
     this.registerEvents();
+  }
+
+  unload() {
+    this.disableEvents();
+  }
+
+  reset() {
+    this.listeners = {};
   }
 
   registerEvents() {
@@ -17,7 +28,7 @@ export class Controller extends EventEmitter {
     document.addEventListener('keyup', this.keyup);
   }
 
-  disable() {
+  disableEvents() {
     document.removeEventListener('keydown', this.keydown);
     document.removeEventListener('keyup', this.keyup);
   }
