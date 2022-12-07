@@ -2,7 +2,6 @@
 
 .forum-message {
   padding: 16px 18px;
-  font-size: 14px;
   background-color: $section_background_color;
   display: flex;
 

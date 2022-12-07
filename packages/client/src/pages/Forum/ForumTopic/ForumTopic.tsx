@@ -1,6 +1,6 @@
 import './ForumTopic.css';
 
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
@@ -13,7 +13,6 @@ import { ForumTopicRowProps } from './typings';
 
 export const ForumTopic: FC<ForumTopicRowProps> = () => {
   const { topicId } = useParams();
-  const [textareaOpen, setTextareaOpen] = useState(false);
 
   return (
     <section className="forum-topic__wrapper" data-testid="forum-topic">
@@ -25,29 +24,17 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
             <ForumMessage key={row.id} {...row} />
           ))}
         </div>
-        {textareaOpen ? (
-          <div className="forum-topic__new-message">
-            <textarea
-              className="forum-topic__textarea"
-              rows={4}
-              placeholder="Текст сообщения"
-              data-testid="topic-textarea"
-            />
-            <div className="forum-topic__buttons-wrapper">
-              <Button onClick={() => setTextareaOpen(false)} text="Отмена" variant={ButtonVariant.Secondary} />
-              <Button text="Отправить сообщение" variant={ButtonVariant.Primary} />
-            </div>
+        <div className="forum-topic__new-message">
+          <textarea
+            className="forum-topic__textarea"
+            rows={4}
+            placeholder="Текст сообщения"
+            data-testid="topic-textarea"
+          />
+          <div className="forum-topic__buttons-wrapper">
+            <Button text="Отправить" variant={ButtonVariant.Primary} />
           </div>
-        ) : (
-          <div className="forum-topic__add-message">
-            <Button
-              data-testid="add-message"
-              onClick={() => setTextareaOpen(true)}
-              text="Написать сообщение"
-              variant={ButtonVariant.Primary}
-            />
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );
