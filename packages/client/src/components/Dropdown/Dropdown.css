@@ -17,6 +17,7 @@
       margin: 0;
       background-color: $background_color;
       border-bottom: 1px solid $border_dropdown_color;
+
       &:last-child {
         border-bottom: none;
       }
