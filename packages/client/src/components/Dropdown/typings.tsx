@@ -1,8 +1,11 @@
-import { ReactElement } from 'react';
+import { ButtonHTMLAttributes, MouseEventHandler, ReactElement } from 'react';
 
-type DropdownProps = {
+export type DropdownMenuItems = {
+  title: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+export type DropdownProps = {
   trigger: ReactElement;
-  menu: ReactElement[];
+  menuItems: DropdownMenuItems[];
 };
-
-export type { DropdownProps };

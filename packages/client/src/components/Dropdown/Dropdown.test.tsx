@@ -11,10 +11,7 @@ describe('Dropdown', () => {
     const handleClick = jest.fn();
 
     render(
-      <Dropdown
-        trigger={<button>{buttonText}</button>}
-        menu={[<button onClick={handleClick}>{menuItemText}</button>]}
-      />
+      <Dropdown trigger={<button>{buttonText}</button>} menuItems={[{ onClick: handleClick, title: menuItemText }]} />
     );
 
     fireEvent.click(screen.getByText(buttonText));

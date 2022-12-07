@@ -4,6 +4,7 @@ import { FC } from 'react';
 
 import defaultAvatarPath from '../../../../assets/img/default-avatar.png';
 import { Dropdown } from '../../../../components/Dropdown';
+import { DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import simplifyDate from '../../../../utils/date-utils';
 import { ForumMessageProps } from './typings';
 
@@ -15,6 +16,12 @@ export const ForumMessage: FC<ForumMessageProps> = ({ id, username, content, dat
   const deleteMessage = () => {
     console.log('Удалить');
   };
+
+  const menuItems: DropdownMenuItems[] = [
+    { onClick: editMessage, title: 'Редактировать' },
+    { onClick: deleteMessage, title: 'Удалить' },
+  ];
+
   const formattedDate = simplifyDate(date);
 
   return (
@@ -44,7 +51,7 @@ export const ForumMessage: FC<ForumMessageProps> = ({ id, username, content, dat
             </svg>
           </div>
         }
-        menu={[<button onClick={editMessage}>Редактировать</button>, <button onClick={deleteMessage}>Удалить</button>]}
+        menuItems={menuItems}
       />
     </div>
   );

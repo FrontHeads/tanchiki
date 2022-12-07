@@ -4,7 +4,7 @@ import { cloneElement, FC, useEffect, useRef, useState } from 'react';
 
 import { DropdownProps } from './typings';
 
-export const Dropdown: FC<DropdownProps> = ({ trigger, menu }) => {
+export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems }) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -30,17 +30,17 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menu }) => {
       })}
       {open ? (
         <ul className="dropdown__menu">
-          {menu.map((menuItem, index) => (
+          {menuItems.map(({ title, onClick, ...rest }, index) => (
             <li key={index} className="dropdown__menu-item">
-              {cloneElement(menuItem, {
-                onClick: () => {
-                  if (menuItem.props.onClick) {
-                    menuItem.props.onClick();
-                    setOpen(false);
-                  }
-                },
-                className: 'dropdown__menu-button',
-              })}
+              <button
+                onClick={event => {
+                  handleOpen();
+                  onClick(event);
+                }}
+                className="dropdown__menu-button"
+                {...rest}>
+                {title}
+              </button>
             </li>
           ))}
         </ul>
