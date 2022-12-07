@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 
+import { renderWithRouter } from '../../../utils/testing-utils';
 import { ForumSection } from './ForumSection';
 
 describe('ForumSection', () => {
   test('it renders', () => {
-    render(<ForumSection />, { wrapper: MemoryRouter });
+    renderWithRouter({ component: <ForumSection /> });
     const forumSectionTestId = 'forum-section';
 
     const renderedForumSection = screen.getByTestId(forumSectionTestId);

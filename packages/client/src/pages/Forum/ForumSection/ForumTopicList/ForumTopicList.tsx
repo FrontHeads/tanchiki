@@ -7,16 +7,14 @@ import { ForumTopicListProps } from './typings';
 export const ForumTopicList: FC<ForumTopicListProps> = ({ topicList, sectionId }) => {
   return (
     <>
-      {topicList.map(item => {
-        return (
-          <tr key={item.id} data-testid={item.id} className="forum__item">
-            <td className="forum__first-column">
-              <Link to={`${Paths.Section}/${sectionId}${Paths.Topic}/${item.id}`}>{item.name}</Link>
-            </td>
-            <td>{item.messages}</td>
-          </tr>
-        );
-      })}
+      {topicList.map(item => (
+        <tr key={item.id} data-testid={item.id} className="forum__item">
+          <td className="forum__first-column">
+            <Link to={`${Paths.Section}/${sectionId}${Paths.Topic}/${item.id}`}>{item.name}</Link>
+          </td>
+          <td>{item.messages}</td>
+        </tr>
+      ))}
     </>
   );
 };

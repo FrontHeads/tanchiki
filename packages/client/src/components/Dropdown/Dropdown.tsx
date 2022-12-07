@@ -31,7 +31,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menu }) => {
       {open ? (
         <ul className="dropdown__menu">
           {menu.map((menuItem, index) => (
-            <li key={index} className="menu-item">
+            <li key={index} className="dropdown__menu-item">
               {cloneElement(menuItem, {
                 onClick: () => {
                   if (menuItem.props.onClick) {
@@ -39,6 +39,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menu }) => {
                     setOpen(false);
                   }
                 },
+                className: 'dropdown__menu-button',
               })}
             </li>
           ))}
