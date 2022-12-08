@@ -11,7 +11,7 @@
   font-weight: bold;
   background-clip: text;
 
-  @media (max-width: 420px) {
+  @media (max-width: 650px) {
     background-size: 3%;
     font-size: 3.2rem;
   }

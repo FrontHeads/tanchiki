@@ -1,6 +1,6 @@
 import './ForumTopic.css';
 
-import { FC } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
@@ -13,6 +13,26 @@ import { ForumTopicRowProps } from './typings';
 
 export const ForumTopic: FC<ForumTopicRowProps> = () => {
   const { topicId } = useParams();
+  const [formMessage, setFormMessage] = useState('');
+
+  const textareaChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const { value } = event.target;
+
+      setFormMessage(value);
+    },
+    [formMessage]
+  );
+
+  const submitHandler = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      console.log(formMessage);
+
+      setFormMessage('');
+    },
+    [formMessage]
+  );
 
   return (
     <section className="forum-topic__wrapper" data-testid="forum-topic">
@@ -24,17 +44,21 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
             <ForumMessage key={row.id} {...row} />
           ))}
         </div>
-        <div className="forum-topic__new-message">
+        <form onSubmit={e => submitHandler(e)} className="forum-topic__new-message">
           <textarea
+            onChange={e => textareaChangeHandler(e)}
+            name="message"
+            id="message"
+            value={formMessage}
             className="forum-topic__textarea"
             rows={4}
             placeholder="Текст сообщения"
             data-testid="topic-textarea"
           />
           <div className="forum-topic__buttons-wrapper">
-            <Button text="Отправить" variant={ButtonVariant.Primary} />
+            <Button type="submit" text="Отправить" variant={ButtonVariant.Primary} />
           </div>
-        </div>
+        </form>
       </div>
     </section>
   );

@@ -2,14 +2,18 @@
 
 .forum-topic {
   &__container {
-    margin: 0 10px $vertical_margin;
+    margin: 0 0 $vertical_margin;
+    padding: 0 15px;
     box-sizing: border-box;
-    padding-top: 3px;
+
+    @media (max-width: 730px) {
+      padding: 0;
+    }
   }
 
   &__wrapper {
     width: 100%;
-    max-width: 920px;
+    max-width: 940px;
     margin: 0 auto;
   }
 
@@ -32,11 +36,6 @@
     border-radius: 10px;
     margin-bottom: 20px;
     padding-top: 20px;
-  }
-
-  &__add-message {
-    max-width: 400px;
-    margin: 0 auto;
   }
 
   &__new-message {

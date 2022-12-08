@@ -13,6 +13,10 @@
 
   td {
     padding: 0 20px;
+
+    @media (max-width: 420px) {
+      padding: 0 5px;
+    }
   }
 
   &__title {
@@ -24,10 +28,6 @@
     height: 100px;
     text-align: center;
     font-family: "Press Start 2P", cursive;
-
-    @media (max-width: 420px) {
-      font-size: 15px;
-    }
   }
 
   &__cell-header {
@@ -37,10 +37,11 @@
       width: 70%;
       text-align: left;
     }
-  }
 
-  &__body {
-    font-size: 18px;
+    @media (max-width: 600px) {
+      padding: 0 5px;
+      margin: 0 0 60px;
+    }
   }
 
   &__item {
@@ -58,9 +59,5 @@
 
   @media (max-width: 420px) {
     margin: 0 0 $vertical_margin;
-
-    &__body {
-      font-size: 15px;
-    }
   }
 }
