@@ -13,7 +13,7 @@ describe('game/entities/Tank', () => {
   it('should determine projectile starting position', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
 
-    const projectile = tank.shoot();
+    const projectile = tank.shoot() as Projectile;
 
     expect(projectile.width).toBe(2);
     expect(projectile.height).toBe(2);
