@@ -130,7 +130,10 @@ export class Game {
     return entity;
   }
 
-  createProjectile(projectile: Projectile) {
+  createProjectile(projectile: Projectile | null) {
+    if (!projectile) {
+      return null;
+    }
     const loopEntitiesArray = Array.from(this.loopEntities);
     loopEntitiesArray.unshift(projectile);
     this.loopEntities = new Set(loopEntitiesArray);
