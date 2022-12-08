@@ -3,6 +3,7 @@
 .forum-message {
   padding: 16px 18px;
   background-color: $section_background_color;
+  border-bottom: 1px solid #737477;
   display: flex;
 
   &:last-child {
