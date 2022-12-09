@@ -188,7 +188,6 @@ export class Game {
   }
 
   destroyEntity(entity: Tank | Projectile) {
-    entity.despawn();
     this.loopEntities.delete(entity);
   }
 
@@ -258,10 +257,10 @@ export class Game {
     this.createBoundaries();
 
     if (option === MainMenuState.SINGLEPLAYER) {
-      this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerAll);
+      this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerAll);
     } else if (option === MainMenuState.MULTIPLAYER) {
-      this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
-      this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
+      this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerWasd);
+      this.createTank({ posX: 34, posY: 50, role: 'player', color: 'lime' }, this.controllerArrows);
     }
 
     const flag = this.createEntity({ type: 'flag', width: 4, height: 4, posX: 26, posY: 50 });
