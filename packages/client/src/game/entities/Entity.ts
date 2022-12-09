@@ -43,17 +43,33 @@ export class Entity extends EventEmitter {
     if (!posState.hasCollision) {
       this.setState({ posX, posY });
       this.spawned = true;
-    } else if (posState.hasCollision && this.type === 'projectile') {
-      this.emit('projectileExploded');
+    } else if (this.type === 'projectile') {
+      this.explode();
     }
   }
 
   despawn() {
+    if (!this.spawned) {
+      return;
+    }
+    this.shouldBeDestroyed = true;
     this.emit('entityShouldBeDestroyed');
     this.spawned = false;
   }
 
-  takeDamage() {
+  explode() {
+    this.emit('exploding');
+    this.despawn();
+  }
+
+  takeDamage(source: Entity) {
     this.emit('damaged');
+    if (this.type === 'projectile') {
+      this.explode();
+    } else if (this.type === 'tank') {
+      if (this.role !== source.role) {
+        this.explode();
+      }
+    }
   }
 }

@@ -26,7 +26,7 @@ export class Tank extends EntityDynamic {
     });
     this.canShoot = false;
 
-    projectile.on('projectileExploded', () => {
+    projectile.on('exploding', () => {
       this.canShoot = true;
     });
 

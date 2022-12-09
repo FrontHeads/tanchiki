@@ -42,14 +42,14 @@ describe('game/entities/Tank', () => {
     expect(projectileOne).toBeTruthy();
     expect(projectileTwo).toBeFalsy();
 
-    zone.registerEntity(projectileOne);
+    zone.add(projectileOne);
     projectileOne.spawn({ posX: 2, posY: 2 });
 
     projectileOne.update();
     projectileOne.update();
     projectileOne.update();
 
-    expect(projectileOne).toHaveProperty('shouldExplode', true);
+    expect(projectileOne).toHaveProperty('shouldBeDestroyed', true);
 
     const projectileThree = tank.shoot() as Projectile;
     expect(projectileThree).toBeTruthy();

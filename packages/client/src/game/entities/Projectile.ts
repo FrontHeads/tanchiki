@@ -19,12 +19,9 @@ export class Projectile extends EntityDynamic {
   }
 
   stateCheck() {
-    if (this.shouldExplode) {
-      this.shouldBeDestroyed = true;
-      this.emit('projectileExploded');
-    }
     if (!this.canMove) {
-      this.shouldExplode = true;
+      this.stop();
+      this.explode();
     }
   }
 }
