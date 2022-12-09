@@ -44,7 +44,7 @@ export class Entity extends EventEmitter {
       this.setState({ posX, posY });
       this.spawned = true;
     } else if (posState.hasCollision && this.type === 'projectile') {
-      this.despawn();
+      this.emit('projectileExploded');
     }
   }
 
