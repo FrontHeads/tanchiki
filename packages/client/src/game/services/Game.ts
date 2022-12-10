@@ -18,8 +18,25 @@ export class Game {
   loopTimeMs = 25;
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
-  mode: 'loading' | 'menu' | 'game' = 'loading';
+  mode: 'loading' | 'menu' | 'game' | 'select-level' = 'loading';
   mainMenuState = MainMenuState.SINGLEPLAYER;
+  level = 1;
+  // TODO: сюда надо будет подгрузить уровни + сделать нормальную типизацию объекта
+  // Массив с настройками уровней
+  levels: Record<string, unknown>[] = [
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 },
+    { id: 6 },
+    { id: 7 },
+    { id: 8 },
+    { id: 9 },
+    { id: 10 },
+    { id: 11 },
+    { id: 12 },
+  ];
 
   private constructor() {
     this.zone = new Zone(this.settings);
@@ -208,6 +225,7 @@ export class Game {
 
     this.controllerAll.reset();
 
+    // Обрабатываем переходы по пунктам меню
     this.controllerAll.on('move', (direction: Direction) => {
       if (this.mode !== 'menu') {
         return;
@@ -220,11 +238,68 @@ export class Game {
       this.overlay.updateMainMenuState(this.mainMenuState);
     });
 
+    // Обрабатываем нажатие на указанном пункте меню
     this.controllerAll.on('shoot', () => {
       if (this.mode !== 'menu') {
         return;
       }
-      this.initScenario(this.mainMenuState);
+
+      // Открываем экран выбора уровня
+      this.initLevelSelector();
+    });
+  }
+
+  initLevelSelector() {
+    this.mode = 'select-level';
+
+    this.overlay.showLevelSelector(this.level);
+
+    this.controllerAll.reset();
+
+    /** Объект setInterval для обработки непрерывного изменения уровня */
+    let changeLevelInterval: ReturnType<typeof setInterval>;
+
+    const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
+
+    this.controllerAll.on('stop', () => {
+      if (this.mode == 'select-level') {
+        resetLevelInterval();
+      }
+    });
+
+    this.controllerAll.on('move', (direction: Direction) => {
+      if (this.mode !== 'select-level') {
+        return;
+      }
+
+      resetLevelInterval();
+
+      changeLevelInterval = setInterval(() => {
+        let shouldTrigger = false;
+        if (direction === Direction.UP && this.level < this.levels.length) {
+          this.level++;
+          shouldTrigger = true;
+        } else if (direction === Direction.DOWN && this.level > 1) {
+          this.level--;
+          shouldTrigger = true;
+        } else {
+          resetLevelInterval();
+        }
+
+        // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
+        if (shouldTrigger) {
+          this.overlay.updateLevelSelectorState(this.level);
+        }
+      }, 100);
+    });
+
+    this.controllerAll.on('shoot', () => {
+      if (this.mode !== 'select-level') {
+        return;
+      }
+
+      // Запускаем игру после выбора уровня
+      this.initGameLevel();
     });
   }
 
@@ -242,7 +317,7 @@ export class Game {
     }, redirectDelay);
   }
 
-  initScenario(option: MainMenuState) {
+  initGameLevel() {
     this.mode = 'game';
     this.view.reset();
     this.zone.reset();
@@ -250,13 +325,14 @@ export class Game {
     this.controllerWasd.reset();
     this.controllerArrows.reset();
 
-    this.overlay.showStartScreen('УРОВЕНЬ  1');
+    // Анимация перехода выбора уровня в игру
+    this.overlay.showStartScreen(this.level);
 
     this.createBoundaries();
 
-    if (option === MainMenuState.SINGLEPLAYER) {
+    if (this.mainMenuState === MainMenuState.SINGLEPLAYER) {
       this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerAll);
-    } else if (option === MainMenuState.MULTIPLAYER) {
+    } else if (this.mainMenuState === MainMenuState.MULTIPLAYER) {
       this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
       this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
     }
