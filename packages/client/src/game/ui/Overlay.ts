@@ -1,16 +1,23 @@
 import type { View } from '../services';
-import { MainMenuState, UIElementSettings } from '../typings';
+import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
+import { Screen, screenClasses } from './screens';
 
 export class Overlay {
   view!: View;
-  mainMenuStateYPos = {
-    [MainMenuState.SINGLEPLAYER]: 32,
-    [MainMenuState.MULTIPLAYER]: 36,
-  };
+  currentScreen!: Screen;
 
   constructor(view: View) {
     this.view = view;
+  }
+
+  show(screen: ScreenType, state: unknown = null) {
+    const ScreenClass = screenClasses[screen];
+    if (!(this.currentScreen instanceof ScreenClass)) {
+      this.currentScreen = new ScreenClass(this);
+    }
+
+    this.currentScreen.show(state);
   }
 
   clearScreen() {
@@ -24,13 +31,13 @@ export class Overlay {
     return elem;
   }
 
-  renderBlackScreen() {
+  renderSplashScreen(backgroundColor: 'black' | 'grey' = 'black') {
     this.renderElement({
       posX: 0,
       posY: 0,
       width: this.view.width,
       height: this.view.height,
-      color: 'black',
+      color: backgroundColor,
     });
   }
 
@@ -46,7 +53,7 @@ export class Overlay {
   }
 
   showLoading() {
-    this.renderBlackScreen();
+    this.renderSplashScreen();
     this.renderElement({
       posX: 0,
       posY: 26,
@@ -58,105 +65,12 @@ export class Overlay {
     });
   }
 
-  showMainMenu(state: MainMenuState) {
-    this.updateMainMenuState(state);
-  }
-
-  renderMainMenu() {
-    this.renderBlackScreen();
-
-    this.renderElement({
-      posX: 0,
-      posY: 12,
-      width: this.view.width,
-      height: 7,
-      img: this.view.brickBg,
-      text: 'ТАНЧИКИ',
-      align: 'center',
-    });
-    this.renderElement({
-      posX: 0,
-      posY: 21,
-      width: this.view.width,
-      height: 7,
-      img: this.view.brickBg,
-      text: '2023',
-      align: 'center',
-    });
-    this.renderElement({
-      posX: 20,
-      posY: this.mainMenuStateYPos[MainMenuState.SINGLEPLAYER],
-      width: 20,
-      height: 2,
-      color: 'white',
-      text: '1 ИГРОК',
-    });
-    this.renderElement({
-      posX: 20,
-      posY: this.mainMenuStateYPos[MainMenuState.MULTIPLAYER],
-      width: 20,
-      height: 2,
-      color: 'white',
-      text: '2 ИГРОКА',
-    });
-
-    this.renderElement({
-      posX: 0,
-      posY: 50,
-      width: this.view.width,
-      height: 1,
-      color: 'lightgrey',
-      text: 'WASD ИЛИ СТРЕЛКИ ДЛЯ ДВИЖЕНИЯ',
-      align: 'center',
-    });
-    this.renderElement({
-      posX: 0,
-      posY: 52,
-      width: this.view.width,
-      height: 1,
-      color: 'lightgrey',
-      text: 'ПРОБЕЛ ИЛИ ВВОД ДЛЯ СТРЕЛЬБЫ',
-      align: 'center',
-    });
-  }
-
-  updateMainMenuState(state: MainMenuState) {
-    this.renderMainMenu();
-
-    this.renderElement({
-      posX: 16,
-      posY: this.mainMenuStateYPos[state],
-      width: 2,
-      height: 2,
-      color: 'yellow',
-    });
-  }
-
-  showStartScreen(title: string) {
-    const initialDelay = 1000;
-    const width = this.view.width;
-    const height = Math.round(this.view.height / 2);
-
-    this.renderElement({
-      posX: 0,
-      posY: 0,
-      width,
-      height: this.view.height,
-      color: 'grey',
-    });
-    this.renderElement({
-      posX: 0,
-      posY: height - 2,
-      width,
-      height: 2,
-      color: 'black',
-      text: title,
-      align: 'center',
-    });
+  showStartScreen(level: number, startAnimationDelay = 0) {
+    this.show(ScreenType.LEVEL_SELECTOR, level);
 
     setTimeout(() => {
       this.animate(this.updateStartScreenStage.bind(this));
-    }, initialDelay);
+    }, startAnimationDelay);
   }
 
   updateStartScreenStage(stage = 0) {
@@ -212,4 +126,8 @@ export class Overlay {
 
     return true;
   }
+
+  // showMainMenu(state: MainMenuState) {
+  //   this.updateMainMenuState(state);
+  // }
 }

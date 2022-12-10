@@ -1,8 +1,9 @@
-import { Entity, Flag, Projectile, Tank, Terrain } from '../entities';
-import { Direction, EntityDynamicSettings, EntitySettings, GameSettings, MainMenuState } from '../typings';
+import { Projectile, Tank } from '../entities';
+import { Direction, GameSettings, MainMenuState, ScreenType } from '../typings';
 import { Overlay } from '../ui';
 import { Controller, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
+import { Scenario } from './Scenario';
 
 export class Game {
   static __instance: Game;
@@ -11,6 +12,7 @@ export class Game {
   zone!: Zone;
   view!: View;
   overlay!: Overlay;
+  scenario?: Scenario;
   controllerAll!: Controller;
   controllerWasd!: Controller;
   controllerArrows!: Controller;
@@ -18,7 +20,7 @@ export class Game {
   loopTimeMs = 25;
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
-  mode: 'loading' | 'menu' | 'game' | 'select-level' = 'loading';
+  screen: ScreenType = ScreenType.LOADING;
   mainMenuState = MainMenuState.SINGLEPLAYER;
   level = 1;
   // TODO: сюда надо будет подгрузить уровни + сделать нормальную типизацию объекта
@@ -89,7 +91,7 @@ export class Game {
     for (const entity of this.loopEntities) {
       entity.update();
       if (entity.shouldBeDestroyed) {
-        this.destroyEntity(entity);
+        this.loopEntities.delete(entity);
       }
     }
     nextCycleDelay -= cycleStartTime - performance.now();
@@ -127,90 +129,9 @@ export class Game {
     }
   }
 
-  createTank(props: EntityDynamicSettings, controller: Controller | null = null) {
-    const entity = new Tank(props);
-    this.loopEntities.add(entity);
-    this.view.add(entity);
-    this.zone.add(entity);
-    entity.spawn(props);
-    if (controller) {
-      controller.on('move', (direction: Direction) => {
-        entity.move(direction);
-      });
-      controller.on('stop', () => {
-        entity.stop();
-      });
-      controller.on('shoot', () => {
-        this.createProjectile(entity.shoot());
-      });
-    }
-    return entity;
-  }
-
-  createProjectile(projectile: Projectile | null) {
-    if (!projectile) {
-      return null;
-    }
-    const loopEntitiesArray = Array.from(this.loopEntities);
-    loopEntitiesArray.unshift(projectile);
-    this.loopEntities = new Set(loopEntitiesArray);
-    this.view.add(projectile);
-    this.zone.add(projectile);
-    projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
-    projectile.update();
-  }
-
-  createEntity(props: EntitySettings) {
-    let entity: Entity;
-    if (props.type === 'flag') {
-      entity = new Flag(props);
-    } else {
-      entity = new Terrain(props);
-    }
-    this.view.add(entity);
-    this.zone.add(entity);
-    entity.spawn(props);
-    return entity;
-  }
-
-  createBoundaries() {
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.width,
-      height: this.settings.boundarySize,
-      posX: 0,
-      posY: 0,
-    });
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.width,
-      height: this.settings.boundarySize,
-      posX: 0,
-      posY: this.settings.height - this.settings.boundarySize,
-    });
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.boundarySize,
-      height: this.settings.height - this.settings.boundarySize * 2,
-      posX: 0,
-      posY: this.settings.boundarySize,
-    });
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.boundarySize,
-      height: this.settings.height - this.settings.boundarySize * 2,
-      posX: this.settings.width - this.settings.boundarySize,
-      posY: this.settings.boundarySize,
-    });
-  }
-
-  destroyEntity(entity: Tank | Projectile) {
-    this.loopEntities.delete(entity);
-  }
-
   initLoading() {
     const redirectDelay = 500;
-    this.mode = 'loading';
+    this.screen = ScreenType.LOADING;
     this.overlay.showLoading();
 
     this.view.offAll('assetsLoaded');
@@ -222,14 +143,14 @@ export class Game {
   }
 
   initMenu() {
-    this.mode = 'menu';
-    this.overlay.showMainMenu(this.mainMenuState);
+    this.screen = ScreenType.MAIN_MENU;
+    this.overlay.show(this.screen, this.mainMenuState);
 
     this.controllerAll.reset();
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll.on('move', (direction: Direction) => {
-      if (this.mode !== 'menu') {
+      if (this.screen !== ScreenType.MAIN_MENU) {
         return;
       }
       if (direction === Direction.UP) {
@@ -237,12 +158,13 @@ export class Game {
       } else if (direction === Direction.DOWN) {
         this.mainMenuState = MainMenuState.MULTIPLAYER;
       }
-      this.overlay.updateMainMenuState(this.mainMenuState);
+
+      this.overlay.show(this.screen, this.mainMenuState);
     });
 
     // Обрабатываем нажатие на указанном пункте меню
     this.controllerAll.on('shoot', () => {
-      if (this.mode !== 'menu') {
+      if (this.screen !== ScreenType.MAIN_MENU) {
         return;
       }
 
@@ -252,9 +174,9 @@ export class Game {
   }
 
   initLevelSelector() {
-    this.mode = 'select-level';
+    this.screen = ScreenType.LEVEL_SELECTOR;
 
-    this.overlay.showLevelSelector(this.level);
+    this.overlay.show(this.screen, this.level);
 
     this.controllerAll.reset();
 
@@ -264,13 +186,13 @@ export class Game {
     const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
 
     this.controllerAll.on('stop', () => {
-      if (this.mode == 'select-level') {
+      if (this.screen == ScreenType.LEVEL_SELECTOR) {
         resetLevelInterval();
       }
     });
 
     this.controllerAll.on('move', (direction: Direction) => {
-      if (this.mode !== 'select-level') {
+      if (this.screen !== ScreenType.LEVEL_SELECTOR) {
         return;
       }
 
@@ -290,13 +212,13 @@ export class Game {
 
         // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
         if (shouldTrigger) {
-          this.overlay.updateLevelSelectorState(this.level);
+          this.overlay.show(this.screen, this.level);
         }
       }, 100);
     });
 
     this.controllerAll.on('shoot', () => {
-      if (this.mode !== 'select-level') {
+      if (this.screen !== ScreenType.LEVEL_SELECTOR) {
         return;
       }
 
@@ -307,7 +229,7 @@ export class Game {
 
   initGameOver() {
     const redirectDelay = 3000;
-    this.mode = 'loading';
+    this.screen = ScreenType.LOADING;
     this.overlay.showGameOver();
 
     this.controllerAll.reset();
@@ -320,7 +242,7 @@ export class Game {
   }
 
   initGameLevel() {
-    this.mode = 'game';
+    this.screen = ScreenType.GAME;
     this.view.reset();
     this.zone.reset();
     this.controllerAll.reset();
@@ -330,27 +252,11 @@ export class Game {
     // Анимация перехода выбора уровня в игру
     this.overlay.showStartScreen(this.level);
 
+    this.scenario = new Scenario(this);
 
-    // В Scenario
-    // new Scenario(this);
-
-    // this.createBoundaries();
-
-    // if (this.mainMenuState === MainMenuState.SINGLEPLAYER) {
-    //   this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerAll);
-    // } else if (this.mainMenuState === MainMenuState.MULTIPLAYER) {
-    //   this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerWasd);
-    //   this.createTank({ posX: 34, posY: 50, role: 'player', color: 'lime' }, this.controllerArrows);
-    // }
-
-    // const flag = this.createEntity({ type: 'flag', width: 4, height: 4, posX: 26, posY: 50 });
-    // this.createEntity({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
-    // this.createEntity({ type: 'trees', width: 16, height: 8, posX: 30, posY: 18 });
-    // this.createEntity({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
-
-    // flag.on('damaged', () => {
-    //   this.initGameOver();
-    // });
+    this.scenario.on('gameOver', () => {
+      this.initGameOver();
+    });
 
     this.controllerAll.on('pause', () => {
       this.togglePause();

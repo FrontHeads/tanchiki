@@ -68,3 +68,10 @@ export enum MainMenuState {
   SINGLEPLAYER,
   MULTIPLAYER,
 }
+
+export enum ScreenType {
+  MAIN_MENU,
+  LOADING,
+  LEVEL_SELECTOR,
+  GAME,
+}
