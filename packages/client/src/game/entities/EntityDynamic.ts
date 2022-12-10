@@ -22,8 +22,6 @@ export class EntityDynamic extends Entity {
    * Если танк едет, то он поворачивает сразу. А если стоит на месте - то при коротком нажатии клавиши
    * он поворачивает, не двигаясь в сторону.*/
   moveLoops = 0;
-  /** Должен ли объект взрываться */
-  shouldExplode = false;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -61,13 +59,13 @@ export class EntityDynamic extends Entity {
 
   /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
   update() {
-    const isStandingStill = !this.moving && !this.stopping && !this.shouldExplode;
+    const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
     if (!this.spawned || isStandingStill) {
       return;
     }
 
     this.stateCheck();
-    if (this.shouldExplode) {
+    if (this.shouldBeDestroyed) {
       return;
     }
 

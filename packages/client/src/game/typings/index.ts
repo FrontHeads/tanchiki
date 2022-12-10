@@ -25,7 +25,7 @@ export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean };
 
-export type EntityRole = 'player1' | 'player2' | 'enemy' | 'neutral';
+export type EntityRole = 'player' | 'enemy' | 'neutral';
 
 export type EntityType =
   | 'tank'

@@ -74,9 +74,15 @@ export class Zone {
     const layer = this.getLayerByEntityType(entity);
     this.updateMatrix(layer, entity.lastRect, null);
     if (!entity.alignedToGrid) {
-      this.updateMatrix(layer, entity.nextRect, null);
+      const rect = entity.nextRect;
+      if (!this.isBeyondMatrix(rect)) {
+        this.updateMatrix(layer, rect, null);
+      }
     } else {
-      this.updateMatrix(layer, entity.getRect(), null);
+      const rect = entity.getRect();
+      if (!this.isBeyondMatrix(rect)) {
+        this.updateMatrix(layer, rect, null);
+      }
     }
   }
 
@@ -151,10 +157,11 @@ export class Zone {
         }
         if (entity.type === 'projectile') {
           if (mainLayerCell !== null && mainLayerCell.hittable) {
-            mainLayerCell.takeDamage();
+            mainLayerCell.takeDamage(entity);
             return true;
           }
           if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
+            secondaryLayerCell.takeDamage(entity);
             return true;
           }
         }

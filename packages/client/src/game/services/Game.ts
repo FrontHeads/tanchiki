@@ -147,7 +147,10 @@ export class Game {
     return entity;
   }
 
-  createProjectile(projectile: Projectile) {
+  createProjectile(projectile: Projectile | null) {
+    if (!projectile) {
+      return null;
+    }
     const loopEntitiesArray = Array.from(this.loopEntities);
     loopEntitiesArray.unshift(projectile);
     this.loopEntities = new Set(loopEntitiesArray);
@@ -202,7 +205,6 @@ export class Game {
   }
 
   destroyEntity(entity: Tank | Projectile) {
-    entity.despawn();
     this.loopEntities.delete(entity);
   }
 
@@ -328,23 +330,27 @@ export class Game {
     // Анимация перехода выбора уровня в игру
     this.overlay.showStartScreen(this.level);
 
-    this.createBoundaries();
 
-    if (this.mainMenuState === MainMenuState.SINGLEPLAYER) {
-      this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerAll);
-    } else if (this.mainMenuState === MainMenuState.MULTIPLAYER) {
-      this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
-      this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
-    }
+    // В Scenario
+    // new Scenario(this);
 
-    const flag = this.createEntity({ type: 'flag', width: 4, height: 4, posX: 26, posY: 50 });
-    this.createEntity({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
-    this.createEntity({ type: 'trees', width: 16, height: 8, posX: 30, posY: 18 });
-    this.createEntity({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
+    // this.createBoundaries();
 
-    flag.on('damaged', () => {
-      this.initGameOver();
-    });
+    // if (this.mainMenuState === MainMenuState.SINGLEPLAYER) {
+    //   this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerAll);
+    // } else if (this.mainMenuState === MainMenuState.MULTIPLAYER) {
+    //   this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerWasd);
+    //   this.createTank({ posX: 34, posY: 50, role: 'player', color: 'lime' }, this.controllerArrows);
+    // }
+
+    // const flag = this.createEntity({ type: 'flag', width: 4, height: 4, posX: 26, posY: 50 });
+    // this.createEntity({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
+    // this.createEntity({ type: 'trees', width: 16, height: 8, posX: 30, posY: 18 });
+    // this.createEntity({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
+
+    // flag.on('damaged', () => {
+    //   this.initGameOver();
+    // });
 
     this.controllerAll.on('pause', () => {
       this.togglePause();
