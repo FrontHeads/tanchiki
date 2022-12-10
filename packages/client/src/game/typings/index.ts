@@ -1,3 +1,5 @@
+import { Tank } from '../entities';
+
 export type GameSettings = {
   width: number;
   height: number;
@@ -73,5 +75,32 @@ export enum ScreenType {
   MAIN_MENU,
   LOADING,
   LEVEL_SELECTOR,
+  GAME_OVER,
   GAME,
 }
+
+// Scenario
+export enum Player {
+  PLAYER1,
+  PLAYER2,
+}
+
+export enum TankEnemyType {
+  BASIC,
+  FAST,
+  POWER,
+  ARMOR,
+}
+
+export enum ScenarioEvent {
+  GAME_OVER = 'game_over',
+  MISSION_ACCOMPLISHED = 'mission_accomplished',
+}
+
+export type ScenarioStat = Record<TankEnemyType, number>;
+
+export type ScenarioState = {
+  entity: Tank;
+  lives: number;
+  stat: ScenarioStat;
+};

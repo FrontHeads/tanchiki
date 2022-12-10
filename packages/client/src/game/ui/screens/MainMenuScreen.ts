@@ -1,5 +1,5 @@
 import { MainMenuState } from '../../typings';
-import { Screen } from '.';
+import { Screen } from './Screen';
 
 export class MainMenuScreen extends Screen<MainMenuState> {
   mainMenuStateYPos = {

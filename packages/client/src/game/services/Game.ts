@@ -1,9 +1,8 @@
 import { Projectile, Tank } from '../entities';
-import { Direction, GameSettings, MainMenuState, ScreenType } from '../typings';
+import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
-import { Controller, View, Zone } from './';
+import { Controller, Scenario, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
-import { Scenario } from './Scenario';
 
 export class Game {
   static __instance: Game;
@@ -132,7 +131,7 @@ export class Game {
   initLoading() {
     const redirectDelay = 500;
     this.screen = ScreenType.LOADING;
-    this.overlay.showLoading();
+    this.overlay.show(this.screen);
 
     this.view.offAll('assetsLoaded');
     this.view.on('assetsLoaded', () => {
@@ -230,7 +229,8 @@ export class Game {
   initGameOver() {
     const redirectDelay = 3000;
     this.screen = ScreenType.LOADING;
-    this.overlay.showGameOver();
+
+    this.overlay.show(this.screen);
 
     this.controllerAll.reset();
     this.controllerWasd.reset();
@@ -250,11 +250,11 @@ export class Game {
     this.controllerArrows.reset();
 
     // Анимация перехода выбора уровня в игру
-    this.overlay.showStartScreen(this.level);
+    this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
+    this.overlay.show(this.screen, this.level);
 
     this.scenario = new Scenario(this);
-
-    this.scenario.on('gameOver', () => {
+    this.scenario.on(ScenarioEvent.GAME_OVER, () => {
       this.initGameOver();
     });
 

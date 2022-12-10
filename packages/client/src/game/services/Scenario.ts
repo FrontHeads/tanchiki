@@ -1,38 +1,24 @@
 import { Entity, Flag, Projectile, Tank, Terrain } from '../entities';
-import { EntitySettings } from '../typings';
+import {
+  Direction,
+  EntityDynamicSettings,
+  EntitySettings,
+  MainMenuState,
+  Player,
+  ScenarioEvent,
+  ScenarioState,
+  TankEnemyType,
+} from '../typings';
 import { EventEmitter } from '../utils';
-import { Direction, EntityDynamicSettings, MainMenuState } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
-
-export enum Player {
-  PLAYER1,
-  PLAYER2,
-}
-
-export enum TankEnemyType {
-  BASIC,
-  FAST,
-  POWER,
-  ARMOR,
-}
-
-type ScenarioEventList = 'gameOver' | 'missionAccomplished';
-
-type ScenarioStat = Record<TankEnemyType, number>;
-
-type ScenarioState = {
-  entity: Tank;
-  lives: number;
-  stat: ScenarioStat;
-};
 
 export const PLAYER_INITIAL_PROPS: Record<Player, EntityDynamicSettings> = {
   [Player.PLAYER1]: { posX: 18, posY: 50, role: 'player', moveSpeed: 4 },
   [Player.PLAYER2]: { posX: 34, posY: 50, role: 'player', color: 'lime' },
 };
 
-export class Scenario extends EventEmitter<ScenarioEventList> {
+export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {} as Record<Player, ScenarioState>;
 
   constructor(private game: Game) {
@@ -59,7 +45,7 @@ export class Scenario extends EventEmitter<ScenarioEventList> {
     this.createEntity({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
 
     flag.on('damaged', () => {
-      this.emit('gameOver');
+      this.emit(ScenarioEvent.GAME_OVER);
     });
   }
 
@@ -128,15 +114,13 @@ export class Scenario extends EventEmitter<ScenarioEventList> {
     };
 
     entity.on('shouldBeDestroyed', () => {
-      // проверяю жизни
+      // проверяю оставшиеся жизни
     });
 
     this.game.loopEntities.add(entity);
     this.game.view.add(entity);
     this.game.zone.add(entity);
     entity.spawn(props);
-
-    console.log(entity);
 
     if (controller) {
       controller.on('move', (direction: Direction) => {

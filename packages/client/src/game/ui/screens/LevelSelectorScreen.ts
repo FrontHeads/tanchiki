@@ -1,4 +1,4 @@
-import { Screen } from './';
+import { Screen } from './Screen';
 
 export class LevelSelectorScreen extends Screen<number> {
   show(level: number) {
