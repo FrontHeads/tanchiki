@@ -104,3 +104,29 @@ export type ScenarioState = {
   lives: number;
   stat: ScenarioStat;
 };
+
+export type MapData = TupleArray<TupleArray<number, 13>, 13>;
+
+export enum Cell {
+  BLANK = 0,
+  FOREST = 11,
+  ICE = 12,
+  RIVER = 13,
+  BASE = 15,
+
+  BRICK = 1,
+  BRICK_TOP = 2,
+  BRICK_RIGHT = 3,
+  BRICK_BOTTOM = 4,
+  BRICK_LEFT = 5,
+  BRICK_LEFT_BOTTOM = 17,
+  BRICK_RIGHT_BOTTOM = 18,
+
+  CONCRETE = 6,
+  CONCRETE_TOP = 7,
+  CONCRETE_RIGHT = 8,
+  CONCRETE_BOTTOM = 9,
+  CONCRETE_LEFT = 10,
+  CONCRETE_LEFT_BOTTOM = 19,
+  CONCRETE_RIGHT_BOTTOM = 20,
+}

@@ -78,6 +78,7 @@ export class Game {
     this.controllerWasd.unload();
     this.controllerArrows.unload();
     this.inited = false;
+    this.level = 1;
   }
 
   createView(root: HTMLElement | null) {
@@ -148,28 +149,28 @@ export class Game {
     this.controllerAll.reset();
 
     // Обрабатываем переходы по пунктам меню
-    this.controllerAll.on('move', (direction: Direction) => {
-      if (this.screen !== ScreenType.MAIN_MENU) {
-        return;
-      }
-      if (direction === Direction.UP) {
-        this.mainMenuState = MainMenuState.SINGLEPLAYER;
-      } else if (direction === Direction.DOWN) {
-        this.mainMenuState = MainMenuState.MULTIPLAYER;
-      }
+    this.controllerAll
+      .on('move', (direction: Direction) => {
+        if (this.screen !== ScreenType.MAIN_MENU) {
+          return;
+        }
+        if (direction === Direction.UP) {
+          this.mainMenuState = MainMenuState.SINGLEPLAYER;
+        } else if (direction === Direction.DOWN) {
+          this.mainMenuState = MainMenuState.MULTIPLAYER;
+        }
 
-      this.overlay.show(this.screen, this.mainMenuState);
-    });
+        this.overlay.show(this.screen, this.mainMenuState);
+      })
+      // Обрабатываем нажатие на указанном пункте меню
+      .on('shoot', () => {
+        if (this.screen !== ScreenType.MAIN_MENU) {
+          return;
+        }
 
-    // Обрабатываем нажатие на указанном пункте меню
-    this.controllerAll.on('shoot', () => {
-      if (this.screen !== ScreenType.MAIN_MENU) {
-        return;
-      }
-
-      // Открываем экран выбора уровня
-      this.initLevelSelector();
-    });
+        // Открываем экран выбора уровня
+        this.initLevelSelector();
+      });
   }
 
   initLevelSelector() {
@@ -183,47 +184,47 @@ export class Game {
     let changeLevelInterval: ReturnType<typeof setInterval>;
 
     const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
-
-    this.controllerAll.on('stop', () => {
-      if (this.screen == ScreenType.LEVEL_SELECTOR) {
+    const handleMove = (direction: Direction) => {
+      let shouldTrigger = false;
+      if (direction === Direction.UP && this.level < this.levels.length) {
+        this.level++;
+        shouldTrigger = true;
+      } else if (direction === Direction.DOWN && this.level > 1) {
+        this.level--;
+        shouldTrigger = true;
+      } else {
         resetLevelInterval();
       }
-    });
-
-    this.controllerAll.on('move', (direction: Direction) => {
-      if (this.screen !== ScreenType.LEVEL_SELECTOR) {
-        return;
+      // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
+      if (shouldTrigger) {
+        this.overlay.show(this.screen, this.level);
       }
+    };
 
-      resetLevelInterval();
-
-      changeLevelInterval = setInterval(() => {
-        let shouldTrigger = false;
-        if (direction === Direction.UP && this.level < this.levels.length) {
-          this.level++;
-          shouldTrigger = true;
-        } else if (direction === Direction.DOWN && this.level > 1) {
-          this.level--;
-          shouldTrigger = true;
-        } else {
+    this.controllerAll
+      .on('stop', () => {
+        if (this.screen == ScreenType.LEVEL_SELECTOR) {
           resetLevelInterval();
         }
-
-        // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
-        if (shouldTrigger) {
-          this.overlay.show(this.screen, this.level);
+      })
+      .on('move', (direction: Direction) => {
+        if (this.screen !== ScreenType.LEVEL_SELECTOR) {
+          return;
         }
-      }, 100);
-    });
 
-    this.controllerAll.on('shoot', () => {
-      if (this.screen !== ScreenType.LEVEL_SELECTOR) {
-        return;
-      }
+        resetLevelInterval();
+        handleMove.call(this, direction);
 
-      // Запускаем игру после выбора уровня
-      this.initGameLevel();
-    });
+        changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
+      })
+      .on('shoot', () => {
+        if (this.screen !== ScreenType.LEVEL_SELECTOR) {
+          return;
+        }
+
+        // Запускаем игру после выбора уровня
+        this.initGameLevel();
+      });
   }
 
   initGameOver() {

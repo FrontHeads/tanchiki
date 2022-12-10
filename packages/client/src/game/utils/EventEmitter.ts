@@ -8,15 +8,19 @@ export class EventEmitter<T extends string = string> {
       this.listeners[eventName] = [];
     }
     this.listeners[eventName].push(callback);
+    return this;
   }
+
   emit(eventName: T, ...args: Array<unknown>) {
     this.listeners[eventName]?.forEach((listener: Fn) => {
       listener.apply(this, args);
     });
   }
+
   off(eventName: T, callback: Fn) {
     this.listeners[eventName] = this.listeners[eventName]?.filter((listener: Fn) => listener !== callback);
   }
+
   offAll(eventName: T) {
     delete this.listeners[eventName];
   }

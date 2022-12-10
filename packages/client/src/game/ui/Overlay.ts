@@ -1,7 +1,8 @@
+import { screenClasses } from '../data/constants';
 import type { View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
-import { Screen, screenClasses } from './screens';
+import { Screen } from './screens';
 
 export class Overlay {
   view!: View;
