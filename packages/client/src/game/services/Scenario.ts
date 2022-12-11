@@ -49,7 +49,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     /**
      * TODO: on tankEnemy.exploding - обновляем статистику
-     * TODO: Eсли еще остались в запасе вражеские танки - spawn нового
      */
 
     const entities = this.mapManager.mapDataToEntitySettings(this.map);
@@ -212,21 +211,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   /** Создаем танк игрока */
   createPlayerTank(playerType: Player = Player.PLAYER1) {
-    console.log('createPlayerTank', playerType);
-
     /** Создаем стейт игрока при первом размещении на карте */
     if (!(playerType in this.state.players)) {
       this.initPlayerState(playerType);
-    } else {
-      this.state.players[playerType].entity?.despawn();
     }
 
     const settings = playerInitialSettings[playerType];
     const playerState = this.state.players[playerType];
+
     const entity = new Tank(settings);
-
-    playerState.entity = entity;
-
     this.game.addEntity(entity);
 
     entity.spawn(settings);
