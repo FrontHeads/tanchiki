@@ -29,8 +29,6 @@ export const Navigation: FC = () => {
     }
 
     dispatch(uiActions.closeBurgerMenu());
-    //TODO убрать здесь scroll после реализации scrollRestoration
-    window.scrollTo(0, 0);
   };
 
   const menuLinksList = NAVIGATION_LIST.map(link => (
