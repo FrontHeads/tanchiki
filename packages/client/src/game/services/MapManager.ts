@@ -1,15 +1,20 @@
-import { birthPlace, BrickCells, ConcreteCells } from '../data/constants';
+import { BrickCells, ConcreteCells, spawnPlaces } from '../data/constants';
 import { levels } from '../data/levels';
-import { Cell, EntityType, MapData } from '../typings';
-import { EntitySettings } from './../typings/index';
+import { Cell, EntitySettings, EntityType, GameSettings, MapData } from '../typings';
 
-class MapManager {
+export class MapManager {
   private mapData = levels;
 
+  constructor(private gameSettings: GameSettings) {}
+
   fixMapData(map: MapData): MapData {
-    this.clearBirthPlaces(map);
+    this.clearSpawnPlaces(map);
     return map;
   }
+
+  coordToPos = (value: number) => {
+    return value * 4 + this.gameSettings.boundarySize;
+  };
 
   getMap(level: number): MapData {
     const map = this.mapData[level - 1];
@@ -19,10 +24,6 @@ class MapManager {
 
   mapDataToEntitySettings(map: MapData): EntitySettings[] {
     const result: EntitySettings[] = [];
-
-    const coordToPos = (value: number) => {
-      return value * 4 + 2;
-    };
 
     map.forEach((row, y) => {
       row.forEach((column, x) => {
@@ -41,15 +42,15 @@ class MapManager {
           type = 'flag';
         }
 
-        const subtype = column as Cell;
+        // const subtype = column as Cell;
         if (type) {
           result.push({
             // subtype,
             type,
             width: 4,
             height: 4,
-            posX: coordToPos(x),
-            posY: coordToPos(y),
+            posX: this.coordToPos(x),
+            posY: this.coordToPos(y),
           });
         }
       });
@@ -58,13 +59,11 @@ class MapManager {
     return result;
   }
 
-  private clearBirthPlaces(map: MapData): void {
-    for (const row in birthPlace) {
-      for (const cow of birthPlace[row]) {
-        map[row][cow] = 0;
+  private clearSpawnPlaces(map: MapData): void {
+    for (const row in spawnPlaces) {
+      for (const cow of spawnPlaces[row]) {
+        map[row][cow] = Cell.BLANK;
       }
     }
   }
 }
-
-export const mapManager = new MapManager();

@@ -95,15 +95,24 @@ export enum TankEnemyType {
 export enum ScenarioEvent {
   GAME_OVER = 'game_over',
   MISSION_ACCOMPLISHED = 'mission_accomplished',
+  TANK_PLAYER_SPAWNED = 'tank_player_spawned',
+  TANK_ENEMY_SPAWNED = 'tank_enemy_spawned',
 }
 
-export type ScenarioStat = Record<TankEnemyType, number>;
-
 export type ScenarioState = {
-  entity: Tank;
-  lives: number;
-  stat: ScenarioStat;
+  maxActiveEnemies: number;
+  enemiesLeft: number;
+  enemies: Tank[];
+  players: Record<Player, ScenarioPlayerState>;
 };
+
+export type ScenarioPlayerState = {
+  entity: Tank;
+  stat: ScenarioStat;
+  lives: number;
+};
+
+export type ScenarioStat = Record<TankEnemyType, number>;
 
 export type MapData = TupleArray<TupleArray<number, 13>, 13>;
 
