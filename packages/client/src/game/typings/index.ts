@@ -1,5 +1,5 @@
-import { Controller } from './../services/Controller';
 import { Tank } from '../entities';
+import { Controller } from './../services/Controller';
 
 export type GameSettings = {
   width: number;
@@ -26,7 +26,7 @@ export type Size = {
 
 export type Rect = Pos & Size;
 
-export type PosState = { hasCollision: boolean };
+export type PosState = { hasCollision: boolean | undefined, nextRect: Rect };
 
 export type EntityRole = 'player' | 'enemy' | 'neutral';
 
