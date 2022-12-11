@@ -220,6 +220,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const playerState = this.state.players[playerType];
 
     const entity = new Tank(settings);
+    playerState.entity = entity;
+    
     this.game.addEntity(entity);
 
     entity.spawn(settings);
