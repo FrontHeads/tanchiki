@@ -3,6 +3,7 @@ import { Direction, EntityDynamicSettings, EntitySettings, GameSettings, MainMen
 import { Overlay } from '../ui';
 import { Controller, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
+import { TankEnemy } from '../entities/TankEnemy';
 
 export class Game {
   static __instance: Game;
@@ -108,6 +109,20 @@ export class Game {
       clearTimeout(this.loopProcess);
       this.loopProcess = null;
     }
+  }
+
+  createTankEnemy(props: EntityDynamicSettings) {
+    const entity = new TankEnemy(props);
+    this.loopEntities.add(entity);
+    this.view.add(entity);
+    this.zone.add(entity);
+    entity.spawn(props);
+
+    setInterval(() => {
+      this.createProjectile(entity.shoot());
+    }, 500);
+
+    return entity;
   }
 
   createTank(props: EntityDynamicSettings, controller: Controller | null = null) {
@@ -260,6 +275,10 @@ export class Game {
       this.createTank({ posX: 18, posY: 50, role: 'player1', moveSpeed: 4 }, this.controllerWasd);
       this.createTank({ posX: 34, posY: 50, role: 'player2', color: 'lime' }, this.controllerArrows);
     }
+
+    this.createTankEnemy({ posX: 2, posY: 2, role: 'enemy', moveSpeed: 4 });
+    this.createTankEnemy({ posX: 30, posY: 10, role: 'enemy', moveSpeed: 4 });
+    this.createTankEnemy({ posX: 6, posY: 6, role: 'enemy', moveSpeed: 4 });
 
     const flag = this.createEntity({ type: 'flag', width: 4, height: 4, posX: 26, posY: 50 });
     this.createEntity({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
