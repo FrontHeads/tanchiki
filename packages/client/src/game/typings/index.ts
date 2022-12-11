@@ -1,3 +1,4 @@
+import { Controller } from './../services/Controller';
 import { Tank } from '../entities';
 
 export type GameSettings = {
@@ -95,8 +96,16 @@ export enum TankEnemyType {
 export enum ScenarioEvent {
   GAME_OVER = 'game_over',
   MISSION_ACCOMPLISHED = 'mission_accomplished',
+
+  /** Танк игрока размещен на карте (в момент старта игры и респаун после убийства в случае наличия жизни */
   TANK_PLAYER_SPAWNED = 'tank_player_spawned',
+  /** Танк игрока был убит */
+  TANK_PLAYER_DESTROYED = 'tank_player_destroyed',
+
+  /** Вражеский танк размежен на карте */
   TANK_ENEMY_SPAWNED = 'tank_enemy_spawned',
+  /** Вражеский танк был убит */
+  TANK_ENEMY_DESTROYED = 'tank_enemy_destroyed',
 }
 
 export type ScenarioState = {
@@ -107,9 +116,10 @@ export type ScenarioState = {
 };
 
 export type ScenarioPlayerState = {
-  entity: Tank;
+  entity?: Tank;
   stat: ScenarioStat;
   lives: number;
+  controller: Controller;
 };
 
 export type ScenarioStat = Record<TankEnemyType, number>;

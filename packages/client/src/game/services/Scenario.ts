@@ -19,7 +19,7 @@ import { MapManager } from './MapManager';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 20,
+    enemiesLeft: 2,
     maxActiveEnemies: 3,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
@@ -36,14 +36,14 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.map = this.mapManager.getMap(game.level);
 
     if (this.game.mainMenuState === MainMenuState.SINGLEPLAYER) {
-      this.createTank(Player.PLAYER1, this.game.controllerAll);
+      this.createPlayerTank(Player.PLAYER1);
     } else if (this.game.mainMenuState === MainMenuState.MULTIPLAYER) {
-      this.createTank(Player.PLAYER1, this.game.controllerWasd);
-      this.createTank(Player.PLAYER2, this.game.controllerArrows);
+      this.createPlayerTank(Player.PLAYER1);
+      this.createPlayerTank(Player.PLAYER2);
     }
 
     // Временная реализацияя размещения врагов
-    while (this.ifCanCreateTankEnemy()) {
+    while (this.canCreateTankEnemy()) {
       this.createTankEnemy();
     }
 
@@ -62,13 +62,53 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         this.createEntity(settings);
       }
     });
+
+    this.initEventListeners();
+  }
+
+  initEventListeners() {
+    this
+      /** После убийства вражеского танка */
+      .on(ScenarioEvent.TANK_ENEMY_DESTROYED, (entity: TankEnemy) => {
+        /** Удаляем его из списка активных */
+        this.state.enemies = this.state.enemies.filter(enemy => enemy !== entity);
+
+        /** Спауним новый вражеский танк если необходимо */
+        if (this.canCreateTankEnemy()) {
+          this.createTankEnemy();
+        } else {
+          /** Триггерим победу в случае если врагов не осталось */
+          if (this.state.enemies.length === 0) {
+            this.emit(ScenarioEvent.MISSION_ACCOMPLISHED);
+          }
+        }
+      })
+
+      /** После убийства игрока */
+      .on(ScenarioEvent.TANK_PLAYER_DESTROYED, (_entity: Tank, playerType: Player) => {
+        // Если не осталось жизней у всех игроков - триггерим game over
+        const isNoLivesLeft = Object.entries(this.state.players).every(([_, playerState]) => playerState.lives === 0);
+        if (isNoLivesLeft) {
+          this.emit(ScenarioEvent.GAME_OVER);
+          return;
+        }
+
+        const playerState = this.state.players[playerType];
+
+        // Если еще есть жизни - уменьшаем их количество и спауним по-новой
+        if (playerState.lives > 0) {
+          --playerState.lives;
+          this.createPlayerTank(playerType);
+        }
+      });
   }
 
   /** Проверяем можно ли еще размещать на поле вражеские танки */
-  ifCanCreateTankEnemy() {
+  canCreateTankEnemy() {
     return this.state.enemies.length < this.state.maxActiveEnemies && this.state.enemiesLeft !== 0;
   }
 
+  /** Создаем элемент карты */
   createEntity(props: EntitySettings) {
     let entity: Entity;
     if (props.type === 'flag') {
@@ -81,6 +121,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     return entity;
   }
 
+  /** Создаем рамки вокруг карты */
   createBoundaries() {
     const { settings } = this.game;
     this.createEntity({
@@ -113,20 +154,36 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
   }
 
+  /** Возвращает контроллер в зависимости от режима игры и индекса игрока */
+  getGameController(playerType: Player): Controller {
+    if (this.game.mainMenuState === MainMenuState.MULTIPLAYER) {
+      if (playerType === Player.PLAYER1) {
+        return this.game.controllerWasd;
+      } else if (playerType === Player.PLAYER2) {
+        return this.game.controllerArrows;
+      }
+    }
+
+    return this.game.controllerAll;
+  }
+
+  /** Создаем вражеский танк */
   createTankEnemy() {
-    this.state.enemiesLeft--;
+    --this.state.enemiesLeft;
+
+    /** Выбираем случайным образом одну из 3 позиций врага */
     const enemySpawnPlaces = spawnPlaces[0];
     const enemySpawnPlaceK = Math.floor(Math.random() * enemySpawnPlaces.length);
 
     const posX = this.mapManager.coordToPos(enemySpawnPlaces[enemySpawnPlaceK]);
     const posY = this.mapManager.coordToPos(0);
 
-    const color = 'darkgrey';
-
-    const settings = { posX, posY, role: 'enemy', color } as EntityDynamicSettings;
-
+    const settings = { posX, posY, role: 'enemy', color: 'darkgrey' } as EntityDynamicSettings;
     const entity = new TankEnemy(settings);
+
     this.state.enemies.push(entity);
+
+    this.emit(ScenarioEvent.TANK_ENEMY_SPAWNED, entity);
 
     this.game.addEntity(entity);
     entity.spawn(settings);
@@ -134,54 +191,67 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.createProjectile(projectile);
     });
 
-    entity.on('entityShouldBeDestroyed', () => {
-      this.state.enemies = this.state.enemies.filter(enemy => enemy !== entity);
-      if (this.ifCanCreateTankEnemy()) {
-        this.createTankEnemy();
-      }
-      // Если врагов не осталось - триггерим победу
-      if (this.state.enemiesLeft === 0) {
-        this.emit(ScenarioEvent.MISSION_ACCOMPLISHED);
-      }
+    entity.on('destroyed', () => {
+      this.emit(ScenarioEvent.TANK_ENEMY_DESTROYED, entity);
     });
   }
 
-  createTank(playerType: Player = Player.PLAYER1, controller: Controller | null = null) {
-    const settings = playerInitialSettings[playerType];
-    const entity = new Tank(settings);
-
+  /** Инициализируем начальное состояние игрока */
+  initPlayerState(playerType: Player) {
     this.state.players[playerType] = {
-      lives: 5,
+      lives: 1,
       stat: {
         [TankEnemyType.ARMOR]: 0,
         [TankEnemyType.BASIC]: 0,
         [TankEnemyType.FAST]: 0,
         [TankEnemyType.POWER]: 0,
       },
-      entity,
+      controller: this.getGameController(playerType),
     };
+  }
 
-    entity.on('entityShouldBeDestroyed', () => {
-      // TODO:  проверяю оставшиеся жизни - spawn нового, либо gameover, если все игроки были убиты
-    });
+  /** Создаем танк игрока */
+  createPlayerTank(playerType: Player = Player.PLAYER1) {
+    console.log('createPlayerTank', playerType);
+
+    /** Создаем стейт игрока при первом размещении на карте */
+    if (!(playerType in this.state.players)) {
+      this.initPlayerState(playerType);
+    } else {
+      this.state.players[playerType].entity?.despawn();
+    }
+
+    const settings = playerInitialSettings[playerType];
+    const playerState = this.state.players[playerType];
+    const entity = new Tank(settings);
+
+    playerState.entity = entity;
 
     this.game.addEntity(entity);
+
     entity.spawn(settings);
     entity.on('shoot', (projectile: Projectile) => {
       this.createProjectile(projectile);
     });
-  
-    if (controller) {
-      controller.on('move', (direction: Direction) => {
+
+    /** Навешиваем события на котроллер, предварительно почистив старые */
+    playerState.controller
+      .reset()
+      .on('move', (direction: Direction) => {
         entity.move(direction);
-      });
-      controller.on('stop', () => {
+      })
+      .on('stop', () => {
         entity.stop();
-      });
-      controller.on('shoot', () => {
+      })
+      .on('shoot', () => {
         entity.shoot();
       });
-    }
+
+    /** Отлавливаем события убийства игрока и передаем событие Scenario */
+    entity.on('destroyed', () => {
+      this.emit(ScenarioEvent.TANK_PLAYER_DESTROYED, entity, playerType);
+    });
+
     return entity;
   }
 

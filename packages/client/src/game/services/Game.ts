@@ -1,6 +1,7 @@
 import { Entity, Projectile, Tank } from '../entities';
 import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
+import { levels } from './../data/levels';
 import { Controller, Scenario, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
@@ -22,22 +23,7 @@ export class Game {
   screen: ScreenType = ScreenType.LOADING;
   mainMenuState = MainMenuState.SINGLEPLAYER;
   level = 1;
-  // TODO: сюда надо будет подгрузить уровни + сделать нормальную типизацию объекта
-  // Массив с настройками уровней
-  levels: Record<string, unknown>[] = [
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-    { id: 6 },
-    { id: 7 },
-    { id: 8 },
-    { id: 9 },
-    { id: 10 },
-    { id: 11 },
-    { id: 12 },
-  ];
+  maxLevels = levels.length;
 
   private constructor() {
     this.zone = new Zone(this.settings);
@@ -78,10 +64,12 @@ export class Game {
     this.controllerWasd.unload();
     this.controllerArrows.unload();
     this.inited = false;
-    // this.level = 1;
   }
 
   reset() {
+    if (this.scenario) {
+      delete this.scenario;
+    }
     this.view.reset();
     this.zone.reset();
     this.controllerAll.reset();
@@ -207,7 +195,7 @@ export class Game {
     const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
     const handleMove = (direction: Direction) => {
       let shouldTrigger = false;
-      if (direction === Direction.UP && this.level < this.levels.length) {
+      if (direction === Direction.UP && this.level < this.maxLevels) {
         this.level++;
         shouldTrigger = true;
       } else if (direction === Direction.DOWN && this.level > 1) {
@@ -263,18 +251,27 @@ export class Game {
     }, redirectDelay);
   }
 
-  initGameLevel() {
+  initGameLevel(firstInit = false) {
     this.screen = ScreenType.GAME;
     this.reset();
 
-    // Анимация перехода выбора уровня в игру
+    /** Анимация перехода выбора уровня в игру */
+    const startAnimationDelay = firstInit ? 2000 : 0;
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
-    this.overlay.show(this.screen, this.level);
+    this.overlay.show(this.screen, startAnimationDelay);
 
+    /** Инициализируем сценарий инстанс сценария */
     this.scenario = new Scenario(this);
-    this.scenario.on(ScenarioEvent.GAME_OVER, () => {
-      this.initGameOver();
-    });
+    this.scenario
+      .on(ScenarioEvent.GAME_OVER, () => {
+        this.initGameOver();
+      })
+      .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
+        if (this.level < this.maxLevels) {
+          this.level++;
+          this.initGameLevel(false);
+        }
+      });
 
     this.controllerAll.on('pause', () => {
       this.togglePause();

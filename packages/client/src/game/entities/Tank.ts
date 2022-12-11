@@ -35,7 +35,7 @@ export class Tank extends EntityDynamic {
   calculateProjectileInitPos() {
     const defaultSize = { width: 2, height: 2 };
     let rect: Rect;
-    if ((this.moving || this.stopping) && this.nextRect) {
+    if ((this.moving || this.stopping) && this.canMove && this.nextRect) {
       rect = this.nextRect;
     } else {
       rect = this.getRect();

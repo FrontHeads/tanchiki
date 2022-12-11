@@ -9,7 +9,8 @@ describe('game/services/Scenario', () => {
     game.createView(document.body);
     const scenario = new Scenario(game);
 
-    const tank = scenario.state.players[Player.PLAYER1].entity;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const tank = scenario.state.players[Player.PLAYER1].entity!;
 
     expect(tank instanceof Tank).toBe(true);
     expect(tank.spawned).toBe(true);
@@ -23,7 +24,8 @@ describe('game/services/Scenario', () => {
     game.createView(document.body);
     const scenario = new Scenario(game);
 
-    const tank = scenario.state.players[Player.PLAYER1].entity;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const tank = scenario.state.players[Player.PLAYER1].entity!;
 
     game.loopEntities.delete(tank);
 

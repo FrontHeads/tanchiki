@@ -1,8 +1,10 @@
 import { Screen } from './Screen';
 
 export class GameScreen extends Screen<number> {
-  show() {
-    this.overlay.animate(this.updateStage.bind(this));
+  show(startAnimationDelay = 0) {
+    setTimeout(() => {
+      this.overlay.animate(this.updateStage.bind(this));
+    }, startAnimationDelay);
   }
 
   updateStage(stage = 0) {
