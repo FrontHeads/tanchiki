@@ -1,5 +1,5 @@
-import { getAssetType } from '../../utils/';
 import { assetDataList, errorMsg, ImageDataList, SoundDataList, timeoutMsg } from './data';
+import { getAssetType } from './helpers';
 import { AssetDataList, ImageList, Resource, SoundList } from './typings';
 
 /** Загружает и хранит изображения и звуки. */

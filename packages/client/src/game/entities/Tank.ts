@@ -1,4 +1,4 @@
-import { resources } from '../services/Resources/Resources';
+import { resources } from '../services/';
 import type { EntityDynamicSettings, Rect } from '../typings';
 import { EntityDynamic, Projectile } from './';
 

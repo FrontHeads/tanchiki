@@ -1,5 +1,4 @@
-import type { View } from '../services';
-import { resources } from '../services/Resources/Resources';
+import { resources, View } from '../services';
 import { MainMenuState, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
 

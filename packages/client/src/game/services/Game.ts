@@ -1,9 +1,8 @@
 import { Entity, Flag, Projectile, Tank, Terrain } from '../entities';
 import { Direction, EntityDynamicSettings, EntitySettings, GameSettings, MainMenuState } from '../typings';
 import { Overlay } from '../ui';
-import { Controller, View, Zone } from './';
+import { Controller, resources, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
-import { resources } from './Resources/Resources';
 
 export class Game {
   static __instance: Game;
