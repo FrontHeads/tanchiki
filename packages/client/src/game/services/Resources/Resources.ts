@@ -1,4 +1,4 @@
-import { getResourceType } from '../../utils/';
+import { getAssetType } from '../../utils/';
 import { assetDataList, errorMsg, ImageDataList, SoundDataList, timeoutMsg } from './data';
 import { AssetDataList, ImageList, Resource, SoundList } from './typings';
 
@@ -41,7 +41,7 @@ export class Resources {
 
     return new Promise((resolve, reject) => {
       let resource: Resource;
-      const assetType = getResourceType(assetPath);
+      const assetType = getAssetType(assetPath);
 
       if (assetType === 'image') {
         resource = new Image();
