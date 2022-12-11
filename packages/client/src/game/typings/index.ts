@@ -26,7 +26,7 @@ export type Size = {
 
 export type Rect = Pos & Size;
 
-export type PosState = { hasCollision: boolean | undefined, nextRect: Rect };
+export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
 
 export type EntityRole = 'player' | 'enemy' | 'neutral';
 

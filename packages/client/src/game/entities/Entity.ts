@@ -34,7 +34,7 @@ export class Entity extends EventEmitter {
   }
 
   spawn({ posX = this.posX, posY = this.posY }: Pos) {
-    const posState: PosState = { 
+    const posState: PosState = {
       hasCollision: undefined,
       nextRect: { posX, posY, width: this.width, height: this.height },
     };

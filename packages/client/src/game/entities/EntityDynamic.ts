@@ -106,7 +106,7 @@ export class EntityDynamic extends Entity {
   prepareToMove() {
     this.lastRect = this.getRect();
     const nextRect = { ...this.lastRect, ...this.getNextMove(true) };
-    const posState: PosState = { 
+    const posState: PosState = {
       hasCollision: undefined,
       nextRect,
     };
