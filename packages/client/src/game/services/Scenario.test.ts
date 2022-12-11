@@ -1,7 +1,7 @@
+import { playerInitialProps } from '../data/constants';
 import { Tank } from '../entities';
 import { Player } from '../typings';
 import { Game, Scenario } from './';
-import { PLAYER_INITIAL_PROPS } from './Scenario';
 
 describe('game/services/Scenario', () => {
   it('should create tank', () => {
@@ -13,8 +13,8 @@ describe('game/services/Scenario', () => {
 
     expect(tank instanceof Tank).toBe(true);
     expect(tank.spawned).toBe(true);
-    expect(tank.posX).toBe(PLAYER_INITIAL_PROPS[Player.PLAYER1].posX);
-    expect(tank.posY).toBe(PLAYER_INITIAL_PROPS[Player.PLAYER1].posY);
+    expect(tank.posX).toBe(playerInitialProps[Player.PLAYER1].posX);
+    expect(tank.posY).toBe(playerInitialProps[Player.PLAYER1].posY);
     expect(game.loopEntities.has(tank)).toBe(true);
   });
 

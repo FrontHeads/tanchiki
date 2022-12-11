@@ -111,7 +111,7 @@ export enum Cell {
   BLANK = 0,
   FOREST = 11,
   ICE = 12,
-  RIVER = 13,
+  WATER = 13,
   BASE = 15,
 
   BRICK = 1,

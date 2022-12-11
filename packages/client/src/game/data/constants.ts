@@ -1,4 +1,4 @@
-import { Cell, ScreenType } from '../typings';
+import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import { GameOverScreen, GameScreen, LevelSelectorScreen, LoadingScreen, MainMenuScreen } from '../ui/screens';
 
 export const ConcreteCells: Cell[] = [
@@ -21,10 +21,34 @@ export const BrickCells: Cell[] = [
   Cell.BRICK_RIGHT_BOTTOM,
 ];
 
+export type EntityType =
+  | 'tank'
+  | 'projectile'
+  | 'flag'
+  | 'boundary'
+  | 'brickWall'
+  | 'concreteWall'
+  | 'trees'
+  | 'water'
+  | 'ice'
+  | 'powerup'
+  | 'custom';
+
 export const screenClasses = {
   [ScreenType.MAIN_MENU]: MainMenuScreen,
   [ScreenType.LOADING]: LoadingScreen,
   [ScreenType.LEVEL_SELECTOR]: LevelSelectorScreen,
   [ScreenType.GAME]: GameScreen,
   [ScreenType.GAME_OVER]: GameOverScreen,
+};
+
+export const playerInitialProps: Record<Player, EntityDynamicSettings> = {
+  [Player.PLAYER1]: { posX: 18, posY: 50, role: 'player', moveSpeed: 4 },
+  [Player.PLAYER2]: { posX: 34, posY: 50, role: 'player', color: 'lime' },
+};
+
+// Map manager
+export const birthPlace: Record<number, number[]> = {
+  0: [0, 6, 12],
+  12: [4, 8],
 };

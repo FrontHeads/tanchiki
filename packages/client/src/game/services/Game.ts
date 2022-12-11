@@ -78,7 +78,7 @@ export class Game {
     this.controllerWasd.unload();
     this.controllerArrows.unload();
     this.inited = false;
-    this.level = 1;
+    // this.level = 1;
   }
 
   createView(root: HTMLElement | null) {
