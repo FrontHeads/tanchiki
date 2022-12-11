@@ -76,8 +76,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     } else {
       entity = new Terrain(props);
     }
-    this.game.view.add(entity);
-    this.game.zone.add(entity);
+    this.game.addEntity(entity);
     entity.spawn(props);
     return entity;
   }
@@ -122,24 +121,21 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const posX = this.mapManager.coordToPos(enemySpawnPlaces[enemySpawnPlaceK]);
     const posY = this.mapManager.coordToPos(0);
 
-    const color = ['green', 'red', 'blue'][Math.floor(Math.random() * 3)];
+    const color = 'darkgrey';
 
     const settings = { posX, posY, role: 'enemy', color } as EntityDynamicSettings;
 
     const entity = new TankEnemy(settings);
     this.state.enemies.push(entity);
-    this.game.loopEntities.add(entity);
-    this.game.view.add(entity);
-    this.game.zone.add(entity);
-    entity.spawn(settings);
 
-    const entityInterval = setInterval(() => {
-      this.createProjectile(entity.shoot());
-    }, 500);
+    this.game.addEntity(entity);
+    entity.spawn(settings);
+    entity.on('shoot', (projectile: Projectile) => {
+      this.createProjectile(projectile);
+    });
 
     entity.on('entityShouldBeDestroyed', () => {
       this.state.enemies = this.state.enemies.filter(enemy => enemy !== entity);
-      clearInterval(entityInterval);
       if (this.ifCanCreateTankEnemy()) {
         this.createTankEnemy();
       }
@@ -169,11 +165,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       // TODO:  проверяю оставшиеся жизни - spawn нового, либо gameover, если все игроки были убиты
     });
 
-    this.game.loopEntities.add(entity);
-    this.game.view.add(entity);
-    this.game.zone.add(entity);
+    this.game.addEntity(entity);
     entity.spawn(settings);
-
+    entity.on('shoot', (projectile: Projectile) => {
+      this.createProjectile(projectile);
+    });
+  
     if (controller) {
       controller.on('move', (direction: Direction) => {
         entity.move(direction);
@@ -182,7 +179,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         entity.stop();
       });
       controller.on('shoot', () => {
-        this.createProjectile(entity.shoot());
+        entity.shoot();
       });
     }
     return entity;
@@ -192,11 +189,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     if (!projectile) {
       return null;
     }
-    const loopEntitiesArray = Array.from(this.game.loopEntities);
-    loopEntitiesArray.unshift(projectile);
-    this.game.loopEntities = new Set(loopEntitiesArray);
-    this.game.view.add(projectile);
-    this.game.zone.add(projectile);
+    this.game.addEntity(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
     projectile.update();
   }

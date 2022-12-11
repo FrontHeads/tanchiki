@@ -11,11 +11,21 @@ export class TankEnemy extends Tank {
     this.color = 'aqua';
     Object.assign(this, props);
 
-    setInterval(() => {
-      this.move(this.getMove());
+    const moveInternval = setInterval(() => {
+      this.move(this.getMoveDirection());
     }, 1000);
+  
+    const shootInternval = setInterval(() => {
+      this.shoot();
+    }, 1000);
+
+    this.on('entityShouldBeDestroyed', () => {
+      clearInterval(moveInternval);
+      clearInterval(shootInternval);
+    });
   }
-  getMove() {
+
+  getMoveDirection() {
     const rand = Math.floor(Math.random() * Object.keys(Direction).length);
     const randValue = Object.keys(Direction)[rand];
     return Direction[randValue as keyof typeof Direction];

@@ -69,6 +69,7 @@ export class Entity extends EventEmitter {
     } else if (this.type === 'tank') {
       if (this.role !== source.role) {
         this.explode();
+        this.emit('destroyed', source);
       }
     }
   }

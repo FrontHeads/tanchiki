@@ -15,7 +15,7 @@ export class Tank extends EntityDynamic {
 
   shoot() {
     if (!this.canShoot) {
-      return null;
+      return;
     }
 
     const projectile = new Projectile({
@@ -29,8 +29,7 @@ export class Tank extends EntityDynamic {
     projectile.on('exploding', () => {
       this.canShoot = true;
     });
-
-    return projectile;
+    this.emit('shoot', projectile);
   }
 
   calculateProjectileInitPos() {

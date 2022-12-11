@@ -1,4 +1,4 @@
-import { Projectile, Tank } from '../entities';
+import { Entity, Projectile, Tank } from '../entities';
 import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
 import { Controller, Scenario, View, Zone } from './';
@@ -81,8 +81,29 @@ export class Game {
     // this.level = 1;
   }
 
+  reset() {
+    this.view.reset();
+    this.zone.reset();
+    this.controllerAll.reset();
+    this.controllerWasd.reset();
+    this.controllerArrows.reset();
+    this.loopEntities = new Set();
+  }
+
   createView(root: HTMLElement | null) {
     this.view.build(root);
+  }
+
+  addEntity(entity: Entity) {
+    this.view.add(entity);
+    this.zone.add(entity);
+    if (entity instanceof Tank) {
+      this.loopEntities.add(entity);
+    } else if (entity instanceof Projectile) {
+      const tempLoopEntitiesArray = Array.from(this.loopEntities);
+      tempLoopEntitiesArray.unshift(entity);
+      this.loopEntities = new Set(tempLoopEntitiesArray);
+    }
   }
 
   loop() {
@@ -244,11 +265,7 @@ export class Game {
 
   initGameLevel() {
     this.screen = ScreenType.GAME;
-    this.view.reset();
-    this.zone.reset();
-    this.controllerAll.reset();
-    this.controllerWasd.reset();
-    this.controllerArrows.reset();
+    this.reset();
 
     // Анимация перехода выбора уровня в игру
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
