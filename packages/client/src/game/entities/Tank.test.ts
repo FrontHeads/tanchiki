@@ -67,7 +67,7 @@ describe('game/entities/Tank', () => {
     expect(projectileOne).toHaveProperty('shouldBeDestroyed', true);
 
     tank.shoot();
-  
+
     const projectileThree = mockFn.mock.calls[1]?.[0];
     expect(projectileThree).toBeTruthy();
   });
