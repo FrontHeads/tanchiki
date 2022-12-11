@@ -11,7 +11,7 @@ describe('game/entities/Tank', () => {
     tank.shoot();
 
     const projectile = mockFn.mock.calls[0][0];
-    expect(mockFn.mock.calls[0][0] instanceof Projectile).toBe(true);
+    expect(projectile instanceof Projectile).toBe(true);
   });
 
   it('should determine projectile starting position', () => {
