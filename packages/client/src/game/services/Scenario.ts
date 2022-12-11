@@ -221,7 +221,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     const entity = new Tank(settings);
     playerState.entity = entity;
-    
+
     this.game.addEntity(entity);
 
     entity.spawn(settings);
