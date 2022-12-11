@@ -1,3 +1,5 @@
+import { AssetDataList } from './typings';
+
 export const timeoutMsg =
   'Не удалось загрузить данные для игры в течение минуты. Загрузка отменена. Попробуйте обновить страницу.';
 export const errorMsg = 'Не удалось загрузить данные для игры. Попробуйте обновить страницу.';
@@ -12,4 +14,4 @@ export enum SoundDataList {
   shoot = '../src/game/assets/sounds/shoot.mp3',
 }
 
-export const assetDataList = { ...ImageDataList, ...SoundDataList };
+export const assetDataList: AssetDataList = { ...ImageDataList, ...SoundDataList };
