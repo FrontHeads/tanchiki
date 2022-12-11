@@ -1,3 +1,4 @@
+import { resources } from '../services/Resources/Resources';
 import type { EntityDynamicSettings, Rect } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
@@ -25,6 +26,8 @@ export class Tank extends EntityDynamic {
       moveSpeed: this.shootSpeed,
     });
     this.canShoot = false;
+
+    resources.playSound('fire');
 
     projectile.on('exploding', () => {
       this.canShoot = true;

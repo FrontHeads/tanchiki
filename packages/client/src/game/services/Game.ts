@@ -3,6 +3,7 @@ import { Direction, EntityDynamicSettings, EntitySettings, GameSettings, MainMen
 import { Overlay } from '../ui';
 import { Controller, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
+import { resources } from './Resources/Resources';
 
 export class Game {
   static __instance: Game;
@@ -192,15 +193,16 @@ export class Game {
   }
 
   initLoading() {
-    const redirectDelay = 500;
     this.mode = 'loading';
     this.overlay.showLoading();
 
     this.view.offAll('assetsLoaded');
-    this.view.on('assetsLoaded', () => {
-      setTimeout(() => {
+    this.view.on('assetsLoaded', async () => {
+      const isResourcesLoaded = await resources.loadAll();
+
+      if (isResourcesLoaded) {
         this.initMenu();
-      }, redirectDelay);
+      }
     });
   }
 
