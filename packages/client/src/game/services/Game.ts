@@ -195,15 +195,7 @@ export class Game {
   initLoading() {
     this.mode = 'loading';
     this.overlay.showLoading();
-
-    this.view.offAll('assetsLoaded');
-    this.view.on('assetsLoaded', async () => {
-      const isResourcesLoaded = await resources.loadAll();
-
-      if (isResourcesLoaded) {
-        this.initMenu();
-      }
-    });
+    resources.loadAll().then(() => this.initMenu());
   }
 
   initMenu() {

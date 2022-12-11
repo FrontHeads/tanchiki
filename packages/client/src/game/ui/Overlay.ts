@@ -1,4 +1,5 @@
 import type { View } from '../services';
+import { resources } from '../services/Resources/Resources';
 import { MainMenuState, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
 
@@ -70,7 +71,7 @@ export class Overlay {
       posY: 12,
       width: this.view.width,
       height: 7,
-      img: this.view.brickBg,
+      img: resources.getImage('brickBg'),
       text: 'ТАНЧИКИ',
       align: 'center',
     });
@@ -79,7 +80,7 @@ export class Overlay {
       posY: 21,
       width: this.view.width,
       height: 7,
-      img: this.view.brickBg,
+      img: resources.getImage('brickBg'),
       text: '2023',
       align: 'center',
     });
