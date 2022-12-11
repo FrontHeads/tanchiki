@@ -1,18 +1,18 @@
-import { assetsData, errorMsg, imagesData, soundsData, timeoutMsg } from './data';
-import { AssetData, AssetsDataList, ImagesList, Resource, SoundsList } from './typings';
+import { assetDataList, errorMsg, imageDataList, soundDataList, timeoutMsg } from './data';
+import { AssetData, AssetDataList, ImageList, Resource, SoundList } from './typings';
 
 /** Загружает и хранит изображения и звуки. */
 export class Resources {
-  private imagesList: ImagesList = {};
-  private soundsList: SoundsList = {};
+  private imageList: ImageList = {};
+  private soundList: SoundList = {};
 
   /** Загружает все изображения и звуки из AssetsDataList */
-  loadAll(assetsDataList: AssetsDataList = assetsData, timeout = 60000): Promise<boolean> {
+  loadAll(assets: AssetDataList = assetDataList, timeout = 60000): Promise<boolean> {
     const loadAllTimeout = setTimeout(() => {
       alert(timeoutMsg);
     }, timeout);
 
-    return Promise.all(Object.entries(assetsDataList).map(assetData => this.load(assetData)))
+    return Promise.all(Object.entries(assets).map(assetData => this.load(assetData)))
       .then(() => true)
       .catch(() => {
         alert(errorMsg);
@@ -21,25 +21,25 @@ export class Resources {
       .finally(() => clearTimeout(loadAllTimeout));
   }
 
-  /** Проигрывает конкретный HTMLAudioElement из Resources.soundsList. */
-  playSound(sound: keyof typeof soundsData): void {
-    if (this.soundsList[sound]) {
-      this.soundsList[sound].currentTime = 0;
-      this.soundsList[sound].play();
+  /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
+  playSound(sound: keyof typeof soundDataList): void {
+    if (this.soundList[sound]) {
+      this.soundList[sound].currentTime = 0;
+      this.soundList[sound].play();
     }
   }
 
-  /** Возвращает конкретный HTMLImageElement из Resources.imagesList. */
-  getImage(image: keyof typeof imagesData): HTMLImageElement | false {
-    if (this.imagesList[image]) {
-      return this.imagesList[image];
+  /** Возвращает конкретный HTMLImageElement из Resources.imageList. */
+  getImage(image: keyof typeof imageDataList): HTMLImageElement | false {
+    if (this.imageList[image]) {
+      return this.imageList[image];
     }
 
     return false;
   }
 
-  /** Загружает конкретный ресурс и кладет в объект (imagesList | soundsList) внутри Resources*/
-  private load(assetData: [string, AssetData]) {
+  /** Загружает конкретный ресурс и кладет в объект (imageList | soundList) внутри Resources*/
+  private load(assetData: [string, AssetData]): Promise<Resource> {
     const [assetName, asset] = assetData;
 
     return new Promise((resolve, reject) => {
@@ -47,13 +47,13 @@ export class Resources {
 
       if (asset.type === 'image') {
         resource = new Image();
-        this.imagesList[assetName] = resource;
+        this.imageList[assetName] = resource;
         resource.onload = () => {
           resolve(resource);
         };
       } else if (asset.type === 'sound') {
         resource = new Audio();
-        this.soundsList[assetName] = resource;
+        this.soundList[assetName] = resource;
         resource.oncanplaythrough = () => {
           resolve(resource);
         };
