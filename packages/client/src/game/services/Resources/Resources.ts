@@ -26,10 +26,7 @@ export class Resources {
     if (this.soundsList[sound]) {
       this.soundsList[sound].currentTime = 0;
       this.soundsList[sound].play();
-      return;
     }
-
-    console.error(`Sound: ${sound} not be found.`);
   }
 
   /** Возвращает конкретный HTMLImageElement из Resources.imagesList. */
@@ -37,8 +34,6 @@ export class Resources {
     if (this.imagesList[image]) {
       return this.imagesList[image];
     }
-
-    console.error(`Image: ${image} not be found.`);
 
     return false;
   }
