@@ -3,7 +3,7 @@ import { assetDataList, errorMsg, ImageDataList, SoundDataList, timeoutMsg } fro
 import { AssetDataList, ImageList, Resource, SoundList } from './typings';
 
 /** Загружает и хранит изображения и звуки. */
-export class Resources {
+class Resources {
   private imageList: ImageList = {};
   private soundList: SoundList = {};
 
