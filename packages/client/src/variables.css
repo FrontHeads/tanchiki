@@ -4,6 +4,7 @@ $section_light_shadow: #727476;
 
 $accent_color: #ffa825;
 $border_color: #737477;
+$border_dropdown_color: #363943;
 $msg_readed_delivered_color: #00aaf3;
 
 $notice_error_background_color: #d66c6c;
@@ -23,3 +24,5 @@ $left_shift_slim: 327px;
 $dendy_button_primary: #d84000;
 $dendy_button_secondary: #745f2c;
 $dendy_button_third: #2d2719;
+
+$vertical_margin: 30px;
