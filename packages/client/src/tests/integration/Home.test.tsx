@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 
 import { Home } from '../../pages/Home';
-import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
+import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testingUtils';
 
 describe('Home page', () => {
   test('it renders all page components', async () => {

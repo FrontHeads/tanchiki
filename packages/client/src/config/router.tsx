@@ -5,6 +5,9 @@ import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
 import { ErrorPage } from '../pages/ErrorPage';
+import { Forum } from '../pages/Forum';
+import { ForumSection } from '../pages/Forum/ForumSection';
+import { ForumTopic } from '../pages/Forum/ForumTopic';
 import { Game } from '../pages/Game';
 import { Home } from '../pages/Home';
 import { Leaderboard } from '../pages/Leaderboard';
@@ -14,8 +17,8 @@ import { UserProfile } from '../pages/UserProfile';
 import { Paths } from './constants';
 
 /*
-  Делаем предзагрузку данных пользователя, проверяя - авторизован или нет catch сделан, 
-  чтобы в случае ошибки (куки не валидны, пользователь не авторизован) пользователю не 
+  Делаем предзагрузку данных пользователя, проверяя - авторизован или нет catch сделан,
+  чтобы в случае ошибки (куки не валидны, пользователь не авторизован) пользователю не
   отображалось это сообщение, т.к. при проверке авторизации в этом нет необходимости
 */
 export const rootLoader = () => {
@@ -38,6 +41,13 @@ export const router = createBrowserRouter(
           <Route path={Paths.UserProfile} element={<UserProfile />}></Route>
           <Route path={Paths.Leaderboard} element={<Leaderboard />}></Route>
           <Route path={Paths.Game} element={<Game />}></Route>
+          <Route path={Paths.Forum}>
+            <Route index={true} element={<Forum />}></Route>
+            <Route path={`${Paths.Section}/:sectionId`}>
+              <Route index={true} element={<ForumSection />}></Route>
+              <Route path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`} element={<ForumTopic />}></Route>
+            </Route>
+          </Route>
         </Route>
       </Route>
       <Route path={Paths.Error500} element={<ErrorPage status="500" message="Что-то пошло не так" />}></Route>

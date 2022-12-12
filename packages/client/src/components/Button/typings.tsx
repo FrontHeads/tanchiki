@@ -1,15 +1,13 @@
-import { ButtonHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, MouseEventHandler } from 'react';
 
 export enum ButtonVariant {
   Primary = 'primary',
   Secondary = 'secondary',
 }
 
-type ButtonProps = {
+export type ButtonProps = {
   text: string;
   type?: string;
   variant?: ButtonVariant;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
-
-export type { ButtonProps };
