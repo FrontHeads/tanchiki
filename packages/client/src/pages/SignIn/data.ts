@@ -1,7 +1,7 @@
-import { FormFieldProps } from '../../components/Form/FormFieldList/FormField/typings';
+import { FieldProps } from '../../components/Form/FieldList/Field/typings';
 import { SignInForm } from './typings';
 
-export const signInFieldList: FormFieldProps[] = [
+export const signInFieldList: FieldProps[] = [
   {
     title: 'Логин',
     type: 'text',
