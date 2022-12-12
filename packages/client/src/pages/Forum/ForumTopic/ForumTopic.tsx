@@ -9,9 +9,8 @@ import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/typings';
 import { DUMMY_TOPIC as topicList, DUMMY_TOPIC_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumMessage } from './ForumMessage';
-import { ForumTopicRowProps } from './typings';
 
-export const ForumTopic: FC<ForumTopicRowProps> = () => {
+export const ForumTopic: FC = () => {
   const { topicId } = useParams();
   const [formMessage, setFormMessage] = useState('');
 
@@ -41,12 +40,12 @@ export const ForumTopic: FC<ForumTopicRowProps> = () => {
       <div className="forum-topic__container">
         <div className="forum-topic__messages">
           {topicList.map(row => (
-            <ForumMessage key={row.id} {...row} />
+            <ForumMessage key={row.id} message={row} />
           ))}
         </div>
-        <form onSubmit={e => submitHandler(e)} className="forum-topic__new-message">
+        <form onSubmit={submitHandler} className="forum-topic__new-message">
           <textarea
-            onChange={e => textareaChangeHandler(e)}
+            onChange={textareaChangeHandler}
             name="message"
             id="message"
             value={formMessage}

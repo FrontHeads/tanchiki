@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { ForumMessage } from './ForumMessage';
 
 describe('ForumMessage', () => {
-  const messageProps = {
+  const message = {
     id: 1,
     userId: 1,
     username: 'Ivan1990',
@@ -14,7 +14,7 @@ describe('ForumMessage', () => {
   };
 
   test('it renders', () => {
-    render(<ForumMessage {...messageProps} />);
+    render(<ForumMessage message={message} />);
     const forumMessageTestId = 'forum-message';
 
     const renderedTopic = screen.getByTestId(forumMessageTestId);
@@ -23,9 +23,9 @@ describe('ForumMessage', () => {
   });
 
   test('it renders with props', () => {
-    render(<ForumMessage {...messageProps} />);
+    render(<ForumMessage message={message} />);
 
-    expect(screen.getByText(messageProps.username)).toBeInTheDocument();
-    expect(screen.getByText(messageProps.content)).toBeInTheDocument();
+    expect(screen.getByText(message.username)).toBeInTheDocument();
+    expect(screen.getByText(message.content)).toBeInTheDocument();
   });
 });

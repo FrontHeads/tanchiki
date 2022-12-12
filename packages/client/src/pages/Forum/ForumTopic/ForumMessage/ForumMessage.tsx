@@ -5,10 +5,11 @@ import { FC } from 'react';
 import defaultAvatarPath from '../../../../assets/img/default-avatar.png';
 import { Dropdown } from '../../../../components/Dropdown';
 import { DropdownMenuItems } from '../../../../components/Dropdown/typings';
-import simplifyDate from '../../../../utils/date-utils';
+import simplifyDate from '../../../../utils/dateUtils';
 import { ForumMessageProps } from './typings';
 
-export const ForumMessage: FC<ForumMessageProps> = ({ id, username, content, date }) => {
+export const ForumMessage: FC<ForumMessageProps> = ({ message }) => {
+  const { id, username, content, date } = message;
   const editMessage = () => {
     console.log('Редактировать');
   };
@@ -25,7 +26,7 @@ export const ForumMessage: FC<ForumMessageProps> = ({ id, username, content, dat
   const formattedDate = simplifyDate(date);
 
   return (
-    <div id={`${id}`} className="forum-message" data-testid="forum-message">
+    <div id={`forum-message-${id}`} className="forum-message" data-testid="forum-message">
       <div className="forum-message__avatar">
         <img alt={`${username} user avatar`} className="forum-message__avatar-image" src={defaultAvatarPath} />
       </div>

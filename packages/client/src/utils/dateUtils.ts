@@ -3,7 +3,7 @@ export default function simplifyDate(dateString: string): string {
   const diff = (+new Date() - +date) / 1000;
 
   const hours = date.getHours();
-  const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
 
   let result = '';
 

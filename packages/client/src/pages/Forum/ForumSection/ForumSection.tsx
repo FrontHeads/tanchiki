@@ -14,15 +14,7 @@ export const ForumSection: FC<ForumSectionProps> = () => {
       <h1 className="forum__title">Раздел {sectionId}</h1>
       <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Wide} />
       <table border={1} className="forum" data-testid="forum-section">
-        <thead className="forum__row-header">
-          <tr>
-            <th className="forum__cell-header">Темы</th>
-            <th className="forum__cell-header">Ответы</th>
-          </tr>
-        </thead>
-        <tbody className="forum__body">
-          <ForumTopicList topicList={topicList} sectionId={sectionId} />
-        </tbody>
+        <ForumTopicList topicList={topicList} sectionId={sectionId} />
       </table>
     </section>
   );
