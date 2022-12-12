@@ -1,10 +1,10 @@
-import type { Entity } from '../entities';
+import type { Entity, EntityDynamic } from '../entities';
 import type { Rect } from '../typings';
 import { EventEmitter } from '../utils';
 import { Zone } from './';
 
 function mockEntity(rect: Rect) {
-  const entity = new EventEmitter() as Entity;
+  const entity = new EventEmitter() as EntityDynamic;
   Object.assign(entity, rect);
   entity.type = 'tank';
   entity.alignedToGrid = true;
@@ -91,8 +91,10 @@ describe('game/services/Zone', () => {
   it('should listen to position changes and update its state', () => {
     const zone = new Zone({ width: 10, height: 10 });
     const entity = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
-    entity.nextRect = { posX: -1, posY: 1, width: 2, height: 2 };
-    const posState = { hasCollision: false };
+    const posState = {
+      hasCollision: undefined,
+      nextRect: { posX: -1, posY: 1, width: 2, height: 2 },
+    };
 
     zone.add(entity);
     entity.emit('entityWillHaveNewPos', posState);
