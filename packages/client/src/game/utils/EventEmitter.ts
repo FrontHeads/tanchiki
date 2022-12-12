@@ -25,14 +25,12 @@ export class EventEmitter<T extends string = string> {
 
   /** Отписка от события конкретной функции-обработчика.
    * Принимает название события и функцию-обработчик */
-
   off(eventName: T, callback: Fn) {
     this.listeners[eventName] = this.listeners[eventName]?.filter((listener: Fn) => listener !== callback);
     return this;
   }
 
   /** Отписка всех функций-обработчиков от конкретного события. */
-
   offAll(eventName: T) {
     delete this.listeners[eventName];
     return this;
