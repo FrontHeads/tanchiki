@@ -1,5 +1,5 @@
-import { assetDataList, errorMsg, extensionList, ImageDataList, SoundDataList, timeoutMsg } from './data';
-import { AssetDataList, ImageList, Resource, SoundList } from './typings';
+import { assetPathList, errorMsg, extensionList, ImagePathList, SoundPathList, timeoutMsg } from './data';
+import { AssetPathList, ImageList, Resource, SoundList } from './typings';
 
 /** Загружает и хранит изображения и звуки. */
 class Resources {
@@ -7,12 +7,12 @@ class Resources {
   private soundList: SoundList = {};
 
   /** Загружает все изображения и звуки из AssetsDataList */
-  loadAll(assets: AssetDataList = assetDataList, timeout = 60000): Promise<boolean> {
+  loadAll(assets: AssetPathList = assetPathList, timeout = 60000): Promise<boolean> {
     const loadAllTimeout = setTimeout(() => {
       alert(timeoutMsg);
     }, timeout);
 
-    return Promise.all(Object.entries(assets).map(assetData => this.load(assetData)))
+    return Promise.all(Object.entries(assets).map(asset => this.load(asset)))
       .then(() => true)
       .catch(() => {
         alert(errorMsg);
@@ -22,7 +22,7 @@ class Resources {
   }
 
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
-  playSound(sound: keyof typeof SoundDataList): void {
+  playSound(sound: keyof typeof SoundPathList): void {
     if (this.soundList[sound]) {
       this.soundList[sound].currentTime = 0;
       this.soundList[sound].play();
@@ -30,13 +30,13 @@ class Resources {
   }
 
   /** Возвращает конкретный HTMLImageElement из Resources.imageList. */
-  getImage(image: keyof typeof ImageDataList): HTMLImageElement {
+  getImage(image: keyof typeof ImagePathList): HTMLImageElement {
     return this.imageList[image];
   }
 
   /** Загружает конкретный ресурс и кладет в объект (imageList | soundList) внутри Resources*/
-  private load(assetData: [string, string]): Promise<Resource> {
-    const [assetName, assetPath] = assetData;
+  private load(asset: [string, string]): Promise<Resource> {
+    const [assetName, assetPath] = asset;
 
     return new Promise((resolve, reject) => {
       let resource: Resource;

@@ -1,4 +1,4 @@
-import { assetDataList, errorMsg, timeoutMsg } from './data';
+import { assetPathList, errorMsg, timeoutMsg } from './data';
 import { resources } from './Resources';
 
 describe('game/services/Resources', () => {
@@ -27,7 +27,7 @@ describe('game/services/Resources', () => {
   global.alert = jest.fn();
 
   it('should return true with correct data', async () => {
-    const isResourcesLoaded = await resources.loadAll(assetDataList);
+    const isResourcesLoaded = await resources.loadAll(assetPathList);
 
     expect(isResourcesLoaded).toBeTruthy();
   });
@@ -51,7 +51,7 @@ describe('game/services/Resources', () => {
   });
 
   it('should show alert about timeout', async () => {
-    const isResourcesLoaded = await resources.loadAll(assetDataList, 50);
+    const isResourcesLoaded = await resources.loadAll(assetPathList, 50);
 
     expect(global.alert).toBeCalledWith(timeoutMsg);
     expect(isResourcesLoaded).toBeFalsy();

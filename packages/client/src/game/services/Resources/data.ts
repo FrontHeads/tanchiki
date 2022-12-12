@@ -1,20 +1,21 @@
-import { AssetDataList } from './typings';
+import { AssetPathList } from './typings';
 
 export const timeoutMsg =
   'Не удалось загрузить данные для игры в течение минуты. Загрузка отменена. Попробуйте обновить страницу.';
 export const errorMsg = 'Не удалось загрузить данные для игры. Попробуйте обновить страницу.';
 
-export enum ImageDataList {
-  brickBg = '../src/assets/img/bricks.png',
-  sprite = '../src/game/assets/img/sprite.png',
+// Файлы с ресурсами лежат в папке packages/client/public/assets, а vite копирует их в dist при build
+export enum ImagePathList {
+  brickBg = '/assets/img/bricks.png',
+  sprite = '/assets/img/sprite.png',
 }
 
-export enum SoundDataList {
-  enemyExplosion = '../src/game/assets/sounds/enemy-explosion.mp3',
-  shoot = '../src/game/assets/sounds/shoot.mp3',
+export enum SoundPathList {
+  enemyExplosion = '/assets/sounds/enemy-explosion.mp3',
+  shoot = '/assets/sounds/shoot.mp3',
 }
 
-export const assetDataList: AssetDataList = { ...ImageDataList, ...SoundDataList };
+export const assetPathList: AssetPathList = { ...ImagePathList, ...SoundPathList };
 
 export const extensionList = {
   images: ['png', 'svg', 'jpg', 'jpeg', 'gif'],
