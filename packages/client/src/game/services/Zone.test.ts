@@ -26,6 +26,20 @@ describe('game/services/Zone', () => {
     expect(zone.matrix[0][99][100]).toBe(undefined);
   });
 
+  it('should reset matrix', () => {
+    const zone = new Zone({ width: 2, height: 2 });
+    const rect = { posX: 0, posY: 0, width: 2, height: 2 };
+    const entity = {} as Entity;
+
+    zone.updateMatrix(0, rect, entity);
+    zone.reset();
+
+    expect(zone.matrix[0][0][0]).toBe(null);
+    expect(zone.matrix[0][0][1]).toBe(null);
+    expect(zone.matrix[0][1][0]).toBe(null);
+    expect(zone.matrix[0][1][1]).toBe(null);
+  });
+
   it('should update matrix', () => {
     const zone = new Zone({ width: 10, height: 10 });
     const rect = { posX: 1, posY: 1, width: 2, height: 2 };
