@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import { FC } from 'react';
 
-import { FormFieldProps } from './typings';
+import { FieldProps } from './typings';
 
-export const FormField: FC<FormFieldProps> = ({
+export const Field: FC<FieldProps> = ({
   id,
   type,
   value,

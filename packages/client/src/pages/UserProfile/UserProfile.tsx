@@ -6,7 +6,7 @@ import { UserProfile as UserProfileType } from '../../app.typings';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
-import { FormField } from '../../components/Form/FormFieldList/FormField';
+import { Field } from '../../components/Form/FieldList/Field';
 import { PATH } from '../../config/constants';
 import { userProfileInputFields } from './data';
 import { UserProfileForm } from './typings';
@@ -73,7 +73,7 @@ export const UserProfile: FC = () => {
 
             const fieldKey = field.id as keyof UserProfileForm;
             return (
-              <FormField key={field.id} {...field} onChange={inputChangeHandler} value={requestBody[fieldKey] || ''} />
+              <Field key={field.id} {...field} onChange={inputChangeHandler} value={requestBody[fieldKey] || ''} />
             );
           })}
         </>

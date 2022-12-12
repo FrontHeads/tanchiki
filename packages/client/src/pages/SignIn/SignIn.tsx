@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
-import { FormFieldList } from '../../components/Form/FormFieldList';
+import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { signInFieldList, signInFormInitialState } from './data';
@@ -35,8 +35,8 @@ export const SignIn: FC = () => {
 
   return (
     <Form handlerSubmit={submitHandler} header="Вход">
-      <FormFieldList<SignInForm>
-        formFieldList={signInFieldList}
+      <FieldList<SignInForm>
+        fieldList={signInFieldList}
         setFormData={setFormData}
         formData={formData}
         disabled={isLoading}

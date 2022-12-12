@@ -1,14 +1,14 @@
 import { PropsWithChildren, useCallback } from 'react';
 
-import { FormField } from './FormField';
-import { FormFieldListProps } from './typings';
+import { Field } from './Field';
+import { FieldListProps } from './typings';
 
-export const FormFieldList = <T extends Record<string, string>>({
-  formFieldList,
+export const FieldList = <T extends Record<string, string>>({
+  fieldList,
   formData,
   setFormData,
   disabled,
-}: PropsWithChildren<FormFieldListProps<T>>) => {
+}: PropsWithChildren<FieldListProps<T>>) => {
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
@@ -19,7 +19,7 @@ export const FormFieldList = <T extends Record<string, string>>({
 
   return (
     <>
-      {formFieldList.map(field => {
+      {fieldList.map(field => {
         if ('heading' in field) {
           return (
             <h3 key={field.heading} data-testid="form-input-header" className="form__input-header">
@@ -29,7 +29,7 @@ export const FormFieldList = <T extends Record<string, string>>({
         }
 
         return (
-          <FormField
+          <Field
             key={field.id}
             {...field}
             disabled={disabled}

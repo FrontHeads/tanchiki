@@ -3,9 +3,9 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
 import { FormInputAndHeadingList } from '../../../app.typings';
-import { FormFieldList } from './FormFieldList';
+import { FieldList } from './FieldList';
 
-describe('FormFieldList', () => {
+describe('FieldList', () => {
   test('it renders', () => {
     const testFieldId = 'email';
 
@@ -23,7 +23,7 @@ describe('FormFieldList', () => {
       },
     ];
 
-    render(<FormFieldList formFieldList={mockFields} formData={formData} setFormData={setFormData} />);
+    render(<FieldList fieldList={mockFields} formData={formData} setFormData={setFormData} />);
 
     const inputFieldsCount = mockFields.filter(item => !('heading' in item)).length;
     const headersCount = mockFields.filter(item => 'heading' in item).length;
