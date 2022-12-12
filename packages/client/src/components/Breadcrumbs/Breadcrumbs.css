@@ -1,0 +1,30 @@
+@import url("../../variables.css");
+
+.breadcrumbs {
+  &__item {
+    display: inline-block;
+
+    &:after {
+      content: "/";
+      padding: 0 5px;
+    }
+
+    &:last-child:after {
+      content: none;
+    }
+  }
+
+  &_margins {
+    &_normal {
+      margin: 10px 15px;
+    }
+
+    &_wide {
+      margin: 10px 60px;
+
+      @media (max-width: 420px) {
+        margin: 10px 0;
+      }
+    }
+  }
+}
