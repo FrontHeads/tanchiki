@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { PropsWithChildren, useCallback } from 'react';
 
 import { FormField } from './FormField';
 import { FormFieldListProps } from './typings';
@@ -8,7 +8,7 @@ export const FormFieldList = <FormType,>({
   formData,
   setFormData,
   disabled,
-}: FormFieldListProps<FormType>) => {
+}: PropsWithChildren<FormFieldListProps<FormType>>): JSX.Element => {
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
