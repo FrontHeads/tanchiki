@@ -1,17 +1,20 @@
-import { FC, useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
-import { FormField } from '../../FormField';
+import { FormField } from './FormField';
 import { FormFieldListProps } from './typings';
 
-export const FormFieldList: FC<FormFieldListProps> = ({ formFieldList, formData }) => {
-  const [requestBody, setRequestBody] = useState(formData);
-
-  const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
+export const FormFieldList = <FormType,>({
+  formFieldList,
+  formData,
+  setFormData,
+  disabled,
+}: FormFieldListProps<FormType>) => {
+  const inputChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
-      setRequestBody({ ...requestBody, [name]: value });
+      setFormData({ ...formData, [name]: value });
     },
-    [requestBody]
+    [formData]
   );
 
   return (
@@ -25,7 +28,10 @@ export const FormFieldList: FC<FormFieldListProps> = ({ formFieldList, formData 
           );
         }
 
-        return <FormField key={field.id} {...field} onChange={inputChangeHandler} value={requestBody[field.id]} />;
+        const fieldValue = formData[field.id as keyof FormType] as string;
+        return (
+          <FormField key={field.id} {...field} disabled={disabled} onChange={inputChangeHandler} value={fieldValue} />
+        );
       })}
     </>
   );

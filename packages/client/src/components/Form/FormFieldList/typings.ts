@@ -1,12 +1,10 @@
-import { FormFieldProps } from '../../FormField/typings';
+import { Dispatch } from 'react';
 
-type FormFieldHeading = {
-  heading: string;
-};
+import { FormInputAndHeadingList } from '../../../app.typings';
 
-type FormFieldListItem = FormFieldProps | FormFieldHeading;
-
-export type FormFieldListProps = {
-  formFieldList: FormFieldListItem[];
-  formData: Record<string, string>;
+export type FormFieldListProps<FormType = Record<string, string>> = {
+  formFieldList: FormInputAndHeadingList;
+  formData: FormType;
+  setFormData: Dispatch<FormType>;
+  disabled?: boolean;
 };

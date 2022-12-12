@@ -5,19 +5,26 @@ import { toast } from 'react-toastify';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
-import { FormField } from '../../components/FormField';
+import { FormFieldList } from '../../components/Form/FormFieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { signInInputFields } from './data';
-import { LoginForm } from './typings';
+import { signInFieldList, signInFormInitialState } from './data';
+import { SignInForm } from './typings';
 
 export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { error, isLoading } = useAppSelector(authSelectors.authState);
-  const formData: LoginForm = { login: '', password: '' };
-  const [requestBody, setRequestBody] = useState<LoginForm>(formData);
+  const [formData, setFormData] = useState<SignInForm>(signInFormInitialState);
+
+  const submitHandler = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      dispatch(authThunks.signIn(formData));
+    },
+    [formData]
+  );
 
   useEffect(() => {
     if (error) {
@@ -26,30 +33,14 @@ export const SignIn: FC = () => {
     }
   }, [error]);
 
-  const inputChangeHandler = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      setRequestBody({ ...requestBody, [name]: value });
-    },
-    [requestBody]
-  );
-
-  const submitHandler = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      dispatch(authThunks.signIn(requestBody));
-    },
-    [requestBody]
-  );
-
   return (
     <Form handlerSubmit={submitHandler} header="Вход">
-      <>
-        {signInInputFields.map(field => (
-          <FormField key={field.id} {...field} onChange={inputChangeHandler} disabled={isLoading} />
-        ))}
-      </>
-
+      <FormFieldList<SignInForm>
+        formFieldList={signInFieldList}
+        setFormData={setFormData}
+        formData={formData}
+        disabled={isLoading}
+      />
       <div className="form__buttons-wrapper">
         <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />

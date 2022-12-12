@@ -6,7 +6,7 @@ import { UserProfile as UserProfileType } from '../../app.typings';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
-import { FormField } from '../../components/FormField';
+import { FormField } from '../../components/Form/FormFieldList/FormField';
 import { PATH } from '../../config/constants';
 import { userProfileInputFields } from './data';
 import { UserProfileForm } from './typings';

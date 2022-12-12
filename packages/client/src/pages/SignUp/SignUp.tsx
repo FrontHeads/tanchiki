@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
-import { FormField } from '../../components/FormField';
+import { FormFieldList } from '../../components/Form/FormFieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { formInitialState, signUpFieldList } from './data';
+import { signUpFieldList, signUpFormInitialState } from './data';
 import { SignUpForm } from './typings';
 
 export const SignUp: FC = () => {
@@ -19,15 +19,7 @@ export const SignUp: FC = () => {
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
 
-  const [formData, setFormData] = useState<SignUpForm>(formInitialState);
-
-  const inputChangeHandler = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      setFormData({ ...formData, [name]: value });
-    },
-    [formData]
-  );
+  const [formData, setFormData] = useState<SignUpForm>(signUpFormInitialState);
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,15 +44,14 @@ export const SignUp: FC = () => {
     }
   }, [error]);
 
-  //TODO вынести цикл в отдельный универсальный компонент - FormFieldList
-  // + взять логику из Profile и типизацию оттуда
-  const formFieldList = signUpFieldList.map(field => {
-    return <FormField key={field.id} {...field} onChange={inputChangeHandler} disabled={isLoading} />;
-  });
-
   return (
     <Form handlerSubmit={submitHandler} header="Регистрация">
-      <>{formFieldList}</>
+      <FormFieldList
+        formFieldList={signUpFieldList}
+        setFormData={setFormData}
+        formData={formData}
+        disabled={isLoading}
+      />
       <div className="form__buttons-wrapper">
         <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />

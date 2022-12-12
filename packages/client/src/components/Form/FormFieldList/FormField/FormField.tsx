@@ -1,5 +1,3 @@
-import './FormField.css';
-
 import cn from 'classnames';
 import { FC } from 'react';
 
@@ -18,17 +16,15 @@ export const FormField: FC<FormFieldProps> = ({
   className,
 }) => {
   return (
-    // TODO Папку с компонентом FormField перенести в папку Form
-    // TODO перенести правила .form-field в .form__field (в компоненте Form)
-    <div className={cn('form__field', 'form-field', className)} data-testid="form-field">
-      <label className="form-field__label" htmlFor={id}>
+    <div className={cn('form__field', className)} data-testid="form-field">
+      <label className="form__field-label" htmlFor={id}>
         {title}
-        {required && <em>*</em>}
+        {required ? <em>*</em> : null}
       </label>
       <input
         id={id}
         required={required}
-        className="input form-field__input"
+        className="input form__field-input"
         type={type || 'text'}
         name={id}
         placeholder={placeholder}
@@ -36,7 +32,7 @@ export const FormField: FC<FormFieldProps> = ({
         value={value}
         disabled={disabled}
       />
-      {error && <div className="form-field__error">{error}</div>}
+      {error && <div className="form__field-error">{error}</div>}
     </div>
   );
 };

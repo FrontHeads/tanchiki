@@ -1,4 +1,4 @@
-import { FormFieldProps } from '../../components/FormField/typings';
+import { FormFieldProps } from '../../components/Form/FormFieldList/FormField/typings';
 import { SignUpForm } from './typings';
 
 export const signUpFieldList: FormFieldProps[] = [
@@ -35,7 +35,7 @@ export const signUpFieldList: FormFieldProps[] = [
     type: 'tel',
     id: 'phone',
     placeholder: '+7 800 555 35 35',
-    required: false,
+    required: true,
   },
   {
     title: 'Пароль',
@@ -53,7 +53,7 @@ export const signUpFieldList: FormFieldProps[] = [
   },
 ];
 
-export const formInitialState: SignUpForm = {
+export const signUpFormInitialState: SignUpForm = {
   login: '',
   password: '',
   password_check: '',
