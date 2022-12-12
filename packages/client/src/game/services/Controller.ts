@@ -19,6 +19,7 @@ export class Controller extends EventEmitter {
 
   reset() {
     this.listeners = {};
+    return this;
   }
 
   registerEvents() {
