@@ -16,7 +16,7 @@ export class Tank extends EntityDynamic {
 
   shoot() {
     if (!this.canShoot) {
-      return null;
+      return;
     }
 
     const projectile = new Projectile({
@@ -32,14 +32,13 @@ export class Tank extends EntityDynamic {
     projectile.on('exploding', () => {
       this.canShoot = true;
     });
-
-    return projectile;
+    this.emit('shoot', projectile);
   }
 
   calculateProjectileInitPos() {
     const defaultSize = { width: 2, height: 2 };
     let rect: Rect;
-    if ((this.moving || this.stopping) && this.nextRect) {
+    if ((this.moving || this.stopping) && this.canMove && this.nextRect) {
       rect = this.nextRect;
     } else {
       rect = this.getRect();
