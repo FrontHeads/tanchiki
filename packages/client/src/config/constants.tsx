@@ -5,10 +5,12 @@ export enum Paths {
   SignIn = '/sign-in',
   SignUp = '/sign-up',
   Game = '/game',
+  Forum = '/forum',
+  Section = '/forum/section',
+  Topic = '/topic',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
   Leaderboard = '/leaderboard',
-  Forum = '/forum',
   Error404 = '404',
   Error500 = '500',
 }
