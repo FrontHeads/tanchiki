@@ -15,3 +15,8 @@ export enum SoundDataList {
 }
 
 export const assetDataList: AssetDataList = { ...ImageDataList, ...SoundDataList };
+
+export const extensionList = {
+  images: ['png', 'svg', 'jpg', 'jpeg', 'gif'],
+  sounds: ['mp3'],
+};

@@ -1,5 +1,4 @@
-import { assetDataList, errorMsg, ImageDataList, SoundDataList, timeoutMsg } from './data';
-import { getAssetType } from './helpers';
+import { assetDataList, errorMsg, extensionList, ImageDataList, SoundDataList, timeoutMsg } from './data';
 import { AssetDataList, ImageList, Resource, SoundList } from './typings';
 
 /** Загружает и хранит изображения и звуки. */
@@ -41,7 +40,7 @@ class Resources {
 
     return new Promise((resolve, reject) => {
       let resource: Resource;
-      const assetType = getAssetType(assetPath);
+      const assetType = this.getAssetType(assetPath);
 
       if (assetType === 'image') {
         resource = new Image();
@@ -64,6 +63,19 @@ class Resources {
         resource.src = assetPath;
       }
     });
+  }
+
+  /** Возвращает тип ресурса (картинка или звук) исходя из расширения файла. */
+  private getAssetType(filePath: string): 'image' | 'sound' | 'unknown' {
+    const fileExtension = filePath.split('.').pop() ?? 'unknown';
+
+    if (extensionList.images.includes(fileExtension)) {
+      return 'image';
+    } else if (extensionList.sounds.includes(fileExtension)) {
+      return 'sound';
+    }
+
+    return 'unknown';
   }
 }
 
