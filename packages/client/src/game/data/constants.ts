@@ -1,7 +1,7 @@
 import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import { GameOverScreen, GameScreen, LevelSelectorScreen, LoadingScreen, MainMenuScreen } from '../ui/screens';
 
-export const ConcreteCells: Cell[] = [
+export const concreteCells: Cell[] = [
   Cell.CONCRETE,
   Cell.CONCRETE_TOP,
   Cell.CONCRETE_RIGHT,
@@ -11,7 +11,7 @@ export const ConcreteCells: Cell[] = [
   Cell.CONCRETE_RIGHT_BOTTOM,
 ];
 
-export const BrickCells: Cell[] = [
+export const brickCells: Cell[] = [
   Cell.BRICK,
   Cell.BRICK_TOP,
   Cell.BRICK_RIGHT,
@@ -34,7 +34,12 @@ export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
   [Player.PLAYER2]: { posX: 34, posY: 50, role: 'player', color: 'lime' },
 };
 
-// Map manager
+/**
+ * Координаты клеток на карте, на которых спаунятся танки
+ * Используются при расстановке вражеских танков на поле
+ * и при проверке карты уровня на случай, если в эти клетки
+ * был установлен какой-то предмет
+ */
 export const spawnPlaces: Record<number, number[]> = {
   0: [0, 6, 12],
   12: [4, 8],

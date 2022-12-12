@@ -1,4 +1,4 @@
-import { BrickCells, ConcreteCells, spawnPlaces } from '../data/constants';
+import { brickCells, concreteCells, spawnPlaces } from '../data/constants';
 import { levels } from '../data/levels';
 import { Cell, EntitySettings, EntityType, GameSettings, MapData } from '../typings';
 
@@ -12,9 +12,9 @@ export class MapManager {
     return map;
   }
 
-  coordToPos = (value: number) => {
+  coordToPos(value: number) {
     return value * 4 + this.gameSettings.boundarySize;
-  };
+  }
 
   getMap(level: number): MapData {
     const map = this.mapData[level - 1];
@@ -28,9 +28,9 @@ export class MapManager {
     map.forEach((row, y) => {
       row.forEach((column, x) => {
         let type: Nullable<EntityType> = null;
-        if (ConcreteCells.includes(column)) {
+        if (concreteCells.includes(column)) {
           type = 'concreteWall';
-        } else if (BrickCells.includes(column)) {
+        } else if (brickCells.includes(column)) {
           type = 'brickWall';
         } else if (column === Cell.FOREST) {
           type = 'trees';
