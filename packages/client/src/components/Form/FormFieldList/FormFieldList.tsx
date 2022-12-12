@@ -3,12 +3,12 @@ import { PropsWithChildren, useCallback } from 'react';
 import { FormField } from './FormField';
 import { FormFieldListProps } from './typings';
 
-export const FormFieldList = <FormType extends Record<string, string>>({
+export const FormFieldList = <T extends Record<string, string>>({
   formFieldList,
   formData,
   setFormData,
   disabled,
-}: PropsWithChildren<FormFieldListProps<FormType>>) => {
+}: PropsWithChildren<FormFieldListProps<T>>) => {
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;

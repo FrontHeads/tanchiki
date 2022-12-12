@@ -2,9 +2,9 @@ import { Dispatch } from 'react';
 
 import { FormInputAndHeadingList } from '../../../app.typings';
 
-export type FormFieldListProps<FormType> = {
+export type FormFieldListProps<T> = {
   formFieldList: FormInputAndHeadingList;
-  formData: FormType;
-  setFormData: Dispatch<FormType>;
+  formData: T;
+  setFormData: Dispatch<T>;
   disabled?: boolean;
 };
