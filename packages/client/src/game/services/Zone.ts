@@ -1,4 +1,4 @@
-import type { Entity } from '../entities';
+import { Entity, EntityDynamic } from '../entities';
 import type { PosState, Rect, Size } from '../typings';
 
 export class Zone {
@@ -57,39 +57,38 @@ export class Zone {
     }
   }
 
-  deleteEntityFromMatrix(entity: Entity) {
-    if (!entity.lastRect) {
-      throw new Error('entity.lastRect is null');
-    }
-    if (entity.alignedToGrid) {
-      const layer = this.getLayerByEntityType(entity);
-      this.updateMatrix(layer, entity.lastRect, null);
-    }
-  }
-
-  destroyEntity(entity: Entity) {
-    if (!entity.lastRect || !entity.nextRect) {
-      throw new Error('entity.lastRect|nextRect is null');
-    }
+  deleteEntityFromMatrix(entity: Entity | EntityDynamic) {
     const layer = this.getLayerByEntityType(entity);
-    this.updateMatrix(layer, entity.lastRect, null);
-    if (!entity.alignedToGrid) {
-      this.updateMatrix(layer, entity.nextRect, null);
+    if (!(entity instanceof EntityDynamic)) {
+      const rect = entity.getRect();
+      if (!this.isBeyondMatrix(rect)) {
+        this.updateMatrix(layer, rect, null);
+      }
     } else {
-      this.updateMatrix(layer, entity.getRect(), null);
+      let rect = entity.lastRect;
+      if (rect) {
+        this.updateMatrix(layer, rect, null);
+      } else if (entity.alignedToGrid) {
+        rect = entity.getRect();
+        this.updateMatrix(layer, rect, null);
+      }
+      if (entity.canMove) {
+        rect = entity.nextRect;
+        if (rect && !this.isBeyondMatrix(rect)) {
+          this.updateMatrix(layer, rect, null);
+        }
+      }
     }
   }
 
   registerEntity(entity: Entity) {
     entity.on('entityWillHaveNewPos', (posState: PosState) => {
-      if (!entity.lastRect || !entity.nextRect) {
-        throw new Error('entity.lastRect|nextRect is null');
-      }
-      if (this.hasCollision(entity.nextRect, entity)) {
+      const rect = posState.nextRect;
+      if (this.hasCollision(rect, entity)) {
         posState.hasCollision = true;
       } else {
         const layer = this.getLayerByEntityType(entity);
-        this.updateMatrix(layer, entity.nextRect, entity);
+        this.updateMatrix(layer, rect, entity);
       }
     });
     entity.on('entityShouldUpdate', (newState: Partial<Entity>) => {
@@ -105,7 +104,7 @@ export class Zone {
       this.writeEntityToMatrix(entity);
     });
     entity.on('entityShouldBeDestroyed', () => {
-      this.destroyEntity(entity);
+      this.deleteEntityFromMatrix(entity);
     });
   }
 
@@ -151,10 +150,11 @@ export class Zone {
         }
         if (entity.type === 'projectile') {
           if (mainLayerCell !== null && mainLayerCell.hittable) {
-            mainLayerCell.takeDamage();
+            mainLayerCell.takeDamage(entity);
             return true;
           }
           if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
+            secondaryLayerCell.takeDamage(entity);
             return true;
           }
         }

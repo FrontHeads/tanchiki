@@ -1,0 +1,75 @@
+@import url("../../../variables.css");
+
+.forum-topic {
+  &__container {
+    margin: 0 0 $vertical_margin;
+    padding: 0 15px;
+    box-sizing: border-box;
+
+    @media (max-width: 730px) {
+      padding: 0;
+    }
+  }
+
+  &__wrapper {
+    width: 100%;
+    max-width: 940px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  &__section {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  @media (max-width: 420px) {
+    margin: 0 0 $vertical_margin;
+  }
+
+  &__messages {
+    border: 1px double $border_color;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  &__new-message {
+    padding: 12px;
+    background: $section_background_color;
+    overflow: hidden;
+    border: 1px double $border_color;
+    border-radius: 10px;
+  }
+
+  &__buttons-wrapper {
+    margin: 12px 24% 0;
+
+    @media (max-width: 730px) {
+      margin: 12px 0 0;
+    }
+
+    .button {
+      margin: 0;
+    }
+  }
+
+  &__textarea {
+    display: block;
+    font-size: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100px;
+    max-height: 500px;
+    padding: 8px;
+    resize: vertical;
+    background-color: $notice_font_color;
+    box-sizing: border-box;
+    border-radius: 6px;
+    color: $font_color_bright;
+  }
+}

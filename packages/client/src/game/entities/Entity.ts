@@ -1,4 +1,4 @@
-import { Direction, EntityRole, EntitySettings, EntityType, Pos, PosState, Rect } from '../typings';
+import { Direction, EntityRole, EntitySettings, EntityType, Pos, PosState } from '../typings';
 import { EventEmitter } from '../utils';
 
 export class Entity extends EventEmitter {
@@ -15,8 +15,6 @@ export class Entity extends EventEmitter {
   flying = false;
   crossable = false;
   hittable = true;
-  lastRect: Rect | null = null;
-  nextRect: Rect | null = null;
   color = 'grey';
   shouldBeDestroyed = false;
 
@@ -35,23 +33,43 @@ export class Entity extends EventEmitter {
     return { posX: this.posX, posY: this.posY, width: this.width, height: this.height };
   }
 
-  spawn({ posX, posY }: Pos) {
-    this.lastRect = { ...this.getRect(), posX, posY };
-    this.nextRect = { ...this.lastRect };
-    const posState: PosState = { hasCollision: false };
+  spawn({ posX = this.posX, posY = this.posY }: Pos) {
+    const posState: PosState = {
+      hasCollision: undefined,
+      nextRect: { posX, posY, width: this.width, height: this.height },
+    };
     this.emit('entityWillHaveNewPos', posState);
     if (!posState.hasCollision) {
       this.setState({ posX, posY });
       this.spawned = true;
+    } else if (this.type === 'projectile') {
+      this.explode();
     }
   }
 
   despawn() {
+    if (!this.spawned) {
+      return;
+    }
+    this.shouldBeDestroyed = true;
     this.emit('entityShouldBeDestroyed');
     this.spawned = false;
   }
 
-  takeDamage() {
+  explode() {
+    this.emit('exploding');
+    this.despawn();
+  }
+
+  takeDamage(source: Entity) {
     this.emit('damaged');
+    if (this.type === 'projectile') {
+      this.explode();
+    } else if (this.type === 'tank') {
+      if (this.role !== source.role) {
+        this.explode();
+        this.emit('destroyed', source);
+      }
+    }
   }
 }

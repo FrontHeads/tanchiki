@@ -7,7 +7,7 @@
   flex-direction: column;
   align-self: center;
   width: 400px;
-  margin-bottom: 60px;
+  margin-bottom: $vertical_margin;
 
   @media (max-width: 420px) {
     max-width: 90%;

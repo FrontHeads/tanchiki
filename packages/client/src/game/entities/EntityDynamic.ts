@@ -1,4 +1,4 @@
-import { Direction, EntityDynamicSettings, PosState } from '../typings';
+import { Direction, EntityDynamicSettings, PosState, Rect } from '../typings';
 import { Entity } from './';
 
 export class EntityDynamic extends Entity {
@@ -22,8 +22,10 @@ export class EntityDynamic extends Entity {
    * Если танк едет, то он поворачивает сразу. А если стоит на месте - то при коротком нажатии клавиши
    * он поворачивает, не двигаясь в сторону.*/
   moveLoops = 0;
-  /** Должен ли объект взрываться */
-  shouldExplode = false;
+  /** Клетка, где объект находился до начала движения*/
+  lastRect: Rect | null = null;
+  /** Клетка, куда объект движется*/
+  nextRect: Rect | null = null;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -61,13 +63,13 @@ export class EntityDynamic extends Entity {
 
   /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
   update() {
-    const isStandingStill = !this.moving && !this.stopping && !this.shouldExplode;
+    const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
     if (!this.spawned || isStandingStill) {
       return;
     }
 
     this.stateCheck();
-    if (this.shouldExplode) {
+    if (this.shouldBeDestroyed) {
       return;
     }
 
@@ -103,13 +105,18 @@ export class EntityDynamic extends Entity {
   /** Выполняет проверку на то, может ли объект двигаться дальше; */
   prepareToMove() {
     this.lastRect = this.getRect();
-    this.nextRect = { ...this.lastRect, ...this.getNextMove(true) };
-    const posState: PosState = { hasCollision: false };
+    const nextRect = { ...this.lastRect, ...this.getNextMove(true) };
+    const posState: PosState = {
+      hasCollision: undefined,
+      nextRect,
+    };
     this.emit('entityWillHaveNewPos', posState);
     if (!posState.hasCollision) {
       this.canMove = true;
+      this.nextRect = nextRect;
     } else {
       this.canMove = false;
+      this.nextRect = null;
     }
   }
 
