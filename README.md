@@ -11,9 +11,9 @@
 
 </div>
 
-Реализация игры [_Battle City_](https://en.wikipedia.org/wiki/Battle_City) с использованием `Canvas`, `Typescript` и `React`
+Реализация веб-версии культовой игры 80-х и 90-х гг. [_Battle City_](https://en.wikipedia.org/wiki/Battle_City) с использованием `Canvas`, `Typescript` и `React`
 
-Проект создан в учебных целях в рамках курса [Мидл фронтенд разработчик](https://practicum.yandex.ru/middle-frontend/)
+Проект создан в учебных целях в рамках курса [Мидл фронтенд разработчик](https://practicum.yandex.ru/middle-frontend/) от Яндекс Практикума
 
 ---
 
@@ -24,10 +24,14 @@
 - React
 - React Router
 - Redux
+- Redux Thunk
 - Typescript
 - Canvas API
 - NodeJS
 - Postcss
+- Axios
+- Vite
+- Jest
 - Server Side Rendering
 - OAuth
 - Nginx
