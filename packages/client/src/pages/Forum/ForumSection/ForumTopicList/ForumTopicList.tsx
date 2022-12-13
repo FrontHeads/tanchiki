@@ -6,7 +6,7 @@ import { ForumTopicListProps } from './typings';
 
 export const ForumTopicList: FC<ForumTopicListProps> = ({ topicList, sectionId }) => {
   return (
-    <>
+    <table border={1} className="forum">
       <thead className="forum__row-header">
         <tr>
           <th className="forum__cell-header">Темы</th>
@@ -23,6 +23,6 @@ export const ForumTopicList: FC<ForumTopicListProps> = ({ topicList, sectionId }
           </tr>
         ))}
       </tbody>
-    </>
+    </table>
   );
 };

@@ -1,6 +1,7 @@
-import { FormFieldProps } from '../../components/FormField/typings';
+import { FieldProps } from '../../components/Form/FieldList/Field/typings';
+import { SignInForm } from './typings';
 
-export const signInInputFields: FormFieldProps[] = [
+export const signInFieldList: FieldProps[] = [
   {
     title: 'Логин',
     type: 'text',
@@ -16,3 +17,8 @@ export const signInInputFields: FormFieldProps[] = [
     required: true,
   },
 ];
+
+export const signInFormInitialState: SignInForm = {
+  login: '',
+  password: '',
+};

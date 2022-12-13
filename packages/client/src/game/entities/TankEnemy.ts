@@ -14,7 +14,7 @@ export class TankEnemy extends Tank {
     const moveInternval = setInterval(() => {
       this.move(this.getMoveDirection());
     }, 1000);
-  
+
     const shootInternval = setInterval(() => {
       this.shoot();
     }, 1000);
