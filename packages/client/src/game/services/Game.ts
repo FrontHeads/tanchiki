@@ -2,7 +2,7 @@ import { Entity, Projectile, Tank } from '../entities';
 import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
-import { Controller, Scenario, View, Zone } from './';
+import { Controller, resources, Scenario, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
 export class Game {
@@ -139,16 +139,9 @@ export class Game {
   }
 
   initLoading() {
-    const redirectDelay = 500;
     this.screen = ScreenType.LOADING;
     this.overlay.show(this.screen);
-
-    this.view.offAll('assetsLoaded');
-    this.view.on('assetsLoaded', () => {
-      setTimeout(() => {
-        this.initMenu();
-      }, redirectDelay);
-    });
+    resources.loadAll().then(() => this.initMenu());
   }
 
   initMenu() {

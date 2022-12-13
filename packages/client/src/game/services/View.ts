@@ -24,7 +24,6 @@ export class View extends EventEmitter {
   layerZIndexCount = 0;
   layers: Layer = {};
   root!: HTMLElement;
-  brickBg!: HTMLImageElement;
 
   constructor({ width, height }: Size) {
     super();
@@ -38,17 +37,6 @@ export class View extends EventEmitter {
     } else {
       document.exitFullscreen();
     }
-  }
-
-  loadAssets() {
-    this.brickBg = new Image();
-    this.brickBg.src = '/src/assets/img/bricks.png';
-    this.brickBg.onload = () => {
-      this.emit('assetsLoaded');
-    };
-    this.brickBg.onerror = () => {
-      this.emit('assetsLoaded');
-    };
   }
 
   isRootEmpty() {
@@ -66,7 +54,6 @@ export class View extends EventEmitter {
   }
 
   build(root: HTMLElement | null) {
-    this.loadAssets();
     if (root === null) {
       throw new Error('proper DOM root for the game should be set');
     }

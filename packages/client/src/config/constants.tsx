@@ -1,4 +1,4 @@
-import defaultAvatar from '../assets/img/default-avatar.png';
+import defaultAvatar from '/assets/img/default-avatar.png';
 
 export enum Paths {
   Home = '/',
