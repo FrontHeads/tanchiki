@@ -2,7 +2,8 @@ import './ForumMessage.css';
 
 import { FC } from 'react';
 
-import defaultAvatarPath from '../../../../assets/img/default-avatar.png';
+import defaultAvatarPath from '/assets/img/default-avatar.png';
+
 import { Dropdown } from '../../../../components/Dropdown';
 import { DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import simplifyDate from '../../../../utils/dateUtils';
