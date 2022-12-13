@@ -8,7 +8,7 @@ import { Forum } from './Forum';
 describe('Forum', () => {
   test('it renders', () => {
     renderWithRouter({ component: <Forum /> });
-    const forumTestId = 'forum';
+    const forumTestId = 'forum-title';
 
     const renderedForum = screen.getByTestId(forumTestId);
 

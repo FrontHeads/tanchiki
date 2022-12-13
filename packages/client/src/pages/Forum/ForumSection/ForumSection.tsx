@@ -11,11 +11,11 @@ export const ForumSection: FC<ForumSectionProps> = () => {
   const { sectionId } = useParams();
   return (
     <section className="forum__wrapper">
-      <h1 className="forum__title">Раздел {sectionId}</h1>
+      <h1 className="forum__title" data-testid="forum-section-title">
+        Раздел {sectionId}
+      </h1>
       <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Wide} />
-      <table border={1} className="forum" data-testid="forum-section">
-        <ForumTopicList topicList={topicList} sectionId={sectionId} />
-      </table>
+      <ForumTopicList topicList={topicList} sectionId={sectionId} />
     </section>
   );
 };

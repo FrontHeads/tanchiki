@@ -2,15 +2,15 @@ import '@testing-library/jest-dom';
 
 import { render } from '@testing-library/react';
 
-import { FormField } from './FormField';
+import { Field } from './Field';
 
-describe('FormField', () => {
+describe('Field', () => {
   test('it render', () => {
     const title = 'Login',
       id = 'login',
       type = 'text';
 
-    const { container } = render(<FormField id={id} title={title} type={type} />);
+    const { container } = render(<Field id={id} title={title} type={type} />);
 
     expect(container.querySelector('input')).toBeInTheDocument();
   });
@@ -20,7 +20,7 @@ describe('FormField', () => {
       id = 'login',
       type = 'text';
 
-    const { container } = render(<FormField id={id} title={title} type={type} />);
+    const { container } = render(<Field id={id} title={title} type={type} />);
 
     expect(container.querySelector('input')).toHaveAttribute('name', 'login');
     expect(container.querySelector('input')).toHaveAttribute('type', 'text');
@@ -31,7 +31,7 @@ describe('FormField', () => {
       id = 'login',
       type = 'text';
 
-    const { container } = render(<FormField id={id} title={title} type={type} />);
+    const { container } = render(<Field id={id} title={title} type={type} />);
 
     expect(container.querySelector('label')).toBeInTheDocument();
     expect(container.querySelector('label')).toHaveTextContent(title);
