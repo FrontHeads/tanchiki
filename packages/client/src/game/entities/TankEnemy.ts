@@ -1,6 +1,6 @@
 import { Direction, EntityDynamicSettings } from '../typings';
-import { Tank } from './Tank';
 import { rand } from '../utils';
+import { Tank } from './Tank';
 
 export class TankEnemy extends Tank {
   width = 4;
