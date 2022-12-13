@@ -1,3 +1,4 @@
+import { resources } from '../../services';
 import { MainMenuState } from '../../typings';
 import { Screen } from './Screen';
 
@@ -29,7 +30,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 12,
       width: view.width,
       height: 7,
-      img: view.brickBg,
+      img: resources.getImage('brickBg'),
       text: 'ТАНЧИКИ',
       align: 'center',
     });
@@ -39,7 +40,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 21,
       width: view.width,
       height: 7,
-      img: view.brickBg,
+      img: resources.getImage('brickBg'),
       text: '2023',
       align: 'center',
     });
