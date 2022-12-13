@@ -5,6 +5,8 @@ import { levels } from './../data/levels';
 import { Controller, resources, Scenario, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
+type LoopDelays = Record<number, Set<() => void>>;
+
 export class Game {
   static __instance: Game;
   inited = false;
@@ -18,6 +20,8 @@ export class Game {
   controllerArrows!: Controller;
   loopProcess: ReturnType<typeof setTimeout> | null = null;
   loopTimeMs = 25;
+  loopCount = 0;
+  loopDelays: LoopDelays = {};
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
   screen: ScreenType = ScreenType.LOADING;
@@ -59,6 +63,7 @@ export class Game {
   }
 
   unload() {
+    this.clearLoopEntities();
     this.stopLoop();
     this.controllerAll.unload();
     this.controllerWasd.unload();
@@ -70,12 +75,12 @@ export class Game {
     if (this.scenario) {
       delete this.scenario;
     }
+    this.clearLoopEntities();
     this.view.reset();
     this.zone.reset();
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
-    this.loopEntities = new Set();
   }
 
   createView(root: HTMLElement | null) {
@@ -87,6 +92,7 @@ export class Game {
     this.zone.add(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
+      this.registerLoopDelays(entity);
     } else if (entity instanceof Projectile) {
       const tempLoopEntitiesArray = Array.from(this.loopEntities);
       tempLoopEntitiesArray.unshift(entity);
@@ -94,9 +100,38 @@ export class Game {
     }
   }
 
+  registerLoopDelays(entity: Entity) {
+    entity.on('loopDelay', (callback: () => void, delay: number) => {
+      const loopMark = this.loopCount + ~~(delay / this.loopTimeMs);
+      if (!this.loopDelays[loopMark]) {
+        this.loopDelays[loopMark] = new Set();
+      }
+      this.loopDelays[loopMark].add(callback);
+    });
+  }
+
+  checkLoopDelays() {
+    if (this.loopDelays[this.loopCount]) {
+      const list = this.loopDelays[this.loopCount];
+      for (const callback of list) {
+        callback();
+      }
+      delete this.loopDelays[this.loopCount];
+    }
+  }
+
+  clearLoopEntities() {
+    for (const entity of this.loopEntities) {
+      entity.despawn();
+    }
+    this.loopEntities = new Set();
+  }
+
   loop() {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
+    ++this.loopCount;
+    this.checkLoopDelays();
     for (const entity of this.loopEntities) {
       entity.update();
       if (entity.shouldBeDestroyed) {
