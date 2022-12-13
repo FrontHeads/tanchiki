@@ -9,10 +9,10 @@ import { ForumProps } from './typing';
 export const Forum: FC<ForumProps> = () => {
   return (
     <section className="forum__wrapper">
-      <h1 className="forum__title">Форум</h1>
-      <table border={1} className="forum" data-testid="forum">
-        <ForumSectionList sectionList={sectionList} />
-      </table>
+      <h1 className="forum__title" data-testid="forum-title">
+        Форум
+      </h1>
+      <ForumSectionList sectionList={sectionList} />
     </section>
   );
 };

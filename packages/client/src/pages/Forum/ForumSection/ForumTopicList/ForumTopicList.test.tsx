@@ -12,13 +12,7 @@ describe('ForumTopicList', () => {
 
   beforeEach(() => {
     renderWithRouter({
-      component: (
-        <table>
-          <tbody>
-            <ForumTopicList topicList={topicList} />
-          </tbody>
-        </table>
-      ),
+      component: <ForumTopicList topicList={topicList} />,
     });
   });
 
