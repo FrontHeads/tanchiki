@@ -231,7 +231,7 @@ export class Game {
 
   initGameOver() {
     const redirectDelay = 3000;
-    this.screen = ScreenType.LOADING;
+    this.screen = ScreenType.GAME_OVER;
 
     this.overlay.show(this.screen);
 
