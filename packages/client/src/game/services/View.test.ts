@@ -49,10 +49,10 @@ describe('game/services/View', () => {
 
     view.build(root);
     view.add(entity);
-    const layerObjectsCount1 = Array.from(view.layers['tanks'].objects).length;
+    const layerObjectsCount1 = Array.from(view.layers['tanks'].entities).length;
     entity.emit('entityShouldBeDestroyed');
     entity.emit('entityDidUpdate');
-    const layerObjectsCount2 = Array.from(view.layers['tanks'].objects).length;
+    const layerObjectsCount2 = Array.from(view.layers['tanks'].entities).length;
 
     expect(layerObjectsCount1).not.toBe(layerObjectsCount2);
     expect(view.eraseEntityFromLayer).toHaveBeenCalled();

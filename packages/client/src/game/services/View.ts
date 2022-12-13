@@ -3,15 +3,17 @@ import type { Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
 
-type Layer = Record<
+/** Список canvas-слоев и прикрепленных к ним сущностей. */
+type LayerList = Record<
   string,
   {
     context: CanvasRenderingContext2D;
-    objects: Set<LayerObject>;
+    entities: Set<LayerEntity>;
   }
 >;
 
-type LayerObject = {
+/** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
+type LayerEntity = {
   instance: Entity;
   listeners: Record<string, () => void>;
 };
@@ -22,7 +24,11 @@ export class View extends EventEmitter {
   pixelRatio = 10;
   gameBgColor = 'black';
   layerZIndexCount = 0;
-  layers: Layer = {};
+  /** Содержит список canvas-слоев, canvasContext этих слоев, а также прикрепленные к слоям сущности.
+   * О сущностях исчерпывающая информация: все свойства, все listeners.
+   */
+  layers: LayerList = {};
+  /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев */
   root!: HTMLElement;
   brickBg!: HTMLImageElement;
 
@@ -43,20 +49,14 @@ export class View extends EventEmitter {
     };
   }
 
-  isRootEmpty() {
-    return this.root.innerHTML.trim() === '';
-  }
-
-  convertToPixels(value: number) {
-    return Math.round(value * this.pixelRatio);
-  }
-
+  /** Удаляет все сущности со всех слоев. */
   reset() {
     for (const id of Object.keys(this.layers)) {
       this.eraseAllEntitiesOnLayer(id);
     }
   }
 
+  /** Инициализирует создание DOM-элементов canvas-слоев и их добавление в корневой DOM-элемент root. */
   build(root: HTMLElement | null) {
     this.loadAssets();
     if (root === null) {
@@ -72,6 +72,7 @@ export class View extends EventEmitter {
     }
   }
 
+  /** Создает DOM-элементы canvas-слоев и добавляет в корневой DOM-элемент root. */
   createLayer(id: string) {
     const layer = document.createElement('canvas');
     layer.id = id;
@@ -87,12 +88,13 @@ export class View extends EventEmitter {
     } else {
       this.layers[id] = {
         context: layer.getContext('2d') as CanvasRenderingContext2D,
-        objects: new Set(),
+        entities: new Set(),
       };
     }
     return layer;
   }
 
+  /** Определяет на какой уровень необходимо добавить сущность и запускает bindEntityToLayer(). */
   add(entity: Entity | UIElement) {
     let layer = '';
     switch (entity.type) {
@@ -115,7 +117,8 @@ export class View extends EventEmitter {
     this.bindEntityToLayer(entity, layer);
   }
 
-  bindEntityToLayer(entity: Entity | UIElement, layerId: keyof Layer) {
+  /** Привязывает сущность к конкретному слою, а к сущности привязывает listeners рендеринга. */
+  bindEntityToLayer(entity: Entity | UIElement, layerId: keyof LayerList) {
     const layerObject = {
       instance: entity,
       listeners: {
@@ -134,38 +137,39 @@ export class View extends EventEmitter {
         },
       },
     };
-    this.layers[layerId].objects.add(layerObject);
+    this.layers[layerId].entities.add(layerObject);
+
+    //FIXME а не многовато ли раз отрабатывает этот метод?
+    // Отрабатывает потому что создаются снаряды непонятно откуда и зачем. Что-то эмитит без конца метод shoot
+    // Но проблема еще в том, что отработанные снаряды не удаляются!
+    // Нужно вызывать метод removeEntityFromLayer у взорвавшихся снарядов противника.
+    // console.log(this.layers[layerId].entities);
 
     for (const [eventName, callback] of Object.entries(layerObject.listeners)) {
       entity.on(eventName, callback);
     }
   }
 
-  removeEntityFromLayer(entity: Entity, layerId: keyof Layer) {
-    let layerObjectToDelete: LayerObject | null = null;
-    for (const layerObject of this.layers[layerId].objects) {
-      if (layerObject.instance === entity) {
-        layerObjectToDelete = layerObject;
+  /** Стирает сущность с canvas-слоя и очищает ее listeners. */
+  removeEntityFromLayer(entity: Entity, layerId: keyof LayerList) {
+    let entityToDelete: LayerEntity | null = null;
+
+    for (const layerEntity of this.layers[layerId].entities) {
+      if (layerEntity.instance === entity) {
+        entityToDelete = layerEntity;
       }
     }
-    if (layerObjectToDelete) {
-      this.layers[layerId].objects.delete(layerObjectToDelete);
-      for (const [eventName, callback] of Object.entries(layerObjectToDelete.listeners)) {
+
+    if (entityToDelete) {
+      this.layers[layerId].entities.delete(entityToDelete);
+      for (const [eventName, callback] of Object.entries(entityToDelete.listeners)) {
         entity.off(eventName, callback);
       }
     }
   }
 
-  getEntityActualRect(entity: Entity) {
-    return [
-      this.convertToPixels(entity.posX),
-      this.convertToPixels(entity.posY),
-      this.convertToPixels(entity.width),
-      this.convertToPixels(entity.height),
-    ] as const;
-  }
-
-  drawTextOnLayer(elem: UIElement, layerId: keyof Layer) {
+  /** Рисует текст на canvas-слое. */
+  drawTextOnLayer(elem: UIElement, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
     context.font = `${this.convertToPixels(elem.height)}px "Press Start 2P"`;
     context.textAlign = elem.align;
@@ -185,27 +189,51 @@ export class View extends EventEmitter {
     context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY));
   }
 
-  drawEntityOnLayer(entity: Entity, layerId: keyof Layer) {
+  /** Рисует сущность на canvas-слое. */
+  drawEntityOnLayer(entity: Entity, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
     context.fillStyle = entity.color;
     context.fillRect(...this.getEntityActualRect(entity));
   }
 
-  eraseEntityFromLayer(entity: Entity, layerId: keyof Layer) {
+  /** Стирает сущность с canvas-слоя. */
+  eraseEntityFromLayer(entity: Entity, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
     context.clearRect(...this.getEntityActualRect(entity));
   }
 
-  redrawAllEntitiesOnLayer(layerId: keyof Layer) {
-    const { objects } = this.layers[layerId];
+  /** Перерисовывает все сущности на слое. */
+  redrawAllEntitiesOnLayer(layerId: keyof LayerList) {
+    const { entities: objects } = this.layers[layerId];
     this.eraseAllEntitiesOnLayer(layerId);
     for (const layerObject of objects) {
       this.drawEntityOnLayer(layerObject.instance, layerId);
     }
   }
 
-  eraseAllEntitiesOnLayer(layerId: keyof Layer) {
+  /** Стирает все сущности с canvas-слоя. */
+  eraseAllEntitiesOnLayer(layerId: keyof LayerList) {
     const { context } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
+  }
+
+  /** Возвращает актуальные координаты сущности на слое (в пикселях) */
+  getEntityActualRect(entity: Entity) {
+    return [
+      this.convertToPixels(entity.posX),
+      this.convertToPixels(entity.posY),
+      this.convertToPixels(entity.width),
+      this.convertToPixels(entity.height),
+    ] as const;
+  }
+
+  /** Проверяет, что слои еще не созданы. */
+  private isRootEmpty() {
+    return this.root.innerHTML.trim() === '';
+  }
+
+  /** Пересчитывает размер игровых клеток в пиксели. */
+  private convertToPixels(value: number) {
+    return Math.round(value * this.pixelRatio);
   }
 }
