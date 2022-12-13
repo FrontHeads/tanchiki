@@ -15,7 +15,7 @@ export class Tank extends EntityDynamic {
   }
 
   shoot() {
-    if (!this.canShoot) {
+    if (!this.spawned || !this.canShoot) {
       return;
     }
 

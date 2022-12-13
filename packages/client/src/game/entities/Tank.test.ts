@@ -7,6 +7,7 @@ describe('game/entities/Tank', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -18,6 +19,7 @@ describe('game/entities/Tank', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -32,6 +34,7 @@ describe('game/entities/Tank', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -47,6 +50,7 @@ describe('game/entities/Tank', () => {
     const tank = new Tank({ posX: 1, posY: 1, width: 1, height: 1, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
     tank.shoot();
