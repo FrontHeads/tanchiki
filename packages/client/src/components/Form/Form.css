@@ -7,7 +7,7 @@
   flex-direction: column;
   align-self: center;
   width: 400px;
-  margin-bottom: 60px;
+  margin-bottom: $vertical_margin;
 
   @media (max-width: 420px) {
     max-width: 90%;
@@ -32,6 +32,38 @@
   &__field {
     width: 80%;
     margin: 0 auto 23px;
+
+    &-label {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      color: $font_color_soft;
+    }
+
+    &-input {
+      background-color: $section_background_color;
+      border: 1px solid $border_color;
+      color: $font_color_bright;
+      font-size: 18px;
+      padding: 8px 0 8px 10px;
+      width: 100%;
+
+      &:hover {
+        transition: 0.2s;
+        border-color: $accent_color;
+      }
+
+      &:focus {
+        transition: 0.2s;
+        box-shadow: 0 0 20px $accent_color;
+      }
+    }
+
+    &_input-padding_lg {
+      .form-field__input {
+        padding: 30px 5px;
+      }
+    }
   }
 
   &__round-wrapper {

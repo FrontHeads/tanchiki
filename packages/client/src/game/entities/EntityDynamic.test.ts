@@ -45,7 +45,7 @@ describe('game/entities/EntityDynamic', () => {
 
     entity.move(Direction.RIGHT);
     for (let i = 0; i < ticks; ++i) {
-      entity.step();
+      entity.update();
     }
 
     expect(entity.posX).toBe(1);
@@ -58,7 +58,7 @@ describe('game/entities/EntityDynamic', () => {
 
     entity.move(Direction.DOWN);
     for (let i = 0; i < ticks; ++i) {
-      entity.step();
+      entity.update();
     }
 
     expect(entity.direction).toBe(Direction.DOWN);
@@ -72,7 +72,7 @@ describe('game/entities/EntityDynamic', () => {
 
     entity.move(Direction.RIGHT);
     for (let i = 0; i < ticks; ++i) {
-      entity.step();
+      entity.update();
     }
     entity.move(Direction.DOWN);
 
@@ -85,11 +85,11 @@ describe('game/entities/EntityDynamic', () => {
 
     entity.move(Direction.RIGHT);
     for (let i = 0; i < ticks; ++i) {
-      entity.step();
+      entity.update();
     }
     entity.move(Direction.DOWN);
     for (let i = 0; i < 10; ++i) {
-      entity.step();
+      entity.update();
     }
 
     expect(entity.direction).toBe(Direction.DOWN);

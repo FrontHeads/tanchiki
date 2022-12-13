@@ -1,0 +1,1 @@
+export { ProtectedRoutes } from './ProtectedRoutes';

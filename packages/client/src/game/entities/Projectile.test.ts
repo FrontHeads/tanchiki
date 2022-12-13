@@ -13,11 +13,12 @@ describe('game/entities/Projectile', () => {
   it('should explode on impact', () => {
     const zone = new Zone({ width: 2, height: 2 });
     const projectile = new Projectile({ posX: 0, posY: 0, moveSpeed: 2, direction: Direction.LEFT });
-    zone.registerEntity(projectile);
+    zone.add(projectile);
 
     projectile.spawn({ posX: 0, posY: 0 });
-    projectile.step();
+    projectile.update();
+    projectile.update();
 
-    expect(projectile).toHaveProperty('shouldExplode', true);
+    expect(projectile).toHaveProperty('shouldBeDestroyed', true);
   });
 });

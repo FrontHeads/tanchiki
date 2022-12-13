@@ -44,4 +44,16 @@ describe('game/entities/Entity', () => {
     expect(entity.spawned).toBe(false);
     expect(mockFn).toHaveBeenCalled();
   });
+
+  it('should take damage', () => {
+    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
+    const source = new Entity({ posX: 4, posY: 4, width: 4, height: 4 });
+    const mockFn = jest.fn();
+
+    entity.on('damaged', mockFn);
+    entity.spawn({ posX: 1, posY: 2 });
+    entity.takeDamage(source);
+
+    expect(mockFn).toHaveBeenCalled();
+  });
 });

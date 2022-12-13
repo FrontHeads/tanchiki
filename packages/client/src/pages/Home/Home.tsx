@@ -1,11 +1,12 @@
 import './Home.css';
 
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
-import { appActions, useAppDispatch } from '../../store';
+import promoImg from '../../assets/img/tankettes_game.png';
+import { Navigation } from '../../components/Navigation';
 import { HTTP } from '../../utils/HTTP';
 
-export const Home = () => {
+export const Home: FC = () => {
   useEffect(() => {
     const fetchServerData = async () => {
       const data = await HTTP.get<Record<string, unknown>>('/', {
@@ -17,18 +18,17 @@ export const Home = () => {
     fetchServerData();
   }, []);
 
-  // This is how the dispatch works. Remove later
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(appActions.setIsLoading(true));
-    setTimeout(() => {
-      dispatch(appActions.setIsLoading(false));
-    }, 2000);
-  }, []);
-
   return (
-    <div className="app">
-      <div className="text-center">Вот тут будет жить ваше приложение :)</div>
-    </div>
+    <>
+      <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />
+      <div className="menu">
+        <div className="delimiter" />
+        <nav data-testid="menu-nav-home" className="menu-nav">
+          <ul className="navigation-list">
+            <Navigation />
+          </ul>
+        </nav>
+      </div>
+    </>
   );
 };

@@ -7,15 +7,15 @@ import { MenuLink } from './MenuLink';
 
 describe('MenuLink', () => {
   test('it renders', () => {
-    const handleNavigate = jest.fn();
+    const onClick = jest.fn();
 
     render(
       <BrowserRouter>
-        <MenuLink handleNavigate={handleNavigate} title="test" to="test" />
+        <MenuLink name="test" onClick={onClick} title="test" to="test" />
       </BrowserRouter>
     );
 
-    const renderedMenu = screen.getByTestId('menulink');
+    const renderedMenu = screen.getByTestId('navigation-list__row');
 
     expect(renderedMenu).toBeInTheDocument();
   });

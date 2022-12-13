@@ -1,20 +1,29 @@
 type Fn = (...args: Array<any>) => void;
 
-export class EventEmitter {
-  listeners: Record<string, Array<Fn>> = {};
+export class EventEmitter<T extends string = string> {
+  listeners = {} as Record<T, Array<Fn>>;
 
-  on(eventName: string, callback: Fn) {
+  on(eventName: T, callback: Fn) {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
     this.listeners[eventName].push(callback);
+    return this;
   }
-  emit(eventName: string, ...args: Array<unknown>) {
+
+  emit(eventName: T, ...args: Array<unknown>) {
     this.listeners[eventName]?.forEach((listener: Fn) => {
       listener.apply(this, args);
     });
   }
-  off(eventName: string, callback: Fn) {
+
+  off(eventName: T, callback: Fn) {
     this.listeners[eventName] = this.listeners[eventName]?.filter((listener: Fn) => listener !== callback);
+    return this;
+  }
+
+  offAll(eventName: T) {
+    delete this.listeners[eventName];
+    return this;
   }
 }

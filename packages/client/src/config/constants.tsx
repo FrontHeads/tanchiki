@@ -5,9 +5,14 @@ export enum Paths {
   SignIn = '/sign-in',
   SignUp = '/sign-up',
   Game = '/game',
+  Forum = '/forum',
+  Section = '/forum/section',
+  Topic = '/topic',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
   Leaderboard = '/leaderboard',
+  Error404 = '404',
+  Error500 = '500',
 }
 
 export const PATH = {
@@ -15,9 +20,9 @@ export const PATH = {
   avatarBase: 'https://ya-praktikum.tech/api/v2/resources',
 };
 
-export const API_HOST = 'https://ya-praktikum.tech/api/v2';
+export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
-export const API_ENDPOINTS = {
+export const YANDEX_API_ENDPOINTS = {
   AUTH: {
     SIGNIN: 'auth/signin',
     SIGNUP: 'auth/signup',

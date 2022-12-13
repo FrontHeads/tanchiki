@@ -1,7 +1,8 @@
 type MenuLinkProps = {
+  name: string;
   title: string;
   to: string;
-  handleNavigate: () => void;
+  onClick?: () => void;
 };
 
 export type { MenuLinkProps };

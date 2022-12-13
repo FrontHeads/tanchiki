@@ -1,6 +1,6 @@
 @import url("../../variables.css");
 
-.menu {
+.menu-link {
   &__tank-wrapper {
     display: flex;
     align-items: center;
@@ -15,14 +15,14 @@
     }
   }
 
-  &__link {
+  &__item {
     text-decoration: none;
 
     &:hover {
       color: $accent_color;
     }
 
-    &:hover + .menu__tank-wrapper {
+    &:hover + .menu-link__tank-wrapper {
       opacity: 1;
     }
   }
@@ -45,16 +45,18 @@
     display: flex;
     align-items: center;
     list-style-type: none;
-    margin: 45px 0;
+    margin: 38px 0;
     font-size: 1.6rem;
     position: relative;
 
     @media (max-width: 430px) {
       font-size: 1.2rem;
+      max-width: 80%;
+      line-height: 1.5rem;
     }
   }
 
   &__row:nth-child(1) {
-    margin: 0 0 45px;
+    margin: 0;
   }
 }

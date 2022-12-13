@@ -1,5 +1,8 @@
-export interface AuthState {
+import { UserProfile } from '../../../app.typings';
+
+export type AuthState = {
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string;
-}
+  userProfile: UserProfile | null;
+};
