@@ -32,6 +32,14 @@ export class View extends EventEmitter {
     this.height = height;
   }
 
+  toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      this.root.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
   loadAssets() {
     this.brickBg = new Image();
     this.brickBg.src = '/src/assets/img/bricks.png';
