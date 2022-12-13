@@ -30,23 +30,11 @@ export class View extends EventEmitter {
   layers: LayerList = {};
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев */
   root!: HTMLElement;
-  brickBg!: HTMLImageElement;
 
   constructor({ width, height }: Size) {
     super();
     this.width = width;
     this.height = height;
-  }
-
-  loadAssets() {
-    this.brickBg = new Image();
-    this.brickBg.src = '/src/assets/img/bricks.png';
-    this.brickBg.onload = () => {
-      this.emit('assetsLoaded');
-    };
-    this.brickBg.onerror = () => {
-      this.emit('assetsLoaded');
-    };
   }
 
   /** Удаляет все сущности со всех слоев. */
@@ -58,7 +46,6 @@ export class View extends EventEmitter {
 
   /** Инициализирует создание DOM-элементов canvas-слоев и их добавление в корневой DOM-элемент root. */
   build(root: HTMLElement | null) {
-    this.loadAssets();
     if (root === null) {
       throw new Error('proper DOM root for the game should be set');
     }

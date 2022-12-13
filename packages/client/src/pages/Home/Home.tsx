@@ -2,7 +2,8 @@ import './Home.css';
 
 import { FC, useEffect } from 'react';
 
-import promoImg from '../../assets/img/tankettes_game.png';
+import promoImg from '/assets/img/tankettes_game.png';
+
 import { Navigation } from '../../components/Navigation';
 import { HTTP } from '../../utils/HTTP';
 

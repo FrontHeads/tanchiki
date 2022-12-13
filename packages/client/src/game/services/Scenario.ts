@@ -1,6 +1,5 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
-import { Entity, Flag, Projectile, Tank, Terrain } from '../entities';
-import { TankEnemy } from '../entities/TankEnemy';
+import { Entity, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
 import {
   Direction,
   EntityDynamicSettings,
