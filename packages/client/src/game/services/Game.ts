@@ -12,7 +12,7 @@ export class Game {
   zone!: Zone;
   view!: View;
   overlay!: Overlay;
-  scenario?: Scenario;
+  scenario: Scenario | undefined;
   controllerAll!: Controller;
   controllerWasd!: Controller;
   controllerArrows!: Controller;
