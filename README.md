@@ -1,82 +1,73 @@
-### Как запускать?
+<div style="text-align:center;">
 
-1. Убедитесь что у вас установлен `node` и `docker`
-2. Выполните команду `yarn bootstrap` - это обязательный шаг, без него ничего работать не будет :)
-3. Выполните команду `yarn dev`
-4. Выполните команду `yarn dev --scope=client` чтобы запустить только клиент
-5. Выполните команду `yarn dev --scope=server` чтобы запустить только server
+# ТАНЧИКИ
 
-### Как правильно писать коммиты?
+<!-- https://shields.io/ -->
 
-Можно почитать в соответствующей разделе [документации](docs/README.md)
+![lerna](https://img.shields.io/badge/lerna-5.4.3-blue)
+![vite](https://img.shields.io/badge/vite-3.0.7-blue)
+![typescript](https://img.shields.io/badge/typescript-4.8.2-blue)
+![authors](https://img.shields.io/badge/authors-FrontHeads-blueviolet)
 
-### Как добавить зависимости?
+</div>
 
-В этом проекте используется `monorepo` на основе [`lerna`](https://github.com/lerna/lerna)
+Реализация веб-версии культовой игры 80-х и 90-х гг. [_Battle City_](https://en.wikipedia.org/wiki/Battle_City) с использованием `Canvas`, `Typescript` и `React`
 
-Флаг `--exact` фиксирует устанавливаемую зависимость.
+Проект создан в учебных целях в рамках курса [Мидл фронтенд разработчик](https://practicum.yandex.ru/middle-frontend/) от Яндекс Практикума
 
-Чтобы добавить зависимость для клиента
-`yarn lerna add {your_dep} --scope client --exact`
+---
 
-Для сервера
-`yarn lerna add {your_dep} --scope server --exact`
+## Технологии
 
-И для клиента и для сервера
-`yarn lerna add {your_dep} --exact`
+В проекте используются:
 
-Если вы хотите добавить dev зависимость, проделайте то же самое, но с флагом `dev`
-`yarn lerna add {your_dep} --dev --scope server --exact`
+- React
+- React Router
+- Redux
+- Redux Thunk
+- Typescript
+- Canvas API
+- NodeJS
+- Postcss
+- Axios
+- Vite
+- Jest
+- Server Side Rendering
+- OAuth
+- Nginx
+- Yandex Cloud
+- Web Workers
 
-### Тесты
+## Реализованный функционал
 
-Для клиента используется [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro/)
+- Страница с игрой
+- Создание профиля
+- Форум
+- Рейтинг игроков
+- Возможность смены темы оформления
+- Возможность играть без доступа в интернет
 
-`yarn test`
+## Режим разработки
 
-### Линтинг
+```
+$ yarn bootstrap
 
-`yarn lint`
+$ yarn dev
+```
 
-### Форматирование prettier
+Дополнительные команды:
 
-`yarn format`
+- `yarn lint` - проверка типов и линтинг всего проекта
+- `yarn test` - запустить тесты
 
-### Production build
+## Механика игры
 
-`yarn build`
+В игре 35 уровней. Задача игрока защитить свою базу от вражеских танков. Для прохождения уровня необходимо уничтожить 20 вражеских танков. Игрок может подбирать различные бонусы (заморозку, щит, дополнительную жизнь и др.)
 
-И чтобы посмотреть что получилось
+Каждый уровень содержит различные виды препятствий:
 
-`yarn preview --scope client`
-`yarn preview --scope server`
-
-## Хуки
-
-В проекте используется [lefthook](https://github.com/evilmartians/lefthook)
-Если очень-очень нужно пропустить проверки, используйте `--no-verify` (но не злоупотребляйте :)
-
-## Ой, ничего не работает :(
-
-Откройте issue, я приду :)
-
-## Автодеплой статики на vercel
-
-Зарегистрируйте аккаунт на [vercel](https://vercel.com/)
-Следуйте [инструкции](https://vitejs.dev/guide/static-deploy.html#vercel-for-git)
-В качестве `root directory` укажите `packages/client`
-
-Все ваши PR будут автоматически деплоиться на vercel. URL вам предоставит деплоящий бот
-
-## Production окружение в докере
-
-Перед первым запуском выполните `node init.js`
-
-`docker compose up` - запустит три сервиса
-
-1. nginx, раздающий клиентскую статику (client)
-2. node, ваш сервер (server)
-3. postgres, вашу базу данных (postgres)
-
-Если вам понадобится только один сервис, просто уточните какой в команде
-`docker compose up {sevice_name}`, например `docker compose up server`
+- кирпичные стены: могут быть разрушены танком игрока или врага
+- стальные стены: могут быть разрушены, если игрок подберёт улучшение
+- вода: блокирует передвижение, но не стрельбу
+- деревья: скрывают из виду танк игрока и вражеские танки
+- лёд: добавляет инерцию танкам
