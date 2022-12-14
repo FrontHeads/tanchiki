@@ -1,10 +1,10 @@
-import { assetPathList, errorMsg, extensionList, ImagePathList, SoundPathList, timeoutMsg } from './data';
+import { assetPathList, errorMsg, extensionList, ImagePathList, timeoutMsg } from './data';
 import { AssetPathList, ImageList, Resource, SoundList } from './typings';
 
 /** Загружает и хранит изображения и звуки. */
 class Resources {
   private imageList: ImageList = {};
-  private soundList: SoundList = {};
+  public soundList: SoundList = {};
 
   /** Загружает все изображения и звуки из AssetsDataList */
   loadAll(assets: AssetPathList = assetPathList, timeout = 60000): Promise<boolean> {
@@ -19,14 +19,6 @@ class Resources {
         return false;
       })
       .finally(() => clearTimeout(loadAllTimeout));
-  }
-
-  /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
-  playSound(sound: keyof typeof SoundPathList): void {
-    if (this.soundList[sound]) {
-      this.soundList[sound].currentTime = 0;
-      this.soundList[sound].play();
-    }
   }
 
   /** Возвращает конкретный HTMLImageElement из Resources.imageList. */

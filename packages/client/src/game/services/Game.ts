@@ -4,6 +4,7 @@ import { Overlay } from '../ui';
 import { levels } from './../data/levels';
 import { Controller, resources, Scenario, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
+import { Sound } from './Sound';
 
 export class Game {
   static __instance: Game;
@@ -11,6 +12,7 @@ export class Game {
   paused = false;
   zone!: Zone;
   view!: View;
+  sound!: Sound;
   overlay!: Overlay;
   scenario?: Scenario;
   controllerAll!: Controller;
@@ -28,6 +30,7 @@ export class Game {
   private constructor() {
     this.zone = new Zone(this.settings);
     this.view = new View(this.settings);
+    this.sound = new Sound();
     this.overlay = new Overlay(this.view);
     this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerWasd = new Controller(KeyBindingsWasd);
@@ -85,6 +88,7 @@ export class Game {
   addEntity(entity: Entity) {
     this.view.add(entity);
     this.zone.add(entity);
+    this.sound.add(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
     } else if (entity instanceof Projectile) {
