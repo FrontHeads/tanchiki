@@ -121,7 +121,7 @@ export class View extends EventEmitter {
         },
       },
     };
-    this.layers[layerId].objects.add(layerObject);
+    this.layers[layerId]?.objects.add(layerObject);
 
     for (const [eventName, callback] of Object.entries(layerObject.listeners)) {
       entity.on(eventName, callback);
