@@ -12,7 +12,7 @@ export class Game {
   zone!: Zone;
   view!: View;
   overlay!: Overlay;
-  scenario?: Scenario;
+  scenario: Scenario | undefined;
   controllerAll!: Controller;
   controllerWasd!: Controller;
   controllerArrows!: Controller;
@@ -228,13 +228,13 @@ export class Game {
         }
 
         // Запускаем игру после выбора уровня
-        this.initGameLevel();
+        this.initGameLevel(true);
       });
   }
 
   initGameOver() {
     const redirectDelay = 3000;
-    this.screen = ScreenType.LOADING;
+    this.screen = ScreenType.GAME_OVER;
 
     this.overlay.show(this.screen);
 
@@ -252,7 +252,7 @@ export class Game {
     this.reset();
 
     /** Анимация перехода выбора уровня в игру */
-    const startAnimationDelay = firstInit ? 2000 : 0;
+    const startAnimationDelay = firstInit ? 0 : 2000;
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
     this.overlay.show(this.screen, startAnimationDelay);
 
@@ -265,7 +265,7 @@ export class Game {
       .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
         if (this.level < this.maxLevels) {
           this.level++;
-          this.initGameLevel(false);
+          this.initGameLevel();
         }
       });
 
