@@ -64,6 +64,7 @@ export class Game {
 
   unload() {
     this.clearLoopEntities();
+    this.clearLoopDelays();
     this.stopLoop();
     this.controllerAll.unload();
     this.controllerWasd.unload();
@@ -76,6 +77,7 @@ export class Game {
       delete this.scenario;
     }
     this.clearLoopEntities();
+    this.clearLoopDelays();
     this.view.reset();
     this.zone.reset();
     this.controllerAll.reset();
@@ -100,9 +102,20 @@ export class Game {
     }
   }
 
+  clearLoopEntities() {
+    for (const entity of this.loopEntities) {
+      entity.despawn();
+    }
+    this.loopEntities = new Set();
+  }
+
+  convertTimeToLoops(delay: number) {
+    return ~~(delay / this.loopTimeMs);
+  }
+
   registerLoopDelays(entity: Entity) {
     entity.on('loopDelay', (callback: () => void, delay: number) => {
-      const loopMark = this.loopCount + ~~(delay / this.loopTimeMs);
+      const loopMark = this.loopCount + this.convertTimeToLoops(delay);
       if (!this.loopDelays[loopMark]) {
         this.loopDelays[loopMark] = new Set();
       }
@@ -110,21 +123,19 @@ export class Game {
     });
   }
 
+  clearLoopDelays() {
+    this.loopCount = 0;
+    this.loopDelays = {};
+  }
+
   checkLoopDelays() {
     if (this.loopDelays[this.loopCount]) {
-      const list = this.loopDelays[this.loopCount];
-      for (const callback of list) {
+      const delayedCallbacks = this.loopDelays[this.loopCount];
+      for (const callback of delayedCallbacks) {
         callback();
       }
       delete this.loopDelays[this.loopCount];
     }
-  }
-
-  clearLoopEntities() {
-    for (const entity of this.loopEntities) {
-      entity.despawn();
-    }
-    this.loopEntities = new Set();
   }
 
   loop() {
