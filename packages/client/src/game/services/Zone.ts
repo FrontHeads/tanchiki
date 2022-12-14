@@ -1,4 +1,4 @@
-import { Entity, EntityDynamic } from '../entities';
+import { Entity, EntityDynamic, Projectile, Tank } from '../entities';
 import type { PosState, Rect, Size } from '../typings';
 
 export class Zone {
@@ -156,20 +156,27 @@ export class Zone {
         if (mainLayerCell === null && secondaryLayerCell === null) {
           continue;
         }
-        if (entity.type === 'tank') {
-          if (mainLayerCell !== null && mainLayerCell !== entity && !mainLayerCell.crossable) {
+        if (entity instanceof Tank) {
+          if (mainLayerCell !== null &&
+              mainLayerCell !== entity &&
+              !mainLayerCell.crossable) {
             hasCollision = true;
           }
-          if (secondaryLayerCell !== null) {
+          if (secondaryLayerCell !== null &&
+              secondaryLayerCell instanceof Projectile &&
+              secondaryLayerCell.parent !== entity) {
             hasCollision = true;
           }
         }
-        if (entity.type === 'projectile') {
-          if (mainLayerCell !== null && mainLayerCell.hittable) {
+        if (entity instanceof Projectile) {
+          if (mainLayerCell !== null &&
+              mainLayerCell.hittable &&
+              mainLayerCell !== entity.parent) {
             mainLayerCell.takeDamage(entity);
             hasCollision = true;
           }
-          if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
+          if (secondaryLayerCell !== null &&
+              secondaryLayerCell !== entity) {
             secondaryLayerCell.takeDamage(entity);
             hasCollision = true;
           }

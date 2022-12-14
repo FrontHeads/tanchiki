@@ -27,7 +27,7 @@ describe('game/entities/Tank', () => {
     expect(projectile.width).toBe(2);
     expect(projectile.height).toBe(2);
     expect(projectile.posX).toBe(2);
-    expect(projectile.posY).toBe(4);
+    expect(projectile.posY).toBe(2);
   });
 
   it('shouldn`t shoot before projectile exploded', () => {

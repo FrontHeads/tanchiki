@@ -1,17 +1,9 @@
-import type { Entity, EntityDynamic } from '../entities';
+import { Entity, Tank } from '../entities';
 import type { Rect } from '../typings';
-import { EventEmitter } from '../utils';
 import { Zone } from './';
 
 function mockEntity(rect: Rect) {
-  const entity = new EventEmitter() as EntityDynamic;
-  Object.assign(entity, rect);
-  entity.type = 'tank';
-  entity.alignedToGrid = true;
-  entity.lastRect = rect;
-  entity.getRect = () => rect;
-  entity.nextRect = rect;
-  return entity;
+  return new Tank(rect);
 }
 
 describe('game/services/Zone', () => {
