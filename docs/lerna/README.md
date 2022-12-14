@@ -30,7 +30,7 @@
 
 ### Тесты
 
-Для клиента используется [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro/)
+Для клиента используются: [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro/), [`jest`](https://jestjs.io/)
 
 `yarn test `- запустить все тесты
 
@@ -41,10 +41,13 @@
 `yarn test --scope server` - запустить тесты серверной части приложения.
 
 `yarn lerna run test:watch --scope client` - запустить тесты в Watch режиме (автоматически перезапускаются при изменении в файлах тестов). Вывод в консоль работает.
+
 Запустить тесты конкретного файла:
 Перейти в директорию клиентской части приложения: `cd packages/client`
 
-`yarn jest `<relativePath> - запустить тесты конкретного файла. Например: `yarn jest packages/client/src/components/Form/Form.test.tsx`
+`yarn jest <relativePath>` - запустить тесты конкретного файла.
+
+Например: `yarn jest src/components/Form/Form.test.tsx`
 
 ### Линтинг
 
