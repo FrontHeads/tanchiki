@@ -67,4 +67,21 @@ describe('game/services/Game', () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
+
+  it('should clear loop delays', async () => {
+    const game = Game.create();
+    const entity = mockEntity();
+    game.inited = true;
+    const delay = 100;
+    const mockFn = jest.fn();
+
+    game.startLoop();
+    game.addEntity(entity);
+    entity.setLoopDelay(mockFn, delay);
+    game.clearLoopDelays();
+
+    await sleep(200);
+
+    expect(mockFn).not.toHaveBeenCalled();
+  });
 });
