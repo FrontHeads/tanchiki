@@ -1,10 +1,12 @@
 import './Root.css';
 
 import { FC, Suspense, useEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 
 import { UserDTO } from '../../api/typings';
 import { BurgerMenu } from '../../components/BurgerMenu';
+import { ErrorFallback } from '../../components/ErrorFallback/ErrorFallback';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
@@ -40,7 +42,10 @@ export const Root: FC = () => {
             {printHeaderAndFooter && <Logo />}
             {printHeaderAndFooter && <div className="delimiter" />}
           </header>
-          <Outlet />
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Outlet />
+          </ErrorBoundary>
+
           {printHeaderAndFooter && <Footer />}
           <ScrollRestoration />
           {isAppLoading && <Loader data-testid="app-loader" />}
