@@ -1,5 +1,5 @@
 import { screenClasses } from '../data/constants';
-import type { View } from '../services';
+import { View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
 import { Screen } from './screens';
