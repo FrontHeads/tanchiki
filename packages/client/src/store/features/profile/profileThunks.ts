@@ -12,8 +12,8 @@ import { me } from '../auth/authThunks';
 import { UpdateAllProfileData, UpdateResult } from './typings';
 
 /**
- * Создаем и присваиваем в массив сообщения об ошибках,
- * либо об успешном обновлении полей, в зависимости от полученного статуса промиса
+ * В зависимости от полученного статуса промиса, создаем сообщение либо об ошибке, либо об успешном обновлении полей
+ * и добавляем его в массив
  * */
 const setUpdateResult = <T extends PromiseSettledResult<unknown>>(
   arr: UpdateResult,
