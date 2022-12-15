@@ -5,7 +5,7 @@ import { BindingConfig, KeyBinding } from './KeyBindings';
 export class Controller extends EventEmitter {
   activeDirection: Partial<Record<Direction, boolean>> = {};
   shootProcess: ReturnType<typeof setInterval> | null = null;
-  shootIntervalMs = 500;
+  shootIntervalMs = 200;
 
   constructor(private keyBindings: BindingConfig) {
     super();
