@@ -11,15 +11,23 @@ import {
   TankEnemyType,
 } from '../typings';
 import { EventEmitter } from '../utils';
-import { MapData, ScenarioPlayerState } from './../typings/index';
+import { MapData, Rect, ScenarioPlayerState } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
 import { MapManager } from './MapManager';
 
+type EnemyDesctroyedPayload = {
+  source: Tank;
+  destination: TankEnemy;
+};
+
+async function sleep(ms = 100) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 2,
-    maxActiveEnemies: 3,
+    enemiesLeft: 20,
+    maxActiveEnemies: 4,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;
@@ -28,6 +36,10 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   map!: MapData;
 
   constructor(private game: Game) {
+    /**
+     * TODO: Реализовать после реализации бонусных такнов
+     * Четвёртый, одиннадцатый и восемнадцатый танки, независимо от типа, появляются переливающиеся цветами
+     **/
     super();
     this.createBoundaries();
 
@@ -37,19 +49,17 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     if (this.game.mainMenuState === MainMenuState.SINGLEPLAYER) {
       this.createPlayerTank(Player.PLAYER1);
     } else if (this.game.mainMenuState === MainMenuState.MULTIPLAYER) {
+      this.state.maxActiveEnemies = 6;
       this.createPlayerTank(Player.PLAYER1);
       this.createPlayerTank(Player.PLAYER2);
     }
 
-    // Временная реализацияя размещения врагов
+    /** Размещаем танки противника */
     while (this.canCreateTankEnemy()) {
       this.createTankEnemy();
     }
 
-    /**
-     * TODO: on tankEnemy.exploding - обновляем статистику
-     */
-
+    /** Размещаем объекты на карте */
     const entities = this.mapManager.mapDataToEntitySettings(this.map);
     entities.forEach(settings => {
       if (settings.type === 'flag') {
@@ -61,15 +71,20 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       }
     });
 
+    /** Инициализируем обработчики событий уровня */
     this.initEventListeners();
   }
 
   initEventListeners() {
     this
       /** После убийства вражеского танка */
-      .on(ScenarioEvent.TANK_ENEMY_DESTROYED, (entity: TankEnemy) => {
+      .on(ScenarioEvent.TANK_ENEMY_DESTROYED, ({ source, destination }: EnemyDesctroyedPayload) => {
         /** Удаляем его из списка активных */
-        this.state.enemies = this.state.enemies.filter(enemy => enemy !== entity);
+        this.state.enemies = this.state.enemies.filter(enemy => enemy !== destination);
+
+        /** Ищем кто убил TankEnemy для обновления статистики */
+        // TODO: доделать после того как в source будет приходить Tank entity
+        const playerState = Object.values(this.state.players).find(({ entity }) => entity === source);
 
         /** Спауним новый вражеский танк если необходимо */
         if (this.canCreateTankEnemy()) {
@@ -84,18 +99,18 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
       /** После убийства игрока */
       .on(ScenarioEvent.TANK_PLAYER_DESTROYED, (_entity: Tank, playerType: Player) => {
-        // Если не осталось жизней у всех игроков - триггерим game over
+        const playerState = this.state.players[playerType];
+        --playerState.lives;
+
+        /** Если не осталось жизней у всех игроков - триггерим game over */
         const isNoLivesLeft = Object.entries(this.state.players).every(([_, playerState]) => playerState.lives === 0);
         if (isNoLivesLeft) {
           this.emit(ScenarioEvent.GAME_OVER);
           return;
         }
 
-        const playerState = this.state.players[playerType];
-
-        // Если еще есть жизни - уменьшаем их количество и спауним по-новой
+        /** Если еще есть жизни - уменьшаем их количество и спауним по-новой */
         if (playerState.lives > 0) {
-          --playerState.lives;
           this.createPlayerTank(playerType);
         }
       });
@@ -166,39 +181,46 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   }
 
   /** Создаем вражеский танк */
-  createTankEnemy() {
+  async createTankEnemy() {
     --this.state.enemiesLeft;
 
-    /** Выбираем случайным образом одну из 3 позиций врага */
-    const enemySpawnPlaces = spawnPlaces[0];
-    const enemySpawnPlaceK = Math.floor(Math.random() * enemySpawnPlaces.length);
-
-    const posX = this.mapManager.coordToPos(enemySpawnPlaces[enemySpawnPlaceK]);
-    const posY = this.mapManager.coordToPos(0);
-
-    const settings = { posX, posY, role: 'enemy', color: 'darkgrey' } as EntityDynamicSettings;
-    const entity = new TankEnemy(settings);
-
+    const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
     this.state.enemies.push(entity);
 
     this.emit(ScenarioEvent.TANK_ENEMY_SPAWNED, entity);
-
     this.game.addEntity(entity);
-    entity.spawn(settings);
+
+    let integer = 0;
+    while (entity.spawned === false) {
+      /** При повторной попытке размещения танка делаем небольшую задержку */
+      if (++integer !== 1) {
+        await sleep(200);
+      }
+
+      /** Выбираем случайным образом одну из 3 позиций противника */
+      const spawnPlaceKey = Math.floor(Math.random() * spawnPlaces[0].length);
+      const spawnPlace = this.mapManager.coordsToRect(spawnPlaces[0][spawnPlaceKey], 0);
+
+      entity.spawn(spawnPlace);
+    }
+
     entity.on('shoot', (projectile: Projectile) => {
       this.createProjectile(projectile);
     });
 
-    entity.on('destroyed', () => {
-      this.emit(ScenarioEvent.TANK_ENEMY_DESTROYED, entity);
+    entity.on('destroyed', sourceEntity => {
+      this.emit<[EnemyDesctroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
+        source: sourceEntity,
+        destination: entity,
+      });
     });
   }
 
   /** Инициализируем начальное состояние игрока */
   initPlayerState(playerType: Player) {
     this.state.players[playerType] = {
-      lives: 1,
-      stat: {
+      lives: 2,
+      statistics: {
         [TankEnemyType.ARMOR]: 0,
         [TankEnemyType.BASIC]: 0,
         [TankEnemyType.FAST]: 0,

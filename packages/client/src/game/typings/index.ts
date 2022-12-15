@@ -109,15 +109,24 @@ export enum ScenarioEvent {
 }
 
 export type ScenarioState = {
+  /**
+   * Максимальное количество активных вражеских танков одновременно на карте
+   *
+   * При игре в одиночку на карте находится не более четырёх танков противника одновременно;
+   * при игре вдвоём их не более шести;
+   */
   maxActiveEnemies: number;
+  /** Всего же танков противника на уровне */
   enemiesLeft: number;
+  /** Массив с танами протвников на карте */
   enemies: Tank[];
+  /** Объект со state игроков */
   players: Record<Player, ScenarioPlayerState>;
 };
 
 export type ScenarioPlayerState = {
   entity?: Tank;
-  stat: ScenarioStat;
+  statistics: ScenarioStat;
   lives: number;
   controller: Controller;
 };
