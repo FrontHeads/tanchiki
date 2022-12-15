@@ -11,8 +11,12 @@ export enum ImagePathList {
 }
 
 export enum SoundPathList {
-  enemyExplosion = '/assets/sounds/enemy-explosion.mp3',
+  pause = '/assets/sounds/pause.mp3',
+  move = '/assets/sounds/tank-move.mp3',
+  idle = '/assets/sounds/tank-idle.mp3',
+  hitEnemy = '/assets/sounds/hit-enemy.mp3',
   shoot = '/assets/sounds/shoot.mp3',
+  enemyExplosion = '/assets/sounds/enemy-explosion.mp3',
 }
 
 export const assetPathList: AssetPathList = { ...ImagePathList, ...SoundPathList };

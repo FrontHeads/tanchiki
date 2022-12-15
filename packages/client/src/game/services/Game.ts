@@ -128,6 +128,7 @@ export class Game {
       this.controllerArrows.unload();
     }
     this.paused = !this.paused;
+    this.controllerAll.emit('pause');
   }
 
   startLoop() {

@@ -45,6 +45,8 @@ export class EntityDynamic extends Entity {
   move(direction: Direction) {
     this.moving = true;
     this.nextDirection = direction;
+
+    this.emit('move');
   }
 
   stop() {
@@ -52,6 +54,7 @@ export class EntityDynamic extends Entity {
     if (this.moveStepsProgress) {
       this.stopping = true;
     }
+    this.emit('stop');
   }
 
   turn(newDirection: Direction = this.nextDirection) {
