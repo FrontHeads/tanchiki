@@ -21,8 +21,8 @@ export class TankEnemy extends Tank {
 
   autoMove() {
     this.setLoopDelay(() => {
-      this.move(this.getMoveDirection());
       if (this.spawned) {
+        this.move(this.getMoveDirection());
         this.autoMove();
       }
     }, rand(1000, 2000));
@@ -30,8 +30,8 @@ export class TankEnemy extends Tank {
 
   autoShoot() {
     this.setLoopDelay(() => {
-      this.shoot();
       if (this.spawned) {
+        this.shoot();
         this.autoShoot();
       }
     }, rand(1000, 2000));
