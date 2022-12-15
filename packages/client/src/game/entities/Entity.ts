@@ -68,8 +68,8 @@ export class Entity extends EventEmitter {
     this.despawn();
   }
 
-  takeDamage(source: Entity) {
-    this.emit('damaged');
+  takeDamage(source: Entity, pos: Pos) {
+    this.emit('damaged', pos);
     if (this.type === 'projectile') {
       this.explode();
     } else if (this.type === 'tank') {
@@ -77,8 +77,6 @@ export class Entity extends EventEmitter {
         this.explode();
         this.emit('destroyed', source);
       }
-    } else if (this.type === 'brickWall') {
-      this.despawn();
     }
   }
 }

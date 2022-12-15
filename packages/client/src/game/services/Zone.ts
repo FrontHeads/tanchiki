@@ -1,5 +1,5 @@
 import { Entity, EntityDynamic, Projectile, Tank } from '../entities';
-import type { PosState, Rect, Size } from '../typings';
+import type { Pos, PosState, Rect, Size } from '../typings';
 
 export class Zone {
   width = 0;
@@ -116,6 +116,12 @@ export class Zone {
     entity.on('entityShouldBeDestroyed', () => {
       this.deleteEntityFromMatrix(entity);
     });
+    if (entity.type === 'brickWall') {
+      entity.on('damaged', (pos: Pos) => {
+        const layer = this.getLayerByEntityType(entity);
+        this.updateMatrix(layer, { ...pos, width: 1, height: 1 }, null);
+      });
+    }
   }
 
   /** Проверка на предмет координат прямоугольника, которые не соответствуют матрице */
@@ -157,27 +163,27 @@ export class Zone {
           continue;
         }
         if (entity instanceof Tank) {
-          if (mainLayerCell !== null &&
-              mainLayerCell !== entity &&
-              !mainLayerCell.crossable) {
+          if (mainLayerCell !== null && mainLayerCell !== entity && !mainLayerCell.crossable) {
             hasCollision = true;
           }
-          if (secondaryLayerCell !== null &&
-              secondaryLayerCell instanceof Projectile &&
-              secondaryLayerCell.parent !== entity) {
+          if (
+            secondaryLayerCell !== null &&
+            secondaryLayerCell instanceof Projectile &&
+            secondaryLayerCell.parent !== entity
+          ) {
             hasCollision = true;
           }
         }
         if (entity instanceof Projectile) {
-          if (mainLayerCell !== null &&
-              mainLayerCell.hittable &&
-              mainLayerCell !== entity.parent) {
-            mainLayerCell.takeDamage(entity);
+          const pos = { posX: x, posY: y };
+          if (mainLayerCell !== null && mainLayerCell.hittable && mainLayerCell !== entity.parent) {
+            if (entity.exploding) {
+              mainLayerCell.takeDamage(entity, pos);
+            }
             hasCollision = true;
           }
-          if (secondaryLayerCell !== null &&
-              secondaryLayerCell !== entity) {
-            secondaryLayerCell.takeDamage(entity);
+          if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
+            secondaryLayerCell.takeDamage(entity, pos);
             hasCollision = true;
           }
         }

@@ -46,8 +46,8 @@ describe('game/entities/Tank', () => {
   });
 
   it('should shoot after projectile exploded', async () => {
-    const zone = new Zone({ width: 4, height: 4 });
-    const tank = new Tank({ posX: 1, posY: 1, width: 1, height: 1, direction: Direction.DOWN });
+    const zone = new Zone({ width: 6, height: 6 });
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
     tank.spawn();
@@ -62,8 +62,10 @@ describe('game/entities/Tank', () => {
     expect(projectileTwo).toBeFalsy();
 
     zone.add(projectileOne);
-    projectileOne.spawn({ posX: 2, posY: 2 });
+    projectileOne.spawn();
 
+    projectileOne.update();
+    projectileOne.update();
     projectileOne.update();
     projectileOne.update();
     projectileOne.update();
