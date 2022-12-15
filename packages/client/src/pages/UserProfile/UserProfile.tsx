@@ -1,27 +1,24 @@
 import './UserProfile.css';
 
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
-import { Field } from '../../components/Form/FieldList/Field';
+import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
-import { userProfileInputFields } from './data';
+import { authSelectors, me, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
+import { userProfileFieldList } from './data';
 import { UserProfileForm } from './typings';
-import { appSelectors, authActions, authSelectors, me, useAppDispatch, useAppSelector } from '../../store';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { appThunks } from '../../store/features/app/appThunks';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
-  const { error, isAuthenticated } = useAppSelector(authSelectors.all);
+  const { userProfile } = useAppSelector(authSelectors.all);
+  const { updateResult, isProfileLoading } = useAppSelector(profileSelectors.all);
 
-  const { userProfile, isLoading } = useAppSelector(appSelectors.all);
-
-  const formData: UserProfileForm = {
+  const userFormData: UserProfileForm = {
     email: userProfile?.email ?? '',
     login: userProfile?.login ?? '',
     first_name: userProfile?.first_name ?? '',
@@ -30,59 +27,44 @@ export const UserProfile: FC = () => {
     phone: userProfile?.phone ?? '',
     oldPassword: '',
     newPassword: '',
+    avatar: '',
   };
 
-  const [requestBody, setRequestBody] = useState<UserProfileForm>(formData);
+  const [formData, setFormData] = useState<UserProfileForm>(userFormData);
 
   useEffect(() => {
-    if (userProfile) {
-      setRequestBody(formData);
-    } else {
+    if (userProfile === null) {
       dispatch(me());
     }
   }, [userProfile]);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(authActions.setError(''));
+    if (updateResult) {
+      updateResult.map(({ type, message }) => {
+        toast(message, { type: type });
+      });
     }
-  }, [error]);
-
-  const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
-      console.log(requestBody);
-      const { name, value } = event.target;
-      setRequestBody({ ...requestBody, [name]: value });
-    },
-    [requestBody]
-  );
+  }, [updateResult]);
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      // Update avatar
+      // Get avatar file
+      let avatarFile: File | undefined;
+
       if (event.target instanceof HTMLFormElement) {
         const avatarInput = event.target.querySelector(`#avatar`);
         if (avatarInput instanceof HTMLInputElement && avatarInput.files && avatarInput.files.length) {
-          dispatch(appThunks.updateProfileAvatar(avatarInput.files[0]));
+          avatarFile = avatarInput.files[0];
         }
       }
 
-      // Update profile
-      // if (JSON.stringify(requestBody) !== JSON.stringify()) {
-      // }
-      console.log('updProfile');
-      dispatch(appThunks.updateProfile(requestBody));
+      dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
 
-      // Update password
-      const { oldPassword, newPassword } = requestBody;
-      if (oldPassword.length && newPassword.length) {
-        dispatch(appThunks.updatePassword({ oldPassword, newPassword }));
-      }
+      setFormData({ ...formData, avatar: '', oldPassword: '', newPassword: '' });
     },
-    [requestBody]
+    [formData]
   );
 
   const avatarPath = userProfile?.avatar ? PATH.avatarBase + userProfile?.avatar : PATH.defaultAvatar;
@@ -93,22 +75,12 @@ export const UserProfile: FC = () => {
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
       <Form handlerSubmit={submitHandler} header={header}>
-        <>
-          {userProfileInputFields.map(field => {
-            if ('heading' in field) {
-              return (
-                <h3 key={field.heading} data-testid="form-input-header" className="form__input-header">
-                  {field.heading}
-                </h3>
-              );
-            }
-
-            const fieldKey = field.id as keyof UserProfileForm;
-            return (
-              <Field key={field.id} {...field} onChange={inputChangeHandler} value={requestBody[fieldKey] || ''} />
-            );
-          })}
-        </>
+        <FieldList
+          fieldList={userProfileFieldList}
+          setFormData={setFormData}
+          formData={formData}
+          disabled={isProfileLoading}
+        />
         <div className="form__buttons-wrapper">
           <Button text="Сохранить изменения" type="submit" variant={ButtonVariant.Primary} />
         </div>

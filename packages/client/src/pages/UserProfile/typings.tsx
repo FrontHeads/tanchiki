@@ -7,4 +7,5 @@ export type UserProfileForm = {
   phone: string;
   oldPassword: string;
   newPassword: string;
+  avatar: string;
 };

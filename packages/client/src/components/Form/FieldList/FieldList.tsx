@@ -34,7 +34,7 @@ export const FieldList = <T extends Record<string, string>>({
             {...field}
             disabled={disabled}
             onChange={inputChangeHandler}
-            value={formData[field.id]}
+            value={formData[field.id] || ''}
           />
         );
       })}
