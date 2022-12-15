@@ -15,7 +15,7 @@ import { UserProfileForm } from './typings';
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { userProfile } = useAppSelector(authSelectors.all);
+  const userProfile = useAppSelector(authSelectors.userProfile);
   const { updateResult, isProfileLoading } = useAppSelector(profileSelectors.all);
 
   const userFormData: UserProfileForm = {
