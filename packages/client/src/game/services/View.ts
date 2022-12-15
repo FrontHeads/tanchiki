@@ -1,5 +1,5 @@
 import type { Entity } from '../entities';
-import type { Size } from '../typings';
+import type { Pos, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
 
@@ -13,7 +13,7 @@ type Layer = Record<
 
 type LayerObject = {
   instance: Entity;
-  listeners: Record<string, () => void>;
+  listeners: Record<string, (...args: Array<any>) => void>;
 };
 
 export class View extends EventEmitter {
@@ -115,17 +115,22 @@ export class View extends EventEmitter {
       instance: entity,
       listeners: {
         entityShouldUpdate: () => {
-          this.eraseEntityFromLayer(entity, layerId);
+          this.eraseFromLayer(entity, layerId);
         },
         entityDidUpdate: () => {
-          this.drawEntityOnLayer(entity, layerId);
+          this.drawOnLayer(entity, layerId);
         },
         entityShouldRenderText: () => {
           this.drawTextOnLayer(entity as UIElement, layerId);
         },
         entityShouldBeDestroyed: () => {
-          this.eraseEntityFromLayer(entity, layerId);
+          this.eraseFromLayer(entity, layerId);
           this.removeEntityFromLayer(entity, layerId);
+        },
+        damaged: (pos: Pos) => {
+          if (entity.type === 'brickWall') {
+            this.eraseFromLayer({ ...pos, width: 1, height: 1 }, layerId);
+          }
         },
       },
     };
@@ -151,12 +156,12 @@ export class View extends EventEmitter {
     }
   }
 
-  getEntityActualRect(entity: Entity) {
+  getActualRect(rect: Entity | Rect) {
     return [
-      this.convertToPixels(entity.posX),
-      this.convertToPixels(entity.posY),
-      this.convertToPixels(entity.width),
-      this.convertToPixels(entity.height),
+      this.convertToPixels(rect.posX),
+      this.convertToPixels(rect.posY),
+      this.convertToPixels(rect.width),
+      this.convertToPixels(rect.height),
     ] as const;
   }
 
@@ -180,22 +185,22 @@ export class View extends EventEmitter {
     context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY));
   }
 
-  drawEntityOnLayer(entity: Entity, layerId: keyof Layer) {
+  drawOnLayer(entity: Entity, layerId: keyof Layer) {
     const context = this.layers[layerId].context;
     context.fillStyle = entity.color;
-    context.fillRect(...this.getEntityActualRect(entity));
+    context.fillRect(...this.getActualRect(entity));
   }
 
-  eraseEntityFromLayer(entity: Entity, layerId: keyof Layer) {
+  eraseFromLayer(rect: Rect | Entity, layerId: keyof Layer) {
     const context = this.layers[layerId].context;
-    context.clearRect(...this.getEntityActualRect(entity));
+    context.clearRect(...this.getActualRect(rect));
   }
 
   redrawAllEntitiesOnLayer(layerId: keyof Layer) {
     const { objects } = this.layers[layerId];
     this.eraseAllEntitiesOnLayer(layerId);
     for (const layerObject of objects) {
-      this.drawEntityOnLayer(layerObject.instance, layerId);
+      this.drawOnLayer(layerObject.instance, layerId);
     }
   }
 
