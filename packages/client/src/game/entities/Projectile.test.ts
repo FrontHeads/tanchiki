@@ -20,6 +20,7 @@ describe('game/entities/Projectile', () => {
     projectile.spawn({ posX: 0, posY: 0 });
     projectile.update();
     projectile.update();
+    projectile.update();
 
     expect(projectile).toHaveProperty('shouldBeDestroyed', true);
   });
