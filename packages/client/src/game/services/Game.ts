@@ -2,7 +2,7 @@ import { Entity, Projectile, Tank } from '../entities';
 import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
-import { Controller, Scenario, View, Zone } from './';
+import { Controller, resources, Scenario, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
 export class Game {
@@ -12,7 +12,7 @@ export class Game {
   zone!: Zone;
   view!: View;
   overlay!: Overlay;
-  scenario?: Scenario;
+  scenario: Scenario | undefined;
   controllerAll!: Controller;
   controllerWasd!: Controller;
   controllerArrows!: Controller;
@@ -139,16 +139,9 @@ export class Game {
   }
 
   initLoading() {
-    const redirectDelay = 500;
     this.screen = ScreenType.LOADING;
     this.overlay.show(this.screen);
-
-    this.view.offAll('assetsLoaded');
-    this.view.on('assetsLoaded', () => {
-      setTimeout(() => {
-        this.initMenu();
-      }, redirectDelay);
-    });
+    resources.loadAll().then(() => this.initMenu());
   }
 
   initMenu() {
@@ -159,6 +152,9 @@ export class Game {
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
+      .on('fullscreen', () => {
+        this.view.toggleFullScreen();
+      })
       .on('move', (direction: Direction) => {
         if (this.screen !== ScreenType.MAIN_MENU) {
           return;
@@ -232,13 +228,13 @@ export class Game {
         }
 
         // Запускаем игру после выбора уровня
-        this.initGameLevel();
+        this.initGameLevel(true);
       });
   }
 
   initGameOver() {
     const redirectDelay = 3000;
-    this.screen = ScreenType.LOADING;
+    this.screen = ScreenType.GAME_OVER;
 
     this.overlay.show(this.screen);
 
@@ -256,7 +252,7 @@ export class Game {
     this.reset();
 
     /** Анимация перехода выбора уровня в игру */
-    const startAnimationDelay = firstInit ? 2000 : 0;
+    const startAnimationDelay = firstInit ? 0 : 2000;
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
     this.overlay.show(this.screen, startAnimationDelay);
 
@@ -269,12 +265,16 @@ export class Game {
       .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
         if (this.level < this.maxLevels) {
           this.level++;
-          this.initGameLevel(false);
+          this.initGameLevel();
         }
       });
 
-    this.controllerAll.on('pause', () => {
-      this.togglePause();
-    });
+    this.controllerAll
+      .on('pause', () => {
+        this.togglePause();
+      })
+      .on('fullscreen', () => {
+        this.view.toggleFullScreen();
+      });
   }
 }
