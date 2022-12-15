@@ -8,7 +8,7 @@ import { ButtonVariant } from '../../components/Button/typings';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
-import { authSelectors, me, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
+import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
 import { userProfileFieldList } from './data';
 import { UserProfileForm } from './typings';
 
@@ -31,12 +31,6 @@ export const UserProfile: FC = () => {
   };
 
   const [formData, setFormData] = useState<UserProfileForm>(userFormData);
-
-  useEffect(() => {
-    if (userProfile === null) {
-      dispatch(me());
-    }
-  }, [userProfile]);
 
   useEffect(() => {
     if (updateResult) {
