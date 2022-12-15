@@ -110,17 +110,20 @@ export class Game {
   }
 
   convertTimeToLoops(delay: number) {
-    return ~~(delay / this.loopTimeMs);
+    return ~~(delay / this.loopTimeMs); // ~~ это Math.floor()
+  }
+
+  /** Аналог setTimeout, который работает через игровой цикл */
+  setLoopDelay(callback: () => void, delay: number) {
+    const loopMark = this.loopCount + this.convertTimeToLoops(delay);
+    if (!this.loopDelays[loopMark]) {
+      this.loopDelays[loopMark] = new Set();
+    }
+    this.loopDelays[loopMark].add(callback);
   }
 
   registerLoopDelays(entity: Entity) {
-    entity.on('loopDelay', (callback: () => void, delay: number) => {
-      const loopMark = this.loopCount + this.convertTimeToLoops(delay);
-      if (!this.loopDelays[loopMark]) {
-        this.loopDelays[loopMark] = new Set();
-      }
-      this.loopDelays[loopMark].add(callback);
-    });
+    entity.on('loopDelay', this.setLoopDelay.bind(this));
   }
 
   clearLoopDelays() {

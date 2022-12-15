@@ -58,14 +58,17 @@ describe('game/services/Game', () => {
     game.inited = true;
     const delay = 100;
     const mockFn = jest.fn();
+    const mockFn2 = jest.fn();
 
     game.startLoop();
     game.addEntity(entity);
     entity.setLoopDelay(mockFn, delay);
+    game.setLoopDelay(mockFn2, delay);
 
     await sleep(200);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn2).toHaveBeenCalledTimes(1);
   });
 
   it('should clear loop delays', async () => {
