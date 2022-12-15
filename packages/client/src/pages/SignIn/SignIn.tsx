@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -10,6 +10,28 @@ import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { signInFieldList, signInFormInitialState } from './data';
 import { SignInForm } from './typings';
+
+class BuggyCounter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { counter: 0 };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState(({ counter }) => ({
+      counter: counter + 1,
+    }));
+  }
+
+  render() {
+    if (this.state.counter === 5) {
+      // Simulate a JS error
+      throw new Error('I crashed!');
+    }
+    return <h1 onClick={this.handleClick}>{this.state.counter}</h1>;
+  }
+}
 
 export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
@@ -42,6 +64,7 @@ export const SignIn: FC = () => {
         disabled={isLoading}
       />
       <div className="form__buttons-wrapper">
+        <BuggyCounter />
         <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
       </div>

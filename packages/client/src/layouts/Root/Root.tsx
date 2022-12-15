@@ -5,6 +5,7 @@ import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 're
 
 import { UserDTO } from '../../api/typings';
 import { BurgerMenu } from '../../components/BurgerMenu';
+import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
@@ -40,7 +41,10 @@ export const Root: FC = () => {
             {printHeaderAndFooter && <Logo />}
             {printHeaderAndFooter && <div className="delimiter" />}
           </header>
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
+
           {printHeaderAndFooter && <Footer />}
           <ScrollRestoration />
           {isAppLoading && <Loader data-testid="app-loader" />}
