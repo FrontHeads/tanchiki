@@ -48,6 +48,7 @@ export const UserProfile: FC = () => {
       dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
 
       setFormData({ ...formData, avatar: '', oldPassword: '', newPassword: '' });
+      setAvatarFile(null);
     },
     [formData]
   );
@@ -61,7 +62,7 @@ export const UserProfile: FC = () => {
 
       <Form handlerSubmit={submitHandler} header={header}>
         <FieldList
-          setFiles={setAvatarFile}
+          setFile={setAvatarFile}
           fieldList={userProfileFieldList}
           setFormData={setFormData}
           formData={formData}
