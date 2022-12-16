@@ -9,3 +9,5 @@ export type UserProfileForm = {
   newPassword: string;
   avatar: string;
 };
+
+export type AvatarFile = File | null;

@@ -4,6 +4,7 @@ import { Field } from './Field';
 import { FieldListProps } from './typings';
 
 export const FieldList = <T extends Record<string, string>>({
+  setFiles,
   fieldList,
   formData,
   setFormData,
@@ -11,7 +12,10 @@ export const FieldList = <T extends Record<string, string>>({
 }: PropsWithChildren<FieldListProps<T>>) => {
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
+      const { name, value, type, files } = event.target;
+      if (setFiles && type === 'file' && files?.length) {
+        setFiles(files[0]);
+      }
       setFormData({ ...formData, [name]: value });
     },
     [formData]

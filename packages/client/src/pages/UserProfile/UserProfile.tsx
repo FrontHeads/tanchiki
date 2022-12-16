@@ -10,7 +10,7 @@ import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
 import { userProfileFieldList } from './data';
-import { UserProfileForm } from './typings';
+import { AvatarFile, UserProfileForm } from './typings';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +31,7 @@ export const UserProfile: FC = () => {
   };
 
   const [formData, setFormData] = useState<UserProfileForm>(userFormData);
+  const [avatarFile, setAvatarFile] = useState<AvatarFile>(null);
 
   useEffect(() => {
     if (updateResult) {
@@ -43,16 +44,6 @@ export const UserProfile: FC = () => {
   const submitHandler: React.FormEventHandler<HTMLFormElement> = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-
-      // Get avatar file
-      let avatarFile: File | undefined;
-
-      if (event.target instanceof HTMLFormElement) {
-        const avatarInput = event.target.querySelector(`#avatar`);
-        if (avatarInput instanceof HTMLInputElement && avatarInput.files && avatarInput.files.length) {
-          avatarFile = avatarInput.files[0];
-        }
-      }
 
       dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
 
@@ -70,6 +61,7 @@ export const UserProfile: FC = () => {
 
       <Form handlerSubmit={submitHandler} header={header}>
         <FieldList
+          setFiles={setAvatarFile}
           fieldList={userProfileFieldList}
           setFormData={setFormData}
           formData={formData}

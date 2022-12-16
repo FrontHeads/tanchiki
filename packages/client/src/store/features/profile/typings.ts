@@ -16,6 +16,6 @@ export type UpdateAllProfileData = {
   phone: string;
   oldPassword: string;
   newPassword: string;
-  avatarFile?: File;
+  avatarFile: File | null;
   avatar?: string;
 };
