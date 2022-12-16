@@ -3,7 +3,13 @@ import { EventEmitter } from '../utils';
 import { SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
-export class Sound extends EventEmitter {
+export class AudioManager extends EventEmitter {
+  constructor() {
+    super();
+    this.on('pause', () => {
+      this.playSound('pause');
+    });
+  }
   /** Подписывает звуки на  соответствующие события */
   add(entity: Entity) {
     const isTank = entity instanceof Tank;
