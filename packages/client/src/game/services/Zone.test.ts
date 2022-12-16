@@ -1,4 +1,4 @@
-import { Entity, Tank } from '../entities';
+import { Entity, Tank, Terrain } from '../entities';
 import type { Rect } from '../typings';
 import { Zone } from './';
 
@@ -103,18 +103,34 @@ describe('game/services/Zone', () => {
     };
 
     zone.add(entity);
+    entity.spawn();
     entity.emit('entityWillHaveNewPos', posState);
 
     expect(posState.hasCollision).toBe(true);
   });
 
+  it('should listen to entity partial destruction', () => {
+    const zone = new Zone({ width: 10, height: 10 });
+    const entity = new Terrain({ type: 'brickWall', posX: 1, posY: 1, width: 2, height: 2 });
+
+    zone.add(entity);
+    entity.spawn();
+    entity.emit('damaged', { posX: 2, posY: 2 });
+
+    expect(zone.matrix[0][1][1]).toBe(entity);
+    expect(zone.matrix[0][1][2]).toBe(entity);
+    expect(zone.matrix[0][2][1]).toBe(entity);
+    expect(zone.matrix[0][2][2]).toBe(null);
+  });
+
   it('should subscribe to entity destruction', () => {
     const zone = new Zone({ width: 10, height: 10 });
-    const entity1 = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
+    const entity = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
 
-    zone.add(entity1);
-    entity1.emit('entityDidUpdate', entity1.getRect());
-    entity1.emit('entityShouldBeDestroyed');
+    zone.add(entity);
+    entity.spawn();
+    entity.emit('entityDidUpdate', entity.getRect());
+    entity.emit('entityShouldBeDestroyed');
 
     expect(zone.matrix[0][1][1]).toBe(null);
   });
