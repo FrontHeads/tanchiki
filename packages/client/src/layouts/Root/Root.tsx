@@ -1,7 +1,6 @@
 import './Root.css';
 
 import { FC, Suspense, useEffect } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 
 import { UserDTO } from '../../api/typings';
@@ -42,7 +41,10 @@ export const Root: FC = () => {
             {printHeaderAndFooter && <Logo />}
             {printHeaderAndFooter && <div className="delimiter" />}
           </header>
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
+
           {printHeaderAndFooter && <Footer />}
           <ScrollRestoration />
           {isAppLoading && <Loader data-testid="app-loader" />}

@@ -1,6 +1,6 @@
-import { Component, ErrorInfo } from 'react';
+import { Component } from 'react';
 
-import { ErrorPage } from '../../pages/ErrorPage';
+import { ErrorBody } from '../ErrorBody/ErrorBody';
 import { Props, State } from './typings';
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -8,18 +8,14 @@ export class ErrorBoundary extends Component<Props, State> {
     hasError: false,
   };
 
-  public static getDerivedStateFromError(_: Error): State {
+  public static getDerivedStateFromError(): State {
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
-  }
-
   public render() {
     if (this.state.hasError) {
-      return <ErrorPage />;
+      return <ErrorBody status="Ошибка" message="Обновите страницу" isRefresh={true} />;
     }
 
     return this.props.children;
