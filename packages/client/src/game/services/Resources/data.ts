@@ -11,11 +11,13 @@ export enum ImagePathList {
 }
 
 export enum SoundPathList {
+  levelIntro = '/assets/sounds/level-intro.mp3',
   pause = '/assets/sounds/pause.mp3',
   move = '/assets/sounds/tank-move.mp3',
   idle = '/assets/sounds/tank-idle.mp3',
   hitEnemy = '/assets/sounds/hit-enemy.mp3',
   shoot = '/assets/sounds/shoot.mp3',
+  playerExplosion = '/assets/sounds/player-explosion.mp3',
   enemyExplosion = '/assets/sounds/enemy-explosion.mp3',
 }
 

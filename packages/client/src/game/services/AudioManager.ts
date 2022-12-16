@@ -9,21 +9,28 @@ export class AudioManager extends EventEmitter {
     this.on('pause', () => {
       this.playSound('pause');
     });
+    this.on('levelIntro', () => {
+      this.playSound('levelIntro');
+    });
   }
   /** Подписывает звуки на  соответствующие события */
   add(entity: Entity) {
     const isTank = entity instanceof Tank;
     const isPlayer = entity.role === 'player';
     const isEnemy = entity.role === 'enemy';
-
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
+      /**появление */
+      entity.on('spawn', () => {
+        this.playSound('idle');
+      });
       /**стрельба */
       entity.on('shoot', () => {
         this.playSound('shoot');
       });
       /**движение */
       entity.on('move', () => {
+        this.stopSound('idle');
         this.playSound('move');
       });
       /**остановка */
@@ -31,14 +38,18 @@ export class AudioManager extends EventEmitter {
         this.stopSound('move');
         this.playSound('idle');
       });
+      /**взрыв игрока */
+      entity.on('destroyed', () => {
+        this.playSound('playerExplosion');
+      });
     }
 
     /** Звуки танка врага */
     if (isTank && isEnemy) {
       /**получение урона */
-      entity.on('damaged', () => {
-        this.playSound('hitEnemy');
-      });
+      // entity.on('damaged', () => {
+      //   this.playSound('hitEnemy');
+      // });
       /**взрыв врага */
       entity.on('destroyed', () => {
         this.playSound('enemyExplosion');

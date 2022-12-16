@@ -282,5 +282,7 @@ export class Game {
       .on('fullscreen', () => {
         this.view.toggleFullScreen();
       });
+
+    this.audioManager.emit('levelIntro');
   }
 }
