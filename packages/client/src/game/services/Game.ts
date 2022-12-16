@@ -248,7 +248,7 @@ export class Game {
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
       .on('fullscreen', () => {
-        // this.view.toggleFullScreen();
+        this.view.toggleFullScreen();
       })
       .on('move', (direction: Direction) => {
         if (this.screen !== ScreenType.MAIN_MENU) {
@@ -371,7 +371,7 @@ export class Game {
         this.togglePause();
       })
       .on('fullscreen', () => {
-        // this.view.toggleFullScreen();
+        this.view.toggleFullScreen();
       });
   }
 }

@@ -43,6 +43,14 @@ export class View extends EventEmitter {
     this.height = height;
   }
 
+  toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      this.root.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
   /** Удаляет все сущности со всех слоев. */
   reset() {
     for (const id of Object.keys(this.layers)) {
@@ -184,6 +192,10 @@ export class View extends EventEmitter {
     if (!entity.spriteCoordinates && entity.color) {
       context.fillStyle = entity.color;
       context.fillRect(...this.getEntityActualRect(entity));
+      return;
+    }
+
+    if (!(this.spriteImg instanceof HTMLImageElement)) {
       return;
     }
 
