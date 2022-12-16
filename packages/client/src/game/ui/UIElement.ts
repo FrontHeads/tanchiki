@@ -4,7 +4,7 @@ import { UIElementSettings } from '../typings';
 export class UIElement extends Entity {
   text = '';
   align: CanvasTextAlign = 'left';
-  img: HTMLImageElement | null = null;
+  backImg: HTMLImageElement | null = null;
 
   constructor(props: UIElementSettings) {
     super(props);

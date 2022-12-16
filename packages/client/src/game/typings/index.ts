@@ -64,7 +64,8 @@ export type UIElementSettings = Pos &
     text: string;
     align: CanvasTextAlign;
     color: string;
-    img: HTMLImageElement;
+    backImg: HTMLImageElement;
+    spriteCoordinates: SpriteCoordinatesNoAnimations;
   }>;
 
 export enum MainMenuState {
@@ -149,3 +150,29 @@ export enum Cell {
   CONCRETE_LEFT_BOTTOM = 19,
   CONCRETE_RIGHT_BOTTOM = 20,
 }
+
+export type LoopDelays = Record<number, Set<() => void>>;
+
+export type LoopIntervals = Record<string, LoopInterval>;
+
+export type LoopInterval = {
+  loopCounter: number;
+  workLoop: number;
+  callback: () => void;
+};
+
+export type SpriteCoordinatesNoAnimations = null | number[][];
+export type SpriteCoordinatesWithAnimations = Record<string, number[][]>;
+
+export type Animations = AnimationSettings[];
+
+export type AnimationSettings = {
+  delay: number;
+  spriteCoordinates: SpriteCoordinatesWithAnimations | SpriteCoordinatesNoAnimations;
+  name?: string | number;
+  spriteFrame?: number;
+  finishSpriteFrame?: number;
+  isPlay?: boolean;
+};
+
+export type CancelAnimation = 'showEntity' | 'eraseEntity' | 'deleteEntity';

@@ -1,3 +1,4 @@
+import { spriteCoordinates } from '../data/constants';
 import { resources } from '../services/';
 import type { EntityDynamicSettings, Rect } from '../typings';
 import { EntityDynamic, Projectile } from './';
@@ -7,11 +8,15 @@ export class Tank extends EntityDynamic {
   height = 4;
   shootSpeed = 3;
   canShoot = true;
+  spriteFrame: number;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
     Object.assign(this, props);
     this.color = props.color || 'yellow';
+    //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
+    this.spriteCoordinates = spriteCoordinates.playerOneTank;
+    this.spriteFrame = 0;
   }
 
   shoot() {

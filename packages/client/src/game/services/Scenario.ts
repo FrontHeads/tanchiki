@@ -5,13 +5,14 @@ import {
   EntityDynamicSettings,
   EntitySettings,
   MainMenuState,
+  MapData,
   Player,
   ScenarioEvent,
+  ScenarioPlayerState,
   ScenarioState,
   TankEnemyType,
 } from '../typings';
 import { EventEmitter } from '../utils';
-import { MapData, ScenarioPlayerState } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
 import { MapManager } from './MapManager';
@@ -42,9 +43,9 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
 
     // Временная реализацияя размещения врагов
-    while (this.canCreateTankEnemy()) {
-      this.createTankEnemy();
-    }
+    // while (this.canCreateTankEnemy()) {
+    //   this.createTankEnemy();
+    // }
 
     /**
      * TODO: on tankEnemy.exploding - обновляем статистику

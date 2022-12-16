@@ -1,3 +1,4 @@
+import { spriteCoordinates } from '../data/constants';
 import type { EntitySettings } from '../typings';
 import { Entity } from './';
 
@@ -16,22 +17,33 @@ export class Terrain extends Entity {
         this.crossable = false;
         this.hittable = true;
         this.color = 'brown';
+        this.spriteCoordinates = spriteCoordinates.brickWall;
         break;
       case 'concreteWall':
         this.crossable = false;
         this.hittable = true;
         this.color = 'lightgrey';
+        this.spriteCoordinates = spriteCoordinates.concreteWall;
         break;
       case 'trees':
         this.crossable = true;
         this.hittable = false;
         this.color = 'green';
+        this.spriteCoordinates = spriteCoordinates.trees;
         break;
       case 'water':
         this.crossable = false;
         this.hittable = false;
         this.color = 'blue';
+        this.spriteCoordinates = spriteCoordinates.water;
         break;
+    }
+
+    if (this.type === 'water') {
+      this.startAnimation({
+        delay: 350,
+        spriteCoordinates: spriteCoordinates.water,
+      });
     }
   }
 }

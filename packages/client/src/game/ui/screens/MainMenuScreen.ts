@@ -1,22 +1,35 @@
+import { spriteCoordinates } from '../../data/constants';
 import { resources } from '../../services';
 import { MainMenuState } from '../../typings';
 import { Screen } from './Screen';
 
 export class MainMenuScreen extends Screen<MainMenuState> {
+  tankElemInterval: string | null = null;
   mainMenuStateYPos = {
     [MainMenuState.SINGLEPLAYER]: 32,
-    [MainMenuState.MULTIPLAYER]: 36,
+    [MainMenuState.MULTIPLAYER]: 37,
   };
 
   show(state: MainMenuState) {
     this.render();
+    const verticalCenteringCorrection = -1;
 
-    this.overlay.renderElement({
-      posX: 16,
-      posY: this.mainMenuStateYPos[state],
-      width: 2,
-      height: 2,
+    const tankElem = this.overlay.renderElement({
+      posX: 14,
+      posY: this.mainMenuStateYPos[state] + verticalCenteringCorrection,
+      width: 4,
+      height: 4,
       color: 'yellow',
+      spriteCoordinates: spriteCoordinates.playerOneTank.RIGHT,
+    });
+
+    /**Запуск анимации танка-курсора в меню.*/
+    tankElem.startAnimation({
+      delay: 25,
+      /** Координаты спрайта для конкретной анимации */
+      spriteCoordinates: spriteCoordinates.playerOneTank.RIGHT,
+      /** Имя анимации и отвечающего за нее setLoopInterval. */
+      name: 'menuTank',
     });
   }
 
@@ -30,7 +43,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 12,
       width: view.width,
       height: 7,
-      img: resources.getImage('brickBg'),
+      backImg: resources.getImage('brickBg'),
       text: 'ТАНЧИКИ',
       align: 'center',
     });
@@ -40,7 +53,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 21,
       width: view.width,
       height: 7,
-      img: resources.getImage('brickBg'),
+      backImg: resources.getImage('brickBg'),
       text: '2023',
       align: 'center',
     });
@@ -49,7 +62,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posX: 20,
       posY: this.mainMenuStateYPos[MainMenuState.SINGLEPLAYER],
       width: 20,
-      height: 2,
+      height: 2.2,
       color: 'white',
       text: '1 ИГРОК',
     });
@@ -58,7 +71,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posX: 20,
       posY: this.mainMenuStateYPos[MainMenuState.MULTIPLAYER],
       width: 20,
-      height: 2,
+      height: 2.2,
       color: 'white',
       text: '2 ИГРОКА',
     });

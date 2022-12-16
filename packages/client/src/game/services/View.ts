@@ -1,5 +1,5 @@
 import type { Entity } from '../entities';
-import type { Size } from '../typings';
+import type { AnimationSettings, Size, SpriteCoordinatesWithAnimations } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
 
@@ -18,6 +18,11 @@ type LayerEntity = {
   listeners: Record<string, () => void>;
 };
 
+type GetSpriteCoordinates = {
+  entity: Entity;
+  animation?: AnimationSettings;
+};
+
 export class View extends EventEmitter {
   width = 0;
   height = 0;
@@ -30,6 +35,7 @@ export class View extends EventEmitter {
   layers: LayerList = {};
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев */
   root!: HTMLElement;
+  spriteImg: HTMLImageElement | null = null;
 
   constructor({ width, height }: Size) {
     super();
@@ -81,7 +87,7 @@ export class View extends EventEmitter {
     return layer;
   }
 
-  /** Определяет на какой уровень необходимо добавить сущность и запускает bindEntityToLayer(). */
+  /** Определяет на какой слой необходимо добавить сущность и запускает bindEntityToLayer(). */
   add(entity: Entity | UIElement) {
     let layer = '';
     switch (entity.type) {
@@ -126,18 +132,12 @@ export class View extends EventEmitter {
     };
     this.layers[layerId].entities.add(layerObject);
 
-    //FIXME а не многовато ли раз отрабатывает этот метод?
-    // Отрабатывает потому что создаются снаряды непонятно откуда и зачем. Что-то эмитит без конца метод shoot
-    // Но проблема еще в том, что отработанные снаряды не удаляются!
-    // Нужно вызывать метод removeEntityFromLayer у взорвавшихся снарядов противника.
-    // console.log(this.layers[layerId].entities);
-
     for (const [eventName, callback] of Object.entries(layerObject.listeners)) {
       entity.on(eventName, callback);
     }
   }
 
-  /** Стирает сущность с canvas-слоя и очищает ее listeners. */
+  /** Удаляет сущность с canvas-слоя, очищает ее listeners. */
   removeEntityFromLayer(entity: Entity, layerId: keyof LayerList) {
     let entityToDelete: LayerEntity | null = null;
 
@@ -161,8 +161,8 @@ export class View extends EventEmitter {
     context.font = `${this.convertToPixels(elem.height)}px "Press Start 2P"`;
     context.textAlign = elem.align;
     context.textBaseline = 'top';
-    if (elem.img) {
-      const pattern = context.createPattern(elem.img, 'repeat');
+    if (elem.backImg) {
+      const pattern = context.createPattern(elem.backImg, 'repeat');
       if (pattern !== null) {
         context.fillStyle = pattern;
       }
@@ -176,14 +176,37 @@ export class View extends EventEmitter {
     context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY));
   }
 
-  /** Рисует сущность на canvas-слое. */
+  /** Рисует отображение сущности на canvas-слое. Заполняет цветом или отображает спрайт.*/
   drawEntityOnLayer(entity: Entity, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
-    context.fillStyle = entity.color;
-    context.fillRect(...this.getEntityActualRect(entity));
+
+    // Отрисовка сущностей без спрайта
+    if (!entity.spriteCoordinates && entity.color) {
+      context.fillStyle = entity.color;
+      context.fillRect(...this.getEntityActualRect(entity));
+      return;
+    }
+
+    // Отрисовка сущностей без настраиваемой анимации
+    if (!entity.animations?.length) {
+      const spriteCoordinates = this.getSpriteCoordinates({ entity });
+
+      //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут нужна скорость работы.
+      context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
+      return;
+    }
+
+    //Отрисовка сущностей с настраиваемой анимацией.
+    entity.animations.forEach(animation => {
+      const spriteCoordinates = this.getSpriteCoordinates({ entity, animation });
+
+      //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут важна скорость работы.
+      context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
+      this.setNextSpriteFrame(animation);
+    });
   }
 
-  /** Стирает сущность с canvas-слоя. */
+  /** Стирает отображение сущности на canvas-слое, но не удаляет сущность. */
   eraseEntityFromLayer(entity: Entity, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
     context.clearRect(...this.getEntityActualRect(entity));
@@ -198,7 +221,7 @@ export class View extends EventEmitter {
     }
   }
 
-  /** Стирает все сущности с canvas-слоя. */
+  /** Стирает отображение всех сущностей с canvas-слоя. */
   eraseAllEntitiesOnLayer(layerId: keyof LayerList) {
     const { context } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
@@ -212,6 +235,46 @@ export class View extends EventEmitter {
       this.convertToPixels(entity.width),
       this.convertToPixels(entity.height),
     ] as const;
+  }
+
+  /** Возвращает координаты спрайта */
+  private getSpriteCoordinates({ entity, animation }: GetSpriteCoordinates) {
+    /** Координаты по которым из спрайта будет взято изображение сущности. */
+    let spriteCoordinates: unknown[] | null = null;
+
+    // Спрайты сущностей без настроек анимации (меняются 2 фрейма или нет анимации).
+    if (!animation && entity.spriteCoordinates) {
+      // Спрайты статичных сущностей.
+      if (!entity.movable && Array.isArray(entity.spriteCoordinates)) {
+        return entity.spriteCoordinates[0];
+      }
+
+      // Спрайты подвижных сущностей.
+
+      if (entity.movable) {
+        entity.spriteFrame = +!entity.spriteFrame;
+
+        return (entity.spriteCoordinates as SpriteCoordinatesWithAnimations)[entity.direction][entity.spriteFrame];
+      }
+    }
+
+    // Спрайты сущностей с настраиваемой анимацией
+    if (animation) {
+      spriteCoordinates = Array.isArray(animation.spriteCoordinates)
+        ? animation.spriteCoordinates[animation.spriteFrame || 0]
+        : null;
+
+      return spriteCoordinates;
+    }
+  }
+
+  /** Меняет sprite-frame, который отрисуется в следующий раз. */
+  private setNextSpriteFrame(animation: AnimationSettings) {
+    /**
+     * Если анимация имеет конец - берем следующий фрейм, иначе берем другой из пары имеющихся
+     * (простая анимация имеет только 2 фрейма).
+     */
+    animation.spriteFrame = animation.finishSpriteFrame ? animation.spriteFrame!++ : +!animation.spriteFrame;
   }
 
   /** Проверяет, что слои еще не созданы. */

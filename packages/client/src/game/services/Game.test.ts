@@ -7,14 +7,14 @@ async function sleep(ms = 100) {
 
 describe('game/services/Game', () => {
   it('should be singleton', () => {
-    const game1 = Game.create();
-    const game2 = Game.create();
+    const game1 = Game.getInstance();
+    const game2 = Game.getInstance();
 
     expect(game1).toBe(game2);
   });
 
   it('should use loop', () => {
-    const game = Game.create();
+    const game = Game.getInstance();
     game.loopTimeMs = 100;
     const entity = { update: jest.fn() } as unknown as Tank;
     game.loopEntities.add(entity);
@@ -27,7 +27,7 @@ describe('game/services/Game', () => {
   });
 
   it('should stop loop', () => {
-    const game = Game.create();
+    const game = Game.getInstance();
 
     game.startLoop();
     game.stopLoop();
@@ -36,7 +36,7 @@ describe('game/services/Game', () => {
   });
 
   it('should pause', () => {
-    const game = Game.create();
+    const game = Game.getInstance();
     game.inited = true;
 
     game.startLoop();

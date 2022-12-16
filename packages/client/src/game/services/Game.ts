@@ -1,5 +1,13 @@
 import { Entity, Projectile, Tank } from '../entities';
-import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
+import {
+  Direction,
+  GameSettings,
+  LoopDelays,
+  LoopIntervals,
+  MainMenuState,
+  ScenarioEvent,
+  ScreenType,
+} from '../typings';
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
 import { Controller, resources, Scenario, View, Zone } from './';
@@ -12,12 +20,15 @@ export class Game {
   zone!: Zone;
   view!: View;
   overlay!: Overlay;
-  scenario?: Scenario;
+  scenario: Scenario | undefined;
   controllerAll!: Controller;
   controllerWasd!: Controller;
   controllerArrows!: Controller;
   loopProcess: ReturnType<typeof setTimeout> | null = null;
   loopTimeMs = 25;
+  loopCount = 0;
+  loopDelays: LoopDelays = {};
+  loopIntervals: LoopIntervals = {};
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
   screen: ScreenType = ScreenType.LOADING;
@@ -34,7 +45,7 @@ export class Game {
     this.controllerArrows = new Controller(KeyBindingsArrows);
   }
 
-  static create() {
+  static getInstance() {
     if (!Game.__instance) {
       Game.__instance = new Game();
     }
@@ -59,6 +70,8 @@ export class Game {
   }
 
   unload() {
+    this.clearLoopEntities();
+    this.clearLoopDelays();
     this.stopLoop();
     this.controllerAll.unload();
     this.controllerWasd.unload();
@@ -70,12 +83,15 @@ export class Game {
     if (this.scenario) {
       delete this.scenario;
     }
+    this.clearLoopEntities();
+    this.clearLoopDelays();
     this.view.reset();
     this.zone.reset();
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
-    this.loopEntities = new Set();
+    //TODO сделать по человечески.
+    this.loopIntervals = {};
   }
 
   createView(root: HTMLElement | null) {
@@ -85,6 +101,8 @@ export class Game {
   addEntity(entity: Entity) {
     this.view.add(entity);
     this.zone.add(entity);
+    //TODO непонятно это надо или нет.
+    // this.registerLoopDelays(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
     } else if (entity instanceof Projectile) {
@@ -94,9 +112,82 @@ export class Game {
     }
   }
 
+  clearLoopEntities() {
+    for (const entity of this.loopEntities) {
+      entity.despawn();
+    }
+    this.loopEntities = new Set();
+  }
+
+  convertTimeToLoops(delay: number) {
+    return ~~(delay / this.loopTimeMs); // ~~ это Math.floor()
+  }
+
+  /** Аналог setTimeout, который работает через игровой цикл */
+  setLoopDelay(callback: () => void, delay: number) {
+    const loopMark = this.loopCount + this.convertTimeToLoops(delay);
+
+    if (!this.loopDelays[loopMark]) {
+      this.loopDelays[loopMark] = new Set();
+    }
+
+    this.loopDelays[loopMark].add(callback);
+  }
+
+  setLoopInterval(callback: () => void, delay: number, intervalName: string | number) {
+    this.loopIntervals[intervalName] = {
+      loopCounter: 0,
+      workLoop: this.convertTimeToLoops(delay),
+      callback: callback,
+    };
+
+    return intervalName;
+  }
+
+  clearLoopInterval(intervalName: string | number) {
+    if (intervalName in this.loopIntervals) {
+      delete this.loopIntervals[intervalName];
+    }
+  }
+
+  registerLoopDelays(entity: Entity) {
+    entity.on('loopDelay', this.setLoopDelay.bind(this));
+    entity.on('loopInterval', this.setLoopInterval.bind(this));
+    entity.on('clearLoopInterval', this.clearLoopInterval.bind(this));
+  }
+
+  clearLoopDelays() {
+    this.loopCount = 0;
+    this.loopDelays = {};
+  }
+
+  checkLoopDelays() {
+    if (this.loopDelays[this.loopCount]) {
+      const delayedCallbacks = this.loopDelays[this.loopCount];
+      for (const callback of delayedCallbacks) {
+        callback();
+      }
+      delete this.loopDelays[this.loopCount];
+    }
+  }
+
+  checkLoopIntervals() {
+    Object.values(this.loopIntervals).forEach(interval => {
+      if (interval.loopCounter === interval.workLoop) {
+        interval.callback();
+        interval.loopCounter = 0;
+        return;
+      }
+      interval.loopCounter++;
+    });
+  }
+
   loop() {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
+    ++this.loopCount;
+    this.checkLoopDelays();
+    this.checkLoopIntervals();
     for (const entity of this.loopEntities) {
       entity.update();
       if (entity.shouldBeDestroyed) {
@@ -107,6 +198,7 @@ export class Game {
     if (nextCycleDelay < 0) {
       nextCycleDelay = 0;
     }
+
     this.loopProcess = setTimeout(this.loop.bind(this), nextCycleDelay);
   }
 
@@ -141,7 +233,10 @@ export class Game {
   initLoading() {
     this.screen = ScreenType.LOADING;
     this.overlay.show(this.screen);
-    resources.loadAll().then(() => this.initMenu());
+    resources.loadAll().then(() => {
+      this.view.spriteImg = resources.getImage('classicDesignSprite');
+      this.initMenu();
+    });
   }
 
   initMenu() {
@@ -152,6 +247,9 @@ export class Game {
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
+      .on('fullscreen', () => {
+        // this.view.toggleFullScreen();
+      })
       .on('move', (direction: Direction) => {
         if (this.screen !== ScreenType.MAIN_MENU) {
           return;
@@ -176,6 +274,8 @@ export class Game {
   }
 
   initLevelSelector() {
+    this.reset();
+
     this.screen = ScreenType.LEVEL_SELECTOR;
 
     this.overlay.show(this.screen, this.level);
@@ -225,13 +325,13 @@ export class Game {
         }
 
         // Запускаем игру после выбора уровня
-        this.initGameLevel();
+        this.initGameLevel(true);
       });
   }
 
   initGameOver() {
     const redirectDelay = 3000;
-    this.screen = ScreenType.LOADING;
+    this.screen = ScreenType.GAME_OVER;
 
     this.overlay.show(this.screen);
 
@@ -249,7 +349,7 @@ export class Game {
     this.reset();
 
     /** Анимация перехода выбора уровня в игру */
-    const startAnimationDelay = firstInit ? 2000 : 0;
+    const startAnimationDelay = firstInit ? 0 : 2000;
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
     this.overlay.show(this.screen, startAnimationDelay);
 
@@ -262,12 +362,16 @@ export class Game {
       .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
         if (this.level < this.maxLevels) {
           this.level++;
-          this.initGameLevel(false);
+          this.initGameLevel();
         }
       });
 
-    this.controllerAll.on('pause', () => {
-      this.togglePause();
-    });
+    this.controllerAll
+      .on('pause', () => {
+        this.togglePause();
+      })
+      .on('fullscreen', () => {
+        // this.view.toggleFullScreen();
+      });
   }
 }

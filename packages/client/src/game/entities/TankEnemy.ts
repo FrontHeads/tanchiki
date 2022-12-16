@@ -15,13 +15,13 @@ export class TankEnemy extends Tank {
       this.move(this.getMoveDirection());
     }, 1000);
 
-    const shootInternval = setInterval(() => {
-      this.shoot();
-    }, 1000);
+    // const shootInternval = setInterval(() => {
+    //   this.shoot();
+    // }, 1000);
 
     this.on('entityShouldBeDestroyed', () => {
       clearInterval(moveInternval);
-      clearInterval(shootInternval);
+      // clearInterval(shootInternval);
     });
   }
 

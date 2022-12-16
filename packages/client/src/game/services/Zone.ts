@@ -92,13 +92,13 @@ export class Zone {
       }
     });
     entity.on('entityShouldUpdate', (newState: Partial<Entity>) => {
-      if (!('posX' in newState) || !('posY' in newState)) {
+      if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.deleteEntityFromMatrix(entity);
     });
     entity.on('entityDidUpdate', (newState: Partial<Entity>) => {
-      if (!('posX' in newState) || !('posY' in newState)) {
+      if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.writeEntityToMatrix(entity);
