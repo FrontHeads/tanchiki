@@ -36,16 +36,19 @@ export const Root: FC = () => {
     <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
       <Await resolve={(data && data.user) || Promise.resolve()}>
         <main className="layout">
-          <header>
-            <BurgerMenu />
-            {printHeaderAndFooter && <Logo />}
-            {printHeaderAndFooter && <div className="delimiter" />}
-          </header>
+          <ErrorBoundary>
+            <header>
+              <BurgerMenu />
+              {printHeaderAndFooter && <Logo />}
+              {printHeaderAndFooter && <div className="delimiter" />}
+            </header>
+          </ErrorBoundary>
+
           <ErrorBoundary>
             <Outlet />
           </ErrorBoundary>
+          <ErrorBoundary>{printHeaderAndFooter && <Footer />}</ErrorBoundary>
 
-          {printHeaderAndFooter && <Footer />}
           <ScrollRestoration />
           {isAppLoading && <Loader data-testid="app-loader" />}
         </main>
