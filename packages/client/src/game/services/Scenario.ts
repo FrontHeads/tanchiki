@@ -11,7 +11,7 @@ import {
   TankEnemyType,
 } from '../typings';
 import { EventEmitter } from '../utils';
-import { MapData, Rect, ScenarioPlayerState } from './../typings/index';
+import { MapData, ScenarioPlayerState } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
 import { MapManager } from './MapManager';
@@ -21,12 +21,14 @@ type EnemyDesctroyedPayload = {
   destination: TankEnemy;
 };
 
+// TODO: убрать после появляние setTimeout для игры с внутренним счетчиком времени
 async function sleep(ms = 100) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 20,
+    enemiesLeft: 1,
     maxActiveEnemies: 4,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
@@ -37,7 +39,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   constructor(private game: Game) {
     /**
-     * TODO: Реализовать после реализации бонусных такнов
+     * TODO: Доработать после реализации бонусных такнов
      * Четвёртый, одиннадцатый и восемнадцатый танки, независимо от типа, появляются переливающиеся цветами
      **/
     super();
@@ -62,13 +64,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     /** Размещаем объекты на карте */
     const entities = this.mapManager.mapDataToEntitySettings(this.map);
     entities.forEach(settings => {
-      if (settings.type === 'flag') {
-        this.createEntity(settings).on('damaged', () => {
-          this.emit(ScenarioEvent.GAME_OVER);
-        });
-      } else {
-        this.createEntity(settings);
-      }
+      this.createEntity(settings);
     });
 
     /** Инициализируем обработчики событий уровня */
@@ -125,7 +121,9 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   createEntity(props: EntitySettings) {
     let entity: Entity;
     if (props.type === 'flag') {
-      entity = new Flag(props);
+      entity = new Flag(props).on('damaged', () => {
+        this.emit(ScenarioEvent.GAME_OVER);
+      });
     } else {
       entity = new Terrain(props);
     }
