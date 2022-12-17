@@ -60,6 +60,21 @@ describe('game/services/Zone', () => {
     expect(zone.isBeyondMatrix(rect4)).toBe(true);
   });
 
+  it('should check if entity rect does not have floats', () => {
+    const zone = new Zone({ width: 10, height: 10 });
+    const rect1 = { posX: 1.5, posY: 1, width: 1, height: 1 };
+    const rect2 = { posX: 1, posY: 1.5, width: 1, height: 1 };
+    const rect3 = { posX: 1, posY: 1, width: 1.5, height: 1 };
+    const rect4 = { posX: 1, posY: 1, width: 1, height: 1.5 };
+    const rect5 = { posX: 1, posY: 1, width: 1, height: 1 };
+
+    expect(zone.isLegalRect(rect1)).toBe(false);
+    expect(zone.isLegalRect(rect2)).toBe(false);
+    expect(zone.isLegalRect(rect3)).toBe(false);
+    expect(zone.isLegalRect(rect4)).toBe(false);
+    expect(zone.isLegalRect(rect5)).toBe(true);
+  });
+
   it('should check if entity rect has collisions with other objects', () => {
     const zone = new Zone({ width: 10, height: 10 });
     const rect1 = { posX: 1, posY: 1, width: 2, height: 2 };

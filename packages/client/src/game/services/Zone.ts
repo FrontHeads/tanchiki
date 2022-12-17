@@ -50,6 +50,9 @@ export class Zone {
 
   /** Добавляет сущность в заданный прямоугольник на определённом слое */
   updateMatrix(z: number, rect: Rect, value: Entity | null) {
+    if (this.isBeyondMatrix(rect) || !this.isLegalRect(rect)) {
+      return;
+    }
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         this.matrix[z][x][y] = value;
@@ -61,7 +64,8 @@ export class Zone {
   writeEntityToMatrix(entity: Entity) {
     if (entity.alignedToGrid) {
       const layer = this.getLayerByEntityType(entity);
-      this.updateMatrix(layer, entity.getRect(), entity);
+      const rect = entity.getRect();
+      this.updateMatrix(layer, rect, entity);
     }
   }
 
@@ -70,9 +74,7 @@ export class Zone {
     const layer = this.getLayerByEntityType(entity);
     if (!(entity instanceof EntityDynamic)) {
       const rect = entity.getRect();
-      if (!this.isBeyondMatrix(rect)) {
-        this.updateMatrix(layer, rect, null);
-      }
+      this.updateMatrix(layer, rect, null);
     } else {
       let rect = entity.lastRect;
       if (rect) {
@@ -83,7 +85,7 @@ export class Zone {
       }
       if (entity.canMove) {
         rect = entity.nextRect;
-        if (rect && !this.isBeyondMatrix(rect)) {
+        if (rect) {
           this.updateMatrix(layer, rect, null);
         }
       }
@@ -119,9 +121,21 @@ export class Zone {
     if (entity.type === 'brickWall') {
       entity.on('damaged', (pos: Pos) => {
         const layer = this.getLayerByEntityType(entity);
-        this.updateMatrix(layer, { ...pos, width: 1, height: 1 }, null);
+        const rect = { ...pos, width: 1, height: 1 };
+        this.updateMatrix(layer, rect, null);
       });
     }
+  }
+
+  /** Проверяет, все ли параметры прямоугольника целочисленные */
+  isLegalRect(rect: Rect) {
+    if (rect.posX % 1 === 0 &&
+        rect.posY % 1 === 0 &&
+        rect.width % 1 === 0 &&
+        rect.height % 1 === 0) {
+      return true;
+    }
+    return false;
   }
 
   /** Проверка на предмет координат прямоугольника, которые не соответствуют матрице */
