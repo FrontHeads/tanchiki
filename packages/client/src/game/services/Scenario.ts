@@ -188,10 +188,10 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.emit(ScenarioEvent.TANK_ENEMY_SPAWNED, entity);
     this.game.addEntity(entity);
 
-    let integer = 0;
+    let isFirstTry = 0;
     while (entity.spawned === false) {
       /** При повторной попытке размещения танка делаем небольшую задержку */
-      if (++integer !== 1) {
+      if (++isFirstTry !== 1) {
         await sleep(200);
       }
 

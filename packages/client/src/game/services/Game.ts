@@ -269,6 +269,8 @@ export class Game {
           if (this.level < this.maxLevels) {
             this.level++;
             this.initGameLevel();
+          } else {
+            this.level = 1;
           }
         });
 

@@ -14,5 +14,25 @@ export class LevelSelectorScreen extends Screen<number> {
       text: text,
       align: 'center',
     });
+
+    this.overlay.renderElement({
+      posX: 0,
+      posY: 50,
+      width: this.overlay.view.width,
+      height: 1,
+      color: 'black',
+      text: 'ДЛЯ ВЫБОРА УРОВНЯ ВОСПОЛЬЗУЙТЕСЬ',
+      align: 'center',
+    });
+
+    this.overlay.renderElement({
+      posX: 0,
+      posY: 52,
+      width: this.overlay.view.width,
+      height: 1,
+      color: 'black',
+      text: 'СТРЕЛКАМИ ВВЕРХ И ВНИЗ',
+      align: 'center',
+    });
   }
 }
