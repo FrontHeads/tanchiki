@@ -129,10 +129,7 @@ export class Zone {
 
   /** Проверяет, все ли параметры прямоугольника целочисленные */
   isLegalRect(rect: Rect) {
-    if (rect.posX % 1 === 0 &&
-        rect.posY % 1 === 0 &&
-        rect.width % 1 === 0 &&
-        rect.height % 1 === 0) {
+    if (rect.posX % 1 === 0 && rect.posY % 1 === 0 && rect.width % 1 === 0 && rect.height % 1 === 0) {
       return true;
     }
     return false;
