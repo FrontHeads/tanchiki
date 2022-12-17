@@ -1,4 +1,3 @@
-import { Game } from '../services';
 import {
   Animations,
   AnimationSettings,
@@ -53,7 +52,6 @@ export class Entity extends EventEmitter {
   constructor(props: EntitySettings) {
     super();
     Object.assign(this, props);
-    Game.getInstance().registerLoopDelays(this);
   }
 
   setState(newState: Partial<Entity>) {
@@ -75,6 +73,7 @@ export class Entity extends EventEmitter {
     if (!posState.hasCollision) {
       this.setState({ posX, posY });
       this.spawned = true;
+      this.emit('spawn');
     } else if (this.type === 'projectile') {
       this.explode();
     }
@@ -107,7 +106,7 @@ export class Entity extends EventEmitter {
   }
 
   startAnimation(settings: AnimationSettings) {
-    settings.name ??= Math.random();
+    settings.name ||= Math.random();
     settings.spriteFrame ??= 0;
     settings.finishSpriteFrame ??= 0;
     settings.isPlay ??= true;

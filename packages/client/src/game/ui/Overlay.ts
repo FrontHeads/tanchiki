@@ -1,14 +1,13 @@
 import { screenClasses } from '../data/constants';
-import { View } from '../services';
+import { Game, View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
 import { Screen } from './screens';
 
 export class Overlay {
-  view!: View;
   currentScreen!: Screen;
 
-  constructor(view: View) {
+  constructor(public view: View, private game?: Game) {
     this.view = view;
   }
 
@@ -27,6 +26,9 @@ export class Overlay {
 
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
+    if (this.game) {
+      this.game.registerLoopDelays(elem);
+    }
     this.view.add(elem);
     elem.render();
     return elem;

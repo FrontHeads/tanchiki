@@ -39,7 +39,7 @@ export class Game {
   private constructor() {
     this.zone = new Zone(this.settings);
     this.view = new View(this.settings);
-    this.overlay = new Overlay(this.view);
+    this.overlay = new Overlay(this.view, this);
     this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerWasd = new Controller(KeyBindingsWasd);
     this.controllerArrows = new Controller(KeyBindingsArrows);
@@ -101,8 +101,7 @@ export class Game {
   addEntity(entity: Entity) {
     this.view.add(entity);
     this.zone.add(entity);
-    //TODO непонятно это надо или нет.
-    // this.registerLoopDelays(entity);
+    this.registerLoopDelays(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
     } else if (entity instanceof Projectile) {

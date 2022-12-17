@@ -40,9 +40,11 @@ export class Terrain extends Entity {
     }
 
     if (this.type === 'water') {
-      this.startAnimation({
-        delay: 350,
-        spriteCoordinates: spriteCoordinates.water,
+      this.on('spawn', () => {
+        this.startAnimation({
+          delay: 350,
+          spriteCoordinates: spriteCoordinates.water,
+        });
       });
     }
   }
