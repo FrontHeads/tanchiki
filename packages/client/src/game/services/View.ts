@@ -1,5 +1,5 @@
 import type { Entity } from '../entities';
-import type { AnimationSettings, Size, SpriteCoordinatesWithAnimations } from '../typings';
+import type { AnimationSettings, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
 
@@ -69,6 +69,7 @@ export class View extends EventEmitter {
       this.createLayer('tanks');
       this.createLayer('projectiles');
       this.createLayer('ceiling');
+      this.createLayer('explosions');
       this.createLayer('overlay').style.position = 'relative';
     }
   }
@@ -110,6 +111,10 @@ export class View extends EventEmitter {
         break;
       case 'trees':
         layer = 'ceiling';
+        break;
+      case 'projectileExplosion':
+      case 'tankExplosion':
+        layer = 'explosions';
         break;
       default:
         layer = 'floor';
@@ -203,19 +208,29 @@ export class View extends EventEmitter {
     if (!entity.animations?.length) {
       const spriteCoordinates = this.getSpriteCoordinates({ entity });
 
+      if (!spriteCoordinates) {
+        return;
+      }
+
       //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут нужна скорость работы.
       context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
       return;
     }
 
     //Отрисовка сущностей с настраиваемой анимацией.
-    entity.animations.forEach(animation => {
-      const spriteCoordinates = this.getSpriteCoordinates({ entity, animation });
+    if (entity.animations.length) {
+      entity.animations.forEach(animation => {
+        const spriteCoordinates = this.getSpriteCoordinates({ entity, animation });
 
-      //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут важна скорость работы.
-      context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
-      this.setNextSpriteFrame(animation);
-    });
+        if (!spriteCoordinates) {
+          return;
+        }
+
+        //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут важна скорость работы.
+        context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
+        this.setNextSpriteFrame(animation, entity);
+      });
+    }
   }
 
   /** Стирает отображение сущности на canvas-слое, но не удаляет сущность. */
@@ -249,10 +264,9 @@ export class View extends EventEmitter {
     ] as const;
   }
 
-  /** Возвращает координаты спрайта */
+  /** Возвращает координаты сущности на спрайте */
   private getSpriteCoordinates({ entity, animation }: GetSpriteCoordinates) {
-    /** Координаты по которым из спрайта будет взято изображение сущности. */
-    let spriteCoordinates: unknown[] | null = null;
+    let spriteCoordinates: number[] | null = null;
 
     // Спрайты сущностей без настроек анимации (меняются 2 фрейма или нет анимации).
     if (!animation && entity.spriteCoordinates) {
@@ -262,31 +276,39 @@ export class View extends EventEmitter {
       }
 
       // Спрайты подвижных сущностей.
-
-      if (entity.movable) {
+      if (entity.movable && !Array.isArray(entity.spriteCoordinates)) {
+        // Без настроек анимации у сущности м.б. только 2 фрейма. Тут их меняем.
         entity.spriteFrame = +!entity.spriteFrame;
-
-        return (entity.spriteCoordinates as SpriteCoordinatesWithAnimations)[entity.direction][entity.spriteFrame];
+        return entity.spriteCoordinates[entity.direction][entity.spriteFrame];
       }
     }
 
     // Спрайты сущностей с настраиваемой анимацией
-    if (animation) {
-      spriteCoordinates = Array.isArray(animation.spriteCoordinates)
-        ? animation.spriteCoordinates[animation.spriteFrame || 0]
-        : null;
+    if (animation && Array.isArray(animation.spriteCoordinates)) {
+      spriteCoordinates = animation.spriteCoordinates[animation.spriteFrame || 0];
 
       return spriteCoordinates;
     }
   }
 
   /** Меняет sprite-frame, который отрисуется в следующий раз. */
-  private setNextSpriteFrame(animation: AnimationSettings) {
-    /**
-     * Если анимация имеет конец - берем следующий фрейм, иначе берем другой из пары имеющихся
-     * (простая анимация имеет только 2 фрейма).
-     */
-    animation.spriteFrame = animation.finishSpriteFrame ? animation.spriteFrame!++ : +!animation.spriteFrame;
+  private setNextSpriteFrame(animation: AnimationSettings, entity: Entity) {
+    if (typeof animation.spriteFrame !== 'number') {
+      return;
+    }
+
+    animation.spriteFrame++;
+
+    const isFinishFrame = animation.spriteFrame === animation.spriteCoordinates?.length;
+
+    if (isFinishFrame && animation.looped) {
+      animation.spriteFrame = 0;
+    }
+
+    if (isFinishFrame && !animation.looped) {
+      // @ts-expect-error animation.name задается по умолчанию в методе startAnimation() и не м.б. undefined
+      entity.cancelAnimation('deleteEntity', animation.name);
+    }
   }
 
   /** Проверяет, что слои еще не созданы. */

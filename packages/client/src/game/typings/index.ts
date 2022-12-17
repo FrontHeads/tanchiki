@@ -41,6 +41,8 @@ export type EntityType =
   | 'water'
   | 'ice'
   | 'powerup'
+  | 'projectileExplosion'
+  | 'tankExplosion'
   | 'custom';
 
 export type EntitySettings = Pos &
@@ -107,6 +109,8 @@ export enum ScenarioEvent {
   TANK_ENEMY_SPAWNED = 'tank_enemy_spawned',
   /** Вражеский танк был убит */
   TANK_ENEMY_DESTROYED = 'tank_enemy_destroyed',
+  /** Вражеский танк был убит */
+  PROJECTILE_HIT = 'projectile_hit',
 }
 
 export type ScenarioState = {
@@ -167,11 +171,18 @@ export type SpriteCoordinatesWithAnimations = Record<string, number[][]>;
 export type Animations = AnimationSettings[];
 
 export type AnimationSettings = {
+  /** Скорость смены кадров */
   delay: number;
+  /** Координаты спрайта для конкретной анимации */
   spriteCoordinates: SpriteCoordinatesWithAnimations | SpriteCoordinatesNoAnimations;
+  /** Показывать анимацию бесконечно или однократно. False = однократно. */
+  looped: boolean;
+  /** Имя анимации, оно же имя loopInterval который крутит анимацию */
   name?: string | number;
+  /** Фрейм (кадр) который будет показан при следующем вызове анимации */
   spriteFrame?: number;
-  finishSpriteFrame?: number;
+  /** Чтобы поставить анимацию анимацию нужно установить false. */
+  //TODO пока не реализовано.
   isPlay?: boolean;
 };
 

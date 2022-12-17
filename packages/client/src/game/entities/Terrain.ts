@@ -44,6 +44,7 @@ export class Terrain extends Entity {
         this.startAnimation({
           delay: 350,
           spriteCoordinates: spriteCoordinates.water,
+          looped: true,
         });
       });
     }

@@ -34,20 +34,7 @@ export class Entity extends EventEmitter {
   /** Указывает какой фрейм анимации показывать. */
   spriteFrame = 0;
   /** Данные необходимые для работы анимации */
-  animations: Animations = [
-    // //TODO этот массив обьектов нужно передавать при создании анимации чтобы он записывался конкретной сущности.
-    // {
-    //   /** Координаты спрайта для конкретной анимации */
-    //   spriteCoordinates: [],
-    //   /** Имя анимации и отвечающего за нее setLoopInterval. */
-    //   name: '',
-    //   /** Указывает какой фрейм анимации показывать (какие координаты брать из массива координат). */
-    //   spriteFrame: 0,
-    //   /** Указывает после какого фрейма анимация считается законченной. */
-    //   finishSpriteFrame: 0,
-    //   isPlay: false,
-    // },
-  ];
+  animations: Animations = [];
 
   constructor(props: EntitySettings) {
     super();
@@ -108,7 +95,6 @@ export class Entity extends EventEmitter {
   startAnimation(settings: AnimationSettings) {
     settings.name ||= Math.random();
     settings.spriteFrame ??= 0;
-    settings.finishSpriteFrame ??= 0;
     settings.isPlay ??= true;
     this.animations.push(settings);
     this.setLoopInterval(this.redraw.bind(this), settings.delay, settings.name);

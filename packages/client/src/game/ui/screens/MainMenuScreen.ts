@@ -26,10 +26,9 @@ export class MainMenuScreen extends Screen<MainMenuState> {
     /**Запуск анимации танка-курсора в меню.*/
     tankElem.startAnimation({
       delay: 25,
-      /** Координаты спрайта для конкретной анимации */
       spriteCoordinates: spriteCoordinates.playerOneTank.RIGHT,
-      /** Имя анимации и отвечающего за нее setLoopInterval. */
       name: 'menuTank',
+      looped: true,
     });
   }
 

@@ -1,5 +1,5 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
-import { Entity, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
+import { Entity, Explosion, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
 import {
   Direction,
   EntityDynamicSettings,
@@ -19,8 +19,8 @@ import { MapManager } from './MapManager';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 2,
-    maxActiveEnemies: 3,
+    enemiesLeft: 4,
+    maxActiveEnemies: 5,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;
@@ -43,9 +43,9 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
 
     // Временная реализацияя размещения врагов
-    // while (this.canCreateTankEnemy()) {
-    //   this.createTankEnemy();
-    // }
+    while (this.canCreateTankEnemy()) {
+      this.createTankEnemy();
+    }
 
     /**
      * TODO: on tankEnemy.exploding - обновляем статистику
@@ -69,6 +69,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this
       /** После убийства вражеского танка */
       .on(ScenarioEvent.TANK_ENEMY_DESTROYED, (entity: TankEnemy) => {
+        this.createTankExplosion(entity);
+
         /** Удаляем его из списка активных */
         this.state.enemies = this.state.enemies.filter(enemy => enemy !== entity);
 
@@ -85,6 +87,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
       /** После убийства игрока */
       .on(ScenarioEvent.TANK_PLAYER_DESTROYED, (_entity: Tank, playerType: Player) => {
+        this.createTankExplosion(_entity);
+
         // Если не осталось жизней у всех игроков - триггерим game over
         const isNoLivesLeft = Object.entries(this.state.players).every(([_, playerState]) => playerState.lives === 0);
         if (isNoLivesLeft) {
@@ -99,6 +103,16 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
           --playerState.lives;
           this.createPlayerTank(playerType);
         }
+      })
+
+      /** Показываем анимацию взрыва при попадании снаряда куда-либо. */
+      .on(ScenarioEvent.PROJECTILE_HIT, (projectile: Projectile) => {
+        const centeringCorrection = -1;
+        const posX = projectile.posX + centeringCorrection;
+        const posY = projectile.posY + centeringCorrection;
+        const explosion = new Explosion({ type: 'projectileExplosion', posX, posY, width: 4, height: 4 });
+        this.game.addEntity(explosion);
+        explosion.spawn({ posX, posY });
       });
   }
 
@@ -257,5 +271,17 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.game.addEntity(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
     projectile.update();
+
+    projectile.on('exploding', () => {
+      this.emit(ScenarioEvent.PROJECTILE_HIT, projectile);
+    });
+  }
+
+  createTankExplosion(tank: Tank) {
+    const posX = tank.posX;
+    const posY = tank.posY;
+    const explosion = new Explosion({ type: 'tankExplosion', posX, posY, width: 8, height: 8 });
+    this.game.addEntity(explosion);
+    explosion.spawn({ posX, posY });
   }
 }
