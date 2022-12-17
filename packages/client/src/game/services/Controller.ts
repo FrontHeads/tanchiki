@@ -66,6 +66,10 @@ export class Controller extends EventEmitter {
     this.emit(action, direction);
 
     if (action === 'shoot') {
+      if (this.shootProcess) {
+        clearInterval(this.shootProcess);
+        this.shootProcess = null;
+      }
       this.shootProcess = setInterval(() => {
         this.emit(action);
       }, this.shootIntervalMs);
