@@ -13,7 +13,7 @@ export class TankEnemy extends Tank {
     this.color = 'aqua';
     Object.assign(this, props);
 
-    this.on('spawned', () => {
+    this.on('spawn', () => {
       this.autoMove();
       this.autoShoot();
     });
