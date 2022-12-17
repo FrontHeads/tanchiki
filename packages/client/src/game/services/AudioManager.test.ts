@@ -1,40 +1,48 @@
-import { Entity } from '../entities';
+import { Tank } from '../entities';
 import { Rect } from '../typings';
-import { EventEmitter } from '../utils';
 import { AudioManager } from './AudioManager';
 
 function mockEntity(rect: Rect) {
-  const entity = new EventEmitter() as Entity;
-  entity.type = 'tank';
-  Object.assign(entity, rect);
-  return entity;
+  const tank = new Tank(rect);
+  tank.role = 'player';
+  return tank;
 }
 
 describe('game/services/AudioManager', () => {
-  it('should play and stop sounds', () => {
+  it('should play sounds', () => {
     const audioManager = new AudioManager();
 
     audioManager.playSound = jest.fn();
-    audioManager.stopSound = jest.fn();
 
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     audioManager.add(entity);
+    entity.spawn({ posX: 2, posY: 2 });
 
-    entity.on('move', () => {
-      audioManager.stopSound('idle');
-      audioManager.playSound('move');
-    });
+    entity.shoot();
+    expect(entity.spawned).toBeTruthy();
 
-    entity.on('stop', () => {
-      audioManager.stopSound('move');
-      audioManager.playSound('idle');
-    });
+    expect(audioManager.playSound).toHaveBeenNthCalledWith(1, 'idle');
+    expect(audioManager.playSound).toHaveBeenNthCalledWith(2, 'shoot');
+  });
+  it('should play pause sound', () => {
+    const audioManager = new AudioManager();
 
-    entity.emit('move');
-    entity.emit('stop');
+    audioManager.playSound = jest.fn();
 
-    expect(audioManager.playSound).toHaveBeenCalledTimes(2);
-    expect(audioManager.stopSound).toHaveBeenCalledTimes(2);
+    audioManager.emit('pause');
+
+    expect(audioManager.playSound).toHaveBeenCalledWith('pause');
+  });
+  it('should mute all sounds on pause', () => {
+    const audioManager = new AudioManager();
+
+    audioManager.mute = jest.fn();
+
+    audioManager.emit('pause');
+
+    expect(audioManager.mute).toBeCalledTimes(1);
+
+    //** Не смог сделать проверку, что функция playSound не вызывается при паузе */
   });
 });

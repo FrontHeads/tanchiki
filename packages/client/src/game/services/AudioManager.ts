@@ -5,12 +5,16 @@ import { resources } from './Resources/Resources';
 
 export class AudioManager extends EventEmitter {
   private isMuted = false;
+  private activeSounds: Set<keyof typeof SoundPathList> = new Set();
 
   constructor() {
     super();
 
     this.on('pause', () => {
       if (!this.isMuted) {
+        this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+          this.stopSound(sound);
+        });
         this.playSound('pause');
         this.mute();
       } else {
@@ -65,17 +69,21 @@ export class AudioManager extends EventEmitter {
 
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList): void {
-    if (resources.getSound(sound) && !this.isMuted) {
-      resources.getSound(sound).currentTime = 0;
-      resources.getSound(sound).play();
+    const soundResource = resources.getSound(sound);
+    if (soundResource && !this.isMuted) {
+      soundResource.currentTime = 0;
+      soundResource.play();
+      this.activeSounds.add(sound);
     }
   }
 
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList): void {
-    if (resources.getSound(sound)) {
-      resources.getSound(sound).pause();
-      resources.getSound(sound).currentTime = 0;
+    const soundResource = resources.getSound(sound);
+    if (soundResource) {
+      soundResource.pause();
+      soundResource.currentTime = 0;
+      this.activeSounds.delete(sound);
     }
   }
 
