@@ -92,9 +92,9 @@ export class Game {
   addEntity(entity: Entity) {
     this.view.add(entity);
     this.zone.add(entity);
+    this.attachLoopDelayHandler(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
-      this.registerLoopDelays(entity);
     } else if (entity instanceof Projectile) {
       const tempLoopEntitiesArray = Array.from(this.loopEntities);
       tempLoopEntitiesArray.unshift(entity);
@@ -122,7 +122,7 @@ export class Game {
     this.loopDelays[loopMark].push(callback);
   }
 
-  registerLoopDelays(entity: Entity) {
+  attachLoopDelayHandler(entity: Entity) {
     entity.on('loopDelay', this.setLoopDelay.bind(this));
   }
 
