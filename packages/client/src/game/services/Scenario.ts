@@ -28,7 +28,7 @@ async function sleep(ms = 100) {
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 1,
+    enemiesLeft: 20,
     maxActiveEnemies: 4,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
