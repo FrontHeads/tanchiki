@@ -1,22 +1,20 @@
-import { Entity, EntityDynamic } from '../entities';
-import type { PosState, Rect, Size } from '../typings';
+import { Entity, EntityDynamic, Projectile, Tank } from '../entities';
+import type { Pos, PosState, Rect, Size } from '../typings';
 
 export class Zone {
   width = 0;
   height = 0;
-  matrix!: Array<Array<Array<Entity | null>>>;
+  matrix: Array<Array<Array<Entity | null>>>;
 
   constructor({ width, height }: Size) {
     this.width = width;
     this.height = height;
-    this.build();
-  }
 
-  reset() {
-    this.build();
-  }
-
-  build() {
+    /**
+     * Создаёт матрицу - карту местности, где указано расположение всех игровых объектов
+     * Используется три уровня/слоя для отдельных типов сущностей,
+     * т.к. некоторые из них могут накладываться друг на друга
+     */
     const layers = ['main', 'projectiles', 'powerups'];
     this.matrix = Array(layers.length);
     for (let z = 0; z < this.matrix.length; ++z) {
@@ -27,6 +25,14 @@ export class Zone {
     }
   }
 
+  /** Очищает матрицу (вызывается перед каждым новым игровым уровнем) */
+  reset() {
+    for (let z = 0; z < this.matrix.length; ++z) {
+      this.updateMatrix(z, { posX: 0, posY: 0, width: this.width, height: this.height }, null);
+    }
+  }
+
+  /** Алиас для registerEntity */
   add(entity: Entity) {
     this.registerEntity(entity);
   }
@@ -42,7 +48,11 @@ export class Zone {
     }
   }
 
+  /** Добавляет сущность в заданный прямоугольник на определённом слое */
   updateMatrix(z: number, rect: Rect, value: Entity | null) {
+    if (this.isBeyondMatrix(rect) || !this.isLegalRect(rect)) {
+      return;
+    }
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         this.matrix[z][x][y] = value;
@@ -50,20 +60,21 @@ export class Zone {
     }
   }
 
+  /** Добавляет сущность в матрицу */
   writeEntityToMatrix(entity: Entity) {
     if (entity.alignedToGrid) {
       const layer = this.getLayerByEntityType(entity);
-      this.updateMatrix(layer, entity.getRect(), entity);
+      const rect = entity.getRect();
+      this.updateMatrix(layer, rect, entity);
     }
   }
 
+  /** Удаляет сущность из матрицы */
   deleteEntityFromMatrix(entity: Entity | EntityDynamic) {
     const layer = this.getLayerByEntityType(entity);
     if (!(entity instanceof EntityDynamic)) {
       const rect = entity.getRect();
-      if (!this.isBeyondMatrix(rect)) {
-        this.updateMatrix(layer, rect, null);
-      }
+      this.updateMatrix(layer, rect, null);
     } else {
       let rect = entity.lastRect;
       if (rect) {
@@ -74,13 +85,14 @@ export class Zone {
       }
       if (entity.canMove) {
         rect = entity.nextRect;
-        if (rect && !this.isBeyondMatrix(rect)) {
+        if (rect) {
           this.updateMatrix(layer, rect, null);
         }
       }
     }
   }
 
+  /** Подписывается на события сущности, которые отслеживаются для обновления матрицы */
   registerEntity(entity: Entity) {
     entity.on('entityWillHaveNewPos', (posState: PosState) => {
       const rect = posState.nextRect;
@@ -106,8 +118,24 @@ export class Zone {
     entity.on('entityShouldBeDestroyed', () => {
       this.deleteEntityFromMatrix(entity);
     });
+    if (entity.type === 'brickWall') {
+      entity.on('damaged', (pos: Pos) => {
+        const layer = this.getLayerByEntityType(entity);
+        const rect = { ...pos, width: 1, height: 1 };
+        this.updateMatrix(layer, rect, null);
+      });
+    }
   }
 
+  /** Проверяет, все ли параметры прямоугольника целочисленные */
+  isLegalRect(rect: Rect) {
+    if (rect.posX % 1 === 0 && rect.posY % 1 === 0 && rect.width % 1 === 0 && rect.height % 1 === 0) {
+      return true;
+    }
+    return false;
+  }
+
+  /** Проверка на предмет координат прямоугольника, которые не соответствуют матрице */
   isBeyondMatrix(rect: Rect) {
     if (this.isBeyondXAxis(rect) || this.isBeyondYAxis(rect)) {
       return true;
@@ -131,7 +159,12 @@ export class Zone {
     return false;
   }
 
+  /**
+   * Проверяет, находится ли по заданным координатам какая-либо ещё сущность.
+   * Если да, то совершает над ней необходимые операции
+   */
   hasCollisionsWithMatrix(rect: Rect, entity: Entity) {
+    let hasCollision = false;
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[0][x][y];
@@ -140,29 +173,37 @@ export class Zone {
         if (mainLayerCell === null && secondaryLayerCell === null) {
           continue;
         }
-        if (entity.type === 'tank') {
+        if (entity instanceof Tank) {
           if (mainLayerCell !== null && mainLayerCell !== entity && !mainLayerCell.crossable) {
-            return true;
+            hasCollision = true;
           }
-          if (secondaryLayerCell !== null) {
-            return true;
+          if (
+            secondaryLayerCell !== null &&
+            secondaryLayerCell instanceof Projectile &&
+            secondaryLayerCell.parent !== entity
+          ) {
+            hasCollision = true;
           }
         }
-        if (entity.type === 'projectile') {
-          if (mainLayerCell !== null && mainLayerCell.hittable) {
-            mainLayerCell.takeDamage(entity);
-            return true;
+        if (entity instanceof Projectile) {
+          const pos = { posX: x, posY: y };
+          if (mainLayerCell !== null && mainLayerCell.hittable && mainLayerCell !== entity.parent) {
+            if (entity.exploding) {
+              mainLayerCell.takeDamage(entity, pos);
+            }
+            hasCollision = true;
           }
           if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
-            secondaryLayerCell.takeDamage(entity);
-            return true;
+            secondaryLayerCell.takeDamage(entity, pos);
+            hasCollision = true;
           }
         }
       }
     }
-    return false;
+    return hasCollision;
   }
 
+  /** Проверка на предмет столкновений сущностей и координат, которые выходят за пределы матрицы */
   hasCollision(rect: Rect, entity: Entity) {
     if (this.isBeyondMatrix(rect) || this.hasCollisionsWithMatrix(rect, entity)) {
       return true;
