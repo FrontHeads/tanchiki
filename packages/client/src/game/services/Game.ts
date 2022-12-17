@@ -5,7 +5,7 @@ import { levels } from './../data/levels';
 import { Controller, resources, Scenario, View, Zone } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
-type LoopDelays = Record<number, Set<() => void>>;
+type LoopDelays = Record<number, Array<() => void>>;
 
 export class Game {
   static __instance: Game;
@@ -110,16 +110,16 @@ export class Game {
   }
 
   convertTimeToLoops(delay: number) {
-    return ~~(delay / this.loopTimeMs); // ~~ это Math.floor()
+    return Math.floor(delay / this.loopTimeMs);
   }
 
   /** Аналог setTimeout, который работает через игровой цикл */
   setLoopDelay(callback: () => void, delay: number) {
     const loopMark = this.loopCount + this.convertTimeToLoops(delay);
     if (!this.loopDelays[loopMark]) {
-      this.loopDelays[loopMark] = new Set();
+      this.loopDelays[loopMark] = [];
     }
-    this.loopDelays[loopMark].add(callback);
+    this.loopDelays[loopMark].push(callback);
   }
 
   registerLoopDelays(entity: Entity) {
@@ -195,9 +195,9 @@ export class Game {
 
   initMenu() {
     this.screen = ScreenType.MAIN_MENU;
-    this.overlay.show(this.screen, this.mainMenuState);
 
-    this.controllerAll.reset();
+    this.reset();
+    this.overlay.show(this.screen, this.mainMenuState);
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
