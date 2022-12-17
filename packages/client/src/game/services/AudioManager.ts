@@ -4,11 +4,21 @@ import { SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
 export class AudioManager extends EventEmitter {
+  private isMuted = false;
+
   constructor() {
     super();
+
     this.on('pause', () => {
-      this.playSound('pause');
+      if (!this.isMuted) {
+        this.playSound('pause');
+        this.mute();
+      } else {
+        this.unMute();
+        this.playSound('pause');
+      }
     });
+
     this.on('levelIntro', () => {
       this.playSound('levelIntro');
     });
@@ -46,36 +56,34 @@ export class AudioManager extends EventEmitter {
 
     /** Звуки танка врага */
     if (isTank && isEnemy) {
-      /**получение урона */
-      // entity.on('damaged', () => {
-      //   this.playSound('hitEnemy');
-      // });
       /**взрыв врага */
       entity.on('destroyed', () => {
         this.playSound('enemyExplosion');
       });
     }
-
-    /**пауза */
-
-    entity.on('pause', () => {
-      this.playSound('pause');
-    });
   }
 
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList): void {
-    if (resources.soundList[sound]) {
-      resources.soundList[sound].currentTime = 0;
-      resources.soundList[sound].play();
+    if (resources.getSound(sound) && !this.isMuted) {
+      resources.getSound(sound).currentTime = 0;
+      resources.getSound(sound).play();
     }
   }
 
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList): void {
-    if (resources.soundList[sound]) {
-      resources.soundList[sound].pause();
-      resources.soundList[sound].currentTime = 0;
+    if (resources.getSound(sound)) {
+      resources.getSound(sound).pause();
+      resources.getSound(sound).currentTime = 0;
     }
+  }
+
+  mute() {
+    this.isMuted = true;
+  }
+
+  unMute() {
+    this.isMuted = false;
   }
 }

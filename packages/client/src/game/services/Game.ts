@@ -12,7 +12,7 @@ export class Game {
   paused = false;
   zone!: Zone;
   view!: View;
-  audioManager!: AudioManager;
+  audioManager: AudioManager = new AudioManager();
   overlay!: Overlay;
   scenario: Scenario | undefined;
   controllerAll!: Controller;
@@ -30,7 +30,6 @@ export class Game {
   private constructor() {
     this.zone = new Zone(this.settings);
     this.view = new View(this.settings);
-    this.audioManager = new AudioManager();
     this.overlay = new Overlay(this.view);
     this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerWasd = new Controller(KeyBindingsWasd);
@@ -128,8 +127,7 @@ export class Game {
       this.controllerArrows.unload();
     }
     this.paused = !this.paused;
-    // this.controllerAll.emit('pause');
-    this.audioManager.emit('pause');
+    this.audioManager.emit('pause', this.paused);
   }
 
   startLoop() {
