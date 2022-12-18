@@ -82,6 +82,7 @@ export class Game {
     this.clearLoopDelays();
     this.view.reset();
     this.zone.reset();
+    this.audioManager.reset();
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();

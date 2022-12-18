@@ -107,4 +107,10 @@ export class AudioManager extends EventEmitter {
       this.activeSounds.delete(sound);
     }
   }
+
+  reset(): void {
+    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+      this.stopSound(sound);
+    });
+  }
 }
