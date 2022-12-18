@@ -2,6 +2,7 @@ import { playerInitialSettings, spawnPlaces } from '../data/constants';
 import { Entity, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
 import {
   Direction,
+  EnemyDestroyedPayload,
   EntityDynamicSettings,
   EntitySettings,
   MainMenuState,
@@ -15,11 +16,6 @@ import { MapData, ScenarioPlayerState } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
 import { MapManager } from './MapManager';
-
-type EnemyDesctroyedPayload = {
-  source: Tank;
-  destination: TankEnemy;
-};
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
@@ -69,7 +65,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   initEventListeners() {
     this
       /** После убийства вражеского танка */
-      .on(ScenarioEvent.TANK_ENEMY_DESTROYED, ({ source, destination }: EnemyDesctroyedPayload) => {
+      .on(ScenarioEvent.TANK_ENEMY_DESTROYED, ({ source, destination }: EnemyDestroyedPayload) => {
         /** Удаляем его из списка активных */
         this.state.enemies = this.state.enemies.filter(enemy => enemy !== destination);
 
@@ -94,7 +90,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         --playerState.lives;
 
         /** Если не осталось жизней у всех игроков - триггерим game over */
-        const isNoLivesLeft = Object.entries(this.state.players).every(([_, playerState]) => playerState.lives === 0);
+        const isNoLivesLeft = Object.values(this.state.players).every(playerState => playerState.lives === 0);
         if (isNoLivesLeft) {
           this.emit(ScenarioEvent.GAME_OVER);
           return;
@@ -190,7 +186,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
     entity.on('spawn', () => {
       entity.on('shoot', this.onTankShoot.bind(this)).on('destroyed', sourceEntity => {
-        this.emit<[EnemyDesctroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
+        this.emit<[EnemyDestroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
           source: sourceEntity,
           destination: entity,
         });

@@ -1,4 +1,4 @@
-import { Tank } from '../entities';
+import { Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 
 export type GameSettings = {
@@ -134,6 +134,11 @@ export type ScenarioPlayerState = {
 };
 
 export type ScenarioStat = Record<TankEnemyType, number>;
+
+export type EnemyDestroyedPayload = {
+  source: Tank;
+  destination: TankEnemy;
+};
 
 export type MapData = TupleArray<TupleArray<number, 13>, 13>;
 
