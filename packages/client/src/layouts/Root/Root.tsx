@@ -33,10 +33,10 @@ export const Root: FC = () => {
   }, [data]);
 
   return (
-    <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
-      <Await resolve={(data && data.user) || Promise.resolve()}>
-        <main className="layout">
-          <ErrorBoundary>
+    <ErrorBoundary>
+      <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
+        <Await resolve={(data && data.user) || Promise.resolve()}>
+          <main className="layout">
             <header>
               <BurgerMenu />
               {printHeaderAndFooter && <Logo />}
@@ -44,11 +44,12 @@ export const Root: FC = () => {
             </header>
             <Outlet />
             {printHeaderAndFooter && <Footer />}
-          </ErrorBoundary>
-          <ScrollRestoration />
-          {isAppLoading && <Loader data-testid="app-loader" />}
-        </main>
-      </Await>
-    </Suspense>
+
+            <ScrollRestoration />
+            {isAppLoading && <Loader data-testid="app-loader" />}
+          </main>
+        </Await>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
