@@ -5,6 +5,7 @@ import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 're
 
 import { UserDTO } from '../../api/typings';
 import { BurgerMenu } from '../../components/BurgerMenu';
+import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
@@ -32,20 +33,23 @@ export const Root: FC = () => {
   }, [data]);
 
   return (
-    <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
-      <Await resolve={(data && data.user) || Promise.resolve()}>
-        <main className="layout">
-          <header>
-            <BurgerMenu />
-            {printHeaderAndFooter && <Logo />}
-            {printHeaderAndFooter && <div className="delimiter" />}
-          </header>
-          <Outlet />
-          {printHeaderAndFooter && <Footer />}
-          <ScrollRestoration />
-          {isAppLoading && <Loader data-testid="app-loader" />}
-        </main>
-      </Await>
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
+        <Await resolve={(data && data.user) || Promise.resolve()}>
+          <main className="layout">
+            <header>
+              <BurgerMenu />
+              {printHeaderAndFooter && <Logo />}
+              {printHeaderAndFooter && <div className="delimiter" />}
+            </header>
+            <Outlet />
+            {printHeaderAndFooter && <Footer />}
+
+            <ScrollRestoration />
+            {isAppLoading && <Loader data-testid="app-loader" />}
+          </main>
+        </Await>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
