@@ -1,9 +1,12 @@
-import { Entity, Flag, Projectile, Tank, Terrain } from '../entities';
-import { Direction, EntityDynamicSettings, EntitySettings, GameSettings, MainMenuState } from '../typings';
+import { Entity, Projectile, Tank } from '../entities';
+import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
-import { Controller, View, Zone } from './';
+import { levels } from './../data/levels';
+import { Controller, resources, Scenario, View, Zone } from './';
+import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
-import { TankEnemy } from '../entities/TankEnemy';
+
+type LoopDelays = Record<number, Array<() => void>>;
 
 export class Game {
   static __instance: Game;
@@ -11,16 +14,22 @@ export class Game {
   paused = false;
   zone!: Zone;
   view!: View;
+  audioManager: AudioManager = new AudioManager();
   overlay!: Overlay;
+  scenario: Scenario | undefined;
   controllerAll!: Controller;
   controllerWasd!: Controller;
   controllerArrows!: Controller;
   loopProcess: ReturnType<typeof setTimeout> | null = null;
   loopTimeMs = 25;
+  loopCount = 0;
+  loopDelays: LoopDelays = {};
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
-  mode: 'loading' | 'menu' | 'game' = 'loading';
+  screen: ScreenType = ScreenType.LOADING;
   mainMenuState = MainMenuState.SINGLEPLAYER;
+  level = 1;
+  maxLevels = levels.length;
 
   private constructor() {
     this.zone = new Zone(this.settings);
@@ -56,6 +65,8 @@ export class Game {
   }
 
   unload() {
+    this.clearLoopEntities();
+    this.clearLoopDelays();
     this.stopLoop();
     this.controllerAll.unload();
     this.controllerWasd.unload();
@@ -63,17 +74,86 @@ export class Game {
     this.inited = false;
   }
 
+  reset() {
+    if (this.scenario) {
+      delete this.scenario;
+    }
+    this.clearLoopEntities();
+    this.clearLoopDelays();
+    this.view.reset();
+    this.zone.reset();
+    this.audioManager.reset();
+    this.controllerAll.reset();
+    this.controllerWasd.reset();
+    this.controllerArrows.reset();
+  }
+
   createView(root: HTMLElement | null) {
     this.view.build(root);
+  }
+
+  addEntity(entity: Entity) {
+    this.view.add(entity);
+    this.zone.add(entity);
+    this.audioManager.add(entity);
+    this.attachLoopDelayHandler(entity);
+    if (entity instanceof Tank) {
+      this.loopEntities.add(entity);
+    } else if (entity instanceof Projectile) {
+      const tempLoopEntitiesArray = Array.from(this.loopEntities);
+      tempLoopEntitiesArray.unshift(entity);
+      this.loopEntities = new Set(tempLoopEntitiesArray);
+    }
+  }
+
+  clearLoopEntities() {
+    for (const entity of this.loopEntities) {
+      entity.despawn();
+    }
+    this.loopEntities = new Set();
+  }
+
+  convertTimeToLoops(delay: number) {
+    return Math.floor(delay / this.loopTimeMs);
+  }
+
+  /** Аналог setTimeout, который работает через игровой цикл */
+  setLoopDelay(callback: () => void, delay: number) {
+    const loopMark = this.loopCount + this.convertTimeToLoops(delay);
+    if (!this.loopDelays[loopMark]) {
+      this.loopDelays[loopMark] = [];
+    }
+    this.loopDelays[loopMark].push(callback);
+  }
+
+  attachLoopDelayHandler(entity: Entity) {
+    entity.on('loopDelay', this.setLoopDelay.bind(this));
+  }
+
+  clearLoopDelays() {
+    this.loopCount = 0;
+    this.loopDelays = {};
+  }
+
+  checkLoopDelays() {
+    if (this.loopDelays[this.loopCount]) {
+      const delayedCallbacks = this.loopDelays[this.loopCount];
+      for (const callback of delayedCallbacks) {
+        callback();
+      }
+      delete this.loopDelays[this.loopCount];
+    }
   }
 
   loop() {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
+    ++this.loopCount;
+    this.checkLoopDelays();
     for (const entity of this.loopEntities) {
       entity.update();
       if (entity.shouldBeDestroyed) {
-        this.destroyEntity(entity);
+        this.loopEntities.delete(entity);
       }
     }
     nextCycleDelay -= cycleStartTime - performance.now();
@@ -97,6 +177,7 @@ export class Game {
       this.controllerArrows.unload();
     }
     this.paused = !this.paused;
+    this.audioManager.emit('pause', this.paused);
   }
 
   startLoop() {
@@ -111,144 +192,105 @@ export class Game {
     }
   }
 
-  createTankEnemy(props: EntityDynamicSettings) {
-    const entity = new TankEnemy(props);
-    this.loopEntities.add(entity);
-    this.view.add(entity);
-    this.zone.add(entity);
-    entity.spawn(props);
-
-    setInterval(() => {
-      this.createProjectile(entity.shoot());
-    }, 500);
-
-    return entity;
-  }
-
-  createTank(props: EntityDynamicSettings, controller: Controller | null = null) {
-    const entity = new Tank(props);
-    this.loopEntities.add(entity);
-    this.view.add(entity);
-    this.zone.add(entity);
-    entity.spawn(props);
-    if (controller) {
-      controller.on('move', (direction: Direction) => {
-        entity.move(direction);
-      });
-      controller.on('stop', () => {
-        entity.stop();
-      });
-      controller.on('shoot', () => {
-        this.createProjectile(entity.shoot());
-      });
-    }
-    return entity;
-  }
-
-  createProjectile(projectile: Projectile | null) {
-    if (!projectile) {
-      return null;
-    }
-    const loopEntitiesArray = Array.from(this.loopEntities);
-    loopEntitiesArray.unshift(projectile);
-    this.loopEntities = new Set(loopEntitiesArray);
-    this.view.add(projectile);
-    this.zone.add(projectile);
-    projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
-    projectile.update();
-  }
-
-  createEntity(props: EntitySettings) {
-    let entity: Entity;
-    if (props.type === 'flag') {
-      entity = new Flag(props);
-    } else {
-      entity = new Terrain(props);
-    }
-    this.view.add(entity);
-    this.zone.add(entity);
-    entity.spawn(props);
-    return entity;
-  }
-
-  createBoundaries() {
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.width,
-      height: this.settings.boundarySize,
-      posX: 0,
-      posY: 0,
-    });
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.width,
-      height: this.settings.boundarySize,
-      posX: 0,
-      posY: this.settings.height - this.settings.boundarySize,
-    });
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.boundarySize,
-      height: this.settings.height - this.settings.boundarySize * 2,
-      posX: 0,
-      posY: this.settings.boundarySize,
-    });
-    this.createEntity({
-      type: 'boundary',
-      width: this.settings.boundarySize,
-      height: this.settings.height - this.settings.boundarySize * 2,
-      posX: this.settings.width - this.settings.boundarySize,
-      posY: this.settings.boundarySize,
-    });
-  }
-
-  destroyEntity(entity: Tank | Projectile) {
-    this.loopEntities.delete(entity);
-  }
-
   initLoading() {
-    const redirectDelay = 500;
-    this.mode = 'loading';
-    this.overlay.showLoading();
-
-    this.view.offAll('assetsLoaded');
-    this.view.on('assetsLoaded', () => {
-      setTimeout(() => {
-        this.initMenu();
-      }, redirectDelay);
-    });
+    this.screen = ScreenType.LOADING;
+    this.overlay.show(this.screen);
+    resources.loadAll().then(() => this.initMenu());
   }
 
   initMenu() {
-    this.mode = 'menu';
-    this.overlay.showMainMenu(this.mainMenuState);
+    this.screen = ScreenType.MAIN_MENU;
+
+    this.reset();
+    this.overlay.show(this.screen, this.mainMenuState);
+
+    // Обрабатываем переходы по пунктам меню
+    this.controllerAll
+      .on('fullscreen', () => {
+        this.view.toggleFullScreen();
+      })
+      .on('move', (direction: Direction) => {
+        if (this.screen !== ScreenType.MAIN_MENU) {
+          return;
+        }
+        if (direction === Direction.UP) {
+          this.mainMenuState = MainMenuState.SINGLEPLAYER;
+        } else if (direction === Direction.DOWN) {
+          this.mainMenuState = MainMenuState.MULTIPLAYER;
+        }
+
+        this.overlay.show(this.screen, this.mainMenuState);
+      })
+      // Обрабатываем нажатие на указанном пункте меню
+      .on('shoot', () => {
+        if (this.screen !== ScreenType.MAIN_MENU) {
+          return;
+        }
+
+        // Открываем экран выбора уровня
+        this.initLevelSelector();
+      });
+  }
+
+  initLevelSelector() {
+    this.screen = ScreenType.LEVEL_SELECTOR;
+
+    this.overlay.show(this.screen, this.level);
 
     this.controllerAll.reset();
 
-    this.controllerAll.on('move', (direction: Direction) => {
-      if (this.mode !== 'menu') {
-        return;
-      }
-      if (direction === Direction.UP) {
-        this.mainMenuState = MainMenuState.SINGLEPLAYER;
-      } else if (direction === Direction.DOWN) {
-        this.mainMenuState = MainMenuState.MULTIPLAYER;
-      }
-      this.overlay.updateMainMenuState(this.mainMenuState);
-    });
+    /** Объект setInterval для обработки непрерывного изменения уровня */
+    let changeLevelInterval: ReturnType<typeof setInterval>;
 
-    this.controllerAll.on('shoot', () => {
-      if (this.mode !== 'menu') {
-        return;
+    const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
+    const handleMove = (direction: Direction) => {
+      let shouldTrigger = false;
+      if (direction === Direction.UP && this.level < this.maxLevels) {
+        this.level++;
+        shouldTrigger = true;
+      } else if (direction === Direction.DOWN && this.level > 1) {
+        this.level--;
+        shouldTrigger = true;
+      } else {
+        resetLevelInterval();
       }
-      this.initScenario(this.mainMenuState);
-    });
+      // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
+      if (shouldTrigger) {
+        this.overlay.show(this.screen, this.level);
+      }
+    };
+
+    this.controllerAll
+      .on('stop', () => {
+        if (this.screen == ScreenType.LEVEL_SELECTOR) {
+          resetLevelInterval();
+        }
+      })
+      .on('move', (direction: Direction) => {
+        if (this.screen !== ScreenType.LEVEL_SELECTOR) {
+          return;
+        }
+
+        resetLevelInterval();
+        handleMove.call(this, direction);
+
+        changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
+      })
+      .on('shoot', () => {
+        if (this.screen !== ScreenType.LEVEL_SELECTOR) {
+          return;
+        }
+
+        // Запускаем игру после выбора уровня
+        this.initGameLevel(true);
+      });
   }
 
   initGameOver() {
     const redirectDelay = 3000;
-    this.mode = 'loading';
-    this.overlay.showGameOver();
+    this.screen = ScreenType.GAME_OVER;
+
+    this.overlay.show(this.screen);
 
     this.controllerAll.reset();
     this.controllerWasd.reset();
@@ -259,40 +301,40 @@ export class Game {
     }, redirectDelay);
   }
 
-  initScenario(option: MainMenuState) {
-    this.mode = 'game';
-    this.view.reset();
-    this.zone.reset();
-    this.controllerAll.reset();
-    this.controllerWasd.reset();
-    this.controllerArrows.reset();
+  initGameLevel(firstInit = false) {
+    this.screen = ScreenType.GAME;
+    this.reset();
 
-    this.overlay.showStartScreen('УРОВЕНЬ  1');
+    /** Анимация перехода с экрана выбора уровня в игру */
+    const startAnimationDelay = firstInit ? 100 : 2000;
+    this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
+    this.overlay.show(this.screen, startAnimationDelay);
 
-    this.createBoundaries();
+    /** Стартуем сценарий после окончания анимации */
+    this.setLoopDelay(() => {
+      /** Инициализируем инстанс сценария */
+      this.scenario = new Scenario(this)
+        .on(ScenarioEvent.GAME_OVER, () => {
+          this.initGameOver();
+        })
+        .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
+          if (this.level < this.maxLevels) {
+            this.level++;
+            this.initGameLevel();
+          } else {
+            this.level = 1;
+          }
+        });
 
-    if (option === MainMenuState.SINGLEPLAYER) {
-      this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerAll);
-    } else if (option === MainMenuState.MULTIPLAYER) {
-      this.createTank({ posX: 18, posY: 50, role: 'player', moveSpeed: 4 }, this.controllerWasd);
-      this.createTank({ posX: 34, posY: 50, role: 'player', color: 'lime' }, this.controllerArrows);
-    }
+      this.controllerAll
+        .on('pause', () => {
+          this.togglePause();
+        })
+        .on('fullscreen', () => {
+          this.view.toggleFullScreen();
+        });
+    }, startAnimationDelay);
 
-    this.createTankEnemy({ posX: 2, posY: 2, role: 'enemy', moveSpeed: 4 });
-    this.createTankEnemy({ posX: 30, posY: 10, role: 'enemy', moveSpeed: 4 });
-    this.createTankEnemy({ posX: 6, posY: 6, role: 'enemy', moveSpeed: 4 });
-
-    const flag = this.createEntity({ type: 'flag', width: 4, height: 4, posX: 26, posY: 50 });
-    this.createEntity({ type: 'brickWall', width: 4, height: 32, posX: 10, posY: 10 });
-    this.createEntity({ type: 'trees', width: 16, height: 8, posX: 30, posY: 18 });
-    this.createEntity({ type: 'water', width: 16, height: 4, posX: 30, posY: 34 });
-
-    flag.on('damaged', () => {
-      this.initGameOver();
-    });
-
-    this.controllerAll.on('pause', () => {
-      this.togglePause();
-    });
+    this.audioManager.emit('levelIntro');
   }
 }

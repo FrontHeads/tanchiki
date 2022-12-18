@@ -1,0 +1,1 @@
+export { ErrorBody } from './ErrorBody';

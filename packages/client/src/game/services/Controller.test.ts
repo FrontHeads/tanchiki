@@ -118,6 +118,20 @@ describe('game/services/Controller', () => {
     expect(mockFn).not.toHaveBeenCalled();
   });
 
+  it('should auto shoot while key is pressed', async () => {
+    const controller = new Controller(KeyBindingsWasd);
+    controller.shootIntervalMs = 500;
+    const mockShootFn = jest.fn();
+
+    controller.load();
+    controller.on('shoot', mockShootFn);
+    mockKeyDown('Space');
+
+    await sleep(700);
+
+    expect(mockShootFn).toBeCalledTimes(2);
+  });
+
   const variants = [
     ['arrow', KeyBindingsArrows],
     ['wasd', KeyBindingsWasd],

@@ -1,17 +1,14 @@
 import './ErrorPage.css';
 
 import { FC } from 'react';
-import { useNavigate, useRouteError } from 'react-router-dom';
+import { useRouteError } from 'react-router-dom';
 
-import { Button } from '../../components/Button';
-import { ButtonVariant } from '../../components/Button/typings';
+import { ErrorBody } from '../../components/ErrorBody/ErrorBody';
 import { Footer } from '../../components/Footer';
 import { Logo } from '../../components/Logo';
-import { Paths } from '../../config/constants';
 import { ErrorPageProps, ErrorType } from './typings';
 
-export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Возникла ошибка' }) => {
-  const navigate = useNavigate();
+export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Что-то пошло не так' }) => {
   let statusCode, messageText;
 
   if (status) {
@@ -19,33 +16,18 @@ export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Возник�
     messageText = message;
   } else {
     const { status, statusText, message: routerErrorMessage } = useRouteError() as ErrorType;
-    statusCode = status;
+    statusCode = status?.toString();
     messageText = statusText || routerErrorMessage || message;
 
     if (statusText === 'Not Found') {
       messageText = 'Не туда попали';
     }
   }
-
   return (
     <>
       <Logo />
       <div className="delimiter" />
-      <div className="web-error">
-        <h1 className="web-error__paragraph web-error__header" data-testid="web-error__header">
-          {statusCode}
-        </h1>
-        <p className="web-error__paragraph web-error__msg">{messageText}</p>
-
-        <p className="web-error__paragraph web-error__link">
-          <Button
-            data-testid="web-error__button"
-            text="На главную"
-            onClick={() => navigate(Paths.Home)}
-            variant={ButtonVariant.Secondary}
-          />
-        </p>
-      </div>
+      <ErrorBody status={statusCode} message={messageText} />
       <Footer />
     </>
   );

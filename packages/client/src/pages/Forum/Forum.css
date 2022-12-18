@@ -1,0 +1,63 @@
+@import url("../../variables.css");
+
+.forum__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.forum {
+  background-color: $section_background_color;
+  border-radius: 10px;
+  text-align: center;
+  margin: 0 60px 60px;
+
+  td {
+    padding: 0 20px;
+
+    @media (max-width: 420px) {
+      padding: 0 5px;
+    }
+  }
+
+  &__title {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  &__row-header {
+    height: 100px;
+    text-align: center;
+    font-family: "Press Start 2P", cursive;
+  }
+
+  &__cell-header {
+    padding: 0 20px;
+
+    &:nth-child(1) {
+      width: 70%;
+      text-align: left;
+    }
+
+    @media (max-width: 600px) {
+      padding: 0 5px;
+      margin: 0 0 60px;
+    }
+  }
+
+  &__item {
+    height: 70px;
+
+    &:nth-child(odd) {
+      background-color: $background_color;
+    }
+  }
+
+  &__first-column {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  @media (max-width: 420px) {
+    margin: 0 0 $vertical_margin;
+  }
+}

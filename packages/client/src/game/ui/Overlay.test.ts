@@ -8,14 +8,14 @@ async function sleep(ms = 100) {
 describe('game/ui/Overlay', () => {
   it('should render elements', () => {
     const view = new View({ width: 10, height: 10 });
-    view.drawEntityOnLayer = jest.fn();
+    view.drawOnLayer = jest.fn();
     const root = document.body.appendChild(document.createElement('div'));
     const overlay = new Overlay(view);
 
     view.build(root);
     overlay.renderElement({ posX: 0, posY: 0, width: 2, height: 2 });
 
-    expect(view.drawEntityOnLayer).toHaveBeenCalled();
+    expect(view.drawOnLayer).toHaveBeenCalled();
   });
 
   it('should use animations', async () => {

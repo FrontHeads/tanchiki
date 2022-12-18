@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 
 import { NAVIGATION_LIST } from '../../components/Navigation/data';
-import { renderWithRouter } from '../../utils/testing-utils';
+import { renderWithRouter } from '../../utils/testingUtils';
 import { Home } from './Home';
 
 describe('Home page', () => {

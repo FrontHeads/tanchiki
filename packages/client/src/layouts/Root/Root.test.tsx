@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
 
-import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testing-utils';
+import { renderWithRouter, waitUntilLoaderToBeRemoved } from '../../utils/testingUtils';
 
 describe('Root', () => {
   test('it renders logo and footer', async () => {

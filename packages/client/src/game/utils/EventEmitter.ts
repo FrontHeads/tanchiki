@@ -1,23 +1,38 @@
 type Fn = (...args: Array<any>) => void;
 
-export class EventEmitter {
-  listeners: Record<string, Array<Fn>> = {};
+export class EventEmitter<T extends string = string> {
+  listeners = {} as Record<T, Array<Fn>>;
 
-  on(eventName: string, callback: Fn) {
+  /** Подписка на событие.
+   * Принимает название события и функцию-обработчик, которая будет вызвана при наступлении события. */
+  on(eventName: T, callback: Fn) {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
     this.listeners[eventName].push(callback);
+    return this;
   }
-  emit(eventName: string, ...args: Array<unknown>) {
+
+  /** Оповещение о событии.
+   * Принимает название события (+ опционально доп. данные) и оповещает подписчиков.
+   * Т.е. запускает функции-обработчики прикрепленные к данному названию события через on() */
+
+  emit<K extends Array<unknown>>(eventName: T, ...args: K) {
     this.listeners[eventName]?.forEach((listener: Fn) => {
       listener.apply(this, args);
     });
   }
-  off(eventName: string, callback: Fn) {
+
+  /** Отписка от события конкретной функции-обработчика.
+   * Принимает название события и функцию-обработчик */
+  off(eventName: T, callback: Fn) {
     this.listeners[eventName] = this.listeners[eventName]?.filter((listener: Fn) => listener !== callback);
+    return this;
   }
-  offAll(eventName: string) {
+
+  /** Отписка всех функций-обработчиков от конкретного события. */
+  offAll(eventName: T) {
     delete this.listeners[eventName];
+    return this;
   }
 }

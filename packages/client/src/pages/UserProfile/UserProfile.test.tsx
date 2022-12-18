@@ -1,16 +1,16 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 
-import { userProfileInputFields } from './data';
+import { renderWithRouter } from '../../utils/testingUtils';
+import { userProfileFieldList } from './data';
 import { UserProfile } from './UserProfile';
 
 describe('UserProfile page', () => {
   test('it renders', () => {
-    render(<UserProfile />);
-
-    const inputFieldsCount = userProfileInputFields.filter(item => !('heading' in item)).length;
-    const headersCount = userProfileInputFields.filter(item => 'heading' in item).length;
+    renderWithRouter({ component: <UserProfile /> });
+    const inputFieldsCount = userProfileFieldList.filter(item => !('heading' in item)).length;
+    const headersCount = userProfileFieldList.filter(item => 'heading' in item).length;
 
     expect(screen.getAllByTestId('form-field').length).toBe(inputFieldsCount);
     expect(screen.getAllByTestId('form-input-header').length).toBe(headersCount);

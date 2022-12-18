@@ -1,6 +1,6 @@
 import { FormInputAndHeadingList } from '../../app.typings';
 
-export const userProfileInputFields: FormInputAndHeadingList = [
+export const userProfileFieldList: FormInputAndHeadingList = [
   {
     title: 'Email',
     type: 'email',

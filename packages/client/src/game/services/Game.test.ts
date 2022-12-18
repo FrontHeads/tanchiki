@@ -5,6 +5,12 @@ async function sleep(ms = 100) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function mockEntity() {
+  const entity = new Tank({ posX: 0, posY: 0 });
+  entity.update = jest.fn();
+  return entity;
+}
+
 describe('game/services/Game', () => {
   it('should be singleton', () => {
     const game1 = Game.create();
@@ -13,15 +19,15 @@ describe('game/services/Game', () => {
     expect(game1).toBe(game2);
   });
 
-  it('should use loop', () => {
+  it('should add entities and use loop', async () => {
     const game = Game.create();
     game.loopTimeMs = 100;
-    const entity = { update: jest.fn() } as unknown as Tank;
-    game.loopEntities.add(entity);
+    const entity = mockEntity();
 
+    game.addEntity(entity);
     game.startLoop();
 
-    sleep(100);
+    await sleep(200);
 
     expect(entity.update).toHaveBeenCalled();
   });
@@ -46,27 +52,39 @@ describe('game/services/Game', () => {
     expect(game.paused).toBe(true);
   });
 
-  it('should create tank', () => {
+  it('should set loop delays', async () => {
     const game = Game.create();
-    game.createView(document.body);
+    const entity = mockEntity();
+    game.inited = true;
+    const delay = 100;
+    const mockFn = jest.fn();
+    const mockFn2 = jest.fn();
 
-    const tank = game.createTank({ posX: 1, posY: 1 });
+    game.startLoop();
+    game.addEntity(entity);
+    entity.setLoopDelay(mockFn, delay);
+    game.setLoopDelay(mockFn2, delay);
 
-    expect(tank instanceof Tank).toBe(true);
-    expect(tank.spawned).toBe(true);
-    expect(tank.posX).toBe(1);
-    expect(tank.posY).toBe(1);
-    expect(game.loopEntities.has(tank)).toBe(true);
+    await sleep(200);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn2).toHaveBeenCalledTimes(1);
   });
 
-  it('should destroy entity', () => {
+  it('should clear loop delays', async () => {
     const game = Game.create();
-    game.createView(document.body);
+    const entity = mockEntity();
+    game.inited = true;
+    const delay = 100;
+    const mockFn = jest.fn();
 
-    const tank = game.createTank({ posX: 1, posY: 1 });
-    game.destroyEntity(tank);
+    game.startLoop();
+    game.addEntity(entity);
+    entity.setLoopDelay(mockFn, delay);
+    game.clearLoopDelays();
 
-    expect(tank.spawned).toBe(false);
-    expect(game.loopEntities.has(tank)).toBe(false);
+    await sleep(200);
+
+    expect(mockFn).not.toHaveBeenCalled();
   });
 });
