@@ -1,6 +1,7 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
+import { ErrorBoundary } from '../components/ErrorBoundary/ErrorBoundary';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
@@ -34,6 +35,7 @@ export const router = createBrowserRouter(
 
         <Route element={<PublicRoutes />}>
           <Route path={Paths.SignIn} element={<SignIn />}></Route>
+
           <Route path={Paths.SignUp} element={<SignUp />}></Route>
         </Route>
 
