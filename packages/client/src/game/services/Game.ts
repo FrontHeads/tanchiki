@@ -305,12 +305,10 @@ export class Game {
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
     this.overlay.show(this.screen, startAnimationDelay);
 
-    // TODO: заменить на внутренний setTimeout после его реализации */
     /** Стартуем сценарий после окончания анимации */
     setTimeout(() => {
       /** Инициализируем инстанс сценария */
-      this.scenario = new Scenario(this);
-      this.scenario
+      this.scenario = new Scenario(this)
         .on(ScenarioEvent.GAME_OVER, () => {
           this.initGameOver();
         })

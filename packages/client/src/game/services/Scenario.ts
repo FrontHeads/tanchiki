@@ -21,11 +21,6 @@ type EnemyDesctroyedPayload = {
   destination: TankEnemy;
 };
 
-// TODO: убрать после появляние setTimeout для игры с внутренним счетчиком времени
-async function sleep(ms = 100) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
     enemiesLeft: 20,
@@ -39,7 +34,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   constructor(private game: Game) {
     /**
-     * TODO: Доработать после реализации бонусных такнов
+     * TODO: Доработать после реализации бонусных танков
      * Четвёртый, одиннадцатый и восемнадцатый танки, независимо от типа, появляются переливающиеся цветами
      **/
     super();
@@ -56,16 +51,16 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.createPlayerTank(Player.PLAYER2);
     }
 
-    /** Размещаем танки противника */
-    while (this.canCreateTankEnemy()) {
-      this.createTankEnemy();
-    }
-
     /** Размещаем объекты на карте */
     const entities = this.mapManager.mapDataToEntitySettings(this.map);
     entities.forEach(settings => {
       this.createEntity(settings);
     });
+
+    /** Размещаем танки противника */
+    while (this.canCreateTankEnemy()) {
+      this.createTankEnemy();
+    }
 
     /** Инициализируем обработчики событий уровня */
     this.initEventListeners();
@@ -178,40 +173,35 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     return this.game.controllerAll;
   }
 
+  trySpawnTankEnemy(entity: TankEnemy) {
+    /** Выбираем случайным образом одну из 3 позиций противника */
+    const spawnPlaceKey = Math.floor(Math.random() * spawnPlaces[0].length);
+    const spawnPlace = this.mapManager.coordsToRect(spawnPlaces[0][spawnPlaceKey], 0);
+
+    if (!entity.spawn(spawnPlace)) {
+      this.game.setLoopDelay(this.trySpawnTankEnemy.bind(this, entity), 200);
+    }
+  }
+
   /** Создаем вражеский танк */
-  async createTankEnemy() {
+  createTankEnemy() {
     --this.state.enemiesLeft;
 
     const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
+    entity.on('spawn', () => {
+      entity.on('shoot', this.onTankShoot.bind(this)).on('destroyed', sourceEntity => {
+        this.emit<[EnemyDesctroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
+          source: sourceEntity,
+          destination: entity,
+        });
+      });
+    });
     this.state.enemies.push(entity);
 
     this.emit(ScenarioEvent.TANK_ENEMY_SPAWNED, entity);
     this.game.addEntity(entity);
 
-    let isFirstTry = 0;
-    while (entity.spawned === false) {
-      /** При повторной попытке размещения танка делаем небольшую задержку */
-      if (++isFirstTry !== 1) {
-        await sleep(200);
-      }
-
-      /** Выбираем случайным образом одну из 3 позиций противника */
-      const spawnPlaceKey = Math.floor(Math.random() * spawnPlaces[0].length);
-      const spawnPlace = this.mapManager.coordsToRect(spawnPlaces[0][spawnPlaceKey], 0);
-
-      entity.spawn(spawnPlace);
-    }
-
-    entity.on('shoot', (projectile: Projectile) => {
-      this.createProjectile(projectile);
-    });
-
-    entity.on('destroyed', sourceEntity => {
-      this.emit<[EnemyDesctroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
-        source: sourceEntity,
-        destination: entity,
-      });
-    });
+    this.trySpawnTankEnemy(entity);
   }
 
   /** Инициализируем начальное состояние игрока */
@@ -244,9 +234,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.game.addEntity(entity);
 
     entity.spawn(settings);
-    entity.on('shoot', (projectile: Projectile) => {
-      this.createProjectile(projectile);
-    });
+    entity.on('shoot', this.onTankShoot.bind(this));
 
     /** Навешиваем события на котроллер, предварительно почистив старые */
     playerState.controller
@@ -267,6 +255,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
 
     return entity;
+  }
+
+  onTankShoot(projectile: Projectile) {
+    if (!this.game.paused) {
+      this.createProjectile(projectile);
+    }
   }
 
   createProjectile(projectile: Projectile | null) {
