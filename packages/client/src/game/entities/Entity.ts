@@ -29,11 +29,17 @@ export class Entity extends EventEmitter {
     this.emit('entityDidUpdate', newState);
   }
 
+  setLoopDelay(callback: () => void, delay: number) {
+    this.emit('loopDelay', callback, delay);
+  }
+
   getRect() {
     return { posX: this.posX, posY: this.posY, width: this.width, height: this.height };
   }
 
-  spawn({ posX = this.posX, posY = this.posY }: Pos) {
+  spawn(coords?: Pos) {
+    const { posX, posY } = coords || { posX: this.posX, posY: this.posY };
+
     const posState: PosState = {
       hasCollision: undefined,
       nextRect: { posX, posY, width: this.width, height: this.height },
@@ -42,6 +48,7 @@ export class Entity extends EventEmitter {
     if (!posState.hasCollision) {
       this.setState({ posX, posY });
       this.spawned = true;
+      this.emit('spawn');
     } else if (this.type === 'projectile') {
       this.explode();
     }
@@ -63,8 +70,8 @@ export class Entity extends EventEmitter {
     this.despawn();
   }
 
-  takeDamage(source: Entity) {
-    this.emit('damaged');
+  takeDamage(source: Entity, pos: Pos) {
+    this.emit('damaged', pos);
     if (this.type === 'projectile') {
       this.explode();
     } else if (this.type === 'tank') {

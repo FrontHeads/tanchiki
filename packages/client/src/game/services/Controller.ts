@@ -4,6 +4,8 @@ import { BindingConfig, KeyBinding } from './KeyBindings';
 
 export class Controller extends EventEmitter {
   activeDirection: Partial<Record<Direction, boolean>> = {};
+  shootProcess: ReturnType<typeof setInterval> | null = null;
+  shootIntervalMs = 200;
 
   constructor(private keyBindings: BindingConfig) {
     super();
@@ -62,6 +64,16 @@ export class Controller extends EventEmitter {
       this.activeDirection[direction] = true;
     }
     this.emit(action, direction);
+
+    if (action === 'shoot') {
+      if (this.shootProcess) {
+        clearInterval(this.shootProcess);
+        this.shootProcess = null;
+      }
+      this.shootProcess = setInterval(() => {
+        this.emit(action);
+      }, this.shootIntervalMs);
+    }
   }
 
   keyReleased([action, direction]: KeyBinding) {
@@ -73,6 +85,10 @@ export class Controller extends EventEmitter {
       } else {
         this.emit(action, activeDirection[0]);
       }
+    }
+    if (action === 'shoot' && this.shootProcess) {
+      clearInterval(this.shootProcess);
+      this.shootProcess = null;
     }
   }
 
