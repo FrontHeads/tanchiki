@@ -1,6 +1,6 @@
 import { brickCells, concreteCells, spawnPlaces } from '../data/constants';
 import { levels } from '../data/levels';
-import { Cell, EntitySettings, EntityType, GameSettings, MapData } from '../typings';
+import { Cell, EntitySettings, EntityType, GameSettings, MapData, Pos } from '../typings';
 
 export class MapManager {
   private mapData = levels;
@@ -14,6 +14,13 @@ export class MapManager {
 
   coordToPos(value: number) {
     return value * 4 + this.gameSettings.boundarySize;
+  }
+
+  coordsToRect(x: number, y: number): Pos {
+    return {
+      posX: this.coordToPos(x),
+      posY: this.coordToPos(y),
+    };
   }
 
   getMap(level: number): MapData {

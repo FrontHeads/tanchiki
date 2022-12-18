@@ -11,6 +11,7 @@ import {
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
 import { Controller, resources, Scenario, View, Zone } from './';
+import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
 export class Game {
@@ -19,6 +20,7 @@ export class Game {
   paused = false;
   zone!: Zone;
   view!: View;
+  audioManager: AudioManager = new AudioManager();
   overlay!: Overlay;
   scenario: Scenario | undefined;
   controllerAll!: Controller;
@@ -88,6 +90,7 @@ export class Game {
     this.clearLoopDelays();
     this.view.reset();
     this.zone.reset();
+    this.audioManager.reset();
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
@@ -100,6 +103,7 @@ export class Game {
   addEntity(entity: Entity) {
     this.view.add(entity);
     this.zone.add(entity);
+    this.audioManager.add(entity);
     this.registerTimerHandlers(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
@@ -215,6 +219,7 @@ export class Game {
       this.controllerArrows.unload();
     }
     this.paused = !this.paused;
+    this.audioManager.emit('pause', this.paused);
   }
 
   startLoop() {
@@ -347,30 +352,36 @@ export class Game {
     this.screen = ScreenType.GAME;
     this.reset();
 
-    /** Анимация перехода выбора уровня в игру */
-    const startAnimationDelay = firstInit ? 0 : 2000;
+    /** Анимация перехода с экрана выбора уровня в игру */
+    const startAnimationDelay = firstInit ? 100 : 2000;
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
     this.overlay.show(this.screen, startAnimationDelay);
 
-    /** Инициализируем сценарий инстанс сценария */
-    this.scenario = new Scenario(this);
-    this.scenario
-      .on(ScenarioEvent.GAME_OVER, () => {
-        this.initGameOver();
-      })
-      .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
-        if (this.level < this.maxLevels) {
-          this.level++;
-          this.initGameLevel();
-        }
-      });
+    /** Стартуем сценарий после окончания анимации */
+    this.setLoopDelay(() => {
+      /** Инициализируем инстанс сценария */
+      this.scenario = new Scenario(this)
+        .on(ScenarioEvent.GAME_OVER, () => {
+          this.initGameOver();
+        })
+        .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
+          if (this.level < this.maxLevels) {
+            this.level++;
+            this.initGameLevel();
+          } else {
+            this.level = 1;
+          }
+        });
 
-    this.controllerAll
-      .on('pause', () => {
-        this.togglePause();
-      })
-      .on('fullscreen', () => {
-        this.view.toggleFullScreen();
-      });
+      this.controllerAll
+        .on('pause', () => {
+          this.togglePause();
+        })
+        .on('fullscreen', () => {
+          this.view.toggleFullScreen();
+        });
+    }, startAnimationDelay);
+
+    this.audioManager.emit('levelIntro');
   }
 }

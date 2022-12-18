@@ -1,5 +1,4 @@
 import { spriteCoordinates } from '../data/constants';
-import { resources } from '../services/';
 import type { EntityDynamicSettings, Rect } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
@@ -67,8 +66,6 @@ export class Tank extends EntityDynamic {
       moveSpeed: this.shootSpeed,
     });
     this.canShoot = false;
-
-    resources.playSound('shoot');
 
     projectile.on('exploding', () => {
       this.canShoot = true;
