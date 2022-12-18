@@ -95,13 +95,22 @@ export class Entity extends EventEmitter {
   }
 
   startAnimation(settings: AnimationSettings) {
-    settings.name ||= Math.random();
+    settings.name ??= Math.random().toString();
     settings.spriteFrame ??= 0;
     settings.isPlay ??= true;
     this.animations.push(settings);
-    // По умолчанию интервалы анимаций убиваются в Game.reset()
-    this.setLoopInterval(this.redraw.bind(this), settings.delay, settings.name);
 
+    this.setLoopInterval(
+      () => {
+        /** Сущность будет перерисована на канвасе. Так работает анимация.*/
+        this.emit('entityShouldUpdate');
+        this.emit('entityDidUpdate');
+      },
+      settings.delay,
+      settings.name
+    );
+
+    // По умолчанию анимации убиваются в Game.reset()
     if (settings.stopTimer) {
       this.setLoopDelay(this.cancelAnimation.bind(this, 'showEntity', settings.name), settings.stopTimer);
     }
@@ -125,12 +134,6 @@ export class Entity extends EventEmitter {
     if (type !== 'showEntity') {
       this.emit('entityShouldUpdate');
     }
-  }
-
-  /** Сущность будет перерисована на канвасе. Так работает анимация.*/
-  redraw() {
-    this.emit('entityShouldUpdate');
-    this.emit('entityDidUpdate');
   }
 
   setLoopInterval(callback: () => void, delay: number, name: string | number) {

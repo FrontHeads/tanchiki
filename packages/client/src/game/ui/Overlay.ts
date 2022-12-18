@@ -27,7 +27,7 @@ export class Overlay {
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
     if (this.game) {
-      this.game.registerLoopDelays(elem);
+      this.game.registerTimers(elem);
     }
     this.view.add(elem);
     elem.render();

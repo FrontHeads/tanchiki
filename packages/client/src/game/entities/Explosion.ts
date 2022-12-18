@@ -7,28 +7,24 @@ export class Explosion extends Entity {
     super(props);
     Object.assign(this, props);
     this.role = 'neutral';
+    this.crossable = true;
+    this.hittable = false;
+    this.color = 'red';
     switch (this.type) {
       case 'projectileExplosion':
-        this.crossable = true;
-        this.hittable = false;
-        this.color = 'red';
         this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
         break;
       case 'tankExplosion':
-        this.crossable = true;
-        this.hittable = false;
-        this.color = 'red';
-        this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
+        this.mainSpriteCoordinates = spriteCoordinates.tankExplosion;
         break;
     }
 
     if (this.type === 'projectileExplosion' || this.type === 'tankExplosion') {
       const coordinateSelector = this.type;
-      const ms = this.type === 'projectileExplosion' ? 0 : 25;
 
       this.on('spawn', () => {
         this.startAnimation({
-          delay: ms,
+          delay: 0,
           spriteCoordinates: spriteCoordinates[coordinateSelector],
           looped: false,
         });

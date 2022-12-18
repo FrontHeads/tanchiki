@@ -20,7 +20,7 @@ import { MapManager } from './MapManager';
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
     enemiesLeft: 2,
-    maxActiveEnemies: 2,
+    maxActiveEnemies: 3,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;
@@ -69,7 +69,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this
       /** После убийства вражеского танка */
       .on(ScenarioEvent.TANK_ENEMY_DESTROYED, (entity: TankEnemy) => {
-        this.createTankExplosion(entity);
+        this.createExplosion(entity);
 
         /** Удаляем его из списка активных */
         this.state.enemies = this.state.enemies.filter(enemy => enemy !== entity);
@@ -87,7 +87,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
       /** После убийства игрока */
       .on(ScenarioEvent.TANK_PLAYER_DESTROYED, (_entity: Tank, playerType: Player) => {
-        this.createTankExplosion(_entity);
+        this.createExplosion(_entity);
 
         // Если не осталось жизней у всех игроков - триггерим game over
         const isNoLivesLeft = Object.entries(this.state.players).every(([_, playerState]) => playerState.lives === 0);
@@ -107,12 +107,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
       /** Показываем анимацию взрыва при попадании снаряда куда-либо. */
       .on(ScenarioEvent.PROJECTILE_HIT, (projectile: Projectile) => {
-        const centeringCorrection = -1;
-        const posX = projectile.posX + centeringCorrection;
-        const posY = projectile.posY + centeringCorrection;
-        const explosion = new Explosion({ type: 'projectileExplosion', posX, posY, width: 4, height: 4 });
-        this.game.addEntity(explosion);
-        explosion.spawn({ posX, posY });
+        this.createExplosion(projectile);
       });
   }
 
@@ -277,10 +272,16 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
   }
 
-  createTankExplosion(tank: Tank) {
-    const posX = tank.posX;
-    const posY = tank.posY;
-    const explosion = new Explosion({ type: 'tankExplosion', posX, posY, width: 8, height: 8 });
+  createExplosion(entity: Tank | Projectile) {
+    const size = entity.type === 'projectile' ? 4 : 8;
+    const type = entity.type === 'projectile' ? 'projectileExplosion' : 'tankExplosion';
+
+    const centeringCorrection = entity.type === 'projectile' ? -1 : 0;
+    const posX = entity.posX + centeringCorrection;
+    const posY = entity.posY + centeringCorrection;
+
+    const explosion = new Explosion({ type, posX, posY, width: size, height: size });
+
     this.game.addEntity(explosion);
     explosion.spawn({ posX, posY });
   }

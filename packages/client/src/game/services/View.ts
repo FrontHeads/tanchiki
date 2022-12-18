@@ -204,9 +204,10 @@ export class View extends EventEmitter {
       return;
     }
 
-    // Отрисовка основного спрайта сущности
+    // Отрисовка основного спрайта сущности, без анимаций.
     if (!entity.animations?.length) {
       this.drawMainEntitySprite(entity, context);
+      return;
     }
 
     //Отрисовка сущностей с настраиваемой анимацией.
@@ -267,6 +268,7 @@ export class View extends EventEmitter {
     // Корректировка нужна чтобы визуально танк не прижимался вплотную к кирпичам.
     let correctTankPos = 0;
     let correctTankSize = 0;
+
     if (entity.type === 'tank') {
       correctTankPos = 2;
       correctTankSize = -4;

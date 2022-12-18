@@ -45,7 +45,7 @@ export class Game {
     this.controllerArrows = new Controller(KeyBindingsArrows);
   }
 
-  static getInstance() {
+  static create() {
     if (!Game.__instance) {
       Game.__instance = new Game();
     }
@@ -100,7 +100,7 @@ export class Game {
   addEntity(entity: Entity) {
     this.view.add(entity);
     this.zone.add(entity);
-    this.registerLoopDelays(entity);
+    this.registerTimers(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
     } else if (entity instanceof Projectile) {
@@ -121,7 +121,7 @@ export class Game {
     return ~~(delay / this.loopTimeMs); // ~~ это Math.floor()
   }
 
-  /** Аналог setTimeout, который работает через игровой цикл */
+  /** Аналог setTimeout, который работает через игровой цикл. */
   setLoopDelay(callback: () => void, delay: number) {
     const loopMark = this.loopCount + this.convertTimeToLoops(delay);
 
@@ -132,7 +132,8 @@ export class Game {
     this.loopDelays[loopMark].add(callback);
   }
 
-  setLoopInterval(callback: () => void, delay: number, intervalName: string | number) {
+  /** Аналог setInterval, который работает через игровой цикл. */
+  setLoopInterval(callback: () => void, delay: number, intervalName: string) {
     this.loopIntervals[intervalName] = {
       loopCounter: 0,
       targetLoop: this.convertTimeToLoops(delay),
@@ -142,13 +143,13 @@ export class Game {
     return intervalName;
   }
 
-  clearLoopInterval(intervalName: string | number) {
+  clearLoopInterval(intervalName: string) {
     if (intervalName in this.loopIntervals) {
       delete this.loopIntervals[intervalName];
     }
   }
 
-  registerLoopDelays(entity: Entity) {
+  registerTimers(entity: Entity) {
     entity.on('loopDelay', this.setLoopDelay.bind(this));
     entity.on('loopInterval', this.setLoopInterval.bind(this));
     entity.on('clearLoopInterval', this.clearLoopInterval.bind(this));

@@ -5,7 +5,7 @@ import { Game, Scenario } from './';
 
 describe('game/services/Scenario', () => {
   it('should create tank', () => {
-    const game = Game.getInstance();
+    const game = Game.create();
     game.createView(document.body);
     const scenario = new Scenario(game);
 
@@ -20,7 +20,7 @@ describe('game/services/Scenario', () => {
   });
 
   it('should destroy entity', () => {
-    const game = Game.getInstance();
+    const game = Game.create();
     game.createView(document.body);
     const scenario = new Scenario(game);
 
