@@ -19,8 +19,8 @@ import { MapManager } from './MapManager';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 4,
-    maxActiveEnemies: 5,
+    enemiesLeft: 2,
+    maxActiveEnemies: 2,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;

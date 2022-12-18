@@ -20,13 +20,13 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       width: 4,
       height: 4,
       color: 'yellow',
-      spriteCoordinates: spriteCoordinates.playerOneTank.RIGHT,
+      mainSpriteCoordinates: spriteCoordinates['tank.player.primary.a'].RIGHT,
     });
 
     /**Запуск анимации танка-курсора в меню.*/
     tankElem.startAnimation({
       delay: 25,
-      spriteCoordinates: spriteCoordinates.playerOneTank.RIGHT,
+      spriteCoordinates: spriteCoordinates['tank.player.primary.a'].RIGHT,
       name: 'menuTank',
       looped: true,
     });

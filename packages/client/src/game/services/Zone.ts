@@ -85,6 +85,7 @@ export class Zone {
     if (entity.type === 'tankExplosion' || entity.type === 'projectileExplosion') {
       return;
     }
+
     entity.on('entityWillHaveNewPos', (posState: PosState) => {
       const rect = posState.nextRect;
       if (this.hasCollision(rect, entity)) {

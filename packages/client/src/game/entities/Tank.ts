@@ -7,16 +7,51 @@ export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
   shootSpeed = 3;
-  canShoot = true;
-  spriteFrame: number;
+  canShoot = false;
+  /** Блокирует возможность перемещения на время отрисовки анимации спауна. */
+  blocked = true;
+  /** Дает танку неуязвимость (снаряды не причиняют вреда) */
+  invincible = true;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
     Object.assign(this, props);
     this.color = props.color || 'yellow';
     //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
-    this.spriteCoordinates = spriteCoordinates.playerOneTank;
-    this.spriteFrame = 0;
+    this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
+
+    this.on('spawn', () => {
+      this.startAnimation({
+        delay: 50,
+        spriteCoordinates: spriteCoordinates.spawn,
+        looped: true,
+        stopTimer: 1000,
+      });
+
+      // Возвращаем танку подвижность после анимации спауна.
+      this.setLoopDelay(() => {
+        this.blocked = false;
+        this.canShoot = true;
+      }, 1000);
+
+      if (this.role === 'player') {
+        this.setLoopDelay(
+          this.startAnimation.bind(this, {
+            delay: 25,
+            spriteCoordinates: spriteCoordinates.shield,
+            looped: true,
+            stopTimer: 3000,
+            showMainSprite: true,
+          }),
+          1000
+        );
+
+        // Возвращаем танку уязимость после исчезновения силового поля после спауна.
+        this.setLoopDelay(() => {
+          this.invincible = false;
+        }, 4000);
+      }
+    });
   }
 
   shoot() {

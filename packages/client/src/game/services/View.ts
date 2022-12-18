@@ -194,7 +194,7 @@ export class View extends EventEmitter {
     const context = this.layers[layerId].context;
 
     // Отрисовка сущностей без спрайта
-    if (!entity.spriteCoordinates && entity.color) {
+    if (!entity.mainSpriteCoordinates && entity.color) {
       context.fillStyle = entity.color;
       context.fillRect(...this.getEntityActualRect(entity));
       return;
@@ -204,17 +204,9 @@ export class View extends EventEmitter {
       return;
     }
 
-    // Отрисовка сущностей без настраиваемой анимации
+    // Отрисовка основного спрайта сущности
     if (!entity.animations?.length) {
-      const spriteCoordinates = this.getSpriteCoordinates({ entity });
-
-      if (!spriteCoordinates) {
-        return;
-      }
-
-      //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут нужна скорость работы.
-      context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
-      return;
+      this.drawMainEntitySprite(entity, context);
     }
 
     //Отрисовка сущностей с настраиваемой анимацией.
@@ -226,11 +218,27 @@ export class View extends EventEmitter {
           return;
         }
 
+        if (animation.showMainSprite) {
+          this.drawMainEntitySprite(entity, context);
+        }
+
         //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут важна скорость работы.
         context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
         this.setNextSpriteFrame(animation, entity);
       });
     }
+  }
+
+  /** Отрисовка основного спрайта сущности */
+  drawMainEntitySprite(entity: Entity, context: CanvasRenderingContext2D) {
+    const spriteCoordinates = this.getSpriteCoordinates({ entity });
+
+    if (!spriteCoordinates) {
+      return;
+    }
+
+    //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут нужна скорость работы.
+    context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
   }
 
   /** Стирает отображение сущности на canvas-слое, но не удаляет сущность. */
@@ -256,11 +264,19 @@ export class View extends EventEmitter {
 
   /** Возвращает актуальные координаты сущности на слое (в пикселях) */
   getEntityActualRect(entity: Entity) {
+    // Корректировка нужна чтобы визуально танк не прижимался вплотную к кирпичам.
+    let correctTankPos = 0;
+    let correctTankSize = 0;
+    if (entity.type === 'tank') {
+      correctTankPos = 2;
+      correctTankSize = -4;
+    }
+
     return [
-      this.convertToPixels(entity.posX),
-      this.convertToPixels(entity.posY),
-      this.convertToPixels(entity.width),
-      this.convertToPixels(entity.height),
+      this.convertToPixels(entity.posX, correctTankPos),
+      this.convertToPixels(entity.posY, correctTankPos),
+      this.convertToPixels(entity.width, correctTankSize),
+      this.convertToPixels(entity.height, correctTankSize),
     ] as const;
   }
 
@@ -269,17 +285,17 @@ export class View extends EventEmitter {
     let spriteCoordinates: number[] | null = null;
 
     // Спрайты сущностей без настроек анимации (меняются 2 фрейма или нет анимации).
-    if (!animation && entity.spriteCoordinates) {
+    if (!animation && entity.mainSpriteCoordinates) {
       // Спрайты статичных сущностей.
-      if (!entity.movable && Array.isArray(entity.spriteCoordinates)) {
-        return entity.spriteCoordinates[0];
+      if (!entity.movable && Array.isArray(entity.mainSpriteCoordinates)) {
+        return entity.mainSpriteCoordinates[0];
       }
 
       // Спрайты подвижных сущностей.
-      if (entity.movable && !Array.isArray(entity.spriteCoordinates)) {
+      if (entity.movable && !Array.isArray(entity.mainSpriteCoordinates)) {
         // Без настроек анимации у сущности м.б. только 2 фрейма. Тут их меняем.
-        entity.spriteFrame = +!entity.spriteFrame;
-        return entity.spriteCoordinates[entity.direction][entity.spriteFrame];
+        entity.mainSpriteFrame = +!entity.mainSpriteFrame;
+        return entity.mainSpriteCoordinates[entity.direction][entity.mainSpriteFrame];
       }
     }
 
@@ -317,7 +333,7 @@ export class View extends EventEmitter {
   }
 
   /** Пересчитывает размер игровых клеток в пиксели. */
-  private convertToPixels(value: number) {
-    return Math.round(value * this.pixelRatio);
+  private convertToPixels(value: number, correction = 0) {
+    return Math.round(value * this.pixelRatio + correction);
   }
 }

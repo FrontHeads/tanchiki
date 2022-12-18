@@ -84,14 +84,13 @@ export class Game {
       delete this.scenario;
     }
     this.clearLoopEntities();
+    this.loopIntervals = {};
     this.clearLoopDelays();
     this.view.reset();
     this.zone.reset();
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
-    //TODO сделать по человечески.
-    this.loopIntervals = {};
   }
 
   createView(root: HTMLElement | null) {
@@ -136,7 +135,7 @@ export class Game {
   setLoopInterval(callback: () => void, delay: number, intervalName: string | number) {
     this.loopIntervals[intervalName] = {
       loopCounter: 0,
-      workLoop: this.convertTimeToLoops(delay),
+      targetLoop: this.convertTimeToLoops(delay),
       callback: callback,
     };
 
@@ -172,7 +171,7 @@ export class Game {
 
   checkLoopIntervals() {
     Object.values(this.loopIntervals).forEach(interval => {
-      if (interval.loopCounter === interval.workLoop) {
+      if (interval.loopCounter === interval.targetLoop) {
         interval.callback();
         interval.loopCounter = 0;
         return;

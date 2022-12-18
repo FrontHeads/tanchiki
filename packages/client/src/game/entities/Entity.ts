@@ -29,10 +29,12 @@ export class Entity extends EventEmitter {
   hittable = true;
   color = 'grey';
   shouldBeDestroyed = false;
-  /** Хранит координаты сущности на спрайте. */
-  spriteCoordinates: SpriteCoordinatesNoAnimations | SpriteCoordinatesWithAnimations = null;
+  /** Значение true делает танк неуязвимым для снарядов. */
+  invincible = false;
+  /** Хранит координаты сущности на спрайте. Это основной спрайт, на который сверху могут накладываться анимации. */
+  mainSpriteCoordinates: SpriteCoordinatesNoAnimations | SpriteCoordinatesWithAnimations = null;
   /** Указывает какой фрейм анимации показывать. */
-  spriteFrame = 0;
+  mainSpriteFrame = 0;
   /** Данные необходимые для работы анимации */
   animations: Animations = [];
 
@@ -84,7 +86,7 @@ export class Entity extends EventEmitter {
     this.emit('damaged');
     if (this.type === 'projectile') {
       this.explode();
-    } else if (this.type === 'tank') {
+    } else if (this.type === 'tank' && !this.invincible) {
       if (this.role !== source.role) {
         this.explode();
         this.emit('destroyed', source);
@@ -97,12 +99,24 @@ export class Entity extends EventEmitter {
     settings.spriteFrame ??= 0;
     settings.isPlay ??= true;
     this.animations.push(settings);
-    this.setLoopInterval(this.redraw.bind(this), settings.delay, settings.name);
     // По умолчанию интервалы анимаций убиваются в Game.reset()
+    this.setLoopInterval(this.redraw.bind(this), settings.delay, settings.name);
+
+    if (settings.stopTimer) {
+      this.setLoopDelay(this.cancelAnimation.bind(this, 'showEntity', settings.name), settings.stopTimer);
+    }
   }
 
-  cancelAnimation(type: CancelAnimation = 'showEntity', name: string | number) {
+  cancelAnimation(type: CancelAnimation = 'eraseEntity', name: string | number) {
     this.clearLoopInterval(name);
+
+    const animationIndex = this.animations.findIndex(animation => animation.name === name);
+    this.animations.splice(animationIndex, 1);
+
+    if (type === 'showEntity') {
+      this.emit('entityShouldUpdate');
+      this.emit('entityDidUpdate');
+    }
 
     if (type === 'deleteEntity') {
       this.despawn();

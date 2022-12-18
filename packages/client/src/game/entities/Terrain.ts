@@ -17,25 +17,25 @@ export class Terrain extends Entity {
         this.crossable = false;
         this.hittable = true;
         this.color = 'brown';
-        this.spriteCoordinates = spriteCoordinates.brickWall;
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.brick'];
         break;
       case 'concreteWall':
         this.crossable = false;
         this.hittable = true;
         this.color = 'lightgrey';
-        this.spriteCoordinates = spriteCoordinates.concreteWall;
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.concrete'];
         break;
       case 'trees':
         this.crossable = true;
         this.hittable = false;
         this.color = 'green';
-        this.spriteCoordinates = spriteCoordinates.trees;
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.trees'];
         break;
       case 'water':
         this.crossable = false;
         this.hittable = false;
         this.color = 'blue';
-        this.spriteCoordinates = spriteCoordinates.water;
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.water'];
         break;
     }
 
@@ -43,7 +43,7 @@ export class Terrain extends Entity {
       this.on('spawn', () => {
         this.startAnimation({
           delay: 350,
-          spriteCoordinates: spriteCoordinates.water,
+          spriteCoordinates: spriteCoordinates['terrain.water'],
           looped: true,
         });
       });

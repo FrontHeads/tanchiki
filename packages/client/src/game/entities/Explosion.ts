@@ -12,13 +12,13 @@ export class Explosion extends Entity {
         this.crossable = true;
         this.hittable = false;
         this.color = 'red';
-        this.spriteCoordinates = spriteCoordinates.projectileExplosion;
+        this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
         break;
       case 'tankExplosion':
         this.crossable = true;
         this.hittable = false;
         this.color = 'red';
-        this.spriteCoordinates = spriteCoordinates.projectileExplosion;
+        this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
         break;
     }
 

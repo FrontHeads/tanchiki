@@ -14,7 +14,7 @@ export class Projectile extends EntityDynamic {
     Object.assign(this, props);
     this.type = 'projectile';
     this.color = 'red';
-    this.spriteCoordinates = spriteCoordinates.projectile;
+    this.mainSpriteCoordinates = spriteCoordinates.projectile;
     this.flying = true;
     this.moving = true;
     this.nextDirection = this.direction;

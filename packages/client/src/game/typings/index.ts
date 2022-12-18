@@ -67,7 +67,7 @@ export type UIElementSettings = Pos &
     align: CanvasTextAlign;
     color: string;
     backImg: HTMLImageElement;
-    spriteCoordinates: SpriteCoordinatesNoAnimations;
+    mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
   }>;
 
 export enum MainMenuState {
@@ -161,7 +161,7 @@ export type LoopIntervals = Record<string, LoopInterval>;
 
 export type LoopInterval = {
   loopCounter: number;
-  workLoop: number;
+  targetLoop: number;
   callback: () => void;
 };
 
@@ -177,13 +177,23 @@ export type AnimationSettings = {
   spriteCoordinates: SpriteCoordinatesWithAnimations | SpriteCoordinatesNoAnimations;
   /** Показывать анимацию бесконечно или однократно. False = однократно. */
   looped: boolean;
-  /** Имя анимации, оно же имя loopInterval который крутит анимацию */
+  /** Показывать ли основной спрайт сущности во время анимации. */
+  showMainSprite?: boolean;
+  /** Указывает через какой промежуток времени остановить анимацию. */
+  stopTimer?: number;
+  /** Имя анимации, оно же имя loopInterval который крутит анимацию. */
   name?: string | number;
-  /** Фрейм (кадр) который будет показан при следующем вызове анимации */
+  /** Фрейм (кадр) который будет показан при следующем вызове анимации. */
   spriteFrame?: number;
-  /** Чтобы поставить анимацию анимацию нужно установить false. */
+  /** Чтобы поставить анимацию на паузу нужно установить false. */
   //TODO пока не реализовано.
   isPlay?: boolean;
 };
 
-export type CancelAnimation = 'showEntity' | 'eraseEntity' | 'deleteEntity';
+export type CancelAnimation =
+  /** Убирает анимацию, но спрайт остается видимым */
+  | 'showEntity'
+  /** Убирает анимацию и стирает спрайт */
+  | 'eraseEntity'
+  /** Убирает анимацию и удаляет сущность */
+  | 'deleteEntity';

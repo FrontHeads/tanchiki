@@ -1,5 +1,6 @@
 import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import { GameOverScreen, GameScreen, LevelSelectorScreen, LoadingScreen, MainMenuScreen } from '../ui/screens';
+import { classicDesignSprite } from './spriteCoordinates';
 
 export const concreteCells: Cell[] = [
   Cell.CONCRETE,
@@ -43,64 +44,6 @@ export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
 export const spawnPlaces: Record<number, number[]> = {
   0: [0, 6, 12],
   12: [4, 8],
-};
-
-/** Координаты сущностей на sprite-изображении с классическим дизайном */
-const classicDesignSprite = {
-  playerOneTank: {
-    UP: [
-      [2, 1, 57, 57],
-      [66, 1, 57, 57],
-    ],
-    RIGHT: [
-      [390, 1, 57, 57],
-      [458, 1, 57, 57],
-    ],
-    DOWN: [
-      [262, 1, 57, 57],
-      [326, 1, 57, 57],
-    ],
-    LEFT: [
-      [134, 1, 57, 57],
-      [202, 1, 57, 57],
-    ],
-  },
-  projectile: {
-    UP: [
-      [1312, 405, 28, 28],
-      [1312, 405, 28, 28],
-    ],
-    RIGHT: [
-      [1407, 400, 28, 28],
-      [1407, 400, 28, 28],
-    ],
-    DOWN: [
-      [1377, 405, 28, 28],
-      [1377, 405, 28, 28],
-    ],
-    LEFT: [
-      [1342, 400, 28, 28],
-      [1342, 400, 28, 28],
-    ],
-  },
-  brickWall: [[1052, 1, 63, 63]],
-  concreteWall: [[1052, 64, 63, 63]],
-  flag: [[1244, 128, 66, 66]],
-  trees: [[1117, 128, 63, 63]],
-  ice: [[1181, 128, 63, 63]],
-  water: [
-    [1117, 192, 63, 63],
-    [1053, 192, 63, 63],
-  ],
-  projectileExplosion: [
-    [1053, 512, 63, 63],
-    [1120, 512, 63, 63],
-    [1184, 512, 63, 63],
-  ],
-  tankExplosion: [
-    [1252, 512, 130, 130],
-    [1371, 512, 130, 130],
-  ],
 };
 
 //TODO тут будут координаты для спрайта с современным дизайном.
