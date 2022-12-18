@@ -1,5 +1,5 @@
-import type { EntityDynamicSettings } from '../typings';
-import { EntityDynamic } from './';
+import type { ProjectileSettings } from '../typings';
+import { EntityDynamic, Tank } from './';
 
 export class Projectile extends EntityDynamic {
   width = 2;
@@ -7,8 +7,11 @@ export class Projectile extends EntityDynamic {
   movePace = 1;
   moveSpeed = 3;
   moveStepsTotal = 4;
+  exploding = false;
+  explosionRadius = 1;
+  parent: Tank | null = null;
 
-  constructor(props: EntityDynamicSettings) {
+  constructor(props: ProjectileSettings) {
     super(props);
     Object.assign(this, props);
     this.type = 'projectile';
@@ -19,9 +22,28 @@ export class Projectile extends EntityDynamic {
   }
 
   stateCheck() {
-    if (!this.canMove) {
-      this.stop();
+    if (this.exploding) {
       this.explode();
+    }
+    if (!this.canMove) {
+      this.prepareToExplode();
+    }
+  }
+
+  prepareToExplode() {
+    this.exploding = true;
+
+    switch (this.direction) {
+      case 'UP':
+      case 'DOWN':
+        this.posX -= this.explosionRadius;
+        this.width += this.explosionRadius * 2;
+        break;
+      case 'LEFT':
+      case 'RIGHT':
+        this.posY -= this.explosionRadius;
+        this.height += this.explosionRadius * 2;
+        break;
     }
   }
 }

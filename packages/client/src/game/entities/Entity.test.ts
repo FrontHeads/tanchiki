@@ -52,7 +52,7 @@ describe('game/entities/Entity', () => {
 
     entity.on('damaged', mockFn);
     entity.spawn({ posX: 1, posY: 2 });
-    entity.takeDamage(source);
+    entity.takeDamage(source, { posX: 3, posY: 3 });
 
     expect(mockFn).toHaveBeenCalled();
   });
