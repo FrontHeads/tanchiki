@@ -17,7 +17,7 @@ export class EventEmitter<T extends string = string> {
    * Принимает название события (+ опционально доп. данные) и оповещает подписчиков.
    * Т.е. запускает функции-обработчики прикрепленные к данному названию события через on() */
 
-  emit(eventName: T, ...args: Array<unknown>) {
+  emit<K extends Array<unknown>>(eventName: T, ...args: K) {
     this.listeners[eventName]?.forEach((listener: Fn) => {
       listener.apply(this, args);
     });

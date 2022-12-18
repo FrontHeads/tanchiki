@@ -52,6 +52,8 @@ export class Entity extends EventEmitter {
     } else if (this.type === 'projectile') {
       this.explode();
     }
+
+    return this.spawned;
   }
 
   despawn() {
