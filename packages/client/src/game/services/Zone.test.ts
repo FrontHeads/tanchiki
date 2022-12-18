@@ -1,17 +1,9 @@
-import type { Entity, EntityDynamic } from '../entities';
+import { Entity, Tank, Terrain } from '../entities';
 import type { Rect } from '../typings';
-import { EventEmitter } from '../utils';
 import { Zone } from './';
 
 function mockEntity(rect: Rect) {
-  const entity = new EventEmitter() as EntityDynamic;
-  Object.assign(entity, rect);
-  entity.type = 'tank';
-  entity.alignedToGrid = true;
-  entity.lastRect = rect;
-  entity.getRect = () => rect;
-  entity.nextRect = rect;
-  return entity;
+  return new Tank(rect);
 }
 
 describe('game/services/Zone', () => {
@@ -24,6 +16,20 @@ describe('game/services/Zone', () => {
     expect(zone.matrix[0][0][0]).toBe(null);
     expect(zone.matrix[0][99][99]).toBe(null);
     expect(zone.matrix[0][99][100]).toBe(undefined);
+  });
+
+  it('should reset matrix', () => {
+    const zone = new Zone({ width: 2, height: 2 });
+    const rect = { posX: 0, posY: 0, width: 2, height: 2 };
+    const entity = {} as Entity;
+
+    zone.updateMatrix(0, rect, entity);
+    zone.reset();
+
+    expect(zone.matrix[0][0][0]).toBe(null);
+    expect(zone.matrix[0][0][1]).toBe(null);
+    expect(zone.matrix[0][1][0]).toBe(null);
+    expect(zone.matrix[0][1][1]).toBe(null);
   });
 
   it('should update matrix', () => {
@@ -52,6 +58,21 @@ describe('game/services/Zone', () => {
     expect(zone.isBeyondMatrix(rect2)).toBe(false);
     expect(zone.isBeyondMatrix(rect3)).toBe(true);
     expect(zone.isBeyondMatrix(rect4)).toBe(true);
+  });
+
+  it('should check if entity rect does not have floats', () => {
+    const zone = new Zone({ width: 10, height: 10 });
+    const rect1 = { posX: 1.5, posY: 1, width: 1, height: 1 };
+    const rect2 = { posX: 1, posY: 1.5, width: 1, height: 1 };
+    const rect3 = { posX: 1, posY: 1, width: 1.5, height: 1 };
+    const rect4 = { posX: 1, posY: 1, width: 1, height: 1.5 };
+    const rect5 = { posX: 1, posY: 1, width: 1, height: 1 };
+
+    expect(zone.isLegalRect(rect1)).toBe(false);
+    expect(zone.isLegalRect(rect2)).toBe(false);
+    expect(zone.isLegalRect(rect3)).toBe(false);
+    expect(zone.isLegalRect(rect4)).toBe(false);
+    expect(zone.isLegalRect(rect5)).toBe(true);
   });
 
   it('should check if entity rect has collisions with other objects', () => {
@@ -97,18 +118,34 @@ describe('game/services/Zone', () => {
     };
 
     zone.add(entity);
+    entity.spawn();
     entity.emit('entityWillHaveNewPos', posState);
 
     expect(posState.hasCollision).toBe(true);
   });
 
+  it('should listen to entity partial destruction', () => {
+    const zone = new Zone({ width: 10, height: 10 });
+    const entity = new Terrain({ type: 'brickWall', posX: 1, posY: 1, width: 2, height: 2 });
+
+    zone.add(entity);
+    entity.spawn();
+    entity.emit('damaged', { posX: 2, posY: 2 });
+
+    expect(zone.matrix[0][1][1]).toBe(entity);
+    expect(zone.matrix[0][1][2]).toBe(entity);
+    expect(zone.matrix[0][2][1]).toBe(entity);
+    expect(zone.matrix[0][2][2]).toBe(null);
+  });
+
   it('should subscribe to entity destruction', () => {
     const zone = new Zone({ width: 10, height: 10 });
-    const entity1 = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
+    const entity = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
 
-    zone.add(entity1);
-    entity1.emit('entityDidUpdate', entity1.getRect());
-    entity1.emit('entityShouldBeDestroyed');
+    zone.add(entity);
+    entity.spawn();
+    entity.emit('entityDidUpdate', entity.getRect());
+    entity.emit('entityShouldBeDestroyed');
 
     expect(zone.matrix[0][1][1]).toBe(null);
   });

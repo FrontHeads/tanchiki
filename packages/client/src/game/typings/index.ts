@@ -1,4 +1,4 @@
-import { Tank } from '../entities';
+import { Entity, Tank } from '../entities';
 import { Controller } from './../services/Controller';
 
 export type GameSettings = {
@@ -59,6 +59,8 @@ export type EntityDynamicSettings = EntitySettings &
   Partial<{
     moveSpeed: number;
   }>;
+
+export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
 
 export type UIElementSettings = Pos &
   Size &
@@ -155,7 +157,7 @@ export enum Cell {
   CONCRETE_RIGHT_BOTTOM = 20,
 }
 
-export type LoopDelays = Record<number, Set<() => void>>;
+export type LoopDelays = Record<number, Array<() => void>>;
 
 export type LoopIntervals = Record<string, LoopInterval>;
 
@@ -197,3 +199,23 @@ export type CancelAnimation =
   | 'eraseEntity'
   /** Убирает анимацию и удаляет сущность. */
   | 'deleteEntity';
+
+/** Список canvas-слоев и прикрепленных к ним сущностей. */
+export type LayerList = Record<
+  string,
+  {
+    context: CanvasRenderingContext2D;
+    entities: Set<LayerEntity>;
+  }
+>;
+
+/** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
+export type LayerEntity = {
+  instance: Entity;
+  listeners: Record<string, (...args: Array<any>) => void>;
+};
+
+export type GetSpriteCoordinates = {
+  entity: Entity;
+  animation?: AnimationSettings;
+};

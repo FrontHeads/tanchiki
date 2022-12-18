@@ -275,10 +275,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   createExplosion(entity: Tank | Projectile) {
     const size = entity.type === 'projectile' ? 4 : 8;
     const type = entity.type === 'projectile' ? 'projectileExplosion' : 'tankExplosion';
+    const centeringCorrection = entity.direction === 'UP' || entity.direction === 'LEFT' ? -2 : 0;
+    let posX = entity.posX;
+    let posY = entity.posY;
 
-    const centeringCorrection = entity.type === 'projectile' ? -1 : 0;
-    const posX = entity.posX + centeringCorrection;
-    const posY = entity.posY + centeringCorrection;
+    if (entity.direction === 'UP' || entity.direction === 'DOWN') {
+      posY += centeringCorrection;
+    } else {
+      posX += centeringCorrection;
+    }
 
     const explosion = new Explosion({ type, posX, posY, width: size, height: size });
 

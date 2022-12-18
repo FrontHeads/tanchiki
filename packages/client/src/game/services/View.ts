@@ -1,27 +1,7 @@
 import type { Entity } from '../entities';
-import type { AnimationSettings, Size } from '../typings';
+import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Pos, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
-
-/** Список canvas-слоев и прикрепленных к ним сущностей. */
-type LayerList = Record<
-  string,
-  {
-    context: CanvasRenderingContext2D;
-    entities: Set<LayerEntity>;
-  }
->;
-
-/** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
-type LayerEntity = {
-  instance: Entity;
-  listeners: Record<string, () => void>;
-};
-
-type GetSpriteCoordinates = {
-  entity: Entity;
-  animation?: AnimationSettings;
-};
 
 export class View extends EventEmitter {
   width = 0;
@@ -29,11 +9,9 @@ export class View extends EventEmitter {
   pixelRatio = 10;
   gameBgColor = 'black';
   layerZIndexCount = 0;
-  /** Содержит список canvas-слоев, canvasContext этих слоев, а также прикрепленные к слоям сущности.
-   * О сущностях исчерпывающая информация: все свойства, все listeners.
-   */
+  /** Содержит список canvas-слоев, canvasContext этих слоев, а также прикрепленные к слоям сущности. */
   layers: LayerList = {};
-  /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев */
+  /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
   spriteImg: HTMLImageElement | null = null;
 
@@ -129,21 +107,26 @@ export class View extends EventEmitter {
       instance: entity,
       listeners: {
         entityShouldUpdate: () => {
-          this.eraseEntityFromLayer(entity, layerId);
+          this.eraseFromLayer(entity, layerId);
         },
         entityDidUpdate: () => {
-          this.drawEntityOnLayer(entity, layerId);
+          this.drawOnLayer(entity, layerId);
         },
         entityShouldRenderText: () => {
           this.drawTextOnLayer(entity as UIElement, layerId);
         },
         entityShouldBeDestroyed: () => {
-          this.eraseEntityFromLayer(entity, layerId);
+          this.eraseFromLayer(entity, layerId);
           this.removeEntityFromLayer(entity, layerId);
+        },
+        damaged: (pos: Pos) => {
+          if (entity.type === 'brickWall') {
+            this.eraseFromLayer({ ...pos, width: 1, height: 1 }, layerId);
+          }
         },
       },
     };
-    this.layers[layerId].entities.add(layerObject);
+    this.layers[layerId]?.entities.add(layerObject);
 
     for (const [eventName, callback] of Object.entries(layerObject.listeners)) {
       entity.on(eventName, callback);
@@ -190,13 +173,13 @@ export class View extends EventEmitter {
   }
 
   /** Рисует отображение сущности на canvas-слое. Заполняет цветом или отображает спрайт.*/
-  drawEntityOnLayer(entity: Entity, layerId: keyof LayerList) {
+  drawOnLayer(entity: Entity, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
 
     // Отрисовка сущностей без спрайта
     if (!entity.mainSpriteCoordinates && entity.color) {
       context.fillStyle = entity.color;
-      context.fillRect(...this.getEntityActualRect(entity));
+      context.fillRect(...this.getActualRect(entity));
       return;
     }
 
@@ -224,7 +207,7 @@ export class View extends EventEmitter {
         }
 
         //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут важна скорость работы.
-        context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
+        context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getActualRect(entity));
         this.setNextSpriteFrame(animation, entity);
       });
     }
@@ -239,13 +222,13 @@ export class View extends EventEmitter {
     }
 
     //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут нужна скорость работы.
-    context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getEntityActualRect(entity));
+    context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getActualRect(entity));
   }
 
   /** Стирает отображение сущности на canvas-слое, но не удаляет сущность. */
-  eraseEntityFromLayer(entity: Entity, layerId: keyof LayerList) {
+  eraseFromLayer(rect: Rect | Entity, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
-    context.clearRect(...this.getEntityActualRect(entity));
+    context.clearRect(...this.getActualRect(rect));
   }
 
   /** Перерисовывает все сущности на слое. */
@@ -253,7 +236,7 @@ export class View extends EventEmitter {
     const { entities: objects } = this.layers[layerId];
     this.eraseAllEntitiesOnLayer(layerId);
     for (const layerObject of objects) {
-      this.drawEntityOnLayer(layerObject.instance, layerId);
+      this.drawOnLayer(layerObject.instance, layerId);
     }
   }
 
@@ -264,21 +247,21 @@ export class View extends EventEmitter {
   }
 
   /** Возвращает актуальные координаты сущности на слое (в пикселях) */
-  getEntityActualRect(entity: Entity) {
+  getActualRect(rect: Entity | Rect) {
     // Корректировка нужна чтобы визуально танк не прижимался вплотную к кирпичам.
     let correctTankPos = 0;
     let correctTankSize = 0;
 
-    if (entity.type === 'tank') {
+    if ('type' in rect && rect.type === 'tank') {
       correctTankPos = 2;
       correctTankSize = -4;
     }
 
     return [
-      this.convertToPixels(entity.posX, correctTankPos),
-      this.convertToPixels(entity.posY, correctTankPos),
-      this.convertToPixels(entity.width, correctTankSize),
-      this.convertToPixels(entity.height, correctTankSize),
+      this.convertToPixels(rect.posX, correctTankPos),
+      this.convertToPixels(rect.posY, correctTankPos),
+      this.convertToPixels(rect.width, correctTankSize),
+      this.convertToPixels(rect.height, correctTankSize),
     ] as const;
   }
 
@@ -323,8 +306,7 @@ export class View extends EventEmitter {
       animation.spriteFrame = 0;
     }
 
-    if (isFinishFrame && !animation.looped) {
-      // @ts-expect-error animation.name задается по умолчанию в методе startAnimation() и не м.б. undefined
+    if (isFinishFrame && !animation.looped && animation.name) {
       entity.cancelAnimation('deleteEntity', animation.name);
     }
   }

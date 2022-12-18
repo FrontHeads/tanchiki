@@ -55,11 +55,12 @@ export class Tank extends EntityDynamic {
   }
 
   shoot() {
-    if (!this.canShoot) {
+    if (!this.spawned || !this.canShoot) {
       return;
     }
 
     const projectile = new Projectile({
+      parent: this,
       ...this.calculateProjectileInitPos(),
       role: this.role,
       direction: this.direction,
@@ -88,13 +89,13 @@ export class Tank extends EntityDynamic {
 
     switch (this.direction) {
       case 'UP':
-        return { posX: rect.posX + offsetX, posY: rect.posY - defaultSize.height };
+        return { posX: rect.posX + offsetX, posY: rect.posY };
       case 'DOWN':
-        return { posX: rect.posX + offsetX, posY: rect.posY + rect.height };
+        return { posX: rect.posX + offsetX, posY: rect.posY + rect.height - defaultSize.height };
       case 'LEFT':
-        return { posX: rect.posX - defaultSize.width, posY: rect.posY + offsetY };
+        return { posX: rect.posX, posY: rect.posY + offsetY };
       case 'RIGHT':
-        return { posX: rect.posX + rect.width, posY: rect.posY + offsetY };
+        return { posX: rect.posX + rect.width - defaultSize.width, posY: rect.posY + offsetY };
       default:
         return { posX: rect.posX, posY: rect.posY }; // чтобы не ругался тайпскрипт (из-за enum Direction)
     }

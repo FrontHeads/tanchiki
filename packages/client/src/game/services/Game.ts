@@ -100,7 +100,7 @@ export class Game {
   addEntity(entity: Entity) {
     this.view.add(entity);
     this.zone.add(entity);
-    this.registerTimers(entity);
+    this.registerTimerHandlers(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
     } else if (entity instanceof Projectile) {
@@ -110,15 +110,8 @@ export class Game {
     }
   }
 
-  clearLoopEntities() {
-    for (const entity of this.loopEntities) {
-      entity.despawn();
-    }
-    this.loopEntities = new Set();
-  }
-
   convertTimeToLoops(delay: number) {
-    return ~~(delay / this.loopTimeMs); // ~~ это Math.floor()
+    return Math.floor(delay / this.loopTimeMs);
   }
 
   /** Аналог setTimeout, который работает через игровой цикл. */
@@ -126,10 +119,15 @@ export class Game {
     const loopMark = this.loopCount + this.convertTimeToLoops(delay);
 
     if (!this.loopDelays[loopMark]) {
-      this.loopDelays[loopMark] = new Set();
+      this.loopDelays[loopMark] = [];
     }
 
-    this.loopDelays[loopMark].add(callback);
+    this.loopDelays[loopMark].push(callback);
+  }
+
+  clearLoopDelays() {
+    this.loopCount = 0;
+    this.loopDelays = {};
   }
 
   /** Аналог setInterval, который работает через игровой цикл. */
@@ -149,15 +147,10 @@ export class Game {
     }
   }
 
-  registerTimers(entity: Entity) {
+  registerTimerHandlers(entity: Entity) {
     entity.on('loopDelay', this.setLoopDelay.bind(this));
     entity.on('loopInterval', this.setLoopInterval.bind(this));
     entity.on('clearLoopInterval', this.clearLoopInterval.bind(this));
-  }
-
-  clearLoopDelays() {
-    this.loopCount = 0;
-    this.loopDelays = {};
   }
 
   checkLoopDelays() {
@@ -179,6 +172,13 @@ export class Game {
       }
       interval.loopCounter++;
     });
+  }
+
+  clearLoopEntities() {
+    for (const entity of this.loopEntities) {
+      entity.despawn();
+    }
+    this.loopEntities = new Set();
   }
 
   loop() {
@@ -240,9 +240,9 @@ export class Game {
 
   initMenu() {
     this.screen = ScreenType.MAIN_MENU;
-    this.overlay.show(this.screen, this.mainMenuState);
 
-    this.controllerAll.reset();
+    this.reset();
+    this.overlay.show(this.screen, this.mainMenuState);
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll

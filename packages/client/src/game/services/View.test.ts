@@ -28,23 +28,23 @@ describe('game/services/View', () => {
 
     view.build(root);
 
-    view.drawEntityOnLayer = jest.fn();
-    view.eraseEntityFromLayer = jest.fn();
+    view.drawOnLayer = jest.fn();
+    view.eraseFromLayer = jest.fn();
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     view.add(entity);
     entity.emit('entityShouldUpdate');
     entity.emit('entityDidUpdate');
 
-    expect(view.eraseEntityFromLayer).toHaveBeenCalledTimes(1);
-    expect(view.drawEntityOnLayer).toHaveBeenCalledTimes(1);
+    expect(view.eraseFromLayer).toHaveBeenCalledTimes(1);
+    expect(view.drawOnLayer).toHaveBeenCalledTimes(1);
   });
 
   it('should subscribe to entity destruction', () => {
     const view = new View({ width: 10, height: 10 });
     const root = document.body.appendChild(document.createElement('div'));
-    view.drawEntityOnLayer = jest.fn();
-    view.eraseEntityFromLayer = jest.fn();
+    view.drawOnLayer = jest.fn();
+    view.eraseFromLayer = jest.fn();
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     view.build(root);
@@ -55,8 +55,8 @@ describe('game/services/View', () => {
     const layerObjectsCount2 = Array.from(view.layers['tanks'].entities).length;
 
     expect(layerObjectsCount1).not.toBe(layerObjectsCount2);
-    expect(view.eraseEntityFromLayer).toHaveBeenCalled();
-    expect(view.drawEntityOnLayer).not.toHaveBeenCalled();
+    expect(view.eraseFromLayer).toHaveBeenCalled();
+    expect(view.drawOnLayer).not.toHaveBeenCalled();
   });
 
   it('should calculate entity rect in pixels', () => {
@@ -66,8 +66,8 @@ describe('game/services/View', () => {
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     view.build(root);
-    const rect = view.getEntityActualRect(entity);
+    const rect = view.getActualRect(entity);
 
-    expect(rect).toEqual([20, 20, 20, 20]);
+    expect(rect).toEqual([22, 22, 16, 16]);
   });
 });

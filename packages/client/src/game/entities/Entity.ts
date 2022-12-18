@@ -53,7 +53,9 @@ export class Entity extends EventEmitter {
     return { posX: this.posX, posY: this.posY, width: this.width, height: this.height };
   }
 
-  spawn({ posX = this.posX, posY = this.posY }: Pos) {
+  spawn(coords?: Pos) {
+    const { posX, posY } = coords || { posX: this.posX, posY: this.posY };
+
     const posState: PosState = {
       hasCollision: undefined,
       nextRect: { posX, posY, width: this.width, height: this.height },
@@ -82,8 +84,8 @@ export class Entity extends EventEmitter {
     this.despawn();
   }
 
-  takeDamage(source: Entity) {
-    this.emit('damaged');
+  takeDamage(source: Entity, pos: Pos) {
+    this.emit('damaged', pos);
     if (this.type === 'projectile') {
       this.explode();
     } else if (this.type === 'tank' && !this.invincible) {
@@ -116,7 +118,7 @@ export class Entity extends EventEmitter {
     }
   }
 
-  cancelAnimation(type: CancelAnimation = 'eraseEntity', name: string | number) {
+  cancelAnimation(type: CancelAnimation = 'eraseEntity', name: string) {
     this.clearLoopInterval(name);
 
     const animationIndex = this.animations.findIndex(animation => animation.name === name);

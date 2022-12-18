@@ -27,7 +27,7 @@ export class Overlay {
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
     if (this.game) {
-      this.game.registerTimers(elem);
+      this.game.registerTimerHandlers(elem);
     }
     this.view.add(elem);
     elem.render();
