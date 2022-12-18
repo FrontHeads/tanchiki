@@ -42,13 +42,9 @@ export const Root: FC = () => {
               {printHeaderAndFooter && <Logo />}
               {printHeaderAndFooter && <div className="delimiter" />}
             </header>
-          </ErrorBoundary>
-
-          <ErrorBoundary>
             <Outlet />
+            {printHeaderAndFooter && <Footer />}
           </ErrorBoundary>
-          <ErrorBoundary>{printHeaderAndFooter && <Footer />}</ErrorBoundary>
-
           <ScrollRestoration />
           {isAppLoading && <Loader data-testid="app-loader" />}
         </main>
