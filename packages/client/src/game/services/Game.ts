@@ -6,6 +6,8 @@ import { Controller, resources, Scenario, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
+type LoopDelays = Record<number, Array<() => void>>;
+
 export class Game {
   static __instance: Game;
   inited = false;
@@ -20,6 +22,8 @@ export class Game {
   controllerArrows!: Controller;
   loopProcess: ReturnType<typeof setTimeout> | null = null;
   loopTimeMs = 25;
+  loopCount = 0;
+  loopDelays: LoopDelays = {};
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
   screen: ScreenType = ScreenType.LOADING;
@@ -61,6 +65,8 @@ export class Game {
   }
 
   unload() {
+    this.clearLoopEntities();
+    this.clearLoopDelays();
     this.stopLoop();
     this.controllerAll.unload();
     this.controllerWasd.unload();
@@ -72,12 +78,13 @@ export class Game {
     if (this.scenario) {
       delete this.scenario;
     }
+    this.clearLoopEntities();
+    this.clearLoopDelays();
     this.view.reset();
     this.zone.reset();
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
-    this.loopEntities = new Set();
   }
 
   createView(root: HTMLElement | null) {
@@ -88,6 +95,7 @@ export class Game {
     this.view.add(entity);
     this.zone.add(entity);
     this.audioManager.add(entity);
+    this.attachLoopDelayHandler(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
     } else if (entity instanceof Projectile) {
@@ -97,9 +105,50 @@ export class Game {
     }
   }
 
+  clearLoopEntities() {
+    for (const entity of this.loopEntities) {
+      entity.despawn();
+    }
+    this.loopEntities = new Set();
+  }
+
+  convertTimeToLoops(delay: number) {
+    return Math.floor(delay / this.loopTimeMs);
+  }
+
+  /** Аналог setTimeout, который работает через игровой цикл */
+  setLoopDelay(callback: () => void, delay: number) {
+    const loopMark = this.loopCount + this.convertTimeToLoops(delay);
+    if (!this.loopDelays[loopMark]) {
+      this.loopDelays[loopMark] = [];
+    }
+    this.loopDelays[loopMark].push(callback);
+  }
+
+  attachLoopDelayHandler(entity: Entity) {
+    entity.on('loopDelay', this.setLoopDelay.bind(this));
+  }
+
+  clearLoopDelays() {
+    this.loopCount = 0;
+    this.loopDelays = {};
+  }
+
+  checkLoopDelays() {
+    if (this.loopDelays[this.loopCount]) {
+      const delayedCallbacks = this.loopDelays[this.loopCount];
+      for (const callback of delayedCallbacks) {
+        callback();
+      }
+      delete this.loopDelays[this.loopCount];
+    }
+  }
+
   loop() {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
+    ++this.loopCount;
+    this.checkLoopDelays();
     for (const entity of this.loopEntities) {
       entity.update();
       if (entity.shouldBeDestroyed) {
@@ -150,9 +199,9 @@ export class Game {
 
   initMenu() {
     this.screen = ScreenType.MAIN_MENU;
-    this.overlay.show(this.screen, this.mainMenuState);
 
-    this.controllerAll.reset();
+    this.reset();
+    this.overlay.show(this.screen, this.mainMenuState);
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll

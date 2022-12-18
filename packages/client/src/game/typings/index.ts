@@ -58,6 +58,8 @@ export type EntityDynamicSettings = EntitySettings &
     moveSpeed: number;
   }>;
 
+export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
+
 export type UIElementSettings = Pos &
   Size &
   Partial<{
