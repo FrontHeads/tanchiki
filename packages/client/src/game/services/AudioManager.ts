@@ -5,7 +5,7 @@ import { resources } from './Resources/Resources';
 
 export class AudioManager extends EventEmitter {
   private isMuted = false;
-  private activeSounds: Set<keyof typeof SoundPathList> = new Set();
+  public activeSounds: Set<keyof typeof SoundPathList> = new Set();
 
   constructor() {
     super();
@@ -13,13 +13,16 @@ export class AudioManager extends EventEmitter {
     this.on('pause', () => {
       if (!this.isMuted) {
         this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-          this.stopSound(sound);
+          this.pauseSound(sound);
         });
         this.playSound('pause');
-        this.mute();
+        this.isMuted = true;
       } else {
-        this.unMute();
+        this.isMuted = false;
         this.playSound('pause');
+        this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+          this.resumeSound(sound);
+        });
       }
     });
 
@@ -73,7 +76,25 @@ export class AudioManager extends EventEmitter {
     if (soundResource && !this.isMuted) {
       soundResource.currentTime = 0;
       soundResource.play();
+      soundResource.addEventListener('ended', () => {
+        this.activeSounds.delete(sound);
+      });
+
       this.activeSounds.add(sound);
+    }
+  }
+
+  pauseSound(sound: keyof typeof SoundPathList): void {
+    const soundResource = resources.getSound(sound);
+    if (soundResource && !this.isMuted) {
+      soundResource.pause();
+    }
+  }
+
+  resumeSound(sound: keyof typeof SoundPathList): void {
+    const soundResource = resources.getSound(sound);
+    if (soundResource && !this.isMuted) {
+      soundResource.play();
     }
   }
 
@@ -85,13 +106,5 @@ export class AudioManager extends EventEmitter {
       soundResource.currentTime = 0;
       this.activeSounds.delete(sound);
     }
-  }
-
-  mute() {
-    this.isMuted = true;
-  }
-
-  unMute() {
-    this.isMuted = false;
   }
 }

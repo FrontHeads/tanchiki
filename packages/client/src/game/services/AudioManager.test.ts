@@ -34,15 +34,16 @@ describe('game/services/AudioManager', () => {
 
     expect(audioManager.playSound).toHaveBeenCalledWith('pause');
   });
-  it('should mute all sounds on pause', () => {
+  it('should not play sounds while paused', () => {
     const audioManager = new AudioManager();
 
-    audioManager.mute = jest.fn();
+    const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
-    audioManager.emit('pause');
+    audioManager.add(entity);
+    entity.spawn({ posX: 2, posY: 2 });
 
-    expect(audioManager.mute).toBeCalledTimes(1);
-
-    //** Не смог сделать проверку, что функция playSound не вызывается при паузе */
+    entity.shoot();
+    expect(entity.spawned).toBeTruthy();
+    expect(audioManager.activeSounds.has('shoot')).toBeFalsy();
   });
 });
