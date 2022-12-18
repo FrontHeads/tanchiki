@@ -169,6 +169,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     return this.game.controllerAll;
   }
 
+  /** Попытка спаунить танк противника, если есть доступное место */
   trySpawnTankEnemy(entity: TankEnemy) {
     /** Выбираем случайным образом одну из 3 позиций противника */
     const spawnPlaceKey = Math.floor(Math.random() * spawnPlaces[0].length);
@@ -253,6 +254,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     return entity;
   }
 
+  /** Обработчик события выстрела танка */
   onTankShoot(projectile: Projectile) {
     if (!this.game.paused) {
       this.createProjectile(projectile);
