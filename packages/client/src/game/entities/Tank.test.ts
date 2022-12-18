@@ -7,6 +7,7 @@ describe('game/entities/Tank', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -18,6 +19,7 @@ describe('game/entities/Tank', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -25,13 +27,14 @@ describe('game/entities/Tank', () => {
     expect(projectile.width).toBe(2);
     expect(projectile.height).toBe(2);
     expect(projectile.posX).toBe(2);
-    expect(projectile.posY).toBe(4);
+    expect(projectile.posY).toBe(2);
   });
 
   it('shouldn`t shoot before projectile exploded', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -43,10 +46,11 @@ describe('game/entities/Tank', () => {
   });
 
   it('should shoot after projectile exploded', async () => {
-    const zone = new Zone({ width: 4, height: 4 });
-    const tank = new Tank({ posX: 1, posY: 1, width: 1, height: 1, direction: Direction.DOWN });
+    const zone = new Zone({ width: 6, height: 6 });
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
+    tank.spawn();
     tank.on('shoot', mockFn);
     tank.shoot();
     tank.shoot();
@@ -58,8 +62,10 @@ describe('game/entities/Tank', () => {
     expect(projectileTwo).toBeFalsy();
 
     zone.add(projectileOne);
-    projectileOne.spawn({ posX: 2, posY: 2 });
+    projectileOne.spawn();
 
+    projectileOne.update();
+    projectileOne.update();
     projectileOne.update();
     projectileOne.update();
     projectileOne.update();
