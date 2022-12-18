@@ -21,17 +21,13 @@ class Resources {
       .finally(() => clearTimeout(loadAllTimeout));
   }
 
-  /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
-  playSound(sound: keyof typeof SoundPathList): void {
-    if (this.soundList[sound]) {
-      this.soundList[sound].currentTime = 0;
-      this.soundList[sound].play();
-    }
-  }
-
   /** Возвращает конкретный HTMLImageElement из Resources.imageList. */
   getImage(image: keyof typeof ImagePathList): HTMLImageElement {
     return this.imageList[image];
+  }
+
+  getSound(sound: keyof typeof SoundPathList): HTMLAudioElement {
+    return this.soundList[sound];
   }
 
   /** Загружает конкретный ресурс и кладет в объект (imageList | soundList) внутри Resources*/
