@@ -305,31 +305,35 @@ export class Game {
     this.screen = ScreenType.GAME;
     this.reset();
 
-    /** Анимация перехода выбора уровня в игру */
-    const startAnimationDelay = firstInit ? 0 : 2000;
+    /** Анимация перехода с экрана выбора уровня в игру */
+    const startAnimationDelay = firstInit ? 100 : 2000;
     this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
     this.overlay.show(this.screen, startAnimationDelay);
 
-    /** Инициализируем сценарий инстанс сценария */
-    this.scenario = new Scenario(this);
-    this.scenario
-      .on(ScenarioEvent.GAME_OVER, () => {
-        this.initGameOver();
-      })
-      .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
-        if (this.level < this.maxLevels) {
-          this.level++;
-          this.initGameLevel();
-        }
-      });
+    /** Стартуем сценарий после окончания анимации */
+    this.setLoopDelay(() => {
+      /** Инициализируем инстанс сценария */
+      this.scenario = new Scenario(this)
+        .on(ScenarioEvent.GAME_OVER, () => {
+          this.initGameOver();
+        })
+        .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
+          if (this.level < this.maxLevels) {
+            this.level++;
+            this.initGameLevel();
+          } else {
+            this.level = 1;
+          }
+        });
 
-    this.controllerAll
-      .on('pause', () => {
-        this.togglePause();
-      })
-      .on('fullscreen', () => {
-        this.view.toggleFullScreen();
-      });
+      this.controllerAll
+        .on('pause', () => {
+          this.togglePause();
+        })
+        .on('fullscreen', () => {
+          this.view.toggleFullScreen();
+        });
+    }, startAnimationDelay);
 
     this.audioManager.emit('levelIntro');
   }
