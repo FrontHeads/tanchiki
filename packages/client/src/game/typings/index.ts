@@ -201,9 +201,6 @@ export type AnimationSettings = {
   name?: string;
   /** Фрейм (кадр) который будет показан при следующем вызове анимации. */
   spriteFrame?: number;
-  /** Чтобы поставить анимацию на паузу нужно установить false. */
-  //TODO пока не реализовано.
-  isPlay?: boolean;
 };
 
 export type CancelAnimation =
