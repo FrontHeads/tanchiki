@@ -4,24 +4,24 @@ import { SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
 export class AudioManager extends EventEmitter {
-  private isMuted = false;
+  private isStopped = false;
   /** Хранит все проигрываемые в настоящий момент звуки. */
   public activeSounds: Set<keyof typeof SoundPathList> = new Set();
 
   constructor() {
     super();
 
-    this.on('pause', ({ isMuteKey = false }) => {
-      if (!this.isMuted) {
+    this.on('pause', ({ isMuteKeyPressed = false }) => {
+      if (!this.isStopped) {
         this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
           this.pauseSound(sound);
         });
-        if (!isMuteKey) {
+        if (!isMuteKeyPressed) {
           this.playSound('pause');
         }
-        this.isMuted = true;
+        this.isStopped = true;
       } else {
-        this.isMuted = false;
+        this.isStopped = false;
         this.playSound('pause');
         this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
           this.resumeSound(sound);
@@ -76,7 +76,7 @@ export class AudioManager extends EventEmitter {
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList): void {
     const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isMuted) {
+    if (soundResource && !this.isStopped) {
       soundResource.currentTime = 0;
       soundResource.play();
       soundResource.addEventListener('ended', () => {
@@ -89,14 +89,14 @@ export class AudioManager extends EventEmitter {
 
   pauseSound(sound: keyof typeof SoundPathList): void {
     const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isMuted) {
+    if (soundResource && !this.isStopped) {
       soundResource.pause();
     }
   }
 
   resumeSound(sound: keyof typeof SoundPathList): void {
     const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isMuted) {
+    if (soundResource && !this.isStopped) {
       soundResource.play();
     }
   }

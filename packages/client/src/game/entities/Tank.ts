@@ -20,18 +20,21 @@ export class Tank extends EntityDynamic {
     this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
 
     this.on('spawn', () => {
+      const spawnTimeout = 1000;
+      const shieldTimeout = 3000;
+
       this.startAnimation({
         delay: 50,
         spriteCoordinates: spriteCoordinates.spawn,
         looped: true,
-        stopTimer: 1000,
+        stopTimer: spawnTimeout,
       });
 
       // Возвращаем танку подвижность после анимации спауна.
       this.setLoopDelay(() => {
         this.blocked = false;
         this.canShoot = true;
-      }, 1000);
+      }, spawnTimeout);
 
       if (this.role === 'player') {
         this.setLoopDelay(
@@ -39,16 +42,16 @@ export class Tank extends EntityDynamic {
             delay: 25,
             spriteCoordinates: spriteCoordinates.shield,
             looped: true,
-            stopTimer: 3000,
+            stopTimer: shieldTimeout,
             showMainSprite: true,
           }),
-          1000
+          spawnTimeout
         );
 
         // Возвращаем танку уязимость после исчезновения силового поля после спауна.
         this.setLoopDelay(() => {
           this.invincible = false;
-        }, 4000);
+        }, spawnTimeout + shieldTimeout);
       }
     });
   }
