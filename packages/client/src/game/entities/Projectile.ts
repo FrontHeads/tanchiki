@@ -5,7 +5,7 @@ export class Projectile extends EntityDynamic {
   width = 2;
   height = 2;
   movePace = 1;
-  moveSpeed = 3;
+  moveSpeed = 2;
   moveStepsTotal = 4;
   exploding = false;
   explosionRadius = 1;

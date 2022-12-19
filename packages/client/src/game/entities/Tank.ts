@@ -1,18 +1,21 @@
-import type { EntityDynamicSettings, Rect, TankType } from '../typings';
-import { EntityDynamic, Projectile } from './';
+import { EntityDynamicSettings, Pos, Rect, TankType, TankTypeOptions } from '../typings';
+import { Entity, EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
   shootSpeed = 3;
   canShoot = true;
-  private tankType: TankType | undefined;
+  private readonly tankType: TankTypeOptions | undefined;
+  armor = 4;
+  isExploding = false;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
     Object.assign(this, props);
     this.color = props.color || 'yellow';
     this.tankType = props.tankType;
+    this.moveSpeed = this.getTankSpeed(this.tankType);
   }
 
   shoot() {
@@ -26,6 +29,7 @@ export class Tank extends EntityDynamic {
       role: this.role,
       direction: this.direction,
       moveSpeed: this.shootSpeed,
+      movePace: this.getProjectileMovePace(this.tankType),
     });
     this.canShoot = false;
 
@@ -33,6 +37,27 @@ export class Tank extends EntityDynamic {
       this.canShoot = true;
     });
     this.emit('shoot', projectile);
+  }
+
+  getTankSpeed(type?: TankTypeOptions) {
+    if (type) {
+      if (type === TankType.FAST) {
+        return 6;
+      }
+      if (type === TankType.ARMOR || type === TankType.POWER) {
+        return 4;
+      }
+    }
+    return 2;
+  }
+
+  getProjectileMovePace(type?: TankTypeOptions) {
+    if (type) {
+      if (type === TankType.POWER || type === TankType.ARMOR) {
+        return 2;
+      }
+    }
+    return 1;
   }
 
   calculateProjectileInitPos() {
@@ -59,4 +84,38 @@ export class Tank extends EntityDynamic {
         return { posX: rect.posX, posY: rect.posY }; // чтобы не ругался тайпскрипт (из-за enum Direction)
     }
   }
+  explode() {
+    if (!this.isExploding) {
+      console.log('boom');
+      if (this.tankType === TankType.BASIC && this.armor) {
+        console.log('ego bron', this.armor);
+        this.armor--;
+      } else {
+        this.emit('exploding');
+        this.despawn();
+      }
+      setTimeout(() => {
+        this.isExploding = false;
+      }, 50);
+    }
+    this.isExploding = true;
+  }
+
+  // takeDamage(source: Entity, pos: Pos) {
+  //   this.emit('damaged', pos);
+  //   if (this.type === 'tank') {
+  //     if (this.role !== source.role) {
+  //       this.emit('destroyed', source);
+  //       this.emit('exploding');
+  //       if (this.tankType === TankType.BASIC && this.armor) {
+  //         setTimeout(value => {
+  //           console.log('ego bron', this.armor);
+  //           this.armor--;
+  //         }, 0);
+  //         return;
+  //       }
+  //       this.explode();
+  //     }
+  //   }
+  // }
 }

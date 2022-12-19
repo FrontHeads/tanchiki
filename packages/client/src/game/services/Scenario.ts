@@ -11,6 +11,7 @@ import {
   ScenarioEvent,
   ScenarioState,
   TankType,
+  TankTypeOptions,
 } from '../typings';
 import { EventEmitter } from '../utils';
 import { MapData, ScenarioPlayerState } from './../typings/index';
@@ -188,7 +189,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   createTankEnemy() {
     ++this.state.enemiesCounter;
 
-    const tankEnemyType: TankType = +this.enemyForces[this.state.enemiesCounter];
+    const tankEnemyType = this.enemyForces[this.state.enemiesCounter] as TankTypeOptions;
 
     const entity = new TankEnemy({
       role: 'enemy',

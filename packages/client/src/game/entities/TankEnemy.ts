@@ -1,5 +1,6 @@
-import { Direction, EntityDynamicSettings } from '../typings';
+import { Direction, EntityDynamicSettings, Pos, TankType } from '../typings';
 import { rand } from '../utils';
+import { Entity } from './Entity';
 import { Tank } from './Tank';
 
 export class TankEnemy extends Tank {
@@ -17,7 +18,7 @@ export class TankEnemy extends Tank {
       this.autoMove();
       this.autoShoot();
     });
-    console.log(props.tankType);
+    console.log(this.type, this.moveSpeed);
   }
 
   autoMove() {
@@ -35,7 +36,7 @@ export class TankEnemy extends Tank {
         this.shoot();
         this.autoShoot();
       }
-    }, rand(1000, 2000));
+    }, rand(1000, 0));
   }
 
   getMoveDirection() {

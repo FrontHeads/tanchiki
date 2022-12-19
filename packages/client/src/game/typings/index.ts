@@ -51,12 +51,13 @@ export type EntitySettings = Pos &
     role: EntityRole;
     color: string;
     img: HTMLImageElement;
-    tankType: TankType;
+    tankType: TankTypeOptions;
   }>;
 
 export type EntityDynamicSettings = EntitySettings &
   Partial<{
     moveSpeed: number;
+    movePace: number;
   }>;
 
 export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
@@ -90,11 +91,12 @@ export enum Player {
 }
 
 export enum TankType {
-  BASIC,
-  FAST,
-  POWER,
-  ARMOR,
+  BASIC = 'a',
+  FAST = 'b',
+  POWER = 'c',
+  ARMOR = 'd',
 }
+export type TankTypeOptions = `${TankType}`;
 
 export enum ScenarioEvent {
   GAME_OVER = 'game_over',
