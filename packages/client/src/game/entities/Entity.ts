@@ -101,7 +101,6 @@ export class Entity extends EventEmitter {
   startAnimation(settings: AnimationSettings) {
     settings.name ??= Math.random().toString();
     settings.spriteFrame ??= 0;
-    settings.isPlay ??= true;
     this.animations.push(settings);
 
     this.setLoopInterval(
