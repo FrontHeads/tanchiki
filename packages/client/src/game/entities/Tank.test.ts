@@ -8,6 +8,8 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
 
     tank.spawn();
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -20,6 +22,8 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
 
     tank.spawn();
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -35,6 +39,8 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
 
     tank.spawn();
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
     tank.on('shoot', mockFn);
     tank.shoot();
 
@@ -45,12 +51,14 @@ describe('game/entities/Tank', () => {
     expect(projectileTwo).toBeFalsy();
   });
 
-  it('should shoot after projectile exploded', async () => {
+  it('should shoot after projectile exploded', () => {
     const zone = new Zone({ width: 6, height: 6 });
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
     tank.spawn();
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
     tank.on('shoot', mockFn);
     tank.shoot();
     tank.shoot();
