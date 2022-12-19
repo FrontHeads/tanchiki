@@ -17,6 +17,31 @@ describe('game/entities/Tank', () => {
     expect(projectile instanceof Projectile).toBe(true);
   });
 
+  it('shouldn`t be able to shoot immediately after spawn (wait for spawn animation)', () => {
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    const mockFn = jest.fn();
+
+    tank.spawn();
+    tank.on('shoot', mockFn);
+    tank.shoot();
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+
+  it('should be invincible immediately after spawn (until shield animation end)', () => {
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    tank.spawn();
+
+    expect(tank.invincible).toBeTruthy();
+  });
+
+  it('shouldn`t be able to move immediately after spawn (until spawn animation end)', () => {
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    tank.spawn();
+
+    expect(tank.blocked).toBeTruthy();
+  });
+
   it('should determine projectile starting position', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();

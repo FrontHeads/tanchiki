@@ -267,7 +267,7 @@ export class View extends EventEmitter {
   }
 
   /** Возвращает координаты сущности на спрайте */
-  private getSpriteCoordinates({ entity, animation }: GetSpriteCoordinates) {
+  getSpriteCoordinates({ entity, animation }: GetSpriteCoordinates) {
     let spriteCoordinates: number[] | null = null;
 
     // Спрайты сущностей без настроек анимации (меняются 2 фрейма или нет анимации).
@@ -294,7 +294,7 @@ export class View extends EventEmitter {
   }
 
   /** Меняет sprite-frame, который отрисуется в следующий раз. */
-  private setNextSpriteFrame(animation: AnimationSettings, entity: Entity) {
+  setNextSpriteFrame(animation: AnimationSettings, entity: Entity) {
     if (typeof animation.spriteFrame !== 'number') {
       return;
     }
@@ -323,13 +323,13 @@ export class View extends EventEmitter {
   }
 
   /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. */
-  getPixelRatio() {
-    /** Размер игрового поля с учетом отступов от канваса до края экрана. */
+  private getPixelRatio() {
+    /** Размер игрового поля с учетом отступов от канваса до края экрана. +4 - это отступы. */
     const realZoneSize = this.width + 4;
 
     const smallerWindowSideSize = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
     const pixelRatio = smallerWindowSideSize / realZoneSize;
 
-    return pixelRatio;
+    return Math.floor(pixelRatio);
   }
 }

@@ -10,6 +10,7 @@ export class Explosion extends Entity {
     this.crossable = true;
     this.hittable = false;
     this.color = 'red';
+
     switch (this.type) {
       case 'projectileExplosion':
         this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
@@ -19,16 +20,12 @@ export class Explosion extends Entity {
         break;
     }
 
-    if (this.type === 'projectileExplosion' || this.type === 'tankExplosion') {
-      const coordinateSelector = this.type;
-
-      this.on('spawn', () => {
-        this.startAnimation({
-          delay: 0,
-          spriteCoordinates: spriteCoordinates[coordinateSelector],
-          looped: false,
-        });
+    this.on('spawn', () => {
+      this.startAnimation({
+        delay: 0,
+        spriteCoordinates: this.mainSpriteCoordinates,
+        looped: false,
       });
-    }
+    });
   }
 }
