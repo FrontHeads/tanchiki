@@ -33,7 +33,7 @@ describe('game/services/AudioManager', () => {
 
     audioManager.playSound = jest.fn();
 
-    audioManager.emit('pause');
+    audioManager.emit('pause', { isMuteKey: false });
 
     expect(audioManager.playSound).toHaveBeenCalledWith('pause');
   });

@@ -11,12 +11,14 @@ export class AudioManager extends EventEmitter {
   constructor() {
     super();
 
-    this.on('pause', () => {
+    this.on('pause', ({ isMuteKey = false }) => {
       if (!this.isMuted) {
         this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
           this.pauseSound(sound);
         });
-        this.playSound('pause');
+        if (!isMuteKey) {
+          this.playSound('pause');
+        }
         this.isMuted = true;
       } else {
         this.isMuted = false;

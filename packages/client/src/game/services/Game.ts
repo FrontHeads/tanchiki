@@ -377,6 +377,9 @@ export class Game {
         .on('pause', () => {
           this.togglePause();
         })
+        .on('mute', () => {
+          this.audioManager.emit('pause', { isMuteKey: true });
+        })
         .on('fullscreen', () => {
           this.view.toggleFullScreen();
         });
