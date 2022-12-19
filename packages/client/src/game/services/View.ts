@@ -19,6 +19,7 @@ export class View extends EventEmitter {
     super();
     this.width = width;
     this.height = height;
+    this.pixelRatio = this.getPixelRatio();
   }
 
   toggleFullScreen() {
@@ -319,5 +320,16 @@ export class View extends EventEmitter {
   /** Пересчитывает размер игровых клеток в пиксели. */
   private convertToPixels(value: number, correction = 0) {
     return Math.round(value * this.pixelRatio + correction);
+  }
+
+  /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. */
+  getPixelRatio() {
+    /** Размер игрового поля с учетом отступов от канваса до края экрана. */
+    const realZoneSize = this.width + 4;
+
+    const smallerWindowSideSize = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+    const pixelRatio = smallerWindowSideSize / realZoneSize;
+
+    return pixelRatio;
   }
 }
