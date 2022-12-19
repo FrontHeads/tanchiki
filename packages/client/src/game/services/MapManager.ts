@@ -1,4 +1,5 @@
 import { brickCells, concreteCells, spawnPlaces } from '../data/constants';
+import { enemyForces } from '../data/enemyForces';
 import { levels } from '../data/levels';
 import { Cell, EntitySettings, EntityType, GameSettings, MapData, Pos } from '../typings';
 
@@ -27,6 +28,9 @@ export class MapManager {
     const map = this.mapData[level - 1];
 
     return this.fixMapData(map);
+  }
+  getEnemyForces(level: number): string {
+    return enemyForces[level - 1];
   }
 
   mapDataToEntitySettings(map: MapData): EntitySettings[] {

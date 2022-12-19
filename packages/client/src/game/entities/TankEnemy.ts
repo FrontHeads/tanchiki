@@ -17,6 +17,7 @@ export class TankEnemy extends Tank {
       this.autoMove();
       this.autoShoot();
     });
+    console.log(props.tankType);
   }
 
   autoMove() {

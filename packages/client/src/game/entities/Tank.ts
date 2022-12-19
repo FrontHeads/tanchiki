@@ -1,4 +1,4 @@
-import type { EntityDynamicSettings, Rect } from '../typings';
+import type { EntityDynamicSettings, Rect, TankType } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
@@ -6,11 +6,13 @@ export class Tank extends EntityDynamic {
   height = 4;
   shootSpeed = 3;
   canShoot = true;
+  private tankType: TankType | undefined;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
     Object.assign(this, props);
     this.color = props.color || 'yellow';
+    this.tankType = props.tankType;
   }
 
   shoot() {

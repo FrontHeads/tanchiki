@@ -1,4 +1,5 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
+import { enemyForces } from '../data/enemyForces';
 import { Entity, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
 import {
   Direction,
@@ -9,7 +10,7 @@ import {
   Player,
   ScenarioEvent,
   ScenarioState,
-  TankEnemyType,
+  TankType,
 } from '../typings';
 import { EventEmitter } from '../utils';
 import { MapData, ScenarioPlayerState } from './../typings/index';
@@ -19,7 +20,8 @@ import { MapManager } from './MapManager';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 20,
+    enemiesCounter: 0,
+    maxEnemies: 20,
     maxActiveEnemies: 4,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
@@ -27,6 +29,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   mapManager!: MapManager;
   map!: MapData;
+  enemyForces: string;
 
   constructor(private game: Game) {
     /**
@@ -38,6 +41,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     this.mapManager = new MapManager(game.settings);
     this.map = this.mapManager.getMap(game.level);
+    this.enemyForces = this.mapManager.getEnemyForces(game.level);
 
     if (this.game.mainMenuState === MainMenuState.SINGLEPLAYER) {
       this.createPlayerTank(Player.PLAYER1);
@@ -105,7 +109,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   /** Проверяем можно ли еще размещать на поле вражеские танки */
   canCreateTankEnemy() {
-    return this.state.enemies.length < this.state.maxActiveEnemies && this.state.enemiesLeft !== 0;
+    return this.state.enemies.length < this.state.maxActiveEnemies && this.state.enemiesCounter < this.state.maxEnemies;
   }
 
   /** Создаем элемент карты */
@@ -182,9 +186,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   /** Создаем вражеский танк */
   createTankEnemy() {
-    --this.state.enemiesLeft;
+    ++this.state.enemiesCounter;
 
-    const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
+    const tankEnemyType: TankType = +this.enemyForces[this.state.enemiesCounter];
+
+    const entity = new TankEnemy({
+      role: 'enemy',
+      color: '#483D8B',
+      tankType: tankEnemyType,
+    } as EntityDynamicSettings);
     entity.on('spawn', () => {
       entity.on('shoot', this.onTankShoot.bind(this)).on('destroyed', sourceEntity => {
         this.emit<[EnemyDestroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
@@ -206,10 +216,10 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.state.players[playerType] = {
       lives: 2,
       statistics: {
-        [TankEnemyType.ARMOR]: 0,
-        [TankEnemyType.BASIC]: 0,
-        [TankEnemyType.FAST]: 0,
-        [TankEnemyType.POWER]: 0,
+        [TankType.ARMOR]: 0,
+        [TankType.BASIC]: 0,
+        [TankType.FAST]: 0,
+        [TankType.POWER]: 0,
       },
       controller: this.getGameController(playerType),
     };

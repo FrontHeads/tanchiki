@@ -51,6 +51,7 @@ export type EntitySettings = Pos &
     role: EntityRole;
     color: string;
     img: HTMLImageElement;
+    tankType: TankType;
   }>;
 
 export type EntityDynamicSettings = EntitySettings &
@@ -88,7 +89,7 @@ export enum Player {
   PLAYER2,
 }
 
-export enum TankEnemyType {
+export enum TankType {
   BASIC,
   FAST,
   POWER,
@@ -118,9 +119,11 @@ export type ScenarioState = {
    * при игре вдвоём их не более шести;
    */
   maxActiveEnemies: number;
-  /** Всего же танков противника на уровне */
-  enemiesLeft: number;
-  /** Массив с танами протвников на карте */
+  /** Максимальное количество танков противника на уровне */
+  maxEnemies: number;
+  /** Счетчик отспауненных вражеских танков  */
+  enemiesCounter: number;
+  /** Массив с танами противников на карте */
   enemies: Tank[];
   /** Объект со state игроков */
   players: Record<Player, ScenarioPlayerState>;
@@ -133,7 +136,7 @@ export type ScenarioPlayerState = {
   controller: Controller;
 };
 
-export type ScenarioStat = Record<TankEnemyType, number>;
+export type ScenarioStat = Record<TankType, number>;
 
 export type EnemyDestroyedPayload = {
   source: Tank;
