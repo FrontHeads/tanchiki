@@ -106,8 +106,7 @@ export class Entity extends EventEmitter {
     this.setLoopInterval(
       () => {
         /** Сущность будет перерисована на канвасе. Так работает анимация.*/
-        this.emit('entityShouldUpdate');
-        this.emit('entityDidUpdate');
+        this.refreshSprite();
       },
       settings.delay,
       settings.name
@@ -126,21 +125,20 @@ export class Entity extends EventEmitter {
     this.animations.splice(animationIndex, 1);
 
     if (type === 'showEntity') {
-      this.emit('entityShouldUpdate');
-      this.emit('entityDidUpdate');
+      this.refreshSprite();
+      return;
     }
 
-    if (type === 'deleteEntity') {
-      this.despawn();
-    }
+    this.emit('entityShouldUpdate');
+  }
 
-    if (type !== 'showEntity') {
-      this.emit('entityShouldUpdate');
-    }
+  refreshSprite() {
+    this.emit('entityShouldUpdate');
+    this.emit('entityDidUpdate');
   }
 
   setLoopInterval(callback: () => void, delay: number, name: string | number) {
-    this.emit('loopInterval', callback, delay, name);
+    this.emit('setLoopInterval', callback, delay, name);
   }
 
   clearLoopInterval(name: string | number) {
@@ -148,6 +146,6 @@ export class Entity extends EventEmitter {
   }
 
   setLoopDelay(callback: () => void, delay: number) {
-    this.emit('loopDelay', callback, delay);
+    this.emit('setLoopDelay', callback, delay);
   }
 }

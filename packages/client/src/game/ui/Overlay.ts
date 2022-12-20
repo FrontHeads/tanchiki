@@ -6,9 +6,10 @@ import { Screen } from './screens';
 
 export class Overlay {
   currentScreen!: Screen;
+  view: View;
 
-  constructor(public view: View, private game?: Game) {
-    this.view = view;
+  constructor(public game: Game) {
+    this.view = game.view;
   }
 
   show(screen: ScreenType, state: unknown = null) {
@@ -26,9 +27,7 @@ export class Overlay {
 
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
-    if (this.game) {
-      this.game.registerTimerHandlers(elem);
-    }
+    this.game.registerTimerHandlers(elem);
     this.view.add(elem);
     elem.render();
     return elem;

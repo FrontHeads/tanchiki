@@ -26,8 +26,8 @@ export class EntityDynamic extends Entity {
   lastRect: Rect | null = null;
   /** Клетка, куда объект движется*/
   nextRect: Rect | null = null;
-  /** Блокирует возможность перемещения на время отрисовки анимации спауна. */
-  blocked = false;
+  /** Временно блокирует возможность перемещения (например на время отрисовки анимации спауна). */
+  frozen = false;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -68,9 +68,10 @@ export class EntityDynamic extends Entity {
 
   /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
   update() {
-    if (this.blocked) {
+    if (this.frozen) {
       return;
     }
+
     const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
     if (!this.spawned || isStandingStill) {
       return;

@@ -41,7 +41,7 @@ export class Game {
   private constructor() {
     this.zone = new Zone(this.settings);
     this.view = new View(this.settings);
-    this.overlay = new Overlay(this.view, this);
+    this.overlay = new Overlay(this);
     this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerWasd = new Controller(KeyBindingsWasd);
     this.controllerArrows = new Controller(KeyBindingsArrows);
@@ -152,8 +152,8 @@ export class Game {
   }
 
   registerTimerHandlers(entity: Entity) {
-    entity.on('loopDelay', this.setLoopDelay.bind(this));
-    entity.on('loopInterval', this.setLoopInterval.bind(this));
+    entity.on('setLoopDelay', this.setLoopDelay.bind(this));
+    entity.on('setLoopInterval', this.setLoopInterval.bind(this));
     entity.on('clearLoopInterval', this.clearLoopInterval.bind(this));
   }
 
