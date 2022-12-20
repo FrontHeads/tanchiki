@@ -1,13 +1,13 @@
-import { EntityDynamicSettings, Pos, Rect, TankType, TankTypeOptions } from '../typings';
-import { Entity, EntityDynamic, Projectile } from './';
+import { EntityDynamicSettings, Rect, TankType, TankTypeOptions } from '../typings';
+import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
-  shootSpeed = 3;
+  shootSpeed = 3.5;
   canShoot = true;
   private readonly tankType: TankTypeOptions | undefined;
-  armor = 4;
+  armor = 3;
   isExploding = false;
 
   constructor(props: EntityDynamicSettings) {
@@ -28,8 +28,7 @@ export class Tank extends EntityDynamic {
       ...this.calculateProjectileInitPos(),
       role: this.role,
       direction: this.direction,
-      moveSpeed: this.shootSpeed,
-      movePace: this.getProjectileMovePace(this.tankType),
+      moveSpeed: this.getProjectileMoveSpeed(this.tankType),
     });
     this.canShoot = false;
 
@@ -51,13 +50,13 @@ export class Tank extends EntityDynamic {
     return 2;
   }
 
-  getProjectileMovePace(type?: TankTypeOptions) {
+  getProjectileMoveSpeed(type?: TankTypeOptions) {
     if (type) {
       if (type === TankType.POWER || type === TankType.ARMOR) {
-        return 2;
+        return 3.5;
       }
     }
-    return 1;
+    return 3;
   }
 
   calculateProjectileInitPos() {
@@ -86,9 +85,7 @@ export class Tank extends EntityDynamic {
   }
   explode() {
     if (!this.isExploding) {
-      console.log('boom');
-      if (this.tankType === TankType.BASIC && this.armor) {
-        console.log('ego bron', this.armor);
+      if (this.tankType === TankType.ARMOR && this.armor) {
         this.armor--;
       } else {
         this.emit('exploding');
@@ -100,22 +97,4 @@ export class Tank extends EntityDynamic {
     }
     this.isExploding = true;
   }
-
-  // takeDamage(source: Entity, pos: Pos) {
-  //   this.emit('damaged', pos);
-  //   if (this.type === 'tank') {
-  //     if (this.role !== source.role) {
-  //       this.emit('destroyed', source);
-  //       this.emit('exploding');
-  //       if (this.tankType === TankType.BASIC && this.armor) {
-  //         setTimeout(value => {
-  //           console.log('ego bron', this.armor);
-  //           this.armor--;
-  //         }, 0);
-  //         return;
-  //       }
-  //       this.explode();
-  //     }
-  //   }
-  // }
 }
