@@ -189,14 +189,14 @@ export class View extends EventEmitter {
     }
 
     // Отрисовка основного спрайта сущности, без анимаций.
-    if (!entity.animations?.length) {
+    if (!entity.animationList?.length) {
       this.drawMainEntitySprite(entity, context);
       return;
     }
 
     //Отрисовка сущностей с настраиваемой анимацией.
-    if (entity.animations.length) {
-      entity.animations.forEach(animation => {
+    if (entity.animationList.length) {
+      entity.animationList.forEach(animation => {
         const spriteCoordinates = this.getSpriteCoordinates({ entity, animation });
 
         if (!spriteCoordinates) {
@@ -308,7 +308,7 @@ export class View extends EventEmitter {
     }
 
     if (isFinishFrame && !animation.looped && animation.name) {
-      entity.cancelAnimation('deleteEntity', animation.name);
+      entity.cancelAnimation('eraseEntity', animation.name);
     }
   }
 

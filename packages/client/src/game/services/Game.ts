@@ -378,7 +378,7 @@ export class Game {
           this.togglePause();
         })
         .on('mute', () => {
-          this.audioManager.emit('pause', { isMuteKeyPressed: true });
+          this.audioManager.emit('pause', { isMuteKey: true });
         })
         .on('fullscreen', () => {
           this.view.toggleFullScreen();

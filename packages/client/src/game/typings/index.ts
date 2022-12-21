@@ -207,9 +207,7 @@ export type CancelAnimation =
   /** Убирает анимацию, но спрайт остается видимым. */
   | 'showEntity'
   /** Убирает анимацию и стирает спрайт. */
-  | 'eraseEntity'
-  /** Убирает анимацию и удаляет сущность. */
-  | 'deleteEntity';
+  | 'eraseEntity';
 
 /** Список canvas-слоев и прикрепленных к ним сущностей. */
 export type LayerList = Record<
