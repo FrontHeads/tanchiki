@@ -131,9 +131,6 @@ export class EntityDynamic extends Entity {
     } else {
       movePace = this.getMoveStepPace();
     }
-    if (this.type === 'projectile') {
-      movePace = this.getMoveStepPace();
-    }
     switch (this.direction) {
       case 'UP':
         return { posY: this.posY - movePace };
