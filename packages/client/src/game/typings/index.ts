@@ -118,7 +118,7 @@ export type ScenarioState = {
    * при игре вдвоём их не более шести;
    */
   maxActiveEnemies: number;
-  /** Всего же танков противника на уровне */
+  /** Всего танков противника на уровне */
   enemiesLeft: number;
   /** Массив с танами протвников на карте */
   enemies: Tank[];

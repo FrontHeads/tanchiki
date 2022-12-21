@@ -6,7 +6,7 @@ import { Screen } from './screens';
 
 export class Overlay {
   view!: View;
-  currentScreen!: Screen;
+  currentScreen?: Screen;
 
   constructor(view: View) {
     this.view = view;
