@@ -1,4 +1,5 @@
 import { spriteCoordinates } from '../data/constants';
+import { EntityEvent } from './../typings/index';
 import { Entity, Projectile, Tank } from './';
 
 type ExplosionSettings = { explosionParentEntity: Tank | Projectile };
@@ -22,7 +23,7 @@ export class Explosion extends Entity {
         break;
     }
 
-    this.on('spawn', () => {
+    this.on(EntityEvent.SPAWN, () => {
       this.startAnimation({
         delay: 0,
         spriteCoordinates: this.mainSpriteCoordinates,

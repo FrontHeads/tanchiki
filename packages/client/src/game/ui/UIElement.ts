@@ -1,5 +1,6 @@
 import { Entity } from '../entities';
 import { UIElementSettings } from '../typings';
+import { EntityEvent } from './../typings/index';
 
 export class UIElement extends Entity {
   text = '';
@@ -15,10 +16,10 @@ export class UIElement extends Entity {
   render() {
     const newState = { posX: this.posX, posY: this.posY };
     if (this.text) {
-      this.emit('entityShouldRenderText', newState);
+      this.emit(EntityEvent.ENTITY_SHOULD_RENDER_TEXT, newState);
     } else {
-      this.emit('entityShouldUpdate', newState);
-      this.emit('entityDidUpdate', newState);
+      this.emit(EntityEvent.ENTITY_SHOULD_UPDATE, newState);
+      this.emit(EntityEvent.ENTITY_DID_UPDATE, newState);
     }
   }
 }

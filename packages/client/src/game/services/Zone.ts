@@ -1,5 +1,6 @@
 import { Entity, EntityDynamic, Projectile, Tank } from '../entities';
 import type { Pos, PosState, Rect, Size } from '../typings';
+import { EntityEvent } from './../typings/index';
 
 export class Zone {
   width = 0;
@@ -98,7 +99,7 @@ export class Zone {
       return;
     }
 
-    entity.on('entityWillHaveNewPos', (posState: PosState) => {
+    entity.on(EntityEvent.ENTITY_WILL_HAVE_NEW_POS, (posState: PosState) => {
       const rect = posState.nextRect;
       if (this.hasCollision(rect, entity)) {
         posState.hasCollision = true;
@@ -107,23 +108,23 @@ export class Zone {
         this.updateMatrix(layer, rect, entity);
       }
     });
-    entity.on('entityShouldUpdate', (newState: Partial<Entity>) => {
+    entity.on(EntityEvent.ENTITY_SHOULD_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.deleteEntityFromMatrix(entity);
     });
-    entity.on('entityDidUpdate', (newState: Partial<Entity>) => {
+    entity.on(EntityEvent.ENTITY_DID_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.writeEntityToMatrix(entity);
     });
-    entity.on('entityShouldBeDestroyed', () => {
+    entity.on(EntityEvent.ENTITY_SHOULD_BE_DESTROYED, () => {
       this.deleteEntityFromMatrix(entity);
     });
     if (entity.type === 'brickWall') {
-      entity.on('damaged', (pos: Pos) => {
+      entity.on(EntityEvent.DAMAGED, (pos: Pos) => {
         const layer = this.getLayerByEntityType(entity);
         const rect = { ...pos, width: 1, height: 1 };
         this.updateMatrix(layer, rect, null);

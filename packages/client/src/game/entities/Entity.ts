@@ -3,6 +3,7 @@ import {
   AnimationSettings,
   CancelAnimation,
   Direction,
+  EntityEvent,
   EntityRole,
   EntitySettings,
   EntityType,
@@ -13,7 +14,7 @@ import {
 } from '../typings';
 import { EventEmitter } from '../utils';
 
-export class Entity extends EventEmitter {
+export class Entity extends EventEmitter<EntityEvent> {
   posX = 0;
   posY = 0;
   width = 0;
@@ -44,9 +45,9 @@ export class Entity extends EventEmitter {
   }
 
   setState(newState: Partial<Entity>) {
-    this.emit('entityShouldUpdate', newState);
+    this.emit(EntityEvent.ENTITY_SHOULD_UPDATE, newState);
     Object.assign(this, newState);
-    this.emit('entityDidUpdate', newState);
+    this.emit(EntityEvent.ENTITY_DID_UPDATE, newState);
   }
 
   getRect() {
@@ -60,11 +61,11 @@ export class Entity extends EventEmitter {
       hasCollision: undefined,
       nextRect: { posX, posY, width: this.width, height: this.height },
     };
-    this.emit('entityWillHaveNewPos', posState);
+    this.emit(EntityEvent.ENTITY_WILL_HAVE_NEW_POS, posState);
     if (!posState.hasCollision) {
       this.setState({ posX, posY });
       this.spawned = true;
-      this.emit('spawn');
+      this.emit(EntityEvent.SPAWN);
     } else if (this.type === 'projectile') {
       this.explode();
     }
@@ -77,23 +78,23 @@ export class Entity extends EventEmitter {
       return;
     }
     this.shouldBeDestroyed = true;
-    this.emit('entityShouldBeDestroyed');
+    this.emit(EntityEvent.ENTITY_SHOULD_BE_DESTROYED);
     this.spawned = false;
   }
 
   explode() {
-    this.emit('exploding');
+    this.emit(EntityEvent.EXPLODING);
     this.despawn();
   }
 
   takeDamage(source: Entity, pos: Pos) {
-    this.emit('damaged', pos);
+    this.emit(EntityEvent.DAMAGED, pos);
     if (this.type === 'projectile') {
       this.explode();
     } else if (this.type === 'tank' && !this.invincible) {
       if (this.role !== source.role) {
         this.explode();
-        this.emit('destroyed', source);
+        this.emit(EntityEvent.DESTROYED, source);
       }
     }
   }
@@ -133,28 +134,28 @@ export class Entity extends EventEmitter {
 
     // Стираем сущность с канваса после завершения анимации.
     if (type === 'eraseEntity') {
-      this.emit('entityShouldUpdate');
+      this.emit(EntityEvent.ENTITY_SHOULD_UPDATE);
     }
   }
 
   /** Стирает и заново отрисовывает сущность на канвасе. Т.е. обновляет вид сущности в игре. */
   refreshSprite() {
-    this.emit('entityShouldUpdate');
-    this.emit('entityDidUpdate');
+    this.emit(EntityEvent.ENTITY_SHOULD_UPDATE);
+    this.emit(EntityEvent.ENTITY_DID_UPDATE);
   }
 
   /** Аналог setInterval. Метод описан в Game. */
   setLoopInterval(callback: () => void, delay: number, name: string | number) {
-    this.emit('setLoopInterval', callback, delay, name);
+    this.emit(EntityEvent.SET_LOOP_INTERVAL, callback, delay, name);
   }
 
   /** Удаляет интервал по его имени. Метод описан в Game. */
   clearLoopInterval(name: string | number) {
-    this.emit('clearLoopInterval', name);
+    this.emit(EntityEvent.CLEAR_LOOP_INTERVAL, name);
   }
 
   /** Аналог setTimeout. Метод описан в Game. */
   setLoopDelay(callback: () => void, delay: number) {
-    this.emit('setLoopDelay', callback, delay);
+    this.emit(EntityEvent.SET_LOOP_DELAY, callback, delay);
   }
 }

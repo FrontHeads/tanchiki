@@ -1,4 +1,5 @@
 import { Direction, EntityDynamicSettings, PosState, Rect } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
 export class EntityDynamic extends Entity {
@@ -48,7 +49,7 @@ export class EntityDynamic extends Entity {
     this.moving = true;
     this.nextDirection = direction;
 
-    this.emit('move');
+    this.emit(EntityEvent.MOVE);
   }
 
   stop() {
@@ -56,7 +57,7 @@ export class EntityDynamic extends Entity {
     if (this.moveStepsProgress) {
       this.stopping = true;
     }
-    this.emit('stop');
+    this.emit(EntityEvent.STOP);
   }
 
   turn(newDirection: Direction = this.nextDirection) {
@@ -119,7 +120,7 @@ export class EntityDynamic extends Entity {
       hasCollision: undefined,
       nextRect,
     };
-    this.emit('entityWillHaveNewPos', posState);
+    this.emit(EntityEvent.ENTITY_WILL_HAVE_NEW_POS, posState);
     if (!posState.hasCollision) {
       this.canMove = true;
       this.nextRect = nextRect;

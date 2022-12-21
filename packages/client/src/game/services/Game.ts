@@ -10,6 +10,7 @@ import {
 } from '../typings';
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
+import { ControllerEvent, EntityEvent } from './../typings/index';
 import { Controller, resources, Scenario, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
@@ -152,9 +153,9 @@ export class Game {
   }
 
   registerTimerHandlers(entity: Entity) {
-    entity.on('setLoopDelay', this.setLoopDelay.bind(this));
-    entity.on('setLoopInterval', this.setLoopInterval.bind(this));
-    entity.on('clearLoopInterval', this.clearLoopInterval.bind(this));
+    entity.on(EntityEvent.SET_LOOP_DELAY, this.setLoopDelay.bind(this));
+    entity.on(EntityEvent.SET_LOOP_INTERVAL, this.setLoopInterval.bind(this));
+    entity.on(EntityEvent.CLEAR_LOOP_INTERVAL, this.clearLoopInterval.bind(this));
   }
 
   checkLoopDelays() {
@@ -251,10 +252,10 @@ export class Game {
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
-      .on('fullscreen', () => {
+      .on(ControllerEvent.FULLSCREEN, () => {
         this.view.toggleFullScreen();
       })
-      .on('move', (direction: Direction) => {
+      .on(ControllerEvent.MOVE, (direction: Direction) => {
         if (this.screen !== ScreenType.MAIN_MENU) {
           return;
         }
@@ -267,7 +268,7 @@ export class Game {
         this.overlay.show(this.screen, this.mainMenuState);
       })
       // Обрабатываем нажатие на указанном пункте меню
-      .on('shoot', () => {
+      .on(ControllerEvent.SHOOT, () => {
         if (this.screen !== ScreenType.MAIN_MENU) {
           return;
         }
@@ -308,12 +309,12 @@ export class Game {
     };
 
     this.controllerAll
-      .on('stop', () => {
+      .on(ControllerEvent.STOP, () => {
         if (this.screen == ScreenType.LEVEL_SELECTOR) {
           resetLevelInterval();
         }
       })
-      .on('move', (direction: Direction) => {
+      .on(ControllerEvent.MOVE, (direction: Direction) => {
         if (this.screen !== ScreenType.LEVEL_SELECTOR) {
           return;
         }
@@ -323,7 +324,7 @@ export class Game {
 
         changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
       })
-      .on('shoot', () => {
+      .on(ControllerEvent.SHOOT, () => {
         if (this.screen !== ScreenType.LEVEL_SELECTOR) {
           return;
         }
@@ -374,13 +375,13 @@ export class Game {
         });
 
       this.controllerAll
-        .on('pause', () => {
+        .on(ControllerEvent.PAUSE, () => {
           this.togglePause();
         })
-        .on('mute', () => {
+        .on(ControllerEvent.MUTE, () => {
           this.audioManager.emit('pause', { isMuteKey: true });
         })
-        .on('fullscreen', () => {
+        .on(ControllerEvent.FULLSCREEN, () => {
           this.view.toggleFullScreen();
         });
     }, startAnimationDelay);
