@@ -1,7 +1,8 @@
-import { Entity } from '../entities';
-import type { Rect } from '../typings';
+import { Entity, Tank } from '../entities';
+import { Direction, Rect } from '../typings';
 import { EventEmitter } from '../utils';
-import { View } from './';
+import { sleep } from '../utils/sleepTimer';
+import { Game, View } from './';
 
 function mockEntity(rect: Rect) {
   const entity = new EventEmitter() as Entity;
@@ -49,10 +50,10 @@ describe('game/services/View', () => {
 
     view.build(root);
     view.add(entity);
-    const layerObjectsCount1 = Array.from(view.layers['tanks'].objects).length;
+    const layerObjectsCount1 = Array.from(view.layers['tanks'].entities).length;
     entity.emit('entityShouldBeDestroyed');
     entity.emit('entityDidUpdate');
-    const layerObjectsCount2 = Array.from(view.layers['tanks'].objects).length;
+    const layerObjectsCount2 = Array.from(view.layers['tanks'].entities).length;
 
     expect(layerObjectsCount1).not.toBe(layerObjectsCount2);
     expect(view.eraseFromLayer).toHaveBeenCalled();
@@ -68,6 +69,35 @@ describe('game/services/View', () => {
     view.build(root);
     const rect = view.getActualRect(entity);
 
-    expect(rect).toEqual([20, 20, 20, 20]);
+    expect(rect).toEqual([22, 22, 16, 16]);
+  });
+
+  it('animation should work. Checking the call of all animation methods in View.', async () => {
+    const root = document.body.appendChild(document.createElement('div'));
+    const game = Game.create();
+    game.startLoop();
+    game.view.spriteImg = new Image();
+    game.view.build(root);
+
+    const eraseFromLayerSpy = jest.spyOn(game.view, 'eraseFromLayer');
+    const drawOnLayerSpy = jest.spyOn(game.view, 'drawOnLayer');
+    const getSpriteCoordinatesSpy = jest.spyOn(game.view, 'getSpriteCoordinates');
+    const drawMainEntitySpriteSpy = jest.spyOn(game.view, 'drawMainEntitySprite');
+    const setNextSpriteFrameSpy = jest.spyOn(game.view, 'setNextSpriteFrame').mockImplementation();
+
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    const startAnimationSpy = jest.spyOn(tank, 'startAnimation');
+    game.addEntity(tank);
+    tank.spawn({ posX: 1, posY: 1 });
+
+    await sleep(200);
+
+    expect(startAnimationSpy).toHaveBeenCalled();
+    expect(eraseFromLayerSpy).toHaveBeenCalled();
+    expect(drawOnLayerSpy).toHaveBeenCalled();
+    expect(getSpriteCoordinatesSpy).toHaveBeenCalled();
+    expect(drawMainEntitySpriteSpy).toHaveBeenCalled();
+    // Если метод отработал более 1 раза, значит фреймы анимации менялись минимум 2 раза. Значит анимация работает.
+    expect(setNextSpriteFrameSpy.mock.calls.length).toBeGreaterThan(1);
   });
 });

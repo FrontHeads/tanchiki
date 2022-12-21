@@ -94,6 +94,10 @@ export class Zone {
 
   /** Подписывается на события сущности, которые отслеживаются для обновления матрицы */
   registerEntity(entity: Entity) {
+    if (entity.type === 'tankExplosion' || entity.type === 'projectileExplosion') {
+      return;
+    }
+
     entity.on('entityWillHaveNewPos', (posState: PosState) => {
       const rect = posState.nextRect;
       if (this.hasCollision(rect, entity)) {
@@ -104,13 +108,13 @@ export class Zone {
       }
     });
     entity.on('entityShouldUpdate', (newState: Partial<Entity>) => {
-      if (!('posX' in newState) || !('posY' in newState)) {
+      if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.deleteEntityFromMatrix(entity);
     });
     entity.on('entityDidUpdate', (newState: Partial<Entity>) => {
-      if (!('posX' in newState) || !('posY' in newState)) {
+      if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.writeEntityToMatrix(entity);
