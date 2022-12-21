@@ -11,7 +11,7 @@ export class Explosion extends Entity {
     this.role = 'neutral';
     this.crossable = true;
     this.hittable = false;
-    this.color = 'red';
+    this.color = 'orange';
 
     switch (this.type) {
       case 'projectileExplosion':

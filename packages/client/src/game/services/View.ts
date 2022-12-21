@@ -218,7 +218,7 @@ export class View extends EventEmitter {
   drawMainEntitySprite(entity: Entity, context: CanvasRenderingContext2D) {
     const spriteCoordinates = this.getSpriteCoordinates({ entity });
 
-    if (!spriteCoordinates) {
+    if (!spriteCoordinates || !(this.spriteImg instanceof HTMLImageElement)) {
       return;
     }
 
