@@ -1,3 +1,6 @@
+import { spriteCoordinates } from '../data/constants';
+import { Game } from '../services';
+import { sleep } from '../utils/sleepTimer';
 import { Entity } from './';
 
 describe('game/entities/Entity', () => {
@@ -55,5 +58,28 @@ describe('game/entities/Entity', () => {
     entity.takeDamage(source, { posX: 3, posY: 3 });
 
     expect(mockFn).toHaveBeenCalled();
+  });
+
+  it('should stop animation by stopTimer', async () => {
+    const game = Game.create();
+    game.startLoop();
+    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
+    game.registerTimerHandlers(entity);
+
+    const cancelAnimationSpy = jest.spyOn(entity, 'cancelAnimation');
+
+    entity.on('spawn', () => {
+      entity.startAnimation({
+        delay: 25,
+        spriteCoordinates: spriteCoordinates['terrain.water'],
+        looped: true,
+        stopTimer: 50,
+      });
+    });
+
+    entity.spawn({ posX: 1, posY: 1 });
+    await sleep(100);
+
+    expect(cancelAnimationSpy).toHaveBeenCalled();
   });
 });

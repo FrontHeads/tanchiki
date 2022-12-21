@@ -1,6 +1,6 @@
 import { Direction } from '../typings';
 
-export type KeyBinding = ['move', Direction] | ['shoot'] | ['pause'] | ['fullscreen'];
+export type KeyBinding = ['move', Direction] | ['shoot'] | ['pause'] | ['mute'] | ['fullscreen'];
 export type BindingConfig = Record<string, KeyBinding>;
 
 export const KeyBindingsWasd: BindingConfig = {
@@ -10,6 +10,7 @@ export const KeyBindingsWasd: BindingConfig = {
   KeyD: ['move', Direction.RIGHT],
   Space: ['shoot'],
   KeyP: ['pause'],
+  KeyM: ['mute'],
   KeyF: ['fullscreen'],
 };
 
@@ -20,5 +21,6 @@ export const KeyBindingsArrows: BindingConfig = {
   ArrowRight: ['move', Direction.RIGHT],
   Enter: ['shoot'],
   KeyP: ['pause'],
+  KeyM: ['mute'],
   KeyF: ['fullscreen'],
 };
