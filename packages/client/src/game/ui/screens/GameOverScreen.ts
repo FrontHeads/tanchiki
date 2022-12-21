@@ -1,6 +1,6 @@
 import { Screen } from './Screen';
 
-export class GameOverScreen extends Screen<number> {
+export class GameOverScreen extends Screen {
   show() {
     this.overlay.animate(this.updateStage.bind(this));
   }

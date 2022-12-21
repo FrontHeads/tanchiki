@@ -83,6 +83,7 @@ export enum ScreenType {
   LEVEL_SELECTOR,
   GAME_OVER,
   GAME,
+  PAUSE,
 }
 
 // Scenario
