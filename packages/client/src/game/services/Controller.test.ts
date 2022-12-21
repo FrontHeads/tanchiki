@@ -1,3 +1,4 @@
+import { sleep } from '../utils/sleepTimer';
 import { Controller } from './';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
@@ -13,10 +14,6 @@ function mockKeyUp(...codes: Array<string>) {
     const event = new KeyboardEvent('keyup', { code: code });
     document.dispatchEvent(event);
   }
-}
-
-async function sleep(ms = 100) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 describe('game/services/Controller', () => {
