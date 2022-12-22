@@ -1,9 +1,15 @@
+import { isOdd } from '../../utils';
 import { Screen } from './Screen';
-
 export class PauseScreen extends Screen {
   show() {
+    this.overlay.animate(this.animatePause.bind(this), 500);
+  }
+  animatePause(counter = 0) {
     const { view } = this.overlay;
+
     const fontSize = 5;
+
+    const textPauseOpacity = isOdd(counter) ? 1 : 0;
 
     this.overlay.clearScreen();
 
@@ -21,8 +27,10 @@ export class PauseScreen extends Screen {
       width: view.width,
       height: fontSize,
       text: 'ПАУЗА',
-      color: 'red',
+      color: `rgba(255,0,0,${textPauseOpacity})`,
       align: 'center',
     });
+
+    return true;
   }
 }
