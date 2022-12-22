@@ -45,6 +45,7 @@ export class Overlay {
 
   animate(animateFunction: (counter: number) => boolean, animateIntervalMs = 25) {
     let stageCount = 0;
+
     const animateProcess = setInterval(() => {
       const stageResult = animateFunction(++stageCount);
 

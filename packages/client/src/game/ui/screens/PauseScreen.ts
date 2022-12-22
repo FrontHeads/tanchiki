@@ -2,16 +2,27 @@ import { isOdd } from '../../utils';
 import { Screen } from './Screen';
 export class PauseScreen extends Screen {
   show() {
+    /**Рендерим паузу один раз без задержки с opacity: 1*/
+    this.showPause(1);
     this.overlay.animate(this.animatePause.bind(this), 500);
   }
+
   animatePause(counter = 0) {
-    const { view } = this.overlay;
-
-    const fontSize = 5;
-
     const textPauseOpacity = isOdd(counter) ? 1 : 0;
-
     this.overlay.clearScreen();
+
+    //** Убироаем анимацию при снятии паузы */
+    if (!this.overlay.game.paused) {
+      return false;
+    }
+    this.showPause(textPauseOpacity);
+
+    return true;
+  }
+
+  showPause(textPauseOpacity?: number) {
+    const { view } = this.overlay;
+    const fontSize = 5;
 
     this.overlay.renderElement({
       posX: 0,
@@ -30,7 +41,5 @@ export class PauseScreen extends Screen {
       color: `rgba(255,0,0,${textPauseOpacity})`,
       align: 'center',
     });
-
-    return true;
   }
 }
