@@ -39,7 +39,7 @@ describe('game/entities/Tank', () => {
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     tank.spawn();
 
-    expect(tank.blocked).toBeTruthy();
+    expect(tank.frozen).toBeTruthy();
   });
 
   it('should determine projectile starting position', () => {

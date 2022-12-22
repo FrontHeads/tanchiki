@@ -14,8 +14,7 @@ export class Flag extends Entity {
 
     this.on('damaged', () => {
       this.mainSpriteCoordinates = spriteCoordinates['base.heart.dead'];
-      this.emit('entityShouldUpdate');
-      this.emit('entityDidUpdate');
+      this.refreshSprite();
     });
   }
 }

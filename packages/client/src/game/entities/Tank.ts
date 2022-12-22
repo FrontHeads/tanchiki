@@ -7,8 +7,8 @@ export class Tank extends EntityDynamic {
   height = 4;
   shootSpeed = 3;
   canShoot = false;
-  /** Блокирует возможность перемещения на время отрисовки анимации спауна. */
-  blocked = true;
+  /** Временно блокирует возможность перемещения (например на время анимации спауна). */
+  frozen = true;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = true;
 
@@ -32,7 +32,7 @@ export class Tank extends EntityDynamic {
 
       // Возвращаем танку подвижность после анимации спауна.
       this.setLoopDelay(() => {
-        this.blocked = false;
+        this.frozen = false;
         this.canShoot = true;
       }, spawnTimeout);
 

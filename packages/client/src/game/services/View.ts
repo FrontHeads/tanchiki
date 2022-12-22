@@ -189,14 +189,14 @@ export class View extends EventEmitter {
     }
 
     // Отрисовка основного спрайта сущности, без анимаций.
-    if (!entity.animations?.length) {
+    if (!entity.animationList?.length) {
       this.drawMainEntitySprite(entity, context);
       return;
     }
 
     //Отрисовка сущностей с настраиваемой анимацией.
-    if (entity.animations.length) {
-      entity.animations.forEach(animation => {
+    if (entity.animationList.length) {
+      entity.animationList.forEach(animation => {
         const spriteCoordinates = this.getSpriteCoordinates({ entity, animation });
 
         if (!spriteCoordinates) {
@@ -218,7 +218,7 @@ export class View extends EventEmitter {
   drawMainEntitySprite(entity: Entity, context: CanvasRenderingContext2D) {
     const spriteCoordinates = this.getSpriteCoordinates({ entity });
 
-    if (!spriteCoordinates) {
+    if (!spriteCoordinates || !(this.spriteImg instanceof HTMLImageElement)) {
       return;
     }
 
@@ -247,22 +247,22 @@ export class View extends EventEmitter {
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
   }
 
-  /** Возвращает актуальные координаты сущности на слое (в пикселях) */
-  getActualRect(rect: Entity | Rect) {
+  /** Возвращает актуальные координаты на слое (в пикселях) */
+  getActualRect(item: Entity | Rect) {
     // Корректировка нужна чтобы визуально танк не прижимался вплотную к кирпичам.
     let correctTankPos = 0;
     let correctTankSize = 0;
 
-    if ('type' in rect && rect.type === 'tank') {
+    if ('type' in item && item.type === 'tank') {
       correctTankPos = 2;
       correctTankSize = -4;
     }
 
     return [
-      this.convertToPixels(rect.posX, correctTankPos),
-      this.convertToPixels(rect.posY, correctTankPos),
-      this.convertToPixels(rect.width, correctTankSize),
-      this.convertToPixels(rect.height, correctTankSize),
+      this.convertToPixels(item.posX, correctTankPos),
+      this.convertToPixels(item.posY, correctTankPos),
+      this.convertToPixels(item.width, correctTankSize),
+      this.convertToPixels(item.height, correctTankSize),
     ] as const;
   }
 
@@ -308,7 +308,7 @@ export class View extends EventEmitter {
     }
 
     if (isFinishFrame && !animation.looped && animation.name) {
-      entity.cancelAnimation('deleteEntity', animation.name);
+      entity.cancelAnimation('eraseEntity', animation.name);
     }
   }
 

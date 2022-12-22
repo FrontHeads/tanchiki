@@ -285,46 +285,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   }
 
   createExplosion(entity: Tank | Projectile) {
-    const size = entity.type === 'projectile' ? 4 : 8;
-    const type = entity.type === 'projectile' ? 'projectileExplosion' : 'tankExplosion';
-    let posX = entity.posX;
-    let posY = entity.posY;
-
-    /**Без коррекции взрыв рисуется не по центру обьекта в который попал снаряд 
-    из-за несовпадения координат и разницы в размерах взрыва и обьекта. */
-    const correction = entity.direction === 'UP' || entity.direction === 'LEFT' ? -2 : 0;
-
-    if (entity.direction === 'UP' || entity.direction === 'DOWN') {
-      if (entity.type === 'tank') {
-        if (entity.direction === 'UP') {
-          posY += correction - 2;
-          posX += correction;
-        }
-        if (entity.direction === 'DOWN') {
-          posY += correction - 2;
-          posX += correction - 2;
-        }
-      } else {
-        posY += correction;
-      }
-    } else {
-      if (entity.type === 'tank') {
-        if (entity.direction === 'RIGHT') {
-          posY += correction - 2;
-          posX += correction;
-        }
-        if (entity.direction === 'LEFT') {
-          posY += correction;
-          posX += correction;
-        }
-      } else {
-        posX += correction;
-      }
-    }
-
-    const explosion = new Explosion({ type, posX, posY, width: size, height: size });
-
+    const explosion = new Explosion({ explosionParentEntity: entity });
     this.game.addEntity(explosion);
-    explosion.spawn({ posX, posY });
+    explosion.spawn({ posX: explosion.posX, posY: explosion.posY });
   }
 }

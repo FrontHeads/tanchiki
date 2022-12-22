@@ -35,8 +35,8 @@ export class Entity extends EventEmitter {
   mainSpriteCoordinates: SpriteCoordinatesNoAnimations | SpriteCoordinatesWithAnimations = null;
   /** Указывает какой фрейм анимации показывать. */
   mainSpriteFrame = 0;
-  /** Данные необходимые для работы анимации */
-  animations: Animations = [];
+  /** Список анимаций для данной сущности. Хранит настройки необходимые для работы анимации. */
+  animationList: Animations = [];
 
   constructor(props: EntitySettings) {
     super();
@@ -98,16 +98,15 @@ export class Entity extends EventEmitter {
     }
   }
 
+  /** Запускает анимацию  */
   startAnimation(settings: AnimationSettings) {
     settings.name ??= Math.random().toString();
     settings.spriteFrame ??= 0;
-    this.animations.push(settings);
+    this.animationList.push(settings);
 
     this.setLoopInterval(
       () => {
-        /** Сущность будет перерисована на канвасе. Так работает анимация.*/
-        this.emit('entityShouldUpdate');
-        this.emit('entityDidUpdate');
+        this.refreshSprite();
       },
       settings.delay,
       settings.name
@@ -119,35 +118,43 @@ export class Entity extends EventEmitter {
     }
   }
 
+  /** Отмена (отключение) анимации. */
   cancelAnimation(type: CancelAnimation = 'eraseEntity', name: string) {
     this.clearLoopInterval(name);
 
-    const animationIndex = this.animations.findIndex(animation => animation.name === name);
-    this.animations.splice(animationIndex, 1);
+    const animationIndex = this.animationList.findIndex(animation => animation.name === name);
+    this.animationList.splice(animationIndex, 1);
 
+    // Обновляем вид сущности и оставляем видимой на канвасе после завершения анимации.
     if (type === 'showEntity') {
-      this.emit('entityShouldUpdate');
-      this.emit('entityDidUpdate');
+      this.refreshSprite();
+      return;
     }
 
-    if (type === 'deleteEntity') {
-      this.despawn();
-    }
-
-    if (type !== 'showEntity') {
+    // Стираем сущность с канваса после завершения анимации.
+    if (type === 'eraseEntity') {
       this.emit('entityShouldUpdate');
     }
   }
 
+  /** Стирает и заново отрисовывает сущность на канвасе. Т.е. обновляет вид сущности в игре. */
+  refreshSprite() {
+    this.emit('entityShouldUpdate');
+    this.emit('entityDidUpdate');
+  }
+
+  /** Аналог setInterval. Метод описан в Game. */
   setLoopInterval(callback: () => void, delay: number, name: string | number) {
-    this.emit('loopInterval', callback, delay, name);
+    this.emit('setLoopInterval', callback, delay, name);
   }
 
+  /** Удаляет интервал по его имени. Метод описан в Game. */
   clearLoopInterval(name: string | number) {
     this.emit('clearLoopInterval', name);
   }
 
+  /** Аналог setTimeout. Метод описан в Game. */
   setLoopDelay(callback: () => void, delay: number) {
-    this.emit('loopDelay', callback, delay);
+    this.emit('setLoopDelay', callback, delay);
   }
 }

@@ -5,18 +5,32 @@ import { resources } from './Resources/Resources';
 
 export class AudioManager extends EventEmitter {
   private isStopped = false;
+  private isMuteKeyPressed = false;
+  private isPauseKeyPressed = false;
   /** Хранит все проигрываемые в настоящий момент звуки. */
   public activeSounds: Set<keyof typeof SoundPathList> = new Set();
 
   constructor() {
     super();
 
-    this.on('pause', ({ isMuteKeyPressed = false }) => {
+    this.on('pause', ({ isMuteKey = false }) => {
+      if (isMuteKey) {
+        this.isMuteKeyPressed = !this.isMuteKeyPressed;
+      } else {
+        this.isPauseKeyPressed = !this.isPauseKeyPressed;
+      }
+
+      // Если mute-режим активирован - кнопка паузы не активна в плане звука.
+      // Если пауза активирована - кнопка mute не активна.
+      if ((this.isMuteKeyPressed && !isMuteKey) || (this.isPauseKeyPressed && isMuteKey)) {
+        return;
+      }
+
       if (!this.isStopped) {
         this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
           this.pauseSound(sound);
         });
-        if (!isMuteKeyPressed) {
+        if (!this.isMuteKeyPressed) {
           this.playSound('pause');
         }
         this.isStopped = true;
