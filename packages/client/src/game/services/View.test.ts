@@ -35,8 +35,8 @@ describe('game/services/View', () => {
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     view.add(entity);
-    entity.emit(EntityEvent.ENTITY_SHOULD_UPDATE);
-    entity.emit(EntityEvent.ENTITY_DID_UPDATE);
+    entity.emit(EntityEvent.SHOULD_UPDATE);
+    entity.emit(EntityEvent.DID_UPDATE);
 
     expect(view.eraseFromLayer).toHaveBeenCalledTimes(1);
     expect(view.drawOnLayer).toHaveBeenCalledTimes(1);
@@ -52,8 +52,8 @@ describe('game/services/View', () => {
     view.build(root);
     view.add(entity);
     const layerObjectsCount1 = Array.from(view.layers['tanks'].entities).length;
-    entity.emit(EntityEvent.ENTITY_SHOULD_BE_DESTROYED);
-    entity.emit(EntityEvent.ENTITY_DID_UPDATE);
+    entity.emit(EntityEvent.SHOULD_BE_DESTROYED);
+    entity.emit(EntityEvent.DID_UPDATE);
     const layerObjectsCount2 = Array.from(view.layers['tanks'].entities).length;
 
     expect(layerObjectsCount1).not.toBe(layerObjectsCount2);

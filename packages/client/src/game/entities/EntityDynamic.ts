@@ -120,7 +120,7 @@ export class EntityDynamic extends Entity {
       hasCollision: undefined,
       nextRect,
     };
-    this.emit(EntityEvent.ENTITY_WILL_HAVE_NEW_POS, posState);
+    this.emit(EntityEvent.WILL_HAVE_NEW_POS, posState);
     if (!posState.hasCollision) {
       this.canMove = true;
       this.nextRect = nextRect;

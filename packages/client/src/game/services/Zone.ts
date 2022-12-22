@@ -99,7 +99,7 @@ export class Zone {
       return;
     }
 
-    entity.on(EntityEvent.ENTITY_WILL_HAVE_NEW_POS, (posState: PosState) => {
+    entity.on(EntityEvent.WILL_HAVE_NEW_POS, (posState: PosState) => {
       const rect = posState.nextRect;
       if (this.hasCollision(rect, entity)) {
         posState.hasCollision = true;
@@ -108,19 +108,19 @@ export class Zone {
         this.updateMatrix(layer, rect, entity);
       }
     });
-    entity.on(EntityEvent.ENTITY_SHOULD_UPDATE, (newState: Partial<Entity>) => {
+    entity.on(EntityEvent.SHOULD_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.deleteEntityFromMatrix(entity);
     });
-    entity.on(EntityEvent.ENTITY_DID_UPDATE, (newState: Partial<Entity>) => {
+    entity.on(EntityEvent.DID_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.writeEntityToMatrix(entity);
     });
-    entity.on(EntityEvent.ENTITY_SHOULD_BE_DESTROYED, () => {
+    entity.on(EntityEvent.SHOULD_BE_DESTROYED, () => {
       this.deleteEntityFromMatrix(entity);
     });
     if (entity.type === 'brickWall') {

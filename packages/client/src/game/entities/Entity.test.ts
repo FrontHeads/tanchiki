@@ -10,8 +10,8 @@ describe('game/entities/Entity', () => {
     const mockFn = jest.fn();
     const state = { posX: 111, posY: 222 };
 
-    entity.on(EntityEvent.ENTITY_SHOULD_UPDATE, mockFn);
-    entity.on(EntityEvent.ENTITY_DID_UPDATE, mockFn);
+    entity.on(EntityEvent.SHOULD_UPDATE, mockFn);
+    entity.on(EntityEvent.DID_UPDATE, mockFn);
     entity.setState(state);
 
     expect(entity).toHaveProperty('posX', 111);
@@ -41,7 +41,7 @@ describe('game/entities/Entity', () => {
     const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
     const mockFn = jest.fn();
 
-    entity.on(EntityEvent.ENTITY_SHOULD_BE_DESTROYED, mockFn);
+    entity.on(EntityEvent.SHOULD_BE_DESTROYED, mockFn);
     entity.spawn({ posX: 1, posY: 2 });
     entity.despawn();
 

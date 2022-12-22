@@ -45,9 +45,9 @@ export class Entity extends EventEmitter<EntityEvent> {
   }
 
   setState(newState: Partial<Entity>) {
-    this.emit(EntityEvent.ENTITY_SHOULD_UPDATE, newState);
+    this.emit(EntityEvent.SHOULD_UPDATE, newState);
     Object.assign(this, newState);
-    this.emit(EntityEvent.ENTITY_DID_UPDATE, newState);
+    this.emit(EntityEvent.DID_UPDATE, newState);
   }
 
   getRect() {
@@ -61,7 +61,7 @@ export class Entity extends EventEmitter<EntityEvent> {
       hasCollision: undefined,
       nextRect: { posX, posY, width: this.width, height: this.height },
     };
-    this.emit(EntityEvent.ENTITY_WILL_HAVE_NEW_POS, posState);
+    this.emit(EntityEvent.WILL_HAVE_NEW_POS, posState);
     if (!posState.hasCollision) {
       this.setState({ posX, posY });
       this.spawned = true;
@@ -78,7 +78,7 @@ export class Entity extends EventEmitter<EntityEvent> {
       return;
     }
     this.shouldBeDestroyed = true;
-    this.emit(EntityEvent.ENTITY_SHOULD_BE_DESTROYED);
+    this.emit(EntityEvent.SHOULD_BE_DESTROYED);
     this.spawned = false;
   }
 
@@ -134,14 +134,14 @@ export class Entity extends EventEmitter<EntityEvent> {
 
     // Стираем сущность с канваса после завершения анимации.
     if (type === 'eraseEntity') {
-      this.emit(EntityEvent.ENTITY_SHOULD_UPDATE);
+      this.emit(EntityEvent.SHOULD_UPDATE);
     }
   }
 
   /** Стирает и заново отрисовывает сущность на канвасе. Т.е. обновляет вид сущности в игре. */
   refreshSprite() {
-    this.emit(EntityEvent.ENTITY_SHOULD_UPDATE);
-    this.emit(EntityEvent.ENTITY_DID_UPDATE);
+    this.emit(EntityEvent.SHOULD_UPDATE);
+    this.emit(EntityEvent.DID_UPDATE);
   }
 
   /** Аналог setInterval. Метод описан в Game. */

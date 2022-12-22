@@ -43,11 +43,11 @@ export enum EntityEvent {
   SET_LOOP_INTERVAL = 'setLoopInterval',
   CLEAR_LOOP_INTERVAL = 'clearLoopInterval',
 
-  ENTITY_WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
-  ENTITY_SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
-  ENTITY_SHOULD_UPDATE = 'entityShouldUpdate',
-  ENTITY_DID_UPDATE = 'entityDidUpdate',
-  ENTITY_SHOULD_RENDER_TEXT = 'entityShouldRenderText',
+  WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
+  SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
+  SHOULD_UPDATE = 'entityShouldUpdate',
+  DID_UPDATE = 'entityDidUpdate',
+  SHOULD_RENDER_TEXT = 'entityShouldRenderText',
 }
 
 export type EntityRole = 'player' | 'enemy' | 'neutral';

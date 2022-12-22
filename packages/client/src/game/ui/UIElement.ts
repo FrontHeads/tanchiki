@@ -16,10 +16,10 @@ export class UIElement extends Entity {
   render() {
     const newState = { posX: this.posX, posY: this.posY };
     if (this.text) {
-      this.emit(EntityEvent.ENTITY_SHOULD_RENDER_TEXT, newState);
+      this.emit(EntityEvent.SHOULD_RENDER_TEXT, newState);
     } else {
-      this.emit(EntityEvent.ENTITY_SHOULD_UPDATE, newState);
-      this.emit(EntityEvent.ENTITY_DID_UPDATE, newState);
+      this.emit(EntityEvent.SHOULD_UPDATE, newState);
+      this.emit(EntityEvent.DID_UPDATE, newState);
     }
   }
 }
