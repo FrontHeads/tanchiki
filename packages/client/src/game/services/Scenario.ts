@@ -75,8 +75,11 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         this.state.enemies = this.state.enemies.filter(enemy => enemy !== destination);
 
         /** Ищем кто убил TankEnemy для обновления статистики */
-        // TODO: доделать после того как в source будет приходить Tank entity
         const playerState = Object.values(this.state.players).find(({ entity }) => entity === source);
+        if (playerState) {
+          // TODO: доделать подсчет статистики убитых противников
+          // playerState.statistics[]++;
+        }
 
         /** Спауним новый вражеский танк если необходимо */
         if (this.canCreateTankEnemy()) {
@@ -198,9 +201,9 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
     entity.on(EntityEvent.SPAWN, () => {
-      entity.on(EntityEvent.SHOOT, this.onTankShoot.bind(this)).on(EntityEvent.DESTROYED, sourceEntity => {
+      entity.on(EntityEvent.SHOOT, this.onTankShoot.bind(this)).on(EntityEvent.DESTROYED, sourceProjectile => {
         this.emit<[EnemyDestroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
-          source: sourceEntity,
+          source: sourceProjectile.parent,
           destination: entity,
         });
       });
@@ -239,11 +242,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     const entity = new Tank(settings);
     playerState.entity = entity;
-
     this.game.addEntity(entity);
 
-    entity.spawn(settings);
-    entity.on(EntityEvent.SHOOT, this.onTankShoot.bind(this));
+    entity
+      .on(EntityEvent.DESTROYED, () => {
+        /** Отлавливаем события убийства игрока и передаем событие Scenario */
+        this.emit(ScenarioEvent.TANK_PLAYER_DESTROYED, entity, playerType);
+      })
+      .on(EntityEvent.SHOOT, this.onTankShoot.bind(this))
+      .spawn(settings);
 
     /** Навешиваем события на котроллер, предварительно почистив старые */
     playerState.controller
@@ -255,13 +262,9 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         entity.stop();
       })
       .on(ControllerEvent.SHOOT, () => {
-        entity.shoot();
+        /** Если игра не на паузе, то вызываем выстрел у игрока */
+        !this.game.paused && entity.shoot();
       });
-
-    /** Отлавливаем события убийства игрока и передаем событие Scenario */
-    entity.on(EntityEvent.DESTROYED, () => {
-      this.emit(ScenarioEvent.TANK_PLAYER_DESTROYED, entity, playerType);
-    });
 
     return entity;
   }
