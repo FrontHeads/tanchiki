@@ -8,9 +8,9 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { validation, ValidationResponse } from '../../utils/validation';
 import { signUpFieldList, signUpFormInitialState } from './data';
 import { SignUpForm } from './typings';
-
 export const SignUp: FC = () => {
   // Оборачиваем в константу из-за каррирования в useAppDispatch() и useNavigate()
   // + хуки можно вызывать только на верхнем уровне компонента.
@@ -19,11 +19,22 @@ export const SignUp: FC = () => {
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
 
+  const [hasErrors, setHasErrors] = useState(false);
   const [formData, setFormData] = useState<SignUpForm>(signUpFormInitialState);
+  const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+
+      const validationResponse = validation(formData);
+
+      if (validationResponse.hasErrors) {
+        setHasErrors(true);
+        setValidationErrors(validationResponse);
+        return;
+      }
+
       dispatch(authThunks.signUp(formData));
     },
     [formData]
@@ -45,8 +56,15 @@ export const SignUp: FC = () => {
   }, [error]);
 
   return (
-    <Form handlerSubmit={submitHandler} header="Регистрация">
-      <FieldList fieldList={signUpFieldList} setFormData={setFormData} formData={formData} disabled={isLoading} />
+    <Form handlerSubmit={submitHandler} header="Регистрация" hasErrors={hasErrors}>
+      <FieldList
+        fieldList={signUpFieldList}
+        setFormData={setFormData}
+        formData={formData}
+        disabled={isLoading}
+        setValidationErrors={setValidationErrors}
+        validationErrors={validationErrors}
+      />
       <div className="form__buttons-wrapper">
         <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
         <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />

@@ -1,5 +1,6 @@
 import { PropsWithChildren, useCallback } from 'react';
 
+import { validation } from '../../../utils/validation';
 import { Field } from './Field';
 import { FieldListProps } from './typings';
 
@@ -8,6 +9,8 @@ export const FieldList = <T extends Record<string, string>>({
   fieldList,
   formData,
   setFormData,
+  validationErrors,
+  setValidationErrors,
   disabled,
 }: PropsWithChildren<FieldListProps<T>>) => {
   const inputChangeHandler = useCallback(
@@ -17,9 +20,24 @@ export const FieldList = <T extends Record<string, string>>({
         setFile(files[0]);
       }
       setFormData({ ...formData, [name]: value });
+
+      const inputErrors = validation({ [name]: value });
+
+      if (inputErrors) {
+        setValidationErrors({ ...validationErrors, ...inputErrors });
+      }
     },
     [formData]
   );
+
+  const inputFocusHandler = (event: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    const inputErrors = validation({ [name]: value });
+
+    if (inputErrors) {
+      setValidationErrors({ ...validationErrors, ...inputErrors });
+    }
+  };
 
   return (
     <>
@@ -38,7 +56,9 @@ export const FieldList = <T extends Record<string, string>>({
             {...field}
             disabled={disabled}
             onChange={inputChangeHandler}
+            onFocus={inputFocusHandler}
             value={formData[field.id] || ''}
+            validationErrors={validationErrors[field.id] as string[]}
           />
         );
       })}

@@ -8,6 +8,7 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { validation, ValidationResponse } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
 import { SignInForm } from './typings';
 
@@ -15,12 +16,23 @@ export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const [hasErrors, setHasErrors] = useState(false);
   const { error, isLoading } = useAppSelector(authSelectors.authState);
   const [formData, setFormData] = useState<SignInForm>(signInFormInitialState);
+  const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+
+      const validationResult = validation(formData);
+
+      if (validationResult.hasErrors) {
+        setHasErrors(true);
+        setValidationErrors(validationResult);
+        return;
+      }
+
       dispatch(authThunks.signIn(formData));
     },
     [formData]
@@ -34,12 +46,14 @@ export const SignIn: FC = () => {
   }, [error]);
 
   return (
-    <Form handlerSubmit={submitHandler} header="Вход">
+    <Form handlerSubmit={submitHandler} header="Вход" hasErrors={hasErrors}>
       <FieldList<SignInForm>
         fieldList={signInFieldList}
         setFormData={setFormData}
         formData={formData}
         disabled={isLoading}
+        validationErrors={validationErrors}
+        setValidationErrors={setValidationErrors}
       />
       <div className="form__buttons-wrapper">
         <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />

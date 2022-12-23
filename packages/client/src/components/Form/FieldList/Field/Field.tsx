@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import { FC } from 'react';
 
+import { ValidationErrors } from '../../../ValidationErrors';
 import { FieldProps } from './typings';
 
 export const Field: FC<FieldProps> = ({
@@ -10,10 +11,11 @@ export const Field: FC<FieldProps> = ({
   title,
   required,
   placeholder,
-  error,
   onChange,
+  onFocus,
   disabled,
   className,
+  validationErrors,
 }) => {
   return (
     <div className={cn('form__field', className)} data-testid="form-field">
@@ -29,10 +31,11 @@ export const Field: FC<FieldProps> = ({
         name={id}
         placeholder={placeholder}
         onChange={onChange}
+        onFocus={onFocus}
         value={value}
         disabled={disabled}
       />
-      {error && <div className="form__field-error">{error}</div>}
+      {validationErrors ? <ValidationErrors validationErrors={validationErrors} /> : null}
     </div>
   );
 };

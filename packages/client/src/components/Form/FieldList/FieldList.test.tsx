@@ -10,6 +10,7 @@ describe('FieldList', () => {
     const testFieldId = 'email';
 
     const [formData, setFormData] = [{ [testFieldId]: '' }, jest.fn()];
+    const [validationErrors, setValidationErrors] = [{ test: [''] }, jest.fn()];
     const mockFields: FormInputAndHeadingList = [
       {
         title: 'Email',
@@ -23,7 +24,15 @@ describe('FieldList', () => {
       },
     ];
 
-    render(<FieldList fieldList={mockFields} formData={formData} setFormData={setFormData} />);
+    render(
+      <FieldList
+        fieldList={mockFields}
+        formData={formData}
+        setFormData={setFormData}
+        setValidationErrors={setValidationErrors}
+        validationErrors={validationErrors}
+      />
+    );
 
     const inputFieldsCount = mockFields.filter(item => !('heading' in item)).length;
     const headersCount = mockFields.filter(item => 'heading' in item).length;
