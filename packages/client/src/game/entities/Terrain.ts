@@ -1,5 +1,6 @@
 import { spriteCoordinates } from '../data/constants';
 import type { EntitySettings } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
 export class Terrain extends Entity {
@@ -40,7 +41,7 @@ export class Terrain extends Entity {
     }
 
     if (this.type === 'water') {
-      this.on('spawn', () => {
+      this.on(EntityEvent.SPAWN, () => {
         this.startAnimation({
           delay: 350,
           spriteCoordinates: spriteCoordinates['terrain.water'],
