@@ -2,6 +2,7 @@ import type { Entity } from '../entities';
 import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Pos, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
+import { EntityEvent } from './../typings/index';
 
 export class View extends EventEmitter {
   width = 0;
@@ -130,7 +131,7 @@ export class View extends EventEmitter {
     this.layers[layerId]?.entities.add(layerObject);
 
     for (const [eventName, callback] of Object.entries(layerObject.listeners)) {
-      entity.on(eventName, callback);
+      entity.on(eventName as EntityEvent, callback);
     }
   }
 
@@ -147,7 +148,7 @@ export class View extends EventEmitter {
     if (entityToDelete) {
       this.layers[layerId].entities.delete(entityToDelete);
       for (const [eventName, callback] of Object.entries(entityToDelete.listeners)) {
-        entity.off(eventName, callback);
+        entity.off(eventName as EntityEvent, callback);
       }
     }
   }
