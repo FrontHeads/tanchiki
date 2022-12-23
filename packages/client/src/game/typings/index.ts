@@ -1,5 +1,7 @@
-import { Tank, TankEnemy } from '../entities';
+import { Entity, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
+
+export type Fn = (...args: Array<any>) => void;
 
 export type GameSettings = {
   width: number;
@@ -28,6 +30,26 @@ export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
 
+export enum EntityEvent {
+  MOVE = 'move',
+  STOP = 'stop',
+  SPAWN = 'spawn',
+  DAMAGED = 'damaged',
+  DESTROYED = 'destroyed',
+  EXPLODING = 'exploding',
+  SHOOT = 'shoot',
+
+  SET_LOOP_DELAY = 'setLoopDelay',
+  SET_LOOP_INTERVAL = 'setLoopInterval',
+  CLEAR_LOOP_INTERVAL = 'clearLoopInterval',
+
+  WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
+  SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
+  SHOULD_UPDATE = 'entityShouldUpdate',
+  DID_UPDATE = 'entityDidUpdate',
+  SHOULD_RENDER_TEXT = 'entityShouldRenderText',
+}
+
 export type EntityRole = 'player' | 'enemy' | 'neutral';
 
 export type EntityType =
@@ -41,6 +63,8 @@ export type EntityType =
   | 'water'
   | 'ice'
   | 'powerup'
+  | 'projectileExplosion'
+  | 'tankExplosion'
   | 'custom';
 
 export type EntitySettings = Pos &
@@ -66,7 +90,8 @@ export type UIElementSettings = Pos &
     text: string;
     align: CanvasTextAlign;
     color: string;
-    img: HTMLImageElement;
+    backImg: HTMLImageElement;
+    mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
   }>;
 
 export enum MainMenuState {
@@ -99,15 +124,17 @@ export enum ScenarioEvent {
   GAME_OVER = 'game_over',
   MISSION_ACCOMPLISHED = 'mission_accomplished',
 
-  /** Танк игрока размещен на карте (в момент старта игры и респаун после убийства в случае наличия жизни */
+  /** Танк игрока размещен на карте (в момент старта игры и респаун после убийства в случае наличия жизни. */
   TANK_PLAYER_SPAWNED = 'tank_player_spawned',
   /** Танк игрока был убит */
   TANK_PLAYER_DESTROYED = 'tank_player_destroyed',
 
-  /** Вражеский танк размежен на карте */
+  /** Вражеский танк размежен на карте. */
   TANK_ENEMY_SPAWNED = 'tank_enemy_spawned',
-  /** Вражеский танк был убит */
+  /** Вражеский танк был убит. */
   TANK_ENEMY_DESTROYED = 'tank_enemy_destroyed',
+  /** Попадание снаряда куда-либо. */
+  PROJECTILE_HIT = 'projectile_hit',
 }
 
 export type ScenarioState = {
@@ -118,7 +145,7 @@ export type ScenarioState = {
    * при игре вдвоём их не более шести;
    */
   maxActiveEnemies: number;
-  /** Всего же танков противника на уровне */
+  /** Всего танков противника на уровне */
   enemiesLeft: number;
   /** Массив с танами протвников на карте */
   enemies: Tank[];
@@ -164,4 +191,71 @@ export enum Cell {
   CONCRETE_LEFT = 10,
   CONCRETE_LEFT_BOTTOM = 19,
   CONCRETE_RIGHT_BOTTOM = 20,
+}
+
+export type LoopDelays = Record<number, Array<() => void>>;
+
+export type LoopIntervals = Record<string, LoopInterval>;
+
+export type LoopInterval = {
+  loopCounter: number;
+  targetLoop: number;
+  callback: () => void;
+};
+
+export type SpriteCoordinatesNoAnimations = null | number[][];
+export type SpriteCoordinatesWithAnimations = Record<string, number[][]>;
+
+export type Animations = AnimationSettings[];
+
+export type AnimationSettings = {
+  /** Задержка смены кадров. Чем меньше число - тем быстрее анимация.*/
+  delay: number;
+  /** Координаты спрайта для конкретной анимации. */
+  spriteCoordinates: SpriteCoordinatesWithAnimations | SpriteCoordinatesNoAnimations;
+  /** Показывать анимацию бесконечно или однократно. False = однократно. */
+  looped: boolean;
+  /** Показывать ли основной спрайт сущности во время анимации. */
+  showMainSprite?: boolean;
+  /** Указывает через какой промежуток времени остановить анимацию. */
+  stopTimer?: number;
+  /** Имя анимации, оно же имя loopInterval который крутит анимацию. */
+  name?: string;
+  /** Фрейм (кадр) который будет показан при следующем вызове анимации. */
+  spriteFrame?: number;
+};
+
+export type CancelAnimation =
+  /** Убирает анимацию, но спрайт остается видимым. */
+  | 'showEntity'
+  /** Убирает анимацию и стирает спрайт. */
+  | 'eraseEntity';
+
+/** Список canvas-слоев и прикрепленных к ним сущностей. */
+export type LayerList = Record<
+  string,
+  {
+    context: CanvasRenderingContext2D;
+    entities: Set<LayerEntity>;
+  }
+>;
+
+/** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
+export type LayerEntity = {
+  instance: Entity;
+  listeners: Record<string, (...args: Array<any>) => void>;
+};
+
+export type GetSpriteCoordinates = {
+  entity: Entity;
+  animation?: AnimationSettings;
+};
+
+export enum ControllerEvent {
+  STOP = 'stop',
+  MOVE = 'move',
+  SHOOT = 'shoot',
+  PAUSE = 'pause',
+  FULLSCREEN = 'fullscreen',
+  MUTE = 'mute',
 }

@@ -1,4 +1,6 @@
+import { spriteCoordinates } from '../data/constants';
 import type { EntitySettings } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
 export class Flag extends Entity {
@@ -9,5 +11,11 @@ export class Flag extends Entity {
     this.color = 'white';
     this.crossable = false;
     this.hittable = true;
+    this.mainSpriteCoordinates = spriteCoordinates['base.heart.alive'];
+
+    this.on(EntityEvent.DAMAGED, () => {
+      this.mainSpriteCoordinates = spriteCoordinates['base.heart.dead'];
+      this.refreshSprite();
+    });
   }
 }

@@ -1,12 +1,19 @@
 import { Entity, Projectile, Tank } from '../entities';
-import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
+import {
+  Direction,
+  GameSettings,
+  LoopDelays,
+  LoopIntervals,
+  MainMenuState,
+  ScenarioEvent,
+  ScreenType,
+} from '../typings';
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
+import { ControllerEvent, EntityEvent } from './../typings/index';
 import { Controller, resources, Scenario, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
-
-type LoopDelays = Record<number, Array<() => void>>;
 
 export class Game {
   static __instance: Game;
@@ -24,6 +31,7 @@ export class Game {
   loopTimeMs = 25;
   loopCount = 0;
   loopDelays: LoopDelays = {};
+  loopIntervals: LoopIntervals = {};
   loopEntities: Set<Tank | Projectile> = new Set();
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
   screen: ScreenType = ScreenType.LOADING;
@@ -34,7 +42,7 @@ export class Game {
   private constructor() {
     this.zone = new Zone(this.settings);
     this.view = new View(this.settings);
-    this.overlay = new Overlay(this.view);
+    this.overlay = new Overlay(this);
     this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerWasd = new Controller(KeyBindingsWasd);
     this.controllerArrows = new Controller(KeyBindingsArrows);
@@ -79,6 +87,7 @@ export class Game {
       delete this.scenario;
     }
     this.clearLoopEntities();
+    this.loopIntervals = {};
     this.clearLoopDelays();
     this.view.reset();
     this.zone.reset();
@@ -96,7 +105,7 @@ export class Game {
     this.view.add(entity);
     this.zone.add(entity);
     this.audioManager.add(entity);
-    this.attachLoopDelayHandler(entity);
+    this.registerTimerHandlers(entity);
     if (entity instanceof Tank) {
       this.loopEntities.add(entity);
     } else if (entity instanceof Projectile) {
@@ -106,33 +115,47 @@ export class Game {
     }
   }
 
-  clearLoopEntities() {
-    for (const entity of this.loopEntities) {
-      entity.despawn();
-    }
-    this.loopEntities = new Set();
-  }
-
   convertTimeToLoops(delay: number) {
     return Math.floor(delay / this.loopTimeMs);
   }
 
-  /** Аналог setTimeout, который работает через игровой цикл */
+  /** Аналог setTimeout, который работает через игровой цикл. */
   setLoopDelay(callback: () => void, delay: number) {
     const loopMark = this.loopCount + this.convertTimeToLoops(delay);
+
     if (!this.loopDelays[loopMark]) {
       this.loopDelays[loopMark] = [];
     }
-    this.loopDelays[loopMark].push(callback);
-  }
 
-  attachLoopDelayHandler(entity: Entity) {
-    entity.on('loopDelay', this.setLoopDelay.bind(this));
+    this.loopDelays[loopMark].push(callback);
   }
 
   clearLoopDelays() {
     this.loopCount = 0;
     this.loopDelays = {};
+  }
+
+  /** Аналог setInterval, который работает через игровой цикл. */
+  setLoopInterval(callback: () => void, delay: number, intervalName: string) {
+    this.loopIntervals[intervalName] = {
+      loopCounter: 0,
+      targetLoop: this.convertTimeToLoops(delay),
+      callback: callback,
+    };
+
+    return intervalName;
+  }
+
+  clearLoopInterval(intervalName: string) {
+    if (intervalName in this.loopIntervals) {
+      delete this.loopIntervals[intervalName];
+    }
+  }
+
+  registerTimerHandlers(entity: Entity) {
+    entity.on(EntityEvent.SET_LOOP_DELAY, this.setLoopDelay.bind(this));
+    entity.on(EntityEvent.SET_LOOP_INTERVAL, this.setLoopInterval.bind(this));
+    entity.on(EntityEvent.CLEAR_LOOP_INTERVAL, this.clearLoopInterval.bind(this));
   }
 
   checkLoopDelays() {
@@ -145,11 +168,30 @@ export class Game {
     }
   }
 
+  checkLoopIntervals() {
+    Object.values(this.loopIntervals).forEach(interval => {
+      if (interval.loopCounter === interval.targetLoop) {
+        interval.callback();
+        interval.loopCounter = 0;
+        return;
+      }
+      interval.loopCounter++;
+    });
+  }
+
+  clearLoopEntities() {
+    for (const entity of this.loopEntities) {
+      entity.despawn();
+    }
+    this.loopEntities = new Set();
+  }
+
   loop() {
     const cycleStartTime = performance.now();
     let nextCycleDelay = this.loopTimeMs;
     ++this.loopCount;
     this.checkLoopDelays();
+    this.checkLoopIntervals();
     for (const entity of this.loopEntities) {
       entity.update();
       if (entity.shouldBeDestroyed) {
@@ -160,6 +202,7 @@ export class Game {
     if (nextCycleDelay < 0) {
       nextCycleDelay = 0;
     }
+
     this.loopProcess = setTimeout(this.loop.bind(this), nextCycleDelay);
   }
 
@@ -195,7 +238,10 @@ export class Game {
   initLoading() {
     this.screen = ScreenType.LOADING;
     this.overlay.show(this.screen);
-    resources.loadAll().then(() => this.initMenu());
+    resources.loadAll().then(() => {
+      this.view.spriteImg = resources.getImage('classicDesignSprite');
+      this.initMenu();
+    });
   }
 
   initMenu() {
@@ -206,10 +252,10 @@ export class Game {
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
-      .on('fullscreen', () => {
+      .on(ControllerEvent.FULLSCREEN, () => {
         this.view.toggleFullScreen();
       })
-      .on('move', (direction: Direction) => {
+      .on(ControllerEvent.MOVE, (direction: Direction) => {
         if (this.screen !== ScreenType.MAIN_MENU) {
           return;
         }
@@ -222,7 +268,7 @@ export class Game {
         this.overlay.show(this.screen, this.mainMenuState);
       })
       // Обрабатываем нажатие на указанном пункте меню
-      .on('shoot', () => {
+      .on(ControllerEvent.SHOOT, () => {
         if (this.screen !== ScreenType.MAIN_MENU) {
           return;
         }
@@ -233,9 +279,11 @@ export class Game {
   }
 
   initLevelSelector() {
+    this.reset();
+
     this.screen = ScreenType.LEVEL_SELECTOR;
 
-    this.overlay.show(this.screen, this.level);
+    this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: true });
 
     this.controllerAll.reset();
 
@@ -256,17 +304,17 @@ export class Game {
       }
       // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
       if (shouldTrigger) {
-        this.overlay.show(this.screen, this.level);
+        this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level });
       }
     };
 
     this.controllerAll
-      .on('stop', () => {
-        if (this.screen == ScreenType.LEVEL_SELECTOR) {
+      .on(ControllerEvent.STOP, () => {
+        if (this.screen === ScreenType.LEVEL_SELECTOR) {
           resetLevelInterval();
         }
       })
-      .on('move', (direction: Direction) => {
+      .on(ControllerEvent.MOVE, (direction: Direction) => {
         if (this.screen !== ScreenType.LEVEL_SELECTOR) {
           return;
         }
@@ -276,7 +324,7 @@ export class Game {
 
         changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
       })
-      .on('shoot', () => {
+      .on(ControllerEvent.SHOOT, () => {
         if (this.screen !== ScreenType.LEVEL_SELECTOR) {
           return;
         }
@@ -307,7 +355,7 @@ export class Game {
 
     /** Анимация перехода с экрана выбора уровня в игру */
     const startAnimationDelay = firstInit ? 100 : 2000;
-    this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
+    this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: false });
     this.overlay.show(this.screen, startAnimationDelay);
 
     /** Стартуем сценарий после окончания анимации */
@@ -327,10 +375,13 @@ export class Game {
         });
 
       this.controllerAll
-        .on('pause', () => {
+        .on(ControllerEvent.PAUSE, () => {
           this.togglePause();
         })
-        .on('fullscreen', () => {
+        .on(ControllerEvent.MUTE, () => {
+          this.audioManager.emit('pause', { isMuteKey: true });
+        })
+        .on(ControllerEvent.FULLSCREEN, () => {
           this.view.toggleFullScreen();
         });
     }, startAnimationDelay);

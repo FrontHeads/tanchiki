@@ -1,18 +1,21 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
-import { Entity, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
+import { Entity, Explosion, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
 import {
   Direction,
   EnemyDestroyedPayload,
   EntityDynamicSettings,
+  EntityEvent,
   EntitySettings,
   MainMenuState,
+  MapData,
   Player,
   ScenarioEvent,
+  ScenarioPlayerState,
   ScenarioState,
   TankEnemyType,
 } from '../typings';
 import { EventEmitter } from '../utils';
-import { MapData, ScenarioPlayerState } from './../typings/index';
+import { ControllerEvent } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
 import { MapManager } from './MapManager';
@@ -66,12 +69,17 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this
       /** После убийства вражеского танка */
       .on(ScenarioEvent.TANK_ENEMY_DESTROYED, ({ source, destination }: EnemyDestroyedPayload) => {
+        this.createExplosion(destination);
+
         /** Удаляем его из списка активных */
         this.state.enemies = this.state.enemies.filter(enemy => enemy !== destination);
 
         /** Ищем кто убил TankEnemy для обновления статистики */
-        // TODO: доделать после того как в source будет приходить Tank entity
         const playerState = Object.values(this.state.players).find(({ entity }) => entity === source);
+        if (playerState) {
+          // TODO: доделать подсчет статистики убитых противников
+          // playerState.statistics[]++;
+        }
 
         /** Спауним новый вражеский танк если необходимо */
         if (this.canCreateTankEnemy()) {
@@ -86,11 +94,13 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
       /** После убийства игрока */
       .on(ScenarioEvent.TANK_PLAYER_DESTROYED, (_entity: Tank, playerType: Player) => {
+        this.createExplosion(_entity);
+
         const playerState = this.state.players[playerType];
         --playerState.lives;
 
         /** Если не осталось жизней у всех игроков - триггерим game over */
-        const isNoLivesLeft = Object.values(this.state.players).every(playerState => playerState.lives === 0);
+        const isNoLivesLeft = Object.values(this.state.players).every(playerState => playerState.lives < 1);
         if (isNoLivesLeft) {
           this.emit(ScenarioEvent.GAME_OVER);
           return;
@@ -100,6 +110,11 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         if (playerState.lives > 0) {
           this.createPlayerTank(playerType);
         }
+      })
+
+      /** Показываем анимацию взрыва при попадании снаряда куда-либо. */
+      .on(ScenarioEvent.PROJECTILE_HIT, (projectile: Projectile) => {
+        this.createExplosion(projectile);
       });
   }
 
@@ -112,7 +127,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   createEntity(props: EntitySettings) {
     let entity: Entity;
     if (props.type === 'flag') {
-      entity = new Flag(props).on('damaged', () => {
+      entity = new Flag(props).on(EntityEvent.DAMAGED, () => {
         this.emit(ScenarioEvent.GAME_OVER);
       });
     } else {
@@ -185,10 +200,10 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     --this.state.enemiesLeft;
 
     const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
-    entity.on('spawn', () => {
-      entity.on('shoot', this.onTankShoot.bind(this)).on('destroyed', sourceEntity => {
+    entity.on(EntityEvent.SPAWN, () => {
+      entity.on(EntityEvent.SHOOT, this.onTankShoot.bind(this)).on(EntityEvent.DESTROYED, sourceProjectile => {
         this.emit<[EnemyDestroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {
-          source: sourceEntity,
+          source: sourceProjectile.parent,
           destination: entity,
         });
       });
@@ -227,29 +242,29 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     const entity = new Tank(settings);
     playerState.entity = entity;
-
     this.game.addEntity(entity);
 
-    entity.spawn(settings);
-    entity.on('shoot', this.onTankShoot.bind(this));
+    entity
+      .on(EntityEvent.DESTROYED, () => {
+        /** Отлавливаем события убийства игрока и передаем событие Scenario */
+        this.emit(ScenarioEvent.TANK_PLAYER_DESTROYED, entity, playerType);
+      })
+      .on(EntityEvent.SHOOT, this.onTankShoot.bind(this))
+      .spawn(settings);
 
     /** Навешиваем события на котроллер, предварительно почистив старые */
     playerState.controller
       .reset()
-      .on('move', (direction: Direction) => {
+      .on(ControllerEvent.MOVE, (direction: Direction) => {
         entity.move(direction);
       })
-      .on('stop', () => {
+      .on(ControllerEvent.STOP, () => {
         entity.stop();
       })
-      .on('shoot', () => {
-        entity.shoot();
+      .on(ControllerEvent.SHOOT, () => {
+        /** Если игра не на паузе, то вызываем выстрел у игрока */
+        !this.game.paused && entity.shoot();
       });
-
-    /** Отлавливаем события убийства игрока и передаем событие Scenario */
-    entity.on('destroyed', () => {
-      this.emit(ScenarioEvent.TANK_PLAYER_DESTROYED, entity, playerType);
-    });
 
     return entity;
   }
@@ -268,5 +283,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.game.addEntity(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
     projectile.update();
+
+    projectile.on(EntityEvent.EXPLODING, () => {
+      this.emit(ScenarioEvent.PROJECTILE_HIT, projectile);
+    });
+  }
+
+  createExplosion(entity: Tank | Projectile) {
+    const explosion = new Explosion({ explosionParentEntity: entity });
+    this.game.addEntity(explosion);
+    explosion.spawn({ posX: explosion.posX, posY: explosion.posY });
   }
 }
