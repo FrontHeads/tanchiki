@@ -283,7 +283,7 @@ export class Game {
 
     this.screen = ScreenType.LEVEL_SELECTOR;
 
-    this.overlay.show(this.screen, this.level);
+    this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: true });
 
     this.controllerAll.reset();
 
@@ -304,13 +304,13 @@ export class Game {
       }
       // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
       if (shouldTrigger) {
-        this.overlay.show(this.screen, this.level);
+        this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level });
       }
     };
 
     this.controllerAll
       .on(ControllerEvent.STOP, () => {
-        if (this.screen == ScreenType.LEVEL_SELECTOR) {
+        if (this.screen === ScreenType.LEVEL_SELECTOR) {
           resetLevelInterval();
         }
       })
@@ -355,7 +355,7 @@ export class Game {
 
     /** Анимация перехода с экрана выбора уровня в игру */
     const startAnimationDelay = firstInit ? 100 : 2000;
-    this.overlay.show(ScreenType.LEVEL_SELECTOR, this.level);
+    this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: false });
     this.overlay.show(this.screen, startAnimationDelay);
 
     /** Стартуем сценарий после окончания анимации */

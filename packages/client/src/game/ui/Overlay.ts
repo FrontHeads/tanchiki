@@ -5,7 +5,7 @@ import { UIElement } from '../ui';
 import { Screen } from './screens';
 
 export class Overlay {
-  currentScreen!: Screen;
+  currentScreen?: Screen;
   view: View;
 
   constructor(public game: Game) {

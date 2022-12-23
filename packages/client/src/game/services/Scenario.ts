@@ -100,7 +100,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         --playerState.lives;
 
         /** Если не осталось жизней у всех игроков - триггерим game over */
-        const isNoLivesLeft = Object.values(this.state.players).every(playerState => playerState.lives === 0);
+        const isNoLivesLeft = Object.values(this.state.players).every(playerState => playerState.lives < 1);
         if (isNoLivesLeft) {
           this.emit(ScenarioEvent.GAME_OVER);
           return;

@@ -11,11 +11,26 @@ export class GameOverScreen extends Screen<number> {
     const posY = view.height - stage;
     const middle = (view.height - fontSize) / 2;
 
+    /**
+     * Вычисляем прозрачность фона в зависимости от шага анимации
+     * На 10 шаге анимации ставим фиксированное значение
+     **/
+    const opacity = stage <= 10 ? stage * 0.05 : 0.5;
+
     if (posY < middle) {
       return false;
     }
 
     this.overlay.clearScreen();
+
+    this.overlay.renderElement({
+      posX: 0,
+      posY: 0,
+      width: view.width,
+      height: view.height,
+      color: `rgba(0,0,0,${opacity})`,
+    });
+
     this.overlay.renderElement({
       posX: 0,
       posY,
