@@ -1,5 +1,6 @@
 import { Entity, Tank } from '../entities';
 import { EventEmitter } from '../utils';
+import { EntityEvent } from './../typings/index';
 import { SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
@@ -55,25 +56,25 @@ export class AudioManager extends EventEmitter {
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
       /**появление */
-      entity.on('spawn', () => {
+      entity.on(EntityEvent.SPAWN, () => {
         this.playSound('idle');
       });
       /**стрельба */
-      entity.on('shoot', () => {
+      entity.on(EntityEvent.SHOOT, () => {
         this.playSound('shoot');
       });
       /**движение */
-      entity.on('move', () => {
+      entity.on(EntityEvent.MOVE, () => {
         this.stopSound('idle');
         this.playSound('move');
       });
       /**остановка */
-      entity.on('stop', () => {
+      entity.on(EntityEvent.STOP, () => {
         this.stopSound('move');
         this.playSound('idle');
       });
       /**взрыв игрока */
-      entity.on('destroyed', () => {
+      entity.on(EntityEvent.DESTROYED, () => {
         this.playSound('playerExplosion');
       });
     }
@@ -81,7 +82,7 @@ export class AudioManager extends EventEmitter {
     /** Звуки танка врага */
     if (isTank && isEnemy) {
       /**взрыв врага */
-      entity.on('destroyed', () => {
+      entity.on(EntityEvent.DESTROYED, () => {
         this.playSound('enemyExplosion');
       });
     }

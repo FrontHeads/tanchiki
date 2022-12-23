@@ -1,4 +1,4 @@
-type Fn = (...args: Array<any>) => void;
+import { Fn } from '../typings';
 
 export class EventEmitter<T extends string = string> {
   listeners = {} as Record<T, Array<Fn>>;

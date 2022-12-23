@@ -1,5 +1,6 @@
 import { Zone } from '../services';
 import { Direction } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { Projectile, Tank } from './';
 
 describe('game/entities/Tank', () => {
@@ -10,7 +11,7 @@ describe('game/entities/Tank', () => {
     tank.spawn();
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
-    tank.on('shoot', mockFn);
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
 
     const projectile = mockFn.mock.calls[0][0];
@@ -22,7 +23,7 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
 
     tank.spawn();
-    tank.on('shoot', mockFn);
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
@@ -49,7 +50,7 @@ describe('game/entities/Tank', () => {
     tank.spawn();
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
-    tank.on('shoot', mockFn);
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
 
     const projectile = mockFn.mock.calls[0][0];
@@ -66,7 +67,7 @@ describe('game/entities/Tank', () => {
     tank.spawn();
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
-    tank.on('shoot', mockFn);
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
 
     const projectileOne = mockFn.mock.calls[0][0];
@@ -84,7 +85,7 @@ describe('game/entities/Tank', () => {
     tank.spawn();
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
-    tank.on('shoot', mockFn);
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
     tank.shoot();
 
