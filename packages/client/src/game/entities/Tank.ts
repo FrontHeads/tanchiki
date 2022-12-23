@@ -1,5 +1,6 @@
 import { spriteCoordinates } from '../data/constants';
 import type { EntityDynamicSettings, Rect } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
@@ -19,7 +20,7 @@ export class Tank extends EntityDynamic {
     //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
     this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
 
-    this.on('spawn', () => {
+    this.on(EntityEvent.SPAWN, () => {
       const spawnTimeout = 1000;
       const shieldTimeout = 3000;
 
@@ -70,11 +71,11 @@ export class Tank extends EntityDynamic {
     });
     this.canShoot = false;
 
-    projectile.on('exploding', () => {
+    projectile.on(EntityEvent.EXPLODING, () => {
       this.canShoot = true;
     });
 
-    this.emit('shoot', projectile);
+    this.emit(EntityEvent.SHOOT, projectile);
   }
 
   calculateProjectileInitPos() {
