@@ -12,7 +12,7 @@ export const Form: FC<FormProps> = ({ handlerSubmit, header = '', children, hasE
 
   return (
     <form data-testid="form" className={formClassNames} onSubmit={handlerSubmit} {...rest}>
-      {header && <h1 className="form__header">{header}</h1>}
+      {header ? <h1 className="form__header">{header}</h1> : null}
       {children}
     </form>
   );
