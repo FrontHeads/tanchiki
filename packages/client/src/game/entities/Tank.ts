@@ -12,6 +12,8 @@ export class Tank extends EntityDynamic {
   frozen = true;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = true;
+  /** Находится в состоянии спауна (отображается в виде звезды) */
+  spawning = true;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
@@ -35,6 +37,7 @@ export class Tank extends EntityDynamic {
       this.setLoopDelay(() => {
         this.frozen = false;
         this.canShoot = true;
+        this.spawning = false;
       }, spawnTimeout);
 
       if (this.role === 'player') {

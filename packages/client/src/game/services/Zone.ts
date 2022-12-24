@@ -193,6 +193,14 @@ export class Zone {
         if (entity instanceof Projectile) {
           const pos = { posX: x, posY: y };
           if (mainLayerCell !== null && mainLayerCell.hittable && mainLayerCell !== entity.parent) {
+            // Чтобы вражеские танки могли стрелять друг через друга
+            if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
+              continue;
+            }
+            // Чтобы снаряды пролетали через спавнящийся танк (отображается в виде звезды)
+            if (mainLayerCell instanceof Tank && mainLayerCell.spawning) {
+              continue;
+            }
             if (entity.exploding) {
               mainLayerCell.takeDamage(entity, pos);
             }
