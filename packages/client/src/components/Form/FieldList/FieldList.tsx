@@ -27,17 +27,20 @@ export const FieldList = <T extends Record<string, string>>({
         setValidationErrors({ ...validationErrors, ...inputErrors });
       }
     },
-    [formData]
+    [formData, validationErrors]
   );
 
-  const inputFocusHandler = (event: React.FocusEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    const inputErrors = validation({ [name]: value });
+  const inputFocusHandler = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      const inputErrors = validation({ [name]: value });
 
-    if (inputErrors) {
-      setValidationErrors({ ...validationErrors, ...inputErrors });
-    }
-  };
+      if (inputErrors) {
+        setValidationErrors({ ...validationErrors, ...inputErrors });
+      }
+    },
+    [formData, validationErrors]
+  );
 
   return (
     <>

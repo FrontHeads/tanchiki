@@ -2,104 +2,104 @@ import { ValidationErrorMessage } from './config';
 import { ValidationRules } from './typings';
 
 export const validationRules: ValidationRules = {
-  loginRules(value: string): string[] {
+  checkLogin(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^(?=.{3,20}$)/.test(value)) {
-      errors.push(ValidationErrorMessage.loginRulesLength);
+      errors.push(ValidationErrorMessage.loginLength);
     }
 
     if (!/^[a-zA-Z0-9\-_]+$/i.test(value)) {
-      errors.push(ValidationErrorMessage.loginRulesCompound);
+      errors.push(ValidationErrorMessage.loginCompound);
     }
 
     if (/^[\d]+$/.test(value)) {
-      errors.push(ValidationErrorMessage.loginRulesFormat);
+      errors.push(ValidationErrorMessage.loginFormat);
     }
 
     return errors;
   },
 
-  passwordRules(value: string): string[] {
+  checkPassword(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^(?=.{8,40}$)/.test(value)) {
-      errors.push(ValidationErrorMessage.passwordRulesLength);
+      errors.push(ValidationErrorMessage.passwordLength);
     }
 
     if (!/\d{1,}/.test(value)) {
-      errors.push(ValidationErrorMessage.passwordRulesNum);
+      errors.push(ValidationErrorMessage.passwordNum);
     }
 
     if (!/[A-ZА-ЯЁ]{1,}/.test(value)) {
-      errors.push(ValidationErrorMessage.passwordRulesCapitalChar);
+      errors.push(ValidationErrorMessage.passwordCapitalChar);
     }
 
     return errors;
   },
 
-  firstNameRules(value: string): string[] {
+  checkFirstName(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^[а-яёА-ЯЁa-zA-Z-]+$/i.test(value)) {
-      errors.push(ValidationErrorMessage.firstNameRulesCompound);
+      errors.push(ValidationErrorMessage.firstNameCompound);
     }
 
     if (!/^[A-ZА-ЯЁ]{1}/.test(value)) {
-      errors.push(ValidationErrorMessage.nameRulesBegin);
+      errors.push(ValidationErrorMessage.nameBegin);
     }
 
     return errors;
   },
 
-  secondNameRules(value: string): string[] {
+  checkSecondName(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^[а-яёА-ЯЁa-zA-Z-]+$/i.test(value)) {
-      errors.push(ValidationErrorMessage.secondNameRulesCompound);
+      errors.push(ValidationErrorMessage.secondNameCompound);
     }
 
     if (!/^[A-ZА-ЯЁ]{1}/.test(value)) {
-      errors.push(ValidationErrorMessage.nameRulesBegin);
+      errors.push(ValidationErrorMessage.nameBegin);
     }
 
     return errors;
   },
 
-  emailRules(value: string): string[] {
+  checkEmail(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^[a-zA-Z0-9\-.@]+$/i.test(value)) {
-      errors.push(ValidationErrorMessage.emailRulesCompound);
+      errors.push(ValidationErrorMessage.emailCompound);
     }
 
     // После собаки обязательно точка, а перед точкой обязательно буквы
     if (!/@\w+\./.test(value)) {
-      errors.push(ValidationErrorMessage.emailRulesFormat);
+      errors.push(ValidationErrorMessage.emailFormat);
     }
 
     return errors;
   },
 
-  phoneRules(value: string): string[] {
+  checkPhone(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^(?=.{10,15}$)/.test(value)) {
-      errors.push(ValidationErrorMessage.phoneRulesLength);
+      errors.push(ValidationErrorMessage.phoneLength);
     }
 
     if (!/^(\+|\d)[0-9]+$/i.test(value)) {
-      errors.push(ValidationErrorMessage.phoneRulesFormat);
+      errors.push(ValidationErrorMessage.phoneFormat);
     }
 
     return errors;
   },
 
-  notEmptyRules(value: string): string[] {
+  checkNotEmpty(value: string): string[] {
     const errors: string[] = [];
 
     if (!value.length) {
-      errors.push(ValidationErrorMessage.notEmptyRules);
+      errors.push(ValidationErrorMessage.notEmpty);
     }
 
     return errors;
