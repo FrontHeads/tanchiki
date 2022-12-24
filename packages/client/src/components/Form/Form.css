@@ -79,6 +79,6 @@
   }
 
   &_has-errors .validation-errors {
-    color: $font_color_red;
+    color: $font_color_danger;
   }
 }
