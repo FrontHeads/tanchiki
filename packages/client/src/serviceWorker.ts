@@ -1,11 +1,8 @@
-const serviceWorker = self as unknown as ServiceWorkerGlobalScope;  // чтобы не ругался тайпскрипт
+const serviceWorker = self as unknown as ServiceWorkerGlobalScope; // чтобы не ругался тайпскрипт
 
 const REPORTING = true;
 const CACHE_NAME = 'tanchiki-cache-1';
-const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-];
+const PRECACHE_URLS = ['/', '/index.html'];
 const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'object'];
 
 // При установке воркера кешируем часть данных (статику)
@@ -13,11 +10,12 @@ serviceWorker.addEventListener('install', (event: ExtendableEvent) => {
   REPORTING && console.log('SW: installing', event);
 
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches
+      .open(CACHE_NAME)
       // `addAll()` собирает и кеширует статику по указанному массиву ссылок
-      .then((cache) => cache.addAll(PRECACHE_URLS))
+      .then(cache => cache.addAll(PRECACHE_URLS))
       // `skipWaiting()` для активации SW сразу, а не после перезагрузки страницы
-      .then(() => { 
+      .then(() => {
         serviceWorker.skipWaiting();
         REPORTING && console.log('SW: cache added & skipped waiting');
       })
@@ -45,34 +43,34 @@ serviceWorker.addEventListener('fetch', async (event: FetchEvent) => {
   }
 
   event.respondWith(
-    caches.open(CACHE_NAME)
+    caches
+      .open(CACHE_NAME)
       .then(cache => {
-        return cache.match(event.request.url)
-          .then(cachedResponse => {
-            // Сначала проверяем в кеше
-            if (cachedResponse) {
-              REPORTING && console.log('SW: return cached response', event.request.url);
-              return cachedResponse;
-            }
+        return cache.match(event.request.url).then(cachedResponse => {
+          // Сначала проверяем в кеше
+          if (cachedResponse) {
+            REPORTING && console.log('SW: return cached response', event.request.url);
+            return cachedResponse;
+          }
 
-            // Если нет в кеше, делаем запрос через сеть
-            return fetch(event.request)
-              .then((fetchedResponse) => {
-                REPORTING && console.log('SW: return network response', event.request.url);
+          // Если нет в кеше, делаем запрос через сеть
+          return fetch(event.request)
+            .then(fetchedResponse => {
+              REPORTING && console.log('SW: return network response', event.request.url);
 
-                // Кладём ответ в кеш, если он не частичный (206)
-                if (fetchedResponse.status !== 206) {
-                  cache.put(event.request, fetchedResponse.clone());
-                }
-                return fetchedResponse;
-              })
-              .catch((fetchedError) => {
-                REPORTING && console.warn('SW: network problem', fetchedError);
-                return new Response();
-              })
-          })
+              // Кладём ответ в кеш, если он не частичный (206)
+              if (fetchedResponse.status !== 206) {
+                cache.put(event.request, fetchedResponse.clone());
+              }
+              return fetchedResponse;
+            })
+            .catch(fetchedError => {
+              REPORTING && console.warn('SW: network problem', fetchedError);
+              return new Response();
+            });
+        });
       })
-      .catch((cacheError) => {
+      .catch(cacheError => {
         REPORTING && console.warn('SW: cache error', cacheError);
         return new Response();
       })

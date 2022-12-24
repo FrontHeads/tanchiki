@@ -20,14 +20,14 @@ export default defineConfig({
     rollupOptions: {
       input: {
         app: './index.html',
-        serviceWorker: './src/serviceWorker.js',
+        serviceWorker: './src/serviceWorker.ts',
       },
       output: {
-        entryFileNames: (assetInfo) => {
+        entryFileNames: assetInfo => {
           return assetInfo.name === 'serviceWorker'
-             ? '[name].js'                  // put service worker in root
-             : 'assets/js/[name]-[hash].js' // others in `assets/js/`
-        }
+            ? '[name].js' // put service worker in root
+            : 'assets/js/[name]-[hash].js'; // others in `assets/js/`
+        },
       },
     },
   },
