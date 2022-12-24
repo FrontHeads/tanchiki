@@ -5,7 +5,7 @@ import { UIElement } from '../ui';
 import { Screen } from './screens';
 
 export class Overlay {
-  currentScreen!: Screen;
+  currentScreen?: Screen;
   view: View;
 
   constructor(public game: Game) {
@@ -43,11 +43,13 @@ export class Overlay {
     });
   }
 
-  animate(animateFunction: (stage: number) => boolean) {
+  animate(animateFunction: (counter: number) => boolean, animateIntervalMs = 25) {
     let stageCount = 0;
-    const animateIntervalMs = 20;
+
     const animateProcess = setInterval(() => {
       const stageResult = animateFunction(++stageCount);
+
+      //**Удаляет интервал (останавливает анимацию) */
       if (!stageResult) {
         clearInterval(animateProcess);
       }

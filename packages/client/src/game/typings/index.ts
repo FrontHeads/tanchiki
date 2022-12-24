@@ -1,6 +1,8 @@
 import { Entity, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 
+export type Fn = (...args: Array<any>) => void;
+
 export type GameSettings = {
   width: number;
   height: number;
@@ -27,6 +29,26 @@ export type Size = {
 export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
+
+export enum EntityEvent {
+  MOVE = 'move',
+  STOP = 'stop',
+  SPAWN = 'spawn',
+  DAMAGED = 'damaged',
+  DESTROYED = 'destroyed',
+  EXPLODING = 'exploding',
+  SHOOT = 'shoot',
+
+  SET_LOOP_DELAY = 'setLoopDelay',
+  SET_LOOP_INTERVAL = 'setLoopInterval',
+  CLEAR_LOOP_INTERVAL = 'clearLoopInterval',
+
+  WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
+  SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
+  SHOULD_UPDATE = 'entityShouldUpdate',
+  DID_UPDATE = 'entityDidUpdate',
+  SHOULD_RENDER_TEXT = 'entityShouldRenderText',
+}
 
 export type EntityRole = 'player' | 'enemy' | 'neutral';
 
@@ -83,6 +105,7 @@ export enum ScreenType {
   LEVEL_SELECTOR,
   GAME_OVER,
   GAME,
+  PAUSE,
 }
 
 // Scenario
@@ -123,7 +146,7 @@ export type ScenarioState = {
    * при игре вдвоём их не более шести;
    */
   maxActiveEnemies: number;
-  /** Всего же танков противника на уровне */
+  /** Всего танков противника на уровне */
   enemiesLeft: number;
   /** Массив с танами протвников на карте */
   enemies: Tank[];
@@ -228,3 +251,12 @@ export type GetSpriteCoordinates = {
   entity: Entity;
   animation?: AnimationSettings;
 };
+
+export enum ControllerEvent {
+  STOP = 'stop',
+  MOVE = 'move',
+  SHOOT = 'shoot',
+  PAUSE = 'pause',
+  FULLSCREEN = 'fullscreen',
+  MUTE = 'mute',
+}
