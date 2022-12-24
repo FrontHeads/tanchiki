@@ -1,4 +1,4 @@
-import type { Entity } from '../entities';
+import { Entity } from '../entities';
 import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Pos, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
@@ -109,6 +109,9 @@ export class View extends EventEmitter {
       instance: entity,
       listeners: {
         entityShouldUpdate: () => {
+          if (entity instanceof Entity && !entity.spawned) {
+            return;
+          }
           this.eraseFromLayer(entity, layerId);
         },
         entityDidUpdate: () => {
