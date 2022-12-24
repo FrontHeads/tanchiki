@@ -210,11 +210,14 @@ export class Game {
     if (!this.inited) {
       return;
     }
+
     if (newState === false || this.paused) {
+      this.overlay.clearScreen();
       this.startLoop();
       this.controllerWasd.load();
       this.controllerArrows.load();
     } else if (newState === true || !this.paused) {
+      this.overlay.show(ScreenType.PAUSE);
       this.stopLoop();
       this.controllerWasd.unload();
       this.controllerArrows.unload();
