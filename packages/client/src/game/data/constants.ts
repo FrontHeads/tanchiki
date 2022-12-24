@@ -1,5 +1,6 @@
 import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import { GameOverScreen, GameScreen, LevelSelectorScreen, LoadingScreen, MainMenuScreen } from '../ui/screens';
+import { PauseScreen } from './../ui/screens/PauseScreen';
 import { classicDesignSprite } from './spriteCoordinates';
 
 export const concreteCells: Cell[] = [
@@ -27,6 +28,7 @@ export const screenClasses = {
   [ScreenType.LOADING]: LoadingScreen,
   [ScreenType.LEVEL_SELECTOR]: LevelSelectorScreen,
   [ScreenType.GAME]: GameScreen,
+  [ScreenType.PAUSE]: PauseScreen,
   [ScreenType.GAME_OVER]: GameOverScreen,
 };
 

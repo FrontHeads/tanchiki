@@ -43,11 +43,13 @@ export class Overlay {
     });
   }
 
-  animate(animateFunction: (stage: number) => boolean) {
+  animate(animateFunction: (counter: number) => boolean, animateIntervalMs = 25) {
     let stageCount = 0;
-    const animateIntervalMs = 20;
+
     const animateProcess = setInterval(() => {
       const stageResult = animateFunction(++stageCount);
+
+      //**Удаляет интервал (останавливает анимацию) */
       if (!stageResult) {
         clearInterval(animateProcess);
       }
