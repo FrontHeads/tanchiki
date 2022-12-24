@@ -43,36 +43,39 @@ serviceWorker.addEventListener('fetch', async (event: FetchEvent) => {
   }
 
   event.respondWith(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.match(event.request).then((cachedResponse) => {
-        // Делаем запрос для обновления кеша
-        const fetchedResponse = fetch(event.request).then((networkResponse) => {
-          // Кладём ответ в кеш, если он не частичный (206)
-          if (networkResponse.status !== 206) {
-            cache.put(event.request, networkResponse.clone());
+    caches
+      .open(CACHE_NAME)
+      .then(cache => {
+        return cache.match(event.request).then(cachedResponse => {
+          // Делаем запрос для обновления кеша
+          const fetchedResponse = fetch(event.request)
+            .then(networkResponse => {
+              // Кладём ответ в кеш, если он не частичный (206)
+              if (networkResponse.status !== 206) {
+                cache.put(event.request, networkResponse.clone());
+              }
+              return networkResponse;
+            })
+            .catch(fetchedError => {
+              REPORTING && console.warn('SW: network problem', fetchedError);
+              return new Response();
+            });
+
+          // Если есть кеш, возвращаем его, не дожидаясь ответа из сети
+          if (cachedResponse) {
+            REPORTING && console.log('SW: return cached response', event.request.url);
+            return cachedResponse;
           }
-          return networkResponse;
-        })
-        .catch(fetchedError => {
-          REPORTING && console.warn('SW: network problem', fetchedError);
-          return new Response();
+
+          // Если нет кеша, ждём и возвращаем ответ из сети
+          REPORTING && console.log('SW: return network response', event.request.url);
+          return fetchedResponse;
         });
-
-        // Если есть кеш, возвращаем его, не дожидаясь ответа из сети
-        if (cachedResponse) {
-          REPORTING && console.log('SW: return cached response', event.request.url);
-          return cachedResponse;
-        }
-
-        // Если нет кеша, ждём и возвращаем ответ из сети
-        REPORTING && console.log('SW: return network response', event.request.url);
-        return fetchedResponse;
-      });
-    })
-    .catch(cacheError => {
-      REPORTING && console.warn('SW: cache error', cacheError);
-      return new Response();
-    })
+      })
+      .catch(cacheError => {
+        REPORTING && console.warn('SW: cache error', cacheError);
+        return new Response();
+      })
   );
 });
 
