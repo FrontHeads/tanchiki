@@ -1,4 +1,4 @@
-export const getBrowserVisibilityProp = (document: Document & { msHidden?: boolean; webkitHidden?: boolean }) => {
+export const getBrowserVisibilityEventName = (document: Document & { msHidden?: boolean; webkitHidden?: boolean }) => {
   if (typeof document.hidden !== 'undefined') {
     // Opera 12.10 and Firefox 18 and later support
     return 'visibilitychange';
@@ -21,7 +21,7 @@ export const getBrowserDocumentHiddenProp = (document: Document & { msHidden?: b
   }
 };
 
-export const getIsDocumentHidden = (document: Document & { msHidden?: boolean; webkitHidden?: boolean }) => {
+export const getIsDocumentVisible = (document: Document & { msHidden?: boolean; webkitHidden?: boolean }) => {
   const visibilityElement = getBrowserDocumentHiddenProp(document);
   return visibilityElement && !document[visibilityElement];
 };

@@ -1,22 +1,18 @@
 import { useEffect, useState } from 'react';
 
-import { getBrowserVisibilityProp, getIsDocumentHidden } from './../utils/webApiUtils';
+import { getBrowserVisibilityEventName, getIsDocumentVisible } from './../utils/webApiUtils';
 
 export function usePageVisibility() {
-  const [isVisible, setIsVisible] = useState(getIsDocumentHidden(document));
-  const onVisibilityChange = () => setIsVisible(getIsDocumentHidden(document));
+  const [isVisible, setIsVisible] = useState(getIsDocumentVisible(document));
+  const onVisibilityChange = () => setIsVisible(getIsDocumentVisible(document));
 
   useEffect(() => {
-    const visibilityChange = getBrowserVisibilityProp(document);
+    const visibilityChange = getBrowserVisibilityEventName(document);
 
-    if (visibilityChange) {
-      document.addEventListener(visibilityChange, onVisibilityChange, false);
-    }
+    document.addEventListener(visibilityChange, onVisibilityChange, false);
 
     return () => {
-      if (visibilityChange) {
-        document.removeEventListener(visibilityChange, onVisibilityChange);
-      }
+      document.removeEventListener(visibilityChange, onVisibilityChange);
     };
   });
 
