@@ -1,5 +1,5 @@
 import { Entity } from '../entities';
-import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Pos, Rect, Size } from '../typings';
+import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
 import { EntityEvent } from './../typings/index';
@@ -108,25 +108,25 @@ export class View extends EventEmitter {
     const layerObject = {
       instance: entity,
       listeners: {
-        entityShouldUpdate: () => {
+        [EntityEvent.SHOULD_UPDATE]: () => {
           if (!entity.spawned) {
             return;
           }
           this.eraseFromLayer(entity, layerId);
         },
-        entityDidUpdate: () => {
+        [EntityEvent.DID_UPDATE]: () => {
           this.drawOnLayer(entity, layerId);
         },
-        entityShouldRenderText: () => {
+        [EntityEvent.SHOULD_RENDER_TEXT]: () => {
           this.drawTextOnLayer(entity as UIElement, layerId);
         },
-        entityShouldBeDestroyed: () => {
+        [EntityEvent.SHOULD_BE_DESTROYED]: () => {
           this.eraseFromLayer(entity, layerId);
           this.removeEntityFromLayer(entity, layerId);
         },
-        damaged: (pos: Pos) => {
+        [EntityEvent.DAMAGED]: (rect: Rect) => {
           if (entity.type === 'brickWall') {
-            this.eraseFromLayer({ ...pos, width: 1, height: 1 }, layerId);
+            this.eraseFromLayer(rect, layerId);
           }
         },
       },

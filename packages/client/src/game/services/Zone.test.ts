@@ -133,7 +133,7 @@ describe('game/services/Zone', () => {
 
     zone.add(entity);
     entity.spawn();
-    entity.emit(EntityEvent.DAMAGED, { posX: 2, posY: 2 });
+    entity.emit(EntityEvent.DAMAGED, { posX: 2, posY: 2, width: 1, height: 1 });
 
     expect(zone.matrix[0][1][1]).toBe(entity);
     expect(zone.matrix[0][1][2]).toBe(entity);
