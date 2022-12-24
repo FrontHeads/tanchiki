@@ -1,4 +1,4 @@
-import { View } from '../services';
+import { Game } from '../services';
 import { Overlay } from './';
 
 async function sleep(ms = 100) {
@@ -7,20 +7,20 @@ async function sleep(ms = 100) {
 
 describe('game/ui/Overlay', () => {
   it('should render elements', () => {
-    const view = new View({ width: 10, height: 10 });
-    view.drawOnLayer = jest.fn();
+    const game = Game.create();
+    game.view.drawOnLayer = jest.fn();
     const root = document.body.appendChild(document.createElement('div'));
-    const overlay = new Overlay(view);
+    const overlay = new Overlay(game);
 
-    view.build(root);
+    game.view.build(root);
     overlay.renderElement({ posX: 0, posY: 0, width: 2, height: 2 });
 
-    expect(view.drawOnLayer).toHaveBeenCalled();
+    expect(game.view.drawOnLayer).toHaveBeenCalled();
   });
 
   it('should use animations', async () => {
-    const view = new View({ width: 10, height: 10 });
-    const overlay = new Overlay(view);
+    const game = Game.create();
+    const overlay = new Overlay(game);
     const mockFn = jest.fn();
     const animationTicksCount = 5;
     const animateFunction = (stage: number) => {

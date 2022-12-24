@@ -7,7 +7,7 @@ export const errorMsg = 'Не удалось загрузить данные д�
 // Файлы с ресурсами лежат в папке packages/client/public/assets, а vite копирует их в dist при build
 export enum ImagePathList {
   brickBg = '/assets/img/bricks.png',
-  sprite = '/assets/img/sprite.png',
+  classicDesignSprite = '/assets/img/sprite.png',
 }
 
 export enum SoundPathList {

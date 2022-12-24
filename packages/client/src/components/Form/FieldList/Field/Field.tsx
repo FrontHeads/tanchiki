@@ -32,7 +32,7 @@ export const Field: FC<FieldProps> = ({
         value={value}
         disabled={disabled}
       />
-      {error && <div className="form__field-error">{error}</div>}
+      {error ? <div className="form__field-error">{error}</div> : null}
     </div>
   );
 };

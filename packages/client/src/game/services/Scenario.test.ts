@@ -1,6 +1,6 @@
 import { playerInitialSettings } from '../data/constants';
 import { Tank } from '../entities';
-import { Player } from '../typings';
+import { Player, ScenarioEvent } from '../typings';
 import { Game, Scenario } from './';
 
 describe('game/services/Scenario', () => {
@@ -31,5 +31,17 @@ describe('game/services/Scenario', () => {
 
     expect(tank.spawned).toBe(false);
     expect(game.loopEntities.has(tank)).toBe(false);
+  });
+
+  it('should create projectile and tank explosions', () => {
+    const game = Game.create();
+    game.createView(document.body);
+    const scenario = new Scenario(game);
+    const createExplosionMock = jest.spyOn(scenario, 'createExplosion').mockImplementation();
+
+    scenario.emit(ScenarioEvent.PROJECTILE_HIT, {});
+    scenario.emit(ScenarioEvent.TANK_ENEMY_DESTROYED, {});
+
+    expect(createExplosionMock).toHaveBeenCalledTimes(2);
   });
 });

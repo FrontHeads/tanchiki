@@ -1,4 +1,5 @@
 import { Direction, EntityDynamicSettings, PosState, Rect } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
 export class EntityDynamic extends Entity {
@@ -26,6 +27,8 @@ export class EntityDynamic extends Entity {
   lastRect: Rect | null = null;
   /** Клетка, куда объект движется*/
   nextRect: Rect | null = null;
+  /** Временно блокирует возможность перемещения (например на время отрисовки анимации спауна). */
+  frozen = false;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -46,7 +49,7 @@ export class EntityDynamic extends Entity {
     this.moving = true;
     this.nextDirection = direction;
 
-    this.emit('move');
+    this.emit(EntityEvent.MOVE);
   }
 
   stop() {
@@ -54,7 +57,7 @@ export class EntityDynamic extends Entity {
     if (this.moveStepsProgress) {
       this.stopping = true;
     }
-    this.emit('stop');
+    this.emit(EntityEvent.STOP);
   }
 
   turn(newDirection: Direction = this.nextDirection) {
@@ -66,6 +69,10 @@ export class EntityDynamic extends Entity {
 
   /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
   update() {
+    if (this.frozen) {
+      return;
+    }
+
     const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
     if (!this.spawned || isStandingStill) {
       return;
@@ -113,7 +120,7 @@ export class EntityDynamic extends Entity {
       hasCollision: undefined,
       nextRect,
     };
-    this.emit('entityWillHaveNewPos', posState);
+    this.emit(EntityEvent.WILL_HAVE_NEW_POS, posState);
     if (!posState.hasCollision) {
       this.canMove = true;
       this.nextRect = nextRect;

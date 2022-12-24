@@ -1,5 +1,6 @@
 import { Zone } from '../services';
 import { Direction } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { Projectile, Tank } from './';
 
 describe('game/entities/Tank', () => {
@@ -8,11 +9,38 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
 
     tank.spawn();
-    tank.on('shoot', mockFn);
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
 
     const projectile = mockFn.mock.calls[0][0];
     expect(projectile instanceof Projectile).toBe(true);
+  });
+
+  it('shouldn`t be able to shoot immediately after spawn (wait for spawn animation)', () => {
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    const mockFn = jest.fn();
+
+    tank.spawn();
+    tank.on(EntityEvent.SHOOT, mockFn);
+    tank.shoot();
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+
+  it('should be invincible immediately after spawn (until shield animation end)', () => {
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    tank.spawn();
+
+    expect(tank.invincible).toBeTruthy();
+  });
+
+  it('shouldn`t be able to move immediately after spawn (until spawn animation end)', () => {
+    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    tank.spawn();
+
+    expect(tank.frozen).toBeTruthy();
   });
 
   it('should determine projectile starting position', () => {
@@ -20,7 +48,9 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
 
     tank.spawn();
-    tank.on('shoot', mockFn);
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
 
     const projectile = mockFn.mock.calls[0][0];
@@ -35,7 +65,9 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
 
     tank.spawn();
-    tank.on('shoot', mockFn);
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
 
     const projectileOne = mockFn.mock.calls[0][0];
@@ -45,13 +77,15 @@ describe('game/entities/Tank', () => {
     expect(projectileTwo).toBeFalsy();
   });
 
-  it('should shoot after projectile exploded', async () => {
+  it('should shoot after projectile exploded', () => {
     const zone = new Zone({ width: 6, height: 6 });
     const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const mockFn = jest.fn();
 
     tank.spawn();
-    tank.on('shoot', mockFn);
+    // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
+    tank.canShoot = true;
+    tank.on(EntityEvent.SHOOT, mockFn);
     tank.shoot();
     tank.shoot();
 

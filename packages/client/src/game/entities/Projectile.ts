@@ -1,3 +1,4 @@
+import { spriteCoordinates } from '../data/constants';
 import type { ProjectileSettings } from '../typings';
 import { EntityDynamic, Tank } from './';
 
@@ -16,6 +17,7 @@ export class Projectile extends EntityDynamic {
     Object.assign(this, props);
     this.type = 'projectile';
     this.color = 'red';
+    this.mainSpriteCoordinates = spriteCoordinates.projectile;
     this.flying = true;
     this.moving = true;
     this.nextDirection = this.direction;

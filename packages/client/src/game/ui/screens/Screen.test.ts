@@ -1,4 +1,4 @@
-import { View } from '../../services/View';
+import { Game } from '../../services';
 import { ScreenType } from '../../typings';
 import { Overlay } from '../Overlay';
 
@@ -15,8 +15,8 @@ jest.mock('./MainMenuScreen', () => {
 
 describe('game/ui/screens/Screen', () => {
   it('should call Screen.show()', () => {
-    const view = new View({ width: 10, height: 10 });
-    const overlay = new Overlay(view);
+    const game = Game.create();
+    const overlay = new Overlay(game);
     overlay.show(ScreenType.MAIN_MENU);
 
     expect(mockShow).toHaveBeenCalled();

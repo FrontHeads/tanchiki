@@ -1,4 +1,6 @@
+import { spriteCoordinates } from '../data/constants';
 import type { EntitySettings } from '../typings';
+import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
 export class Terrain extends Entity {
@@ -16,22 +18,36 @@ export class Terrain extends Entity {
         this.crossable = false;
         this.hittable = true;
         this.color = 'brown';
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.brick'];
         break;
       case 'concreteWall':
         this.crossable = false;
         this.hittable = true;
         this.color = 'lightgrey';
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.concrete'];
         break;
       case 'trees':
         this.crossable = true;
         this.hittable = false;
         this.color = 'green';
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.trees'];
         break;
       case 'water':
         this.crossable = false;
         this.hittable = false;
         this.color = 'blue';
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.water'];
         break;
+    }
+
+    if (this.type === 'water') {
+      this.on(EntityEvent.SPAWN, () => {
+        this.startAnimation({
+          delay: 350,
+          spriteCoordinates: spriteCoordinates['terrain.water'],
+          looped: true,
+        });
+      });
     }
   }
 }

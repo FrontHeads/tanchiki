@@ -1,5 +1,7 @@
 import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import { GameOverScreen, GameScreen, LevelSelectorScreen, LoadingScreen, MainMenuScreen } from '../ui/screens';
+import { PauseScreen } from './../ui/screens/PauseScreen';
+import { classicDesignSprite } from './spriteCoordinates';
 
 export const concreteCells: Cell[] = [
   Cell.CONCRETE,
@@ -26,6 +28,7 @@ export const screenClasses = {
   [ScreenType.LOADING]: LoadingScreen,
   [ScreenType.LEVEL_SELECTOR]: LevelSelectorScreen,
   [ScreenType.GAME]: GameScreen,
+  [ScreenType.PAUSE]: PauseScreen,
   [ScreenType.GAME_OVER]: GameOverScreen,
 };
 
@@ -44,3 +47,10 @@ export const spawnPlaces: Record<number, number[]> = {
   0: [0, 6, 12],
   12: [4, 8],
 };
+
+//TODO тут будут координаты для спрайта с современным дизайном.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const modernDesignSprite = {};
+
+/** Координаты сущностей на sprite-изображении */
+export const spriteCoordinates = classicDesignSprite;

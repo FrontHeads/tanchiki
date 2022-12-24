@@ -1,15 +1,15 @@
 import { screenClasses } from '../data/constants';
-import { View } from '../services';
+import { Game, View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
 import { Screen } from './screens';
 
 export class Overlay {
-  view!: View;
-  currentScreen!: Screen;
+  currentScreen?: Screen;
+  view: View;
 
-  constructor(view: View) {
-    this.view = view;
+  constructor(public game: Game) {
+    this.view = game.view;
   }
 
   show(screen: ScreenType, state: unknown = null) {
@@ -27,6 +27,7 @@ export class Overlay {
 
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
+    this.game.registerTimerHandlers(elem);
     this.view.add(elem);
     elem.render();
     return elem;
@@ -42,11 +43,13 @@ export class Overlay {
     });
   }
 
-  animate(animateFunction: (stage: number) => boolean) {
+  animate(animateFunction: (counter: number) => boolean, animateIntervalMs = 25) {
     let stageCount = 0;
-    const animateIntervalMs = 20;
+
     const animateProcess = setInterval(() => {
       const stageResult = animateFunction(++stageCount);
+
+      //**Удаляет интервал (останавливает анимацию) */
       if (!stageResult) {
         clearInterval(animateProcess);
       }

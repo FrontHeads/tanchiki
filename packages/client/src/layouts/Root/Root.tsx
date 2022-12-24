@@ -5,7 +5,7 @@ import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 're
 
 import { UserDTO } from '../../api/typings';
 import { BurgerMenu } from '../../components/BurgerMenu';
-import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
@@ -39,14 +39,14 @@ export const Root: FC = () => {
           <main className="layout">
             <header>
               <BurgerMenu />
-              {printHeaderAndFooter && <Logo />}
-              {printHeaderAndFooter && <div className="delimiter" />}
+              {printHeaderAndFooter ? <Logo /> : null}
+              {printHeaderAndFooter ? <div className="delimiter" /> : null}
             </header>
             <Outlet />
-            {printHeaderAndFooter && <Footer />}
+            {printHeaderAndFooter ? <Footer /> : null}
 
             <ScrollRestoration />
-            {isAppLoading && <Loader data-testid="app-loader" />}
+            {isAppLoading ? <Loader data-testid="app-loader" /> : null}
           </main>
         </Await>
       </Suspense>

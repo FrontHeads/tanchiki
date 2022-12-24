@@ -43,6 +43,12 @@ describe('game/services/Game', () => {
 
   it('should pause', () => {
     const game = Game.create();
+
+    game.view.eraseFromLayer = jest.fn();
+    game.view.drawTextOnLayer = jest.fn();
+    game.view.drawOnLayer = jest.fn();
+    game.view.eraseAllEntitiesOnLayer = jest.fn();
+
     game.inited = true;
 
     game.startLoop();

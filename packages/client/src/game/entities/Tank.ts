@@ -1,11 +1,15 @@
-import { EntityDynamicSettings, Rect, TankType, TankTypeOptions } from '../typings';
+import type { EntityDynamicSettings, Rect } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
-  shootSpeed = 3.5;
-  canShoot = true;
+  shootSpeed = 3;
+  canShoot = false;
+  /** Временно блокирует возможность перемещения (например на время анимации спауна). */
+  frozen = true;
+  /** Дает танку неуязвимость (снаряды не причиняют вреда) */
+  invincible = true;
   private readonly tankType: TankTypeOptions | undefined;
   armor = 3;
   isExploding = false;
@@ -16,6 +20,44 @@ export class Tank extends EntityDynamic {
     this.color = props.color || 'yellow';
     this.tankType = props.tankType;
     this.moveSpeed = this.getTankSpeed(this.tankType);
+    //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
+    this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
+
+    this.on(EntityEvent.SPAWN, () => {
+      const spawnTimeout = 1000;
+      const shieldTimeout = 3000;
+
+      this.startAnimation({
+        delay: 50,
+        spriteCoordinates: spriteCoordinates.spawn,
+        looped: true,
+        stopTimer: spawnTimeout,
+      });
+
+      // Возвращаем танку подвижность после анимации спауна.
+      this.setLoopDelay(() => {
+        this.frozen = false;
+        this.canShoot = true;
+      }, spawnTimeout);
+
+      if (this.role === 'player') {
+        this.setLoopDelay(
+          this.startAnimation.bind(this, {
+            delay: 25,
+            spriteCoordinates: spriteCoordinates.shield,
+            looped: true,
+            stopTimer: shieldTimeout,
+            showMainSprite: true,
+          }),
+          spawnTimeout
+        );
+
+        // Возвращаем танку уязимость после исчезновения силового поля после спауна.
+        this.setLoopDelay(() => {
+          this.invincible = false;
+        }, spawnTimeout + shieldTimeout);
+      }
+    });
   }
 
   shoot() {
@@ -32,10 +74,11 @@ export class Tank extends EntityDynamic {
     });
     this.canShoot = false;
 
-    projectile.on('exploding', () => {
+    projectile.on(EntityEvent.EXPLODING, () => {
       this.canShoot = true;
     });
-    this.emit('shoot', projectile);
+
+    this.emit(EntityEvent.SHOOT, projectile);
   }
 
   getTankSpeed(type?: TankTypeOptions) {
