@@ -8,7 +8,7 @@ const FALLBACK_BODY = `
   <h1>Интернеты упали! Но это неточно.</h1>
   <h2>Надо бы обновить страницу...</h2>
 `;
-const FALLBACK_HEADERS = { headers: { 'Content-Type': 'text/html; charset=utf-8' }};
+const FALLBACK_HEADERS = { headers: { 'Content-Type': 'text/html; charset=utf-8' } };
 
 // При установке воркера кешируем часть данных (статику)
 serviceWorker.addEventListener('install', (event: ExtendableEvent) => {
@@ -55,8 +55,8 @@ serviceWorker.addEventListener('fetch', async (event: FetchEvent) => {
           // Делаем запрос для обновления кеша
           const fetchedResponse = fetch(event.request)
             .then(networkResponse => {
-              // Кладём ответ в кеш, если он не частичный (206)
-              if (networkResponse.status !== 206) {
+              // Кладём ответ в кеш, если он содержит что-то субстантивное
+              if (networkResponse.status === 200) {
                 cache.put(event.request, networkResponse.clone());
               }
               return networkResponse;
