@@ -69,17 +69,17 @@ export class EntityDynamic extends Entity {
 
   /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
   update() {
-    if (this.frozen) {
-      return;
-    }
-
-    const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
-    if (!this.spawned || isStandingStill) {
+    if (!this.spawned || this.frozen) {
       return;
     }
 
     this.stateCheck();
     if (this.shouldBeDestroyed) {
+      return;
+    }
+
+    const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
+    if (isStandingStill) {
       return;
     }
 
@@ -102,7 +102,7 @@ export class EntityDynamic extends Entity {
 
   /** Выполняет проверку в каждом игровом цикле (нужна для определения столкновения у снарядов) */
   stateCheck() {
-    // для Projectile
+    // для Tank и Projectile
   }
 
   /** Чтобы объект не начал двигаться сразу после поворота; */
