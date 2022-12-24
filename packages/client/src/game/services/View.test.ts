@@ -8,6 +8,7 @@ import { Game, View } from './';
 function mockEntity(rect: Rect) {
   const entity = new EventEmitter() as Entity;
   entity.type = 'tank';
+  entity.spawned = true;
   Object.assign(entity, rect);
   return entity;
 }
@@ -76,7 +77,7 @@ describe('game/services/View', () => {
   it('animation should work. Checking the call of all animation methods in View.', async () => {
     const root = document.body.appendChild(document.createElement('div'));
     const game = Game.create();
-    game.startLoop();
+    game.loop.start();
     game.view.spriteImg = new Image();
     game.view.build(root);
 

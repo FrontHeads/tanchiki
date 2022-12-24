@@ -63,9 +63,9 @@ describe('game/entities/Entity', () => {
 
   it('should stop animation by stopTimer', async () => {
     const game = Game.create();
-    game.startLoop();
+    game.loop.start();
     const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
-    game.registerTimerHandlers(entity);
+    game.loop.registerTimerHandlers(entity);
 
     const cancelAnimationSpy = jest.spyOn(entity, 'cancelAnimation');
 

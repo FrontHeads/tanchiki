@@ -4,7 +4,9 @@ import { EntityEvent } from './../typings/index';
 import { Zone } from './';
 
 function mockEntity(rect: Rect) {
-  return new Tank(rect);
+  const entity = new Tank(rect);
+  entity.spawned = true;
+  return entity;
 }
 
 describe('game/services/Zone', () => {
