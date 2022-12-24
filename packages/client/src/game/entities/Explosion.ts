@@ -5,9 +5,8 @@ type ExplosionSettings = { explosionParentEntity: Tank | Projectile };
 
 export class Explosion extends Entity {
   constructor(props: ExplosionSettings) {
-    //@ts-expect-error не передаем posX и posY т.к. они есть в props.explosionParentEntity
-    super(props);
-    Object.assign(this, this.setExplosionProps(props.explosionParentEntity));
+    super({ posX: 0, posY: 0 });
+    Object.assign(this, this.calculateExplosionProps(props.explosionParentEntity));
     this.role = 'neutral';
     this.crossable = true;
     this.hittable = false;
@@ -31,7 +30,7 @@ export class Explosion extends Entity {
     });
   }
 
-  setExplosionProps(entity: Tank | Projectile) {
+  calculateExplosionProps(entity: Tank | Projectile) {
     const size = entity.type === 'projectile' ? 4 : 8;
     const type = entity.type === 'projectile' ? 'projectileExplosion' : 'tankExplosion';
     let posX = entity.posX;
