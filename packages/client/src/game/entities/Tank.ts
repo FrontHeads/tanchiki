@@ -1,4 +1,5 @@
-import type { EntityDynamicSettings, Rect } from '../typings';
+import { spriteCoordinates } from '../data/constants';
+import { EntityDynamicSettings, EntityEvent, Rect, TankType, TankTypeOptions } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
@@ -131,7 +132,7 @@ export class Tank extends EntityDynamic {
       if (this.tankType === TankType.ARMOR && this.armor) {
         this.armor--;
       } else {
-        this.emit('exploding');
+        this.emit(EntityEvent.EXPLODING);
         this.despawn();
       }
       setTimeout(() => {
