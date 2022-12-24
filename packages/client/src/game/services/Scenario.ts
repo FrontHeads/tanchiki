@@ -1,6 +1,7 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
 import { Entity, Explosion, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
 import {
+  ControllerEvent,
   Direction,
   EnemyDestroyedPayload,
   EntityDynamicSettings,
@@ -16,7 +17,6 @@ import {
   TankTypeOptions,
 } from '../typings';
 import { EventEmitter } from '../utils';
-import { ControllerEvent } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
 import { MapManager } from './MapManager';
