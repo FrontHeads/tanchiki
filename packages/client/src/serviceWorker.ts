@@ -4,6 +4,11 @@ const REPORTING = true;
 const CACHE_NAME = 'tanchiki-cache-1';
 const PRECACHE_URLS = ['/', '/index.html'];
 const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'object'];
+const FALLBACK_BODY = `
+  <h1>Интернеты упали! Но это неточно.</h1>
+  <h2>Надо бы обновить страницу...</h2>
+`;
+const FALLBACK_HEADERS = { headers: { 'Content-Type': 'text/html; charset=utf-8' }};
 
 // При установке воркера кешируем часть данных (статику)
 serviceWorker.addEventListener('install', (event: ExtendableEvent) => {
@@ -58,7 +63,7 @@ serviceWorker.addEventListener('fetch', async (event: FetchEvent) => {
             })
             .catch(fetchedError => {
               REPORTING && console.warn('SW: network problem', fetchedError);
-              return new Response();
+              return cachedResponse ?? new Response(FALLBACK_BODY, FALLBACK_HEADERS);
             });
 
           // Если есть кеш, возвращаем его, не дожидаясь ответа из сети
@@ -74,7 +79,7 @@ serviceWorker.addEventListener('fetch', async (event: FetchEvent) => {
       })
       .catch(cacheError => {
         REPORTING && console.warn('SW: cache error', cacheError);
-        return new Response();
+        return new Response(FALLBACK_BODY, FALLBACK_HEADERS);
       })
   );
 });
