@@ -109,7 +109,7 @@ export class View extends EventEmitter {
       instance: entity,
       listeners: {
         entityShouldUpdate: () => {
-          if (entity instanceof Entity && !entity.spawned) {
+          if (!entity.spawned) {
             return;
           }
           this.eraseFromLayer(entity, layerId);

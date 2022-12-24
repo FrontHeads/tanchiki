@@ -112,6 +112,9 @@ export class Zone {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
+      if (!entity.spawned) {
+        return;
+      }
       this.deleteEntityFromMatrix(entity);
     });
     entity.on(EntityEvent.DID_UPDATE, (newState: Partial<Entity>) => {
