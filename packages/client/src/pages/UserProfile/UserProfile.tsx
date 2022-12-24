@@ -31,7 +31,7 @@ export const UserProfile: FC = () => {
     avatar: '',
   };
 
-  const [hasErrors, setHasErrors] = useState(false);
+  const [formHasErrors, setFormHasErrors] = useState(false);
   const [formData, setFormData] = useState<UserProfileForm>(userFormData);
   const [avatarFile, setAvatarFile] = useState<AvatarFile>(null);
   const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
@@ -51,7 +51,7 @@ export const UserProfile: FC = () => {
       const validationResponse = validation(formData, ['display_name', 'oldPassword', 'newPassword']);
 
       if (validationResponse.hasErrors) {
-        setHasErrors(true);
+        setFormHasErrors(true);
         setValidationErrors(validationResponse);
         return;
       }
@@ -71,7 +71,7 @@ export const UserProfile: FC = () => {
     <div className="user-profile">
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
-      <Form handlerSubmit={submitHandler} header={header} hasErrors={hasErrors}>
+      <Form handlerSubmit={submitHandler} header={header} hasErrors={formHasErrors}>
         <FieldList
           setFile={setAvatarFile}
           fieldList={userProfileFieldList}

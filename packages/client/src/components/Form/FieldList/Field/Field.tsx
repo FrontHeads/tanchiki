@@ -15,7 +15,7 @@ export const Field: FC<FieldProps> = ({
   onFocus,
   disabled,
   className,
-  validationErrors,
+  errorList,
 }) => {
   return (
     <div className={cn('form__field', className)} data-testid="form-field">
@@ -35,7 +35,7 @@ export const Field: FC<FieldProps> = ({
         value={value}
         disabled={disabled}
       />
-      {validationErrors ? <ValidationErrors validationErrors={validationErrors} /> : null}
+      {errorList ? <ValidationErrors errorList={errorList} /> : null}
     </div>
   );
 };

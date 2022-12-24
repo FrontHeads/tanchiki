@@ -7,6 +7,6 @@ export type FieldProps = {
   required?: boolean;
   labelText?: string;
   inputHeader?: string;
-  validationErrors?: string[];
+  errorList?: string[];
   pattern?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;

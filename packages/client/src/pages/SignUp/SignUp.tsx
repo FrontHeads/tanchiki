@@ -19,7 +19,7 @@ export const SignUp: FC = () => {
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
 
-  const [hasErrors, setHasErrors] = useState(false);
+  const [formHasErrors, setFormHasErrors] = useState(false);
   const [formData, setFormData] = useState<SignUpForm>(signUpFormInitialState);
   const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
 
@@ -30,7 +30,7 @@ export const SignUp: FC = () => {
       const validationResponse = validation(formData);
 
       if (validationResponse.hasErrors) {
-        setHasErrors(true);
+        setFormHasErrors(true);
         setValidationErrors(validationResponse);
         return;
       }
@@ -56,14 +56,14 @@ export const SignUp: FC = () => {
   }, [error]);
 
   return (
-    <Form handlerSubmit={submitHandler} header="Регистрация" hasErrors={hasErrors}>
+    <Form handlerSubmit={submitHandler} header="Регистрация" hasErrors={formHasErrors}>
       <FieldList
         fieldList={signUpFieldList}
         setFormData={setFormData}
         formData={formData}
         disabled={isLoading}
-        setValidationErrors={setValidationErrors}
         validationErrors={validationErrors}
+        setValidationErrors={setValidationErrors}
       />
       <div className="form__buttons-wrapper">
         <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />

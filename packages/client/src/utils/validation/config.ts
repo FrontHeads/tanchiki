@@ -14,7 +14,7 @@ export enum ValidationRulesConfig {
   title = 'notEmptyRules',
 }
 
-export enum ErrorMessage {
+export enum ValidationErrorMessage {
   notEmptyRules = 'Поле не может быть пустым.',
   phoneRulesLength = 'Длина номера телефона должна быть от 10 до 15 символов.',
   phoneRulesFormat = 'Телефон может состоять только из цифр и знака + в начале.',

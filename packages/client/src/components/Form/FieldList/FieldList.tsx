@@ -58,7 +58,7 @@ export const FieldList = <T extends Record<string, string>>({
             onChange={inputChangeHandler}
             onFocus={inputFocusHandler}
             value={formData[field.id] || ''}
-            validationErrors={validationErrors[field.id] as string[]}
+            errorList={validationErrors[field.id] as string[]}
           />
         );
       })}

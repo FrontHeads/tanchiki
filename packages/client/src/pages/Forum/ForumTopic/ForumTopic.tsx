@@ -16,15 +16,15 @@ import { ForumMessage } from './ForumMessage';
 export const ForumTopic: FC = () => {
   const { topicId } = useParams();
   const [formMessage, setFormMessage] = useState('');
-  const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
-  const [messageHasErrors, setMessageHasErrors] = useState(false);
+  const [errorList, setErrorList] = useState({} as ValidationResponse);
+  const [messageHasErrors, setFormHasErrors] = useState(false);
 
   const textareaChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
 
       const validationResult = validation({ message: value });
-      setValidationErrors(validationResult);
+      setErrorList(validationResult);
 
       setFormMessage(value);
     },
@@ -38,8 +38,8 @@ export const ForumTopic: FC = () => {
       const validationResult = validation({ message: formMessage });
 
       if (validationResult.hasErrors) {
-        setMessageHasErrors(true);
-        setValidationErrors(validationResult);
+        setFormHasErrors(true);
+        setErrorList(validationResult);
         return;
       }
 
@@ -78,7 +78,7 @@ export const ForumTopic: FC = () => {
             <Button type="submit" text="Отправить" variant={ButtonVariant.Primary} />
           </div>
         </form>
-        {validationErrors.message ? <ValidationErrors validationErrors={validationErrors.message as string[]} /> : null}
+        {errorList.message ? <ValidationErrors errorList={errorList.message as string[]} /> : null}
       </div>
     </section>
   );

@@ -9,7 +9,7 @@ describe('ValidationErrors', () => {
   const validationErrors = [errorText, 'second'];
 
   test('it renders', () => {
-    render(<ValidationErrors validationErrors={validationErrors} />);
+    render(<ValidationErrors errorList={validationErrors} />);
 
     const renderedElement = screen.getByText(errorText);
 

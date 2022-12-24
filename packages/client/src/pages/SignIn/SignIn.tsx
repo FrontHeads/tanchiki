@@ -16,7 +16,7 @@ export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [hasErrors, setHasErrors] = useState(false);
+  const [formHasErrors, setFormHasErrors] = useState(false);
   const { error, isLoading } = useAppSelector(authSelectors.authState);
   const [formData, setFormData] = useState<SignInForm>(signInFormInitialState);
   const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
@@ -28,7 +28,7 @@ export const SignIn: FC = () => {
       const validationResult = validation(formData);
 
       if (validationResult.hasErrors) {
-        setHasErrors(true);
+        setFormHasErrors(true);
         setValidationErrors(validationResult);
         return;
       }
@@ -46,7 +46,7 @@ export const SignIn: FC = () => {
   }, [error]);
 
   return (
-    <Form handlerSubmit={submitHandler} header="Вход" hasErrors={hasErrors}>
+    <Form handlerSubmit={submitHandler} header="Вход" hasErrors={formHasErrors}>
       <FieldList<SignInForm>
         fieldList={signInFieldList}
         setFormData={setFormData}

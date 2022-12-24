@@ -1,4 +1,4 @@
 export type ValidationErrorsProps = {
-  validationErrors: string[];
+  errorList: string[];
   className?: string;
 };
