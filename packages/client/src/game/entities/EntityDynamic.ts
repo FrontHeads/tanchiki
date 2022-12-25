@@ -2,7 +2,7 @@ import { Direction, EntityDynamicSettings, PosState, Rect } from '../typings';
 import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
-export class EntityDynamic extends Entity {
+export abstract class EntityDynamic extends Entity {
   /** Должен ли объект двигаться*/
   moving = false;
   /** Прекращает ли объект движение (он должен стать по целочисленным координатам)*/
@@ -104,9 +104,7 @@ export class EntityDynamic extends Entity {
   }
 
   /** Выполняет проверку в каждом игровом цикле (нужна для определения столкновения у снарядов) */
-  stateCheck() {
-    // для Tank и Projectile
-  }
+  abstract stateCheck(): void;
 
   /** Чтобы объект не начал двигаться сразу после поворота; */
   turnWithInterrupt() {
@@ -141,6 +139,7 @@ export class EntityDynamic extends Entity {
     } else {
       movePace = this.getMoveStepPace();
     }
+
     switch (this.direction) {
       case 'UP':
         return { posY: this.posY - movePace };
@@ -150,9 +149,10 @@ export class EntityDynamic extends Entity {
         return { posX: this.posX - movePace };
       case 'RIGHT':
         return { posX: this.posX + movePace };
-      default:
-        return {}; // чтобы не ругался тайпскрипт (из-за enum Direction)
     }
+
+    // чтобы не ругался тайпскрипт (из-за enum Direction)
+    return {};
   }
 
   /** Выполняет микродвижение за игровой цикл */

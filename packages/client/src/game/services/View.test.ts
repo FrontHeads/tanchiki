@@ -5,8 +5,10 @@ import { sleep } from '../utils/sleepTimer';
 import { EntityEvent } from './../typings/index';
 import { Game, View } from './';
 
+class TestEntity extends EventEmitter {}
+
 function mockEntity(rect: Rect) {
-  const entity = new EventEmitter() as Entity;
+  const entity = new TestEntity() as Entity;
   entity.type = 'tank';
   entity.spawned = true;
   Object.assign(entity, rect);

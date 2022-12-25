@@ -15,7 +15,7 @@ import {
 } from '../typings';
 import { EventEmitter } from '../utils';
 
-export class Entity extends EventEmitter<EntityEvent> {
+export abstract class Entity extends EventEmitter<EntityEvent> {
   posX = 0;
   posY = 0;
   width = 0;
