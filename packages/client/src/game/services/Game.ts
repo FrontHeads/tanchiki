@@ -231,6 +231,7 @@ export class Game {
     this.screen = ScreenType.GAME;
     this.reset();
 
+    const missionAccomplishedDelay = 1000;
     /** Анимация перехода с экрана выбора уровня в игру */
     const startAnimationDelay = firstInit ? 100 : 2000;
     this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: false });
@@ -244,12 +245,14 @@ export class Game {
           this.initGameOver();
         })
         .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
-          if (this.level < this.maxLevels) {
-            this.level++;
+          this.loop.setLoopDelay(() => {
+            if (this.level < this.maxLevels) {
+              this.level++;
+            } else {
+              this.level = 1;
+            }
             this.initGameLevel();
-          } else {
-            this.level = 1;
-          }
+          }, missionAccomplishedDelay);
         });
 
       this.controllerAll
