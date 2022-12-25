@@ -137,6 +137,9 @@ export class AudioManager extends EventEmitter {
   playSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource && !this.isStopped) {
+      if (sound === 'idle' || sound === 'move') {
+        soundResource.volume = 0.5;
+      }
       soundResource.currentTime = 0;
       soundResource.play();
       this.activeSounds.add(sound);
