@@ -1,4 +1,4 @@
-import { Entity, Tank, TankEnemy } from '../entities';
+import { Entity, Projectile, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 
 export type Fn = (...args: Array<any>) => void;
@@ -87,6 +87,8 @@ export type EntityDynamicSettings = EntitySettings &
   }>;
 
 export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
+
+export type DamageSettings = Rect & { source: Projectile };
 
 export type UIElementSettings = Pos &
   Size &

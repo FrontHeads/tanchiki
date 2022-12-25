@@ -9,6 +9,7 @@ import {
   EntityType,
   Pos,
   PosState,
+  Rect,
   SpriteCoordinatesNoAnimations,
   SpriteCoordinatesWithAnimations,
 } from '../typings';
@@ -87,8 +88,8 @@ export class Entity extends EventEmitter<EntityEvent> {
     this.despawn();
   }
 
-  takeDamage(source: Entity, pos: Pos) {
-    this.emit(EntityEvent.DAMAGED, pos);
+  takeDamage(source: Entity, rect: Rect) {
+    this.emit(EntityEvent.DAMAGED, { ...rect, source });
     if (this.type === 'projectile') {
       this.explode();
     } else if (this.type === 'tank' && !this.invincible) {

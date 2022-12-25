@@ -224,6 +224,7 @@ export class Game {
     this.screen = ScreenType.GAME_OVER;
 
     this.overlay.show(this.screen);
+    this.audioManager.emit('gameOver');
 
     this.controllerAll.reset();
     this.controllerWasd.reset();

@@ -1,6 +1,6 @@
-import { Entity, Tank } from '../entities';
+import { Entity, Tank, Terrain } from '../entities';
 import { EventEmitter } from '../utils';
-import { EntityEvent } from './../typings/index';
+import { DamageSettings, EntityEvent } from '../typings/';
 import { SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
@@ -43,6 +43,10 @@ export class AudioManager extends EventEmitter {
     this.on('levelIntro', () => {
       this.playSound('levelIntro');
     });
+    this.on('gameOver', () => {
+      this.pauseSoundAll();
+      this.playSound('gameOver');
+    });
   }
 
   load() {
@@ -68,6 +72,7 @@ export class AudioManager extends EventEmitter {
     const isTank = entity instanceof Tank;
     const isPlayer = entity.role === 'player';
     const isEnemy = entity.role === 'enemy';
+    const isTerrain = entity instanceof Terrain;
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
       /**появление */
@@ -98,6 +103,21 @@ export class AudioManager extends EventEmitter {
         this.stopSound('idle');
         this.playSound('playerExplosion');
       });
+    } else if (isTerrain) {
+      if (entity.type === 'brickWall') {
+        entity.on(EntityEvent.DAMAGED, (damageProps: DamageSettings) => {
+          if (damageProps.source.role === 'player') {
+            this.playSound('hitBrick');
+          }
+        });
+      }
+      if (entity.type === 'boundary' || entity.type === 'concreteWall') {
+        entity.on(EntityEvent.DAMAGED, (damageProps: DamageSettings) => {
+          if (damageProps.source.role === 'player') {
+            this.playSound('hitSteel');
+          }
+        });
+      }
     }
 
     /** Звуки танка врага */
