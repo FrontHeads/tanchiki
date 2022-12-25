@@ -34,6 +34,7 @@ export enum EntityEvent {
   MOVE = 'move',
   STOP = 'stop',
   SPAWN = 'spawn',
+  READY = 'ready',
   DAMAGED = 'damaged',
   DESTROYED = 'destroyed',
   EXPLODING = 'exploding',

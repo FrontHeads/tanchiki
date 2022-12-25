@@ -49,7 +49,9 @@ export class EntityDynamic extends Entity {
     this.moving = true;
     this.nextDirection = direction;
 
-    this.emit(EntityEvent.MOVE);
+    if (this.spawned && !this.frozen) {
+      this.emit(EntityEvent.MOVE);
+    }
   }
 
   stop() {
@@ -57,6 +59,7 @@ export class EntityDynamic extends Entity {
     if (this.moveStepsProgress) {
       this.stopping = true;
     }
+
     this.emit(EntityEvent.STOP);
   }
 

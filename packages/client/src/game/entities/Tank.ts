@@ -39,6 +39,7 @@ export class Tank extends EntityDynamic {
         this.frozen = false;
         this.canShoot = true;
         this.spawning = false;
+        this.emit(EntityEvent.READY);
       }, spawnTimeout);
 
       if (this.role === 'player') {
@@ -88,7 +89,7 @@ export class Tank extends EntityDynamic {
     });
 
     this.emit(EntityEvent.SHOOT, projectile);
-  
+
     this.shooting = false;
   }
 

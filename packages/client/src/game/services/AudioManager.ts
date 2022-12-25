@@ -28,9 +28,7 @@ export class AudioManager extends EventEmitter {
       }
 
       if (!this.isStopped) {
-        this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-          this.pauseSound(sound);
-        });
+        this.pauseSoundAll();
         if (!this.isMuteKeyPressed) {
           this.playSound('pause');
         }
@@ -38,9 +36,7 @@ export class AudioManager extends EventEmitter {
       } else {
         this.isStopped = false;
         this.playSound('pause');
-        this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-          this.resumeSound(sound);
-        });
+        this.resumeSoundAll();
       }
     });
 
@@ -48,7 +44,15 @@ export class AudioManager extends EventEmitter {
       this.playSound('levelIntro');
     });
   }
-  /** Подписывает звуки на  соответствующие события */
+
+  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
+  reset() {
+    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+      this.stopSound(sound);
+    });
+  }
+
+  /** Подписывает звуки на соответствующие события */
   add(entity: Entity) {
     const isTank = entity instanceof Tank;
     const isPlayer = entity.role === 'player';
@@ -56,8 +60,12 @@ export class AudioManager extends EventEmitter {
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
       /**появление */
-      entity.on(EntityEvent.SPAWN, () => {
-        this.playSound('idle');
+      entity.on(EntityEvent.READY, () => {
+        if (entity.moving) {
+          this.playSound('move');
+        } else {
+          this.playSound('idle');
+        }
       });
       /**стрельба */
       entity.on(EntityEvent.SHOOT, () => {
@@ -75,6 +83,8 @@ export class AudioManager extends EventEmitter {
       });
       /**взрыв игрока */
       entity.on(EntityEvent.DESTROYED, () => {
+        this.stopSound('move');
+        this.stopSound('idle');
         this.playSound('playerExplosion');
       });
     }
@@ -88,48 +98,64 @@ export class AudioManager extends EventEmitter {
     }
   }
 
+  isPlaying(soundResource: HTMLAudioElement) {
+    return soundResource.currentTime > 0 && !soundResource.paused && !soundResource.ended;
+  }
+
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
-  playSound(sound: keyof typeof SoundPathList): void {
+  playSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource && !this.isStopped) {
       soundResource.currentTime = 0;
       soundResource.play();
-      soundResource.addEventListener('ended', () => {
-        this.activeSounds.delete(sound);
-      });
-
       this.activeSounds.add(sound);
-    }
-  }
-
-  pauseSound(sound: keyof typeof SoundPathList): void {
-    const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      soundResource.pause();
-    }
-  }
-
-  resumeSound(sound: keyof typeof SoundPathList): void {
-    const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      soundResource.play();
+      soundResource.addEventListener('ended', () => {
+        if (sound === 'idle' || sound === 'move') {
+          this.playSound(sound);
+        } else {
+          this.activeSounds.delete(sound);
+        }
+      });
     }
   }
 
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
-  stopSound(sound: keyof typeof SoundPathList): void {
+  stopSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource) {
-      soundResource.pause();
+      if (this.isPlaying(soundResource)) {
+        soundResource.pause();
+      }
       soundResource.currentTime = 0;
       this.activeSounds.delete(sound);
     }
   }
 
-  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
-  reset(): void {
+  pauseSound(sound: keyof typeof SoundPathList) {
+    const soundResource = resources.getSound(sound);
+    if (soundResource && !this.isStopped) {
+      if (this.isPlaying(soundResource)) {
+        soundResource.pause();
+      }
+    }
+  }
+
+  pauseSoundAll() {
     this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.stopSound(sound);
+      this.pauseSound(sound);
+    });
+  }
+
+  resumeSound(sound: keyof typeof SoundPathList) {
+    const soundResource = resources.getSound(sound);
+    if (soundResource && !this.isStopped) {
+      soundResource.play();
+    }
+  }
+
+  resumeSoundAll() {
+    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+      this.resumeSound(sound);
     });
   }
 }

@@ -25,8 +25,7 @@ describe('game/services/AudioManager', () => {
     entity.shoot();
     entity.update();
 
-    expect(audioManager.playSound).toHaveBeenNthCalledWith(1, 'idle');
-    expect(audioManager.playSound).toHaveBeenNthCalledWith(2, 'shoot');
+    expect(audioManager.playSound).toHaveBeenNthCalledWith(1, 'shoot');
   });
 
   it('should play pause sound', () => {
