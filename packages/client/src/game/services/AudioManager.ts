@@ -153,10 +153,8 @@ export class AudioManager extends EventEmitter {
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
-    if (soundResource) {
-      if (this.isPlaying(soundResource)) {
-        soundResource.pause();
-      }
+    if (soundResource && this.isPlaying(soundResource)) {
+      soundResource.pause();
       soundResource.currentTime = 0;
       this.activeSounds.delete(sound);
     }
@@ -164,10 +162,8 @@ export class AudioManager extends EventEmitter {
 
   pauseSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      if (this.isPlaying(soundResource)) {
-        soundResource.pause();
-      }
+    if (!this.isStopped && soundResource && this.isPlaying(soundResource)) {
+      soundResource.pause();
     }
   }
 
