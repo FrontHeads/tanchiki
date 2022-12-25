@@ -54,7 +54,9 @@ export class Game {
 
   load(root: HTMLElement | null) {
     this.createView(root);
+    this.overlay.load();
     this.loop.load();
+    this.audioManager.load();
     this.controllerAll.load();
     this.controllerWasd.load();
     this.controllerArrows.load();
@@ -63,10 +65,13 @@ export class Game {
 
   unload() {
     this.loop.unload();
+    this.overlay.unload();
+    this.audioManager.unload();
     this.controllerAll.unload();
     this.controllerWasd.unload();
     this.controllerArrows.unload();
     this.inited = false;
+    this.paused = false;
   }
 
   reset() {
@@ -74,12 +79,14 @@ export class Game {
       delete this.scenario;
     }
     this.loop.reset();
-    this.view.reset();
     this.zone.reset();
+    this.view.reset();
+    this.overlay.reset();
     this.audioManager.reset();
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
+    this.paused = false;
   }
 
   createView(root: HTMLElement | null) {

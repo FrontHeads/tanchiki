@@ -238,6 +238,9 @@ export class View extends EventEmitter {
 
   /** Перерисовывает все сущности на слое. */
   redrawAllEntitiesOnLayer(layerId: keyof LayerList) {
+    if (!this.layers[layerId]) {
+      return;
+    }
     const { entities: objects } = this.layers[layerId];
     this.eraseAllEntitiesOnLayer(layerId);
     for (const layerObject of objects) {
@@ -247,6 +250,9 @@ export class View extends EventEmitter {
 
   /** Стирает отображение всех сущностей с canvas-слоя. */
   eraseAllEntitiesOnLayer(layerId: keyof LayerList) {
+    if (!this.layers[layerId]) {
+      return;
+    }
     const { context } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
   }

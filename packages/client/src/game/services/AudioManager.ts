@@ -45,11 +45,22 @@ export class AudioManager extends EventEmitter {
     });
   }
 
+  load() {
+    this.reset();
+  }
+
+  unload() {
+    this.reset();
+  }
+
   /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
   reset() {
     this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
       this.stopSound(sound);
     });
+    this.isStopped = false;
+    this.isMuteKeyPressed = false;
+    this.isPauseKeyPressed = false;
   }
 
   /** Подписывает звуки на соответствующие события */
