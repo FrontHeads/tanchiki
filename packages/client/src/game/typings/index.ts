@@ -67,11 +67,14 @@ export type EntityType =
   | 'tankExplosion'
   | 'custom';
 
+export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';
+
 export type EntitySettings = Pos &
   Partial<Size> &
   Partial<{
     direction: Direction;
     type: EntityType;
+    variant: TerrainVariant;
     role: EntityRole;
     color: string;
     img: HTMLImageElement;
