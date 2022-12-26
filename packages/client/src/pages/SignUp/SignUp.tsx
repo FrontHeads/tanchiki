@@ -57,7 +57,7 @@ export const SignUp: FC = () => {
   }, [error]);
 
   return (
-    <Form handlerSubmit={submitHandler} header="Регистрация" hasErrors={formHasErrors}>
+    <Form onSubmitHandler={submitHandler} header="Регистрация" hasErrors={formHasErrors}>
       <FieldList<SignUpForm>
         fieldList={signUpFieldList}
         setFormData={setFormData}

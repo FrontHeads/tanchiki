@@ -12,7 +12,6 @@ import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppS
 import { useValidation, ValidationResponse } from '../../utils/validation';
 import { userProfileFieldList } from './data';
 import { AvatarFile, UserProfileForm } from './typings';
-import { signUpFieldList } from '../SignUp/data';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
@@ -74,7 +73,7 @@ export const UserProfile: FC = () => {
     <div className="user-profile">
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
-      <Form handlerSubmit={submitHandler} header={header} hasErrors={formHasErrors}>
+      <Form onSubmitHandler={submitHandler} header={header} hasErrors={formHasErrors}>
         <FieldList<UserProfileForm>
           setFile={setAvatarFile}
           fieldList={userProfileFieldList}

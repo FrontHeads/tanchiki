@@ -12,6 +12,7 @@ export const Field: FC<FieldProps> = ({
   required,
   placeholder,
   onChange,
+  onBlur,
   onFocus,
   disabled,
   className,
@@ -30,6 +31,7 @@ export const Field: FC<FieldProps> = ({
         type={type || 'text'}
         name={id}
         placeholder={placeholder}
+        onBlur={onBlur}
         onChange={onChange}
         onFocus={onFocus}
         value={value}
