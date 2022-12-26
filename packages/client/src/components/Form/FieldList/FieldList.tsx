@@ -21,8 +21,6 @@ export const FieldList = <T extends Record<string, string>>({
     console.log('validationResult', !!validationResult.hasErrors, validationResult);
     setFormHasErrors(!!validationResult.hasErrors);
     setValidationErrors(validationErrors);
-
-    
   }, [isFormSubmitted]);
 
   const inputChangeHandler = useCallback(

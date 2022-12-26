@@ -5,10 +5,10 @@ import { validators } from './validators';
 
 export function useValidation(formInputAndHeadingList: FormInputAndHeadingList) {
   const fieldList = formInputAndHeadingList.filter((value): value is FieldProps => 'id' in value);
-  
+
   return (inputs: Record<string, string>, isSubmitValidation = false) => {
     const validationResponse = { hasErrors: false } as ValidationResponse;
-    
+
     Object.entries(inputs).forEach(([id, value]) => {
       const field = fieldList.find(field => field.id === id);
 
