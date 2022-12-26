@@ -8,35 +8,31 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { validation, ValidationResponse } from '../../utils/validation';
+import { useValidation, ValidationResponse } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
 import { SignInForm } from './typings';
+import { signUpFieldList } from '../SignUp/data';
 
 export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [formHasErrors, setFormHasErrors] = useState(false);
+  // const [formHasErrors, setFormHasErrors] = useState(false);
+  const [isSubmitRequested, setIsSubmitRequested] = useState(false);
   const { error, isLoading } = useAppSelector(authSelectors.authState);
   const [formData, setFormData] = useState<SignInForm>(signInFormInitialState);
-  const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
+  const validation = useValidation(signInFieldList);
+  console.log('signin page');
 
-  const submitHandler = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+  const onSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitRequested(true);
+  }, []);
 
-      const validationResult = validation(formData);
-
-      if (validationResult.hasErrors) {
-        setFormHasErrors(true);
-        setValidationErrors(validationResult);
-        return;
-      }
-
-      dispatch(authThunks.signIn(formData));
-    },
-    [formData]
-  );
+  const submitHandler = useCallback(() => {
+    console.log('nea');
+    dispatch(authThunks.signIn(formData));
+  }, [formData]);
 
   useEffect(() => {
     if (error) {
@@ -46,14 +42,15 @@ export const SignIn: FC = () => {
   }, [error]);
 
   return (
-    <Form handlerSubmit={submitHandler} header="Вход" hasErrors={formHasErrors}>
+    <Form handlerSubmit={onSubmit} header="Вход" hasErrors={isSubmitRequested}>
       <FieldList<SignInForm>
+        submitHandler={submitHandler}
+        submitRequested={isSubmitRequested}
+        validation={validation}
         fieldList={signInFieldList}
         setFormData={setFormData}
         formData={formData}
         disabled={isLoading}
-        validationErrors={validationErrors}
-        setValidationErrors={setValidationErrors}
       />
       <div className="form__buttons-wrapper">
         <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />

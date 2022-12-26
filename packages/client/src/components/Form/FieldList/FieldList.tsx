@@ -1,18 +1,34 @@
-import { PropsWithChildren, useCallback } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 
-import { validation } from '../../../utils/validation';
+import { useValidation, ValidationResponse } from '../../../utils/validation';
 import { Field } from './Field';
 import { FieldListProps } from './typings';
 
 export const FieldList = <T extends Record<string, string>>({
   setFile,
+  submitRequested,
   fieldList,
   formData,
   setFormData,
-  validationErrors,
-  setValidationErrors,
+  submitHandler,
+  validation,
   disabled,
 }: PropsWithChildren<FieldListProps<T>>) => {
+  const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
+
+  useEffect(() => {
+    if (submitRequested) {
+      const validationResult = validation(formData);
+
+      if (validationResult.hasErrors) {
+        setValidationErrors(validationResult);
+        return;
+      }
+
+      submitHandler();
+    }
+  }, [submitRequested]);
+
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value, type, files } = event.target;
@@ -34,6 +50,7 @@ export const FieldList = <T extends Record<string, string>>({
     (event: React.FocusEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
       const inputErrors = validation({ [name]: value });
+      console.log('validation obj:', inputErrors);
 
       if (inputErrors) {
         setValidationErrors({ ...validationErrors, ...inputErrors });

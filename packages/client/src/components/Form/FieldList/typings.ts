@@ -8,7 +8,10 @@ export type FieldListProps<T> = {
   fieldList: FormInputAndHeadingList;
   formData: T;
   setFormData: Dispatch<T>;
+  submitRequested: boolean;
   disabled?: boolean;
-  validationErrors: ValidationResponse;
-  setValidationErrors: Dispatch<ValidationResponse>;
+  validation: (input: Record<string, string>) => ValidationResponse;
+  submitHandler: () => void;
+  // validationErrors: ValidationResponse;
+  // setValidationErrors: Dispatch<ValidationResponse>;
 };

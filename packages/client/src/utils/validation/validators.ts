@@ -1,8 +1,8 @@
 import { ValidationErrorMessage } from './config';
-import { ValidationRules } from './typings';
+import { Validators } from './typings';
 
-export const validationRules: ValidationRules = {
-  checkLogin(value: string): string[] {
+export const validators: Validators = {
+  login(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^(?=.{3,20}$)/.test(value)) {
@@ -20,7 +20,7 @@ export const validationRules: ValidationRules = {
     return errors;
   },
 
-  checkPassword(value: string): string[] {
+  password(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^(?=.{8,40}$)/.test(value)) {
@@ -38,7 +38,7 @@ export const validationRules: ValidationRules = {
     return errors;
   },
 
-  checkFirstName(value: string): string[] {
+  firstName(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^[а-яёА-ЯЁa-zA-Z-]+$/i.test(value)) {
@@ -52,7 +52,7 @@ export const validationRules: ValidationRules = {
     return errors;
   },
 
-  checkSecondName(value: string): string[] {
+  secondName(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^[а-яёА-ЯЁa-zA-Z-]+$/i.test(value)) {
@@ -66,7 +66,7 @@ export const validationRules: ValidationRules = {
     return errors;
   },
 
-  checkEmail(value: string): string[] {
+  email(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^[a-zA-Z0-9\-.@]+$/i.test(value)) {
@@ -81,7 +81,7 @@ export const validationRules: ValidationRules = {
     return errors;
   },
 
-  checkPhone(value: string): string[] {
+  phone(value: string): string[] {
     const errors: string[] = [];
 
     if (!/^(?=.{10,15}$)/.test(value)) {
@@ -95,7 +95,7 @@ export const validationRules: ValidationRules = {
     return errors;
   },
 
-  checkNotEmpty(value: string): string[] {
+  notEmpty(value: string): string[] {
     const errors: string[] = [];
 
     if (!value.length) {

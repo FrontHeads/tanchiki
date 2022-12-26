@@ -9,7 +9,7 @@ import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/typings';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/typings';
 import { ValidationErrors } from '../../../components/ValidationErrors';
-import { validation, ValidationResponse } from '../../../utils/validation';
+import { useValidation, ValidationResponse } from '../../../utils/validation';
 import { DUMMY_TOPIC as topicList, DUMMY_TOPIC_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumMessage } from './ForumMessage';
 
@@ -18,13 +18,24 @@ export const ForumTopic: FC = () => {
   const [formMessage, setFormMessage] = useState('');
   const [errorList, setErrorList] = useState({} as ValidationResponse);
   const [messageHasErrors, setFormHasErrors] = useState(false);
+  const validation = useValidation([
+    {
+      title: 'Message',
+      type: 'text',
+      id: 'message',
+      validator: 'message',
+      required: true,
+    },
+  ]);
 
   const textareaChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
 
       const validationResult = validation({ message: value });
-      setErrorList(validationResult);
+      if (validationResult) {
+        setErrorList(validationResult);
+      }
 
       setFormMessage(value);
     },
@@ -37,7 +48,7 @@ export const ForumTopic: FC = () => {
 
       const validationResult = validation({ message: formMessage });
 
-      if (validationResult.hasErrors) {
+      if (validationResult?.hasErrors) {
         setFormHasErrors(true);
         setErrorList(validationResult);
         return;

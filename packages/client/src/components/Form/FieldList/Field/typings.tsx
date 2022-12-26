@@ -5,6 +5,7 @@ export type FieldProps = {
   placeholder?: string;
   value?: string;
   required?: boolean;
+  validator?: string;
   labelText?: string;
   inputHeader?: string;
   errorList?: string[];

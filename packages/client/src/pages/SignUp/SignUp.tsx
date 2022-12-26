@@ -8,7 +8,7 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { validation, ValidationResponse } from '../../utils/validation';
+import { useValidation, ValidationResponse } from '../../utils/validation';
 import { signUpFieldList, signUpFormInitialState } from './data';
 import { SignUpForm } from './typings';
 export const SignUp: FC = () => {
@@ -22,6 +22,7 @@ export const SignUp: FC = () => {
   const [formHasErrors, setFormHasErrors] = useState(false);
   const [formData, setFormData] = useState<SignUpForm>(signUpFormInitialState);
   const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
+  const validation = useValidation(signUpFieldList);
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,7 +30,7 @@ export const SignUp: FC = () => {
 
       const validationResponse = validation(formData);
 
-      if (validationResponse.hasErrors) {
+      if (validationResponse?.hasErrors) {
         setFormHasErrors(true);
         setValidationErrors(validationResponse);
         return;
@@ -57,13 +58,14 @@ export const SignUp: FC = () => {
 
   return (
     <Form handlerSubmit={submitHandler} header="Регистрация" hasErrors={formHasErrors}>
-      <FieldList
+      <FieldList<SignUpForm>
         fieldList={signUpFieldList}
         setFormData={setFormData}
         formData={formData}
         disabled={isLoading}
         validationErrors={validationErrors}
         setValidationErrors={setValidationErrors}
+        validation={validation}
       />
       <div className="form__buttons-wrapper">
         <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />

@@ -9,9 +9,10 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
-import { validation, ValidationResponse } from '../../utils/validation';
+import { useValidation, ValidationResponse } from '../../utils/validation';
 import { userProfileFieldList } from './data';
 import { AvatarFile, UserProfileForm } from './typings';
+import { signUpFieldList } from '../SignUp/data';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +36,8 @@ export const UserProfile: FC = () => {
   const [formData, setFormData] = useState<UserProfileForm>(userFormData);
   const [avatarFile, setAvatarFile] = useState<AvatarFile>(null);
   const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
+  const validation = useValidation(userProfileFieldList);
+  console.log('up');
 
   useEffect(() => {
     if (updateResult) {
@@ -48,7 +51,7 @@ export const UserProfile: FC = () => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      const validationResponse = validation(formData, ['display_name', 'oldPassword', 'newPassword']);
+      const validationResponse = validation(formData, true);
 
       if (validationResponse.hasErrors) {
         setFormHasErrors(true);
@@ -72,14 +75,15 @@ export const UserProfile: FC = () => {
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
       <Form handlerSubmit={submitHandler} header={header} hasErrors={formHasErrors}>
-        <FieldList
+        <FieldList<UserProfileForm>
           setFile={setAvatarFile}
           fieldList={userProfileFieldList}
-          setFormData={setFormData}
           formData={formData}
-          disabled={isProfileLoading}
+          setFormData={setFormData}
           validationErrors={validationErrors}
           setValidationErrors={setValidationErrors}
+          validation={validation}
+          disabled={isProfileLoading}
         />
         <div className="form__buttons-wrapper">
           <Button text="Сохранить изменения" type="submit" variant={ButtonVariant.Primary} />

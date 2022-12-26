@@ -1,2 +1,2 @@
 export type { ValidationResponse } from './typings';
-export { validation } from './validation';
+export { useValidation } from './validation';

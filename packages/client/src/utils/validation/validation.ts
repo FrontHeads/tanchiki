@@ -1,24 +1,39 @@
-import { ValidationRulesConfig } from './config';
-import { ValidationResponse, ValidationRulesName } from './typings';
-import { validationRules } from './validationRules';
+import { useCallback, useMemo } from 'react';
 
-export function validation(inputs: Record<string, string>, nonRequiredFields?: string[]) {
-  const validationResponse: ValidationResponse = { hasErrors: false };
+import { FormInputAndHeadingList } from '../../app.typings';
+import { FieldProps } from '../../components/Form/FieldList/Field/typings';
+import { ValidationResponse } from './typings';
+import { validators } from './validators';
 
-  Object.entries(inputs).forEach(([name, value]) => {
-    const rulesName = ValidationRulesConfig[name as ValidationRulesName];
-    if (rulesName) {
-      if (nonRequiredFields && nonRequiredFields.includes(name) && value === '') {
-        return;
-      }
+export function useValidation(formInputAndHeadingList: FormInputAndHeadingList) {
+  const fieldList = useMemo(
+    () => formInputAndHeadingList.filter((value): value is FieldProps => 'id' in value),
+    [formInputAndHeadingList]
+  );
+  const validationResponse = { hasErrors: false } as ValidationResponse;
 
-      const result = validationRules[rulesName](value);
-      if (result.length) {
-        validationResponse.hasErrors = true;
-      }
-      validationResponse[name] = result;
-    }
-  });
+  return useCallback(
+    (inputs: Record<string, string>, isSubmitValidation = false) => {
+      console.log('into validation callback');
+      Object.entries(inputs).forEach(([id, value]) => {
+        const field = fieldList.find(field => field.id === id);
 
-  return validationResponse;
+        if (field?.validator) {
+          // Пропускаем проверку не обязательных полей в момент отправки формы
+          if (isSubmitValidation && !field.required && value === '') {
+            return;
+          }
+
+          const result = validators[field.validator](value);
+          if (result.length) {
+            validationResponse.hasErrors = true;
+          }
+          validationResponse[id] = result;
+        }
+      });
+
+      return validationResponse;
+    },
+    [fieldList]
+  );
 }
