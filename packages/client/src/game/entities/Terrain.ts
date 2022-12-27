@@ -1,5 +1,5 @@
 import { spriteCoordinates } from '../data/constants';
-import { EntitySettings, EntityEvent, TerrainVariant } from '../typings';
+import { EntityEvent, EntitySettings, TerrainVariant } from '../typings';
 import { Entity } from './';
 
 export class Terrain extends Entity {

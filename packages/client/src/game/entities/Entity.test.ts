@@ -4,9 +4,11 @@ import { EntityEvent } from '../typings';
 import { sleep } from '../utils/sleepTimer';
 import { Entity } from './';
 
+class TestEntity extends Entity {}
+
 describe('game/entities/Entity', () => {
   it('should set state', () => {
-    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
+    const entity = new TestEntity({ posX: 0, posY: 0, width: 4, height: 4 });
     const mockFn = jest.fn();
     const state = { posX: 111, posY: 222 };
 
@@ -22,13 +24,13 @@ describe('game/entities/Entity', () => {
 
   it('should return its own rect', () => {
     const rect = { posX: 0, posY: 0, width: 4, height: 4 };
-    const entity = new Entity(rect);
+    const entity = new TestEntity(rect);
 
     expect(entity.getRect()).toEqual(rect);
   });
 
   it('should spawn', () => {
-    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
+    const entity = new TestEntity({ posX: 0, posY: 0, width: 4, height: 4 });
 
     entity.spawn({ posX: 1, posY: 2 });
 
@@ -38,7 +40,7 @@ describe('game/entities/Entity', () => {
   });
 
   it('should despawn', () => {
-    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
+    const entity = new TestEntity({ posX: 0, posY: 0, width: 4, height: 4 });
     const mockFn = jest.fn();
 
     entity.on(EntityEvent.SHOULD_BE_DESTROYED, mockFn);
@@ -50,8 +52,8 @@ describe('game/entities/Entity', () => {
   });
 
   it('should take damage', () => {
-    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
-    const source = new Entity({ posX: 4, posY: 4, width: 4, height: 4 });
+    const entity = new TestEntity({ posX: 0, posY: 0, width: 4, height: 4 });
+    const source = new TestEntity({ posX: 4, posY: 4, width: 4, height: 4 });
     const mockFn = jest.fn();
 
     entity.on(EntityEvent.DAMAGED, mockFn);
@@ -64,7 +66,7 @@ describe('game/entities/Entity', () => {
   it('should stop animation by stopTimer', async () => {
     const game = Game.create();
     game.loop.start();
-    const entity = new Entity({ posX: 0, posY: 0, width: 4, height: 4 });
+    const entity = new TestEntity({ posX: 0, posY: 0, width: 4, height: 4 });
     game.loop.registerTimerHandlers(entity);
 
     const cancelAnimationSpy = jest.spyOn(entity, 'cancelAnimation');

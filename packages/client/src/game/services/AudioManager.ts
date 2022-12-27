@@ -1,6 +1,6 @@
 import { Entity, Tank, Terrain } from '../entities';
-import { EventEmitter } from '../utils';
 import { DamageSettings, EntityEvent } from '../typings/';
+import { EventEmitter } from '../utils';
 import { SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
