@@ -1,7 +1,7 @@
-type LeaderboardRecord = {
+export type LeaderboardRecord = {
   place: number;
   username: string;
-  record: number;
+  score: number;
   time: number;
   matches: number;
 };

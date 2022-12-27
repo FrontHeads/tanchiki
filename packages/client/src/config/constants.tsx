@@ -35,4 +35,8 @@ export const YANDEX_API_ENDPOINTS = {
     UPDATE_PROFILE_AVATAR: 'user/profile/avatar',
     SEARCH: 'user/search',
   },
+  LEADERBOARD: {
+    ADD_SCORE: '/leaderboard',
+    GET_ALL: '/leaderboard/all',
+  },
 };

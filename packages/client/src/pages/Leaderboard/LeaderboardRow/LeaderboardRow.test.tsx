@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { LeaderboardRow } from './LeaderboardRow';
 
 describe('LeaderboardRow', () => {
-  const row = { place: 1, username: 'John', record: 1234, time: 20, matches: 99 };
+  const row = { place: 1, username: 'John', score: 1234, time: 20, matches: 99 };
 
   test('it renders', () => {
     render(
@@ -31,7 +31,7 @@ describe('LeaderboardRow', () => {
     );
     expect(screen.getByText(row.place)).toBeInTheDocument();
     expect(screen.getByText(row.username)).toBeInTheDocument();
-    expect(screen.getByText(row.record)).toBeInTheDocument();
+    expect(screen.getByText(row.score)).toBeInTheDocument();
     expect(screen.getByText(row.time)).toBeInTheDocument();
     expect(screen.getByText(row.matches)).toBeInTheDocument();
   });

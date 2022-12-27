@@ -2,6 +2,9 @@ import './Leaderboard.css';
 
 import { FC } from 'react';
 
+import { leaderboardAPI } from '../../api/leaderboardAPI';
+import { useAppDispatch } from '../../store';
+import { leaderboardThunks } from '../../store/features/leaderboard/leaderboardThunks';
 import { DUMMY_LEADERBOARD } from './DummyData';
 import { LeaderboardRow } from './LeaderboardRow';
 import { LeaderboardProps } from './typings';
@@ -9,6 +12,27 @@ import { LeaderboardProps } from './typings';
 export const headerText = 'Рейтинг игроков';
 
 export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
+  const dispatch = useAppDispatch();
+
+  dispatch(
+    leaderboardThunks.addScore({
+      // data: {
+      username: 'yatx',
+      score: 11,
+      matches: 1,
+      // },
+      ratingFieldName: 'string',
+      teamName: 'string',
+    })
+  );
+  dispatch(
+    leaderboardThunks.getAll({
+      ratingFieldName: 'string',
+      cursor: 10,
+      limit: 10,
+    })
+  );
+
   return (
     <section className="leaderboard__wrapper">
       <h1 className="no-margin-top leaderboard__header">{header}</h1>
