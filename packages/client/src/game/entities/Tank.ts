@@ -13,8 +13,6 @@ export class Tank extends EntityDynamic {
   frozen = true;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = true;
-  /** Находится в состоянии спауна (отображается в виде звезды) */
-  spawning = true;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
@@ -34,11 +32,13 @@ export class Tank extends EntityDynamic {
         stopTimer: spawnTimeout,
       });
 
+      // Чтобы снаряды пролетали через спавнящийся танк (отображается в виде звезды)
+      this.hittable = false;
       // Возвращаем танку подвижность после анимации спауна.
       this.setLoopDelay(() => {
         this.frozen = false;
         this.canShoot = true;
-        this.spawning = false;
+        this.hittable = true;
         this.emit(EntityEvent.READY);
       }, spawnTimeout);
 

@@ -142,16 +142,14 @@ export class EntityDynamic extends Entity {
       movePace = this.getMoveStepPace();
     }
     switch (this.direction) {
-      case 'UP':
+      case Direction.UP:
         return { posY: this.posY - movePace };
-      case 'DOWN':
+      case Direction.DOWN:
         return { posY: this.posY + movePace };
-      case 'LEFT':
+      case Direction.LEFT:
         return { posX: this.posX - movePace };
-      case 'RIGHT':
+      case Direction.RIGHT:
         return { posX: this.posX + movePace };
-      default:
-        return {}; // чтобы не ругался тайпскрипт (из-за enum Direction)
     }
   }
 

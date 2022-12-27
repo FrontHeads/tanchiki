@@ -199,10 +199,6 @@ export class Zone {
             if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
               continue;
             }
-            // Чтобы снаряды пролетали через спавнящийся танк (отображается в виде звезды)
-            if (mainLayerCell instanceof Tank && mainLayerCell.spawning) {
-              continue;
-            }
             if (entity.exploding) {
               mainLayerCell.takeDamage(entity, damagedRect);
             }

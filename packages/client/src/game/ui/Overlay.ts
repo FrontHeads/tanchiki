@@ -45,7 +45,8 @@ export class Overlay {
 
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
-    this.game.loop.registerTimerHandlers(elem); // TODO: здесь нужен рефакторинг
+    // TODO: нужно подумать над тем, чтобы использовать для анимаций в меню обычные интервалы вне игрового цикла
+    this.game.loop.registerTimerHandlers(elem);
     this.view.add(elem);
     elem.render();
     return elem;
