@@ -1,15 +1,16 @@
 import { spriteCoordinates } from '../data/constants';
-import type { ProjectileSettings } from '../typings';
-import { EntityDynamic, Tank } from './';
+import { Direction, EntityEvent, type ProjectileSettings } from '../typings';
+import { EntityDynamic, type Tank } from './';
 
 export class Projectile extends EntityDynamic {
   width = 2;
   height = 2;
   movePace = 1;
-  moveSpeed = 3;
+  moveSpeed = 2;
   moveStepsTotal = 4;
   exploding = false;
   explosionRadius = 1;
+  explosionForce = 1;
   parent: Tank | null = null;
 
   constructor(props: ProjectileSettings) {
@@ -28,24 +29,41 @@ export class Projectile extends EntityDynamic {
       this.explode();
     }
     if (!this.canMove) {
-      this.prepareToExplode();
+      this.exploding = true;
+      this.emit(EntityEvent.WILL_DO_DAMAGE, this.calculateExposionRect());
     }
   }
 
-  prepareToExplode() {
-    this.exploding = true;
-
+  calculateExposionRect() {
     switch (this.direction) {
-      case 'UP':
-      case 'DOWN':
-        this.posX -= this.explosionRadius;
-        this.width += this.explosionRadius * 2;
-        break;
-      case 'LEFT':
-      case 'RIGHT':
-        this.posY -= this.explosionRadius;
-        this.height += this.explosionRadius * 2;
-        break;
+      case Direction.UP:
+        return {
+          posX: this.posX - this.explosionRadius,
+          posY: this.posY - this.explosionForce,
+          width: this.width + this.explosionRadius * 2,
+          height: this.height,
+        };
+      case Direction.DOWN:
+        return {
+          posX: this.posX - this.explosionRadius,
+          posY: this.posY + this.explosionForce,
+          width: this.width + this.explosionRadius * 2,
+          height: this.height,
+        };
+      case Direction.LEFT:
+        return {
+          posX: this.posX - this.explosionForce,
+          posY: this.posY - this.explosionRadius,
+          width: this.width,
+          height: this.height + this.explosionRadius * 2,
+        };
+      case Direction.RIGHT:
+        return {
+          posX: this.posX + this.explosionForce,
+          posY: this.posY - this.explosionRadius,
+          width: this.width,
+          height: this.height + this.explosionRadius * 2,
+        };
     }
   }
 }

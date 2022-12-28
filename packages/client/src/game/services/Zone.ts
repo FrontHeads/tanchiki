@@ -108,6 +108,11 @@ export class Zone {
         this.updateMatrix(layer, rect, entity);
       }
     });
+
+    entity.on(EntityEvent.WILL_DO_DAMAGE, (rect: Rect) => {
+      this.doDamage(rect, entity);
+    });
+
     entity.on(EntityEvent.SHOULD_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
@@ -117,15 +122,18 @@ export class Zone {
       }
       this.deleteEntityFromMatrix(entity);
     });
+
     entity.on(EntityEvent.DID_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.writeEntityToMatrix(entity);
     });
+
     entity.on(EntityEvent.SHOULD_BE_DESTROYED, () => {
       this.deleteEntityFromMatrix(entity);
     });
+
     if (entity.type === 'brickWall') {
       entity.on(EntityEvent.DAMAGED, (rect: Rect) => {
         const layer = this.getLayerByEntityType(entity);
@@ -166,6 +174,22 @@ export class Zone {
     return false;
   }
 
+  doDamage(rect: Rect, entity: Entity) {
+    for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
+      for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
+        const mainLayerCell = this.matrix[0][x][y];
+        const secondaryLayerCell = this.matrix[1][x][y];
+        const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
+        if (mainLayerCell !== null) {
+          mainLayerCell.takeDamage(entity, damagedRect);
+        }
+        if (secondaryLayerCell !== null) {
+          secondaryLayerCell.takeDamage(entity, damagedRect);
+        }
+      }
+    }
+  }
+
   /**
    * Проверяет, находится ли по заданным координатам какая-либо ещё сущность.
    * Если да, то совершает над ней необходимые операции
@@ -193,19 +217,14 @@ export class Zone {
           }
         }
         if (entity instanceof Projectile) {
-          const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
           if (mainLayerCell !== null && mainLayerCell.hittable && mainLayerCell !== entity.parent) {
             // Чтобы вражеские танки могли стрелять друг через друга
             if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
               continue;
             }
-            if (entity.exploding) {
-              mainLayerCell.takeDamage(entity, damagedRect);
-            }
             hasCollision = true;
           }
           if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
-            secondaryLayerCell.takeDamage(entity, damagedRect);
             hasCollision = true;
           }
         }

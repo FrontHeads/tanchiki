@@ -45,6 +45,7 @@ export enum EntityEvent {
   CLEAR_LOOP_INTERVAL = 'clearLoopInterval',
 
   WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
+  WILL_DO_DAMAGE = 'entityWillDoDamage',
   SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
   SHOULD_UPDATE = 'entityShouldUpdate',
   DID_UPDATE = 'entityDidUpdate',
