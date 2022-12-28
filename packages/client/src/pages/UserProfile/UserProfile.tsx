@@ -54,7 +54,6 @@ export const UserProfile: FC = () => {
     dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
     setFormData({ ...formData, avatar: '', oldPassword: '', newPassword: '' });
     setAvatarFile(null);
-    setIsFormSubmitted(false);
   };
 
   const avatarPath = userProfile?.avatar ? PATH.avatarBase + userProfile?.avatar : PATH.defaultAvatar;

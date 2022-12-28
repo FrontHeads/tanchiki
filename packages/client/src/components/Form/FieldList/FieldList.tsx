@@ -30,10 +30,10 @@ export const FieldList = <T extends Record<string, string>>({
 
       if (validationResponse.hasErrors) {
         setValidationErrors(validationResponse.errors);
-        setIsFormSubmitted(false);
       } else {
         onFormSubmitCallback();
       }
+      setIsFormSubmitted(false);
     }
   }, [isFormSubmitted]);
 
@@ -46,9 +46,7 @@ export const FieldList = <T extends Record<string, string>>({
 
     const validationResponse = validation({ [name]: value });
 
-    if (validationResponse.errors[name]) {
-      setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
-    }
+    setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
   }, []);
 
   const inputBlurHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +54,7 @@ export const FieldList = <T extends Record<string, string>>({
 
     const validationResponse = validation({ [name]: value });
 
-    if (validationResponse.errors[name] && !isFormSubmitted) {
+    if (!isFormSubmitted) {
       setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
     }
   }, []);

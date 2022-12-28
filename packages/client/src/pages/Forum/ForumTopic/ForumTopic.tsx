@@ -35,9 +35,7 @@ export const ForumTopic: FC = () => {
 
       const validationResult = validation({ message: value });
 
-      if (validationResult.errors.message) {
-        setValidationErrors(validationResult.errors);
-      }
+      setValidationErrors(validationResult.errors);
 
       setFormMessage(value);
     },

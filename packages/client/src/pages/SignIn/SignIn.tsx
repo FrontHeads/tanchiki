@@ -30,7 +30,6 @@ export const SignIn: FC = () => {
 
   const onFormSubmitCallback = () => {
     dispatch(authThunks.signIn(formData));
-    setIsFormSubmitted(false);
   };
 
   useEffect(() => {
