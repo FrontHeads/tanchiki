@@ -6,7 +6,7 @@ import { EntityDynamic, Projectile } from './';
 export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
-  shootSpeed = 3;
+  shootSpeed = 2;
   canShoot = false;
   shooting = false;
   /** Временно блокирует возможность перемещения (например на время анимации спауна). */

@@ -7,7 +7,8 @@ import { Tank } from './Tank';
 export class TankEnemy extends Tank {
   width = 4;
   height = 4;
-  shootSpeed = 3;
+  moveSpeed = 0;
+  shootSpeed = 2;
   lastDirection: Direction = Direction.UP;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = false;
