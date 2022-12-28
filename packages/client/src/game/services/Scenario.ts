@@ -191,7 +191,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const spawnPlace = this.mapManager.coordsToRect(spawnPlaces[0][spawnPlaceKey], 0);
 
     if (!entity.spawn(spawnPlace)) {
-      this.game.setLoopDelay(this.trySpawnTankEnemy.bind(this, entity), 200);
+      this.game.loop.setLoopDelay(this.trySpawnTankEnemy.bind(this, entity), 200);
     }
   }
 

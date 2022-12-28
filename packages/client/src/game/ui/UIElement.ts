@@ -6,6 +6,7 @@ export class UIElement extends Entity {
   text = '';
   align: CanvasTextAlign = 'left';
   backImg: HTMLImageElement | null = null;
+  spawned = true;
 
   constructor(props: UIElementSettings) {
     super(props);
