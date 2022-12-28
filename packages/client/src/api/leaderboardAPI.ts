@@ -1,5 +1,6 @@
 import { YANDEX_API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
+import { TEAM_NAME } from './../config/constants';
 import { LeaderboardRecord } from './../pages/Leaderboard/LeaderboardRow/typings';
 
 export type NewLeaderboardRecordRequest = {
@@ -9,7 +10,7 @@ export type NewLeaderboardRecordRequest = {
   ratingFieldName: string;
 
   /**Название команды. Используется чтобы создоть уникольный лидерборд для каждого проекта (взято из Swagger) */
-  teamName: 'FrontHeadsTest';
+  teamName: typeof TEAM_NAME;
 };
 
 export type LeaderboardRequest = {
@@ -24,5 +25,5 @@ export type LeaderboardRequest = {
 
 export const leaderboardAPI = {
   addScore: (data: LeaderboardRecord) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
-  getLeaderboard: (data: LeaderboardRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.GET, { data }),
+  getLeaderboard: (data: LeaderboardRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(TEAM_NAME), { data }),
 };
