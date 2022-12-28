@@ -26,7 +26,6 @@ export const Field: FC<FieldProps> = ({
       </label>
       <input
         id={id}
-        required={required}
         className="input form__field-input"
         type={type || 'text'}
         name={id}

@@ -10,7 +10,8 @@ describe('FieldList', () => {
     const testFieldId = 'email';
 
     const [formData, setFormData] = [{ [testFieldId]: '' }, jest.fn()];
-    const [validationErrors, setValidationErrors] = [{ test: [''] }, jest.fn()];
+    const [isFormSubmitted, setIsFormSubmitted] = [false, jest.fn()];
+    const mockFn = jest.fn();
     const mockFields: FormInputAndHeadingList = [
       {
         title: 'Email',
@@ -29,8 +30,10 @@ describe('FieldList', () => {
         fieldList={mockFields}
         formData={formData}
         setFormData={setFormData}
-        setValidationErrors={setValidationErrors}
-        validationErrors={validationErrors}
+        isFormSubmitted={isFormSubmitted}
+        onFormSubmitCallback={mockFn}
+        setIsFormSubmitted={setIsFormSubmitted}
+        validation={mockFn}
       />
     );
 

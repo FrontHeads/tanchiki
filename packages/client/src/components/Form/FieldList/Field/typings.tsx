@@ -8,6 +8,6 @@ export type FieldProps = {
   validator?: string;
   labelText?: string;
   inputHeader?: string;
-  errorList?: string[];
+  errorList?: string[] | null;
   pattern?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;

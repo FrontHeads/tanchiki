@@ -8,38 +8,32 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
-import { useValidation, ValidationResponse } from '../../utils/validation';
+import { useValidation } from '../../utils/validation';
 import { signUpFieldList, signUpFormInitialState } from './data';
 import { SignUpForm } from './typings';
+
 export const SignUp: FC = () => {
   // Оборачиваем в константу из-за каррирования в useAppDispatch() и useNavigate()
   // + хуки можно вызывать только на верхнем уровне компонента.
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const validation = useValidation(signUpFieldList);
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
 
-  const [formHasErrors, setFormHasErrors] = useState(false);
   const [formData, setFormData] = useState<SignUpForm>(signUpFormInitialState);
-  const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
-  const validation = useValidation(signUpFieldList);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const submitHandler = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+  const onFormSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-      const validationResponse = validation(formData);
+    setIsFormSubmitted(true);
+  }, []);
 
-      if (validationResponse?.hasErrors) {
-        setFormHasErrors(true);
-        setValidationErrors(validationResponse);
-        return;
-      }
-
-      dispatch(authThunks.signUp(formData));
-    },
-    [formData]
-  );
+  const onFormSubmitCallback = () => {
+    dispatch(authThunks.signUp(formData));
+    setIsFormSubmitted(false);
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -57,15 +51,16 @@ export const SignUp: FC = () => {
   }, [error]);
 
   return (
-    <Form onSubmitHandler={submitHandler} header="Регистрация" hasErrors={formHasErrors}>
+    <Form onSubmitHandler={onFormSubmit} header="Регистрация">
       <FieldList<SignUpForm>
         fieldList={signUpFieldList}
-        setFormData={setFormData}
+        isFormSubmitted={isFormSubmitted}
+        setIsFormSubmitted={setIsFormSubmitted}
+        onFormSubmitCallback={onFormSubmitCallback}
         formData={formData}
-        disabled={isLoading}
-        validationErrors={validationErrors}
-        setValidationErrors={setValidationErrors}
+        setFormData={setFormData}
         validation={validation}
+        disabled={isLoading}
       />
       <div className="form__buttons-wrapper">
         <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />

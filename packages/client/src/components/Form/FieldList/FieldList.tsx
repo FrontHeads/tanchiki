@@ -1,6 +1,7 @@
+import cn from 'classnames';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 
-import { ValidationResponse } from '../../../utils/validation';
+import { ValidationErrorList } from '../../../utils/validation/typings';
 import { Field } from './Field';
 import { FieldListProps } from './typings';
 
@@ -9,49 +10,59 @@ export const FieldList = <T extends Record<string, string>>({
   fieldList,
   formData,
   setFormData,
-  setFormHasErrors,
+  onFormSubmitCallback,
+  setIsFormSubmitted,
   isFormSubmitted,
   validation,
   disabled,
 }: PropsWithChildren<FieldListProps<T>>) => {
-  const [validationErrors, setValidationErrors] = useState<ValidationResponse>({});
+  const [formHasErrors, setFormHasErrors] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
+  const formClassNames = cn('form', {
+    'form_has-errors': formHasErrors,
+  });
 
   useEffect(() => {
-    const validationResult = validation(formData);
-    console.log('validationResult', !!validationResult.hasErrors, validationResult);
-    setFormHasErrors(!!validationResult.hasErrors);
-    setValidationErrors(validationErrors);
+    if (isFormSubmitted) {
+      const validationResponse = validation(formData);
+
+      setFormHasErrors(validationResponse.hasErrors);
+
+      if (validationResponse.hasErrors) {
+        setValidationErrors(validationResponse.errors);
+        setIsFormSubmitted(false);
+      } else {
+        onFormSubmitCallback();
+      }
+    }
   }, [isFormSubmitted]);
 
-  const inputChangeHandler = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value, type, files } = event.target;
-      if (setFile && type === 'file' && files?.length) {
-        setFile(files[0]);
-      }
-      setFormData({ ...formData, [name]: value });
-    },
-    [formData, validationErrors]
-  );
+  const inputChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, files } = event.target;
+    if (setFile && type === 'file' && files?.length) {
+      setFile(files[0]);
+    }
+    setFormData(oldState => ({ ...oldState, [name]: value }));
 
-  const inputBlurHandler = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
+    const validationResponse = validation({ [name]: value });
 
-      const validationResult = validation(formData);
-      console.log('validationResult', validationResult);
+    if (validationResponse.errors[name]) {
+      setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
+    }
+  }, []);
 
-      if (validationResult[name]) {
-        setValidationErrors({ ...validationErrors, ...{ [name]: validationResult[name] } });
-      }
+  const inputBlurHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
 
-      setFormHasErrors(!!validationResult.hasErrors);
-    },
-    [formData, validationErrors]
-  );
+    const validationResponse = validation({ [name]: value });
+
+    if (validationResponse.errors[name] && !isFormSubmitted) {
+      setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
+    }
+  }, []);
 
   return (
-    <>
+    <div className={formClassNames}>
       {fieldList.map(field => {
         if ('heading' in field) {
           return (
@@ -69,10 +80,10 @@ export const FieldList = <T extends Record<string, string>>({
             onBlur={inputBlurHandler}
             onChange={inputChangeHandler}
             value={formData[field.id] || ''}
-            errorList={validationErrors[field.id] as string[]}
+            errorList={validationErrors[field.id]}
           />
         );
       })}
-    </>
+    </div>
   );
 };

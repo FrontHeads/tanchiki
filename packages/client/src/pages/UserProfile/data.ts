@@ -23,6 +23,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     id: 'first_name',
     validator: 'firstName',
     placeholder: 'Имя',
+    required: false,
   },
   {
     title: 'Фамилия',
@@ -30,6 +31,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     id: 'second_name',
     validator: 'secondName',
     placeholder: 'Фамилия',
+    required: false,
   },
   {
     title: 'Имя в чате',
@@ -37,6 +39,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     id: 'display_name',
     validator: 'firstName',
     placeholder: 'Имя в чате',
+    required: false,
   },
   {
     title: 'Телефон',
@@ -55,6 +58,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     id: 'oldPassword',
     validator: 'password',
     placeholder: 'Старый пароль',
+    required: false,
   },
   {
     title: 'Новый пароль',
@@ -62,6 +66,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     id: 'newPassword',
     validator: 'password',
     placeholder: 'Новый пароль',
+    required: false,
   },
   {
     heading: 'Если хотите поменять аватар:',
@@ -70,7 +75,6 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     title: 'Фото',
     type: 'file',
     id: 'avatar',
-    validator: 'avatar',
     className: 'form-field_input-padding_lg',
   },
 ];

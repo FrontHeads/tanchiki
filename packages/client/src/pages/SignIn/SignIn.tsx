@@ -12,31 +12,26 @@ import { useValidation } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
 import { SignInForm } from './typings';
 
-const validation = useValidation(signInFieldList);
-
 export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const validation = useValidation(signInFieldList);
 
-  const [formHasErrors, setFormHasErrors] = useState(false);
   const { error, isLoading } = useAppSelector(authSelectors.authState);
+
   const [formData, setFormData] = useState<SignInForm>(signInFormInitialState);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  console.log('signin formHasErrors', formHasErrors);
+  const onFormSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const onFormSubmit = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+    setIsFormSubmitted(true);
+  }, []);
 
-      setIsFormSubmitted(true);
-
-      if (!formHasErrors) {
-        dispatch(authThunks.signIn(formData));
-      }
-    },
-    [formData, formHasErrors]
-  );
+  const onFormSubmitCallback = () => {
+    dispatch(authThunks.signIn(formData));
+    setIsFormSubmitted(false);
+  };
 
   useEffect(() => {
     if (error) {
@@ -46,14 +41,15 @@ export const SignIn: FC = () => {
   }, [error]);
 
   return (
-    <Form onSubmitHandler={onFormSubmit} header="Вход" hasErrors={formHasErrors}>
+    <Form onSubmitHandler={onFormSubmit} header="Вход">
       <FieldList<SignInForm>
-        isFormSubmitted={isFormSubmitted}
-        setFormHasErrors={setFormHasErrors}
         fieldList={signInFieldList}
+        isFormSubmitted={isFormSubmitted}
+        setIsFormSubmitted={setIsFormSubmitted}
+        onFormSubmitCallback={onFormSubmitCallback}
+        formData={formData}
         setFormData={setFormData}
         validation={validation}
-        formData={formData}
         disabled={isLoading}
       />
       <div className="form__buttons-wrapper">

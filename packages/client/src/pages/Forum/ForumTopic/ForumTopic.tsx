@@ -9,21 +9,22 @@ import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/typings';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/typings';
 import { ValidationErrors } from '../../../components/ValidationErrors';
-import { useValidation, ValidationResponse } from '../../../utils/validation';
+import { useValidation } from '../../../utils/validation';
+import { ValidationErrorList } from '../../../utils/validation/typings';
 import { DUMMY_TOPIC as topicList, DUMMY_TOPIC_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumMessage } from './ForumMessage';
 
 export const ForumTopic: FC = () => {
   const { topicId } = useParams();
   const [formMessage, setFormMessage] = useState('');
-  const [errorList, setErrorList] = useState({} as ValidationResponse);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [messageHasErrors, setFormHasErrors] = useState(false);
   const validation = useValidation([
     {
       title: 'Message',
       type: 'text',
       id: 'message',
-      validator: 'message',
+      validator: 'notEmpty',
       required: true,
     },
   ]);
@@ -33,8 +34,9 @@ export const ForumTopic: FC = () => {
       const { value } = event.target;
 
       const validationResult = validation({ message: value });
-      if (validationResult) {
-        setErrorList(validationResult);
+
+      if (validationResult.errors.message) {
+        setValidationErrors(validationResult.errors);
       }
 
       setFormMessage(value);
@@ -48,9 +50,9 @@ export const ForumTopic: FC = () => {
 
       const validationResult = validation({ message: formMessage });
 
-      if (validationResult?.hasErrors) {
+      if (validationResult.hasErrors) {
         setFormHasErrors(true);
-        setErrorList(validationResult);
+        setValidationErrors(validationResult.errors);
         return;
       }
 
@@ -89,7 +91,7 @@ export const ForumTopic: FC = () => {
             <Button type="submit" text="Отправить" variant={ButtonVariant.Primary} />
           </div>
         </form>
-        {errorList.message ? <ValidationErrors errorList={errorList.message as string[]} /> : null}
+        {validationErrors.message ? <ValidationErrors errorList={validationErrors.message} /> : null}
       </div>
     </section>
   );

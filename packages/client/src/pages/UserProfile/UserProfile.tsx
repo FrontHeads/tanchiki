@@ -9,12 +9,13 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
-import { useValidation, ValidationResponse } from '../../utils/validation';
+import { useValidation } from '../../utils/validation';
 import { userProfileFieldList } from './data';
 import { AvatarFile, UserProfileForm } from './typings';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
+  const validation = useValidation(userProfileFieldList);
 
   const userProfile = useAppSelector(authSelectors.userProfile);
   const { updateResult, isProfileLoading } = useAppSelector(profileSelectors.all);
@@ -31,12 +32,9 @@ export const UserProfile: FC = () => {
     avatar: '',
   };
 
-  const [formHasErrors, setFormHasErrors] = useState(false);
   const [formData, setFormData] = useState<UserProfileForm>(userFormData);
   const [avatarFile, setAvatarFile] = useState<AvatarFile>(null);
-  const [validationErrors, setValidationErrors] = useState({} as ValidationResponse);
-  const validation = useValidation(userProfileFieldList);
-  console.log('up');
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   useEffect(() => {
     if (updateResult) {
@@ -46,25 +44,18 @@ export const UserProfile: FC = () => {
     }
   }, [updateResult]);
 
-  const submitHandler: React.FormEventHandler<HTMLFormElement> = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+  const onFormSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-      const validationResponse = validation(formData, true);
+    setIsFormSubmitted(true);
+  }, []);
 
-      if (validationResponse.hasErrors) {
-        setFormHasErrors(true);
-        setValidationErrors(validationResponse);
-        return;
-      }
-
-      dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
-
-      setFormData({ ...formData, avatar: '', oldPassword: '', newPassword: '' });
-      setAvatarFile(null);
-    },
-    [formData]
-  );
+  const onFormSubmitCallback = () => {
+    dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
+    setFormData({ ...formData, avatar: '', oldPassword: '', newPassword: '' });
+    setAvatarFile(null);
+    setIsFormSubmitted(false);
+  };
 
   const avatarPath = userProfile?.avatar ? PATH.avatarBase + userProfile?.avatar : PATH.defaultAvatar;
   const header = userProfile?.first_name;
@@ -73,14 +64,15 @@ export const UserProfile: FC = () => {
     <div className="user-profile">
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
-      <Form onSubmitHandler={submitHandler} header={header} hasErrors={formHasErrors}>
+      <Form onSubmitHandler={onFormSubmit} header={header}>
         <FieldList<UserProfileForm>
           setFile={setAvatarFile}
           fieldList={userProfileFieldList}
+          isFormSubmitted={isFormSubmitted}
+          setIsFormSubmitted={setIsFormSubmitted}
+          onFormSubmitCallback={onFormSubmitCallback}
           formData={formData}
           setFormData={setFormData}
-          validationErrors={validationErrors}
-          setValidationErrors={setValidationErrors}
           validation={validation}
           disabled={isProfileLoading}
         />

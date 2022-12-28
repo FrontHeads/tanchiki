@@ -1,18 +1,14 @@
-// Задаем правила валидации в зависимости от имени поля
-export enum ValidationRulesConfig {
-  login = 'checkLogin',
-  password = 'checkPassword',
-  oldPassword = 'checkPassword',
-  newPassword = 'checkPassword',
-  password_check = 'checkPassword',
-  first_name = 'checkFirstName',
-  display_name = 'checkFirstName',
-  second_name = 'checkSecondName',
-  email = 'checkEmail',
-  phone = 'checkPhone',
-  message = 'checkNotEmpty',
-  title = 'checkNotEmpty',
-}
+export const ValidationRegex = {
+  loginCompound: /^[a-zA-Z0-9\-_]+$/i,
+  nameCompound: /^[а-яёА-ЯЁa-zA-Z-]+$/i,
+  emailCompound: /^[a-zA-Z0-9\-.@]+$/i,
+  phoneFormat: /^(\+|\d)[0-9]+$/i,
+  emailFormat: /@\w+\./,
+  onlyNumbers: /^[\d]+$/,
+  atLeastOneDigit: /\d{1,}/,
+  firstLetterIsCapital: /^[A-ZА-ЯЁ]{1}/,
+  atLeastOneCapitalChar: /[A-ZА-ЯЁ]{1,}/,
+};
 
 export enum ValidationErrorMessage {
   notEmpty = 'Поле не может быть пустым.',

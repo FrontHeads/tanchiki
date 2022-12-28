@@ -7,7 +7,7 @@ import { ValidationErrorsProps } from './typings';
 
 export const ValidationErrors: FC<ValidationErrorsProps> = ({ errorList, className }) => {
   if (!errorList || errorList.length === 0) {
-    return <></>;
+    return null;
   }
   const validationErrorsClassName = cn('validation-errors', className);
 

@@ -1,19 +1,19 @@
-import { ValidationErrorMessage } from './config';
+import { ValidationErrorMessage, ValidationRegex } from './config';
 import { Validators } from './typings';
 
 export const validators: Validators = {
   login(value: string): string[] {
     const errors: string[] = [];
 
-    if (!/^(?=.{3,20}$)/.test(value)) {
+    if (value.length < 3 || value.length > 20) {
       errors.push(ValidationErrorMessage.loginLength);
     }
 
-    if (!/^[a-zA-Z0-9\-_]+$/i.test(value)) {
+    if (!ValidationRegex.loginCompound.test(value)) {
       errors.push(ValidationErrorMessage.loginCompound);
     }
 
-    if (/^[\d]+$/.test(value)) {
+    if (ValidationRegex.onlyNumbers.test(value)) {
       errors.push(ValidationErrorMessage.loginFormat);
     }
 
@@ -23,15 +23,15 @@ export const validators: Validators = {
   password(value: string): string[] {
     const errors: string[] = [];
 
-    if (!/^(?=.{8,40}$)/.test(value)) {
+    if (value.length < 8 || value.length > 40) {
       errors.push(ValidationErrorMessage.passwordLength);
     }
 
-    if (!/\d{1,}/.test(value)) {
+    if (!ValidationRegex.atLeastOneDigit.test(value)) {
       errors.push(ValidationErrorMessage.passwordNum);
     }
 
-    if (!/[A-ZА-ЯЁ]{1,}/.test(value)) {
+    if (!ValidationRegex.atLeastOneCapitalChar.test(value)) {
       errors.push(ValidationErrorMessage.passwordCapitalChar);
     }
 
@@ -41,11 +41,11 @@ export const validators: Validators = {
   firstName(value: string): string[] {
     const errors: string[] = [];
 
-    if (!/^[а-яёА-ЯЁa-zA-Z-]+$/i.test(value)) {
+    if (!ValidationRegex.nameCompound.test(value)) {
       errors.push(ValidationErrorMessage.firstNameCompound);
     }
 
-    if (!/^[A-ZА-ЯЁ]{1}/.test(value)) {
+    if (!ValidationRegex.firstLetterIsCapital.test(value)) {
       errors.push(ValidationErrorMessage.nameBegin);
     }
 
@@ -55,11 +55,11 @@ export const validators: Validators = {
   secondName(value: string): string[] {
     const errors: string[] = [];
 
-    if (!/^[а-яёА-ЯЁa-zA-Z-]+$/i.test(value)) {
+    if (!ValidationRegex.nameCompound.test(value)) {
       errors.push(ValidationErrorMessage.secondNameCompound);
     }
 
-    if (!/^[A-ZА-ЯЁ]{1}/.test(value)) {
+    if (!ValidationRegex.firstLetterIsCapital.test(value)) {
       errors.push(ValidationErrorMessage.nameBegin);
     }
 
@@ -69,12 +69,12 @@ export const validators: Validators = {
   email(value: string): string[] {
     const errors: string[] = [];
 
-    if (!/^[a-zA-Z0-9\-.@]+$/i.test(value)) {
+    if (!ValidationRegex.emailCompound.test(value)) {
       errors.push(ValidationErrorMessage.emailCompound);
     }
 
     // После собаки обязательно точка, а перед точкой обязательно буквы
-    if (!/@\w+\./.test(value)) {
+    if (!ValidationRegex.emailFormat.test(value)) {
       errors.push(ValidationErrorMessage.emailFormat);
     }
 
@@ -84,11 +84,11 @@ export const validators: Validators = {
   phone(value: string): string[] {
     const errors: string[] = [];
 
-    if (!/^(?=.{10,15}$)/.test(value)) {
+    if (value.length < 8 || value.length > 15) {
       errors.push(ValidationErrorMessage.phoneLength);
     }
 
-    if (!/^(\+|\d)[0-9]+$/i.test(value)) {
+    if (!ValidationRegex.phoneFormat.test(value)) {
       errors.push(ValidationErrorMessage.phoneFormat);
     }
 
