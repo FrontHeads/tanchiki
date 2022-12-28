@@ -16,6 +16,5 @@
       "preset": "bem"
     }
   },
-  "plugins": ["stylelint-selector-bem-pattern"],
-  "ignoreFiles": ["dist/*"]
+  "plugins": ["stylelint-selector-bem-pattern"]
 }
