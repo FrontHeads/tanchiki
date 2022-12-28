@@ -2,7 +2,7 @@ import { Direction, EntityDynamicSettings, PosState, Rect } from '../typings';
 import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
-export class EntityDynamic extends Entity {
+export abstract class EntityDynamic extends Entity {
   /** Должен ли объект двигаться*/
   moving = false;
   /** Прекращает ли объект движение (он должен стать по целочисленным координатам)*/
@@ -49,7 +49,9 @@ export class EntityDynamic extends Entity {
     this.moving = true;
     this.nextDirection = direction;
 
-    this.emit(EntityEvent.MOVE);
+    if (this.spawned && !this.frozen) {
+      this.emit(EntityEvent.MOVE);
+    }
   }
 
   stop() {
@@ -57,6 +59,7 @@ export class EntityDynamic extends Entity {
     if (this.moveStepsProgress) {
       this.stopping = true;
     }
+
     this.emit(EntityEvent.STOP);
   }
 
@@ -69,17 +72,17 @@ export class EntityDynamic extends Entity {
 
   /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
   update() {
-    if (this.frozen) {
-      return;
-    }
-
-    const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
-    if (!this.spawned || isStandingStill) {
+    if (!this.spawned || this.frozen) {
       return;
     }
 
     this.stateCheck();
     if (this.shouldBeDestroyed) {
+      return;
+    }
+
+    const isStandingStill = !this.moving && !this.stopping && !this.shouldBeDestroyed;
+    if (isStandingStill) {
       return;
     }
 
@@ -101,9 +104,7 @@ export class EntityDynamic extends Entity {
   }
 
   /** Выполняет проверку в каждом игровом цикле (нужна для определения столкновения у снарядов) */
-  stateCheck() {
-    // для Projectile
-  }
+  abstract stateCheck(): void;
 
   /** Чтобы объект не начал двигаться сразу после поворота; */
   turnWithInterrupt() {
@@ -138,18 +139,20 @@ export class EntityDynamic extends Entity {
     } else {
       movePace = this.getMoveStepPace();
     }
+
     switch (this.direction) {
-      case 'UP':
+      case Direction.UP:
         return { posY: this.posY - movePace };
-      case 'DOWN':
+      case Direction.DOWN:
         return { posY: this.posY + movePace };
-      case 'LEFT':
+      case Direction.LEFT:
         return { posX: this.posX - movePace };
-      case 'RIGHT':
+      case Direction.RIGHT:
         return { posX: this.posX + movePace };
-      default:
-        return {}; // чтобы не ругался тайпскрипт (из-за enum Direction)
     }
+
+    // чтобы не ругался тайпскрипт (из-за enum Direction)
+    return {};
   }
 
   /** Выполняет микродвижение за игровой цикл */
