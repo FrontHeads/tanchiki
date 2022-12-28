@@ -1,4 +1,4 @@
-import { Entity, Tank, TankEnemy } from '../entities';
+import { Entity, Projectile, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 
 export type Fn = (...args: Array<any>) => void;
@@ -34,6 +34,7 @@ export enum EntityEvent {
   MOVE = 'move',
   STOP = 'stop',
   SPAWN = 'spawn',
+  READY = 'ready',
   DAMAGED = 'damaged',
   DESTROYED = 'destroyed',
   EXPLODING = 'exploding',
@@ -67,11 +68,14 @@ export type EntityType =
   | 'tankExplosion'
   | 'custom';
 
+export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';
+
 export type EntitySettings = Pos &
   Partial<Size> &
   Partial<{
     direction: Direction;
     type: EntityType;
+    variant: TerrainVariant;
     role: EntityRole;
     color: string;
     img: HTMLImageElement;
@@ -83,6 +87,8 @@ export type EntityDynamicSettings = EntitySettings &
   }>;
 
 export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
+
+export type DamageSettings = Rect & { source: Projectile };
 
 export type UIElementSettings = Pos &
   Size &
