@@ -7,9 +7,27 @@ import { Screen } from './screens';
 export class Overlay {
   currentScreen?: Screen;
   view: View;
+  activeAnimations: Set<ReturnType<typeof setTimeout>> = new Set();
 
   constructor(public game: Game) {
     this.view = game.view;
+  }
+
+  load() {
+    this.reset();
+  }
+
+  unload() {
+    this.reset();
+  }
+
+  reset() {
+    for (const animateProcess of this.activeAnimations) {
+      clearInterval(animateProcess);
+    }
+    this.activeAnimations = new Set();
+    this.clearScreen();
+    delete this.currentScreen;
   }
 
   show(screen: ScreenType, state: unknown = null) {
@@ -27,7 +45,8 @@ export class Overlay {
 
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
-    this.game.registerTimerHandlers(elem);
+    // TODO: нужно подумать над тем, чтобы использовать для анимаций в меню обычные интервалы вне игрового цикла
+    this.game.loop.registerTimerHandlers(elem);
     this.view.add(elem);
     elem.render();
     return elem;
@@ -51,8 +70,10 @@ export class Overlay {
 
       //**Удаляет интервал (останавливает анимацию) */
       if (!stageResult) {
+        this.activeAnimations.delete(animateProcess);
         clearInterval(animateProcess);
       }
     }, animateIntervalMs);
+    this.activeAnimations.add(animateProcess);
   }
 }

@@ -1,5 +1,5 @@
 import { Entity, EntityDynamic, Projectile, Tank } from '../entities';
-import type { Pos, PosState, Rect, Size } from '../typings';
+import type { PosState, Rect, Size } from '../typings';
 import { EntityEvent } from './../typings/index';
 
 export class Zone {
@@ -112,6 +112,9 @@ export class Zone {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
+      if (!entity.spawned) {
+        return;
+      }
       this.deleteEntityFromMatrix(entity);
     });
     entity.on(EntityEvent.DID_UPDATE, (newState: Partial<Entity>) => {
@@ -124,9 +127,8 @@ export class Zone {
       this.deleteEntityFromMatrix(entity);
     });
     if (entity.type === 'brickWall') {
-      entity.on(EntityEvent.DAMAGED, (pos: Pos) => {
+      entity.on(EntityEvent.DAMAGED, (rect: Rect) => {
         const layer = this.getLayerByEntityType(entity);
-        const rect = { ...pos, width: 1, height: 1 };
         this.updateMatrix(layer, rect, null);
       });
     }
@@ -191,15 +193,19 @@ export class Zone {
           }
         }
         if (entity instanceof Projectile) {
-          const pos = { posX: x, posY: y };
+          const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
           if (mainLayerCell !== null && mainLayerCell.hittable && mainLayerCell !== entity.parent) {
+            // Чтобы вражеские танки могли стрелять друг через друга
+            if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
+              continue;
+            }
             if (entity.exploding) {
-              mainLayerCell.takeDamage(entity, pos);
+              mainLayerCell.takeDamage(entity, damagedRect);
             }
             hasCollision = true;
           }
           if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
-            secondaryLayerCell.takeDamage(entity, pos);
+            secondaryLayerCell.takeDamage(entity, damagedRect);
             hasCollision = true;
           }
         }

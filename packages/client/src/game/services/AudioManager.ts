@@ -1,6 +1,6 @@
-import { Entity, Tank } from '../entities';
+import { Entity, Tank, Terrain } from '../entities';
+import { DamageSettings, EntityEvent } from '../typings/';
 import { EventEmitter } from '../utils';
-import { EntityEvent } from './../typings/index';
 import { SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
@@ -28,9 +28,7 @@ export class AudioManager extends EventEmitter {
       }
 
       if (!this.isStopped) {
-        this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-          this.pauseSound(sound);
-        });
+        this.pauseSoundAll();
         if (!this.isMuteKeyPressed) {
           this.playSound('pause');
         }
@@ -38,26 +36,52 @@ export class AudioManager extends EventEmitter {
       } else {
         this.isStopped = false;
         this.playSound('pause');
-        this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-          this.resumeSound(sound);
-        });
+        this.resumeSoundAll();
       }
     });
 
     this.on('levelIntro', () => {
       this.playSound('levelIntro');
     });
+    this.on('gameOver', () => {
+      this.pauseSoundAll();
+      this.playSound('gameOver');
+    });
   }
-  /** Подписывает звуки на  соответствующие события */
+
+  load() {
+    this.reset();
+  }
+
+  unload() {
+    this.reset();
+  }
+
+  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
+  reset() {
+    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+      this.stopSound(sound);
+    });
+    this.isStopped = false;
+    this.isMuteKeyPressed = false;
+    this.isPauseKeyPressed = false;
+  }
+
+  /** Подписывает звуки на соответствующие события */
   add(entity: Entity) {
     const isTank = entity instanceof Tank;
     const isPlayer = entity.role === 'player';
     const isEnemy = entity.role === 'enemy';
+    const isTerrain = entity instanceof Terrain;
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
       /**появление */
-      entity.on(EntityEvent.SPAWN, () => {
-        this.playSound('idle');
+      entity.on(EntityEvent.READY, () => {
+        if (entity.moving) {
+          this.playSound('move');
+        } else {
+          this.playSound('idle');
+        }
       });
       /**стрельба */
       entity.on(EntityEvent.SHOOT, () => {
@@ -75,8 +99,25 @@ export class AudioManager extends EventEmitter {
       });
       /**взрыв игрока */
       entity.on(EntityEvent.DESTROYED, () => {
+        this.stopSound('move');
+        this.stopSound('idle');
         this.playSound('playerExplosion');
       });
+    } else if (isTerrain) {
+      if (entity.type === 'brickWall') {
+        entity.on(EntityEvent.DAMAGED, (damageProps: DamageSettings) => {
+          if (damageProps.source.role === 'player') {
+            this.playSound('hitBrick');
+          }
+        });
+      }
+      if (entity.type === 'boundary' || entity.type === 'concreteWall') {
+        entity.on(EntityEvent.DAMAGED, (damageProps: DamageSettings) => {
+          if (damageProps.source.role === 'player') {
+            this.playSound('hitSteel');
+          }
+        });
+      }
     }
 
     /** Звуки танка врага */
@@ -88,48 +129,63 @@ export class AudioManager extends EventEmitter {
     }
   }
 
+  isPlaying(soundResource: HTMLAudioElement) {
+    return soundResource.currentTime > 0 && !soundResource.paused && !soundResource.ended;
+  }
+
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
-  playSound(sound: keyof typeof SoundPathList): void {
+  playSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource && !this.isStopped) {
+      if (sound === 'idle' || sound === 'move') {
+        soundResource.volume = 0.5;
+      }
       soundResource.currentTime = 0;
       soundResource.play();
-      soundResource.addEventListener('ended', () => {
-        this.activeSounds.delete(sound);
-      });
-
       this.activeSounds.add(sound);
-    }
-  }
-
-  pauseSound(sound: keyof typeof SoundPathList): void {
-    const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      soundResource.pause();
-    }
-  }
-
-  resumeSound(sound: keyof typeof SoundPathList): void {
-    const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      soundResource.play();
+      soundResource.addEventListener('ended', () => {
+        if (sound === 'idle' || sound === 'move') {
+          this.playSound(sound);
+        } else {
+          this.activeSounds.delete(sound);
+        }
+      });
     }
   }
 
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
-  stopSound(sound: keyof typeof SoundPathList): void {
+  stopSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
-    if (soundResource) {
+    if (soundResource && this.isPlaying(soundResource)) {
       soundResource.pause();
       soundResource.currentTime = 0;
       this.activeSounds.delete(sound);
     }
   }
 
-  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
-  reset(): void {
+  pauseSound(sound: keyof typeof SoundPathList) {
+    const soundResource = resources.getSound(sound);
+    if (!this.isStopped && soundResource && this.isPlaying(soundResource)) {
+      soundResource.pause();
+    }
+  }
+
+  pauseSoundAll() {
     this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.stopSound(sound);
+      this.pauseSound(sound);
+    });
+  }
+
+  resumeSound(sound: keyof typeof SoundPathList) {
+    const soundResource = resources.getSound(sound);
+    if (soundResource && !this.isStopped) {
+      soundResource.play();
+    }
+  }
+
+  resumeSoundAll() {
+    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+      this.resumeSound(sound);
     });
   }
 }
