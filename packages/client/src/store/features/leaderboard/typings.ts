@@ -1,3 +1,6 @@
+import { LeaderboardRowProps } from '../../../pages/Leaderboard/LeaderboardRow/typings';
+
 export type LeaderboardState = {
-  isLeaderboardLoading: boolean;
+  isLoading: boolean;
+  leaderboard: LeaderboardRowProps[];
 };

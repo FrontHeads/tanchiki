@@ -1,15 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { leaderboardAPI } from './../../../api/leaderboardAPI';
+import { leaderboardAPI, LeaderboardRequest } from './../../../api/leaderboardAPI';
+import { LeaderboardRecord } from './../../../pages/Leaderboard/LeaderboardRow/typings';
 
-export const addScore = createAsyncThunk('leaderboard', async (payload: any) => {
+export const addScore = createAsyncThunk('leaderboard/add', async (payload: LeaderboardRecord) => {
   const { data } = await leaderboardAPI.addScore(payload);
   return data;
 });
 
-export const getAll = createAsyncThunk('leaderboard/getall', async (payload: any) => {
-  const { data } = await leaderboardAPI.getAll(payload);
+export const getLeaderboard = createAsyncThunk('leaderboard/get', async (payload: LeaderboardRequest) => {
+  const { data } = await leaderboardAPI.getLeaderboard(payload);
   return data;
 });
 
-export const leaderboardThunks = { addScore, getAll };
+export const leaderboardThunks = { addScore, getLeaderboard };

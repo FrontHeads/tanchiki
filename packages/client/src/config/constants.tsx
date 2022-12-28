@@ -37,6 +37,6 @@ export const YANDEX_API_ENDPOINTS = {
   },
   LEADERBOARD: {
     ADD_SCORE: '/leaderboard',
-    GET_ALL: '/leaderboard/all',
+    GET: '/leaderboard/FrontHeadsTest',
   },
 };

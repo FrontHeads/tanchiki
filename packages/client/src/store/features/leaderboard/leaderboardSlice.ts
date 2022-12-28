@@ -1,50 +1,41 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from './../../store';
-import { addScore, leaderboardThunks } from './leaderboardThunks';
+import { leaderboardThunks } from './leaderboardThunks';
 import { LeaderboardState } from './typings';
 
 export const leaderboardSlice = createSlice({
   name: 'leaderboard',
   initialState: {
-    isLeaderboardLoading: false,
+    isLoading: false,
+    leaderboard: [],
   } as LeaderboardState,
-  reducers: {
-    // addScore: () => {
-    //   console.log('add score');
-    // },
-    // getAll: () => {
-    //   console.log('get all');
-    // },
-  },
+
+  reducers: {},
   extraReducers: builder => {
     builder
 
-      //** get all */
-      .addCase(leaderboardThunks.getAll.pending, state => {
-        console.log('pending', state);
-        state.isLeaderboardLoading = true;
+      //** get leaderboard */
+      .addCase(leaderboardThunks.getLeaderboard.pending, state => {
+        state.isLoading = true;
       })
-      .addCase(leaderboardThunks.getAll.fulfilled, (state, action) => {
-        console.log('fullfilled', state);
-        console.log(action);
-        state.isLeaderboardLoading = false;
+      .addCase(leaderboardThunks.getLeaderboard.fulfilled, (state, action: any) => {
+        state.leaderboard = action.payload;
+        state.isLoading = false;
       })
-      .addCase(leaderboardThunks.getAll.rejected, state => {
-        console.log('rejected', state);
-        state.isLeaderboardLoading = false;
+      .addCase(leaderboardThunks.getLeaderboard.rejected, state => {
+        state.isLoading = false;
       })
 
       //** add score */
       .addCase(leaderboardThunks.addScore.pending, state => {
-        console.log('pending', state);
+        state.isLoading = true;
       })
-      .addCase(leaderboardThunks.addScore.fulfilled, (state, action) => {
-        console.log('fullfilled', state);
-        console.log(action);
+      .addCase(leaderboardThunks.addScore.fulfilled, state => {
+        state.isLoading = false;
       })
       .addCase(leaderboardThunks.addScore.rejected, state => {
-        console.log('rejected', state);
+        state.isLoading = false;
       });
   },
 });

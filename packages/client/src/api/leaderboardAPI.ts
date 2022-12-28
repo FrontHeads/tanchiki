@@ -23,7 +23,6 @@ export type LeaderboardRequest = {
 };
 
 export const leaderboardAPI = {
-  addScore: (data: LeaderboardRecord) =>
-    HTTP.post<LeaderboardRecord>(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
-  getAll: (data: any) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.GET_ALL, { data }),
+  addScore: (data: LeaderboardRecord) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
+  getLeaderboard: (data: LeaderboardRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.GET, { data }),
 };
