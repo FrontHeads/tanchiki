@@ -1,6 +1,6 @@
 import { Fn } from '../typings';
 
-export class EventEmitter<T extends string = string> {
+export abstract class EventEmitter<T extends string = string> {
   listeners = {} as Record<T, Array<Fn>>;
 
   /** Подписка на событие.

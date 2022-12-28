@@ -8,6 +8,7 @@ export class Tank extends EntityDynamic {
   height = 4;
   shootSpeed = 3;
   canShoot = false;
+  shooting = false;
   /** Временно блокирует возможность перемещения (например на время анимации спауна). */
   frozen = true;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
@@ -31,10 +32,14 @@ export class Tank extends EntityDynamic {
         stopTimer: spawnTimeout,
       });
 
+      // Чтобы снаряды пролетали через спавнящийся танк (отображается в виде звезды)
+      this.hittable = false;
       // Возвращаем танку подвижность после анимации спауна.
       this.setLoopDelay(() => {
         this.frozen = false;
         this.canShoot = true;
+        this.hittable = true;
+        this.emit(EntityEvent.READY);
       }, spawnTimeout);
 
       if (this.role === 'player') {
@@ -62,6 +67,15 @@ export class Tank extends EntityDynamic {
       return;
     }
 
+    this.shooting = true;
+    this.canShoot = false;
+  }
+
+  stateCheck() {
+    if (!this.shooting) {
+      return;
+    }
+
     const projectile = new Projectile({
       parent: this,
       ...this.calculateProjectileInitPos(),
@@ -69,13 +83,14 @@ export class Tank extends EntityDynamic {
       direction: this.direction,
       moveSpeed: this.shootSpeed,
     });
-    this.canShoot = false;
 
     projectile.on(EntityEvent.EXPLODING, () => {
       this.canShoot = true;
     });
 
     this.emit(EntityEvent.SHOOT, projectile);
+
+    this.shooting = false;
   }
 
   calculateProjectileInitPos() {

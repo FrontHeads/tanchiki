@@ -1,9 +1,10 @@
 import { spriteCoordinates } from '../data/constants';
-import type { EntitySettings } from '../typings';
-import { EntityEvent } from './../typings/index';
+import { EntityEvent, EntitySettings, TerrainVariant } from '../typings';
 import { Entity } from './';
 
 export class Terrain extends Entity {
+  variant: TerrainVariant = 'WHOLE';
+
   constructor(props: EntitySettings) {
     super(props);
     Object.assign(this, props);
@@ -18,13 +19,13 @@ export class Terrain extends Entity {
         this.crossable = false;
         this.hittable = true;
         this.color = 'brown';
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.brick'];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.brick'][this.variant];
         break;
       case 'concreteWall':
         this.crossable = false;
         this.hittable = true;
         this.color = 'lightgrey';
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.concrete'];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.concrete'][this.variant];
         break;
       case 'trees':
         this.crossable = true;
