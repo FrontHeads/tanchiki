@@ -255,6 +255,7 @@ export class View extends EventEmitter {
     }
     const { context } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
+    this.layers[layerId].entities.clear();
   }
 
   /** Возвращает актуальные координаты на слое (в пикселях) */
