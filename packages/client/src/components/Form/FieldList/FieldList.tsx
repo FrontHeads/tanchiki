@@ -48,8 +48,6 @@ export const FieldList = <T extends Record<string, string>>({
 
     const validationResponse = validation({ [name]: value });
 
-    console.log(validationResponse);
-
     setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
   }, []);
 
