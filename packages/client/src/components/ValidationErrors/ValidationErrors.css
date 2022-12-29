@@ -2,7 +2,7 @@
 
 .validation-errors {
   white-space: pre-wrap;
-  margin-top: 7px;
+  margin-top: 12px;
   color: $font_color_soft;
   display: flex;
   padding-left: 15px;
@@ -10,7 +10,11 @@
   margin-bottom: 0;
   flex-direction: column;
 
-  &-item {
+  &__item {
     margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }

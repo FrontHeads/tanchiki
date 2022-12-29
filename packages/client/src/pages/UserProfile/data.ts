@@ -46,7 +46,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     type: 'tel',
     id: 'phone',
     validator: 'phone',
-    placeholder: 'ivanIvanov',
+    placeholder: '+7 800 555 35 35',
     required: true,
   },
   {

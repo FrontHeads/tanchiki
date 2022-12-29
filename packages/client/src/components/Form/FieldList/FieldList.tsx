@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { ValidationErrorList } from '../../../utils/validation/typings';
 import { Field } from './Field';
@@ -30,6 +31,7 @@ export const FieldList = <T extends Record<string, string>>({
 
       if (validationResponse.hasErrors) {
         setValidationErrors(validationResponse.errors);
+        toast.error('Поля заполнены некорректно');
       } else {
         onFormSubmitCallback();
       }
@@ -45,6 +47,8 @@ export const FieldList = <T extends Record<string, string>>({
     setFormData(oldState => ({ ...oldState, [name]: value }));
 
     const validationResponse = validation({ [name]: value });
+
+    console.log(validationResponse);
 
     setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
   }, []);
