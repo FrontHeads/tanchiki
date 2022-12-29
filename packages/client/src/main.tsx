@@ -8,4 +8,4 @@ import { registerServiceWorker } from './utils/serviceWorkerUtils';
 
 registerServiceWorker();
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(<App />);
+ReactDOM.hydrateRoot(document.getElementById('root') as HTMLElement, <App />);

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:ssr": "tsc && vite build --config ssr.config.ts",
     "preview": "yarn build && vite preview",
     "lint": "npm-run-all lint:*",
     "lint:ts": "yarn tsc --noEmit",

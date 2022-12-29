@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
+import { createBrowserRouter, createMemoryRouter, createRoutesFromElements, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
@@ -29,38 +29,39 @@ export const rootLoader = () => {
   return { user };
 };
 
-export const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route element={<RootLayout />} errorElement={<ErrorPage />} loader={rootLoader}>
-        <Route path={Paths.Home} element={<Home />}></Route>
+const routerElements = createRoutesFromElements(
+  <>
+    <Route element={<RootLayout />} errorElement={<ErrorPage />} loader={rootLoader}>
+      <Route path={Paths.Home} element={<Home />}></Route>
 
-        <Route element={<PublicRoutes />}>
-          <Route path={Paths.SignIn} element={<SignIn />}></Route>
+      <Route element={<PublicRoutes />}>
+        <Route path={Paths.SignIn} element={<SignIn />}></Route>
 
-          <Route path={Paths.SignUp} element={<SignUp />}></Route>
-        </Route>
+        <Route path={Paths.SignUp} element={<SignUp />}></Route>
+      </Route>
 
-        <Route element={<ProtectedRoutes />}>
-          <Route path={Paths.UserProfile} element={<UserProfile />}></Route>
-          <Route path={Paths.Leaderboard} element={<Leaderboard />}></Route>
-          <Route
-            path={Paths.Game}
-            element={
-              <Suspense fallback={<>Загрузка...</>}>
-                <Game />
-              </Suspense>
-            }></Route>
-          <Route path={Paths.Forum}>
-            <Route index={true} element={<Forum />}></Route>
-            <Route path={`${Paths.Section}/:sectionId`}>
-              <Route index={true} element={<ForumSection />}></Route>
-              <Route path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`} element={<ForumTopic />}></Route>
-            </Route>
+      <Route element={<ProtectedRoutes />}>
+        <Route path={Paths.UserProfile} element={<UserProfile />}></Route>
+        <Route path={Paths.Leaderboard} element={<Leaderboard />}></Route>
+        <Route
+          path={Paths.Game}
+          element={
+            <Suspense fallback={<>Загрузка...</>}>
+              <Game />
+            </Suspense>
+          }></Route>
+        <Route path={Paths.Forum}>
+          <Route index={true} element={<Forum />}></Route>
+          <Route path={`${Paths.Section}/:sectionId`}>
+            <Route index={true} element={<ForumSection />}></Route>
+            <Route path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`} element={<ForumTopic />}></Route>
           </Route>
         </Route>
       </Route>
-      <Route path={Paths.Error500} element={<ErrorPage status="500" message="Что-то пошло не так" />}></Route>
-    </>
-  )
+    </Route>
+    <Route path={Paths.Error500} element={<ErrorPage status="500" message="Что-то пошло не так" />}></Route>
+  </>
 );
+
+export const router = (isMemoryRouter = false) =>
+  isMemoryRouter ? createMemoryRouter(routerElements) : createBrowserRouter(routerElements);

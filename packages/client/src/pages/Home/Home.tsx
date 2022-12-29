@@ -10,7 +10,7 @@ import { HTTP } from '../../utils/HTTP';
 export const Home: FC = () => {
   useEffect(() => {
     const fetchServerData = async () => {
-      const data = await HTTP.get<Record<string, unknown>>('/', {
+      const data = await HTTP.get<Record<string, unknown>>('/api', {
         baseUrl: `http://localhost:${__SERVER_PORT__}`,
       });
       console.log(data.data);
