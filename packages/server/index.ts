@@ -77,13 +77,9 @@ async function startServer() {
 
       let didError = false;
       const writable = new HtmlWritable();
-
       writable.on('finish', () => {
         const appHtml = writable.getHtml();
-        console.log(appHtml);
-
         const responseHtml = template.replace(`<!--ssr-outlet-->`, appHtml);
-
         res.send(responseHtml);
       });
 
@@ -92,7 +88,7 @@ async function startServer() {
           res.status(didError ? 500 : 200).setHeader('Content-type', 'text/html');
           stream.pipe(writable);
         },
-        onShellError(_error) {
+        onShellError() {
           res.statusCode = 500;
           res.send('<!doctype html><p>Loading...</p><script src="clientrender.js"></script>');
         },

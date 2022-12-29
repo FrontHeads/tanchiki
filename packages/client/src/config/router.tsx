@@ -63,5 +63,6 @@ const routerElements = createRoutesFromElements(
   </>
 );
 
-export const router = (isMemoryRouter = false) =>
-  isMemoryRouter ? createMemoryRouter(routerElements) : createBrowserRouter(routerElements);
+/** В случае, если рендер на стороне сервера - подключаем MemoryRouter */
+export const router =
+  typeof document === 'undefined' ? createMemoryRouter(routerElements) : createBrowserRouter(routerElements);
