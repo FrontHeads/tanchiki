@@ -77,4 +77,8 @@
       width: 100%;
     }
   }
+
+  &_has-errors .validation-errors {
+    color: $font_color_danger;
+  }
 }
