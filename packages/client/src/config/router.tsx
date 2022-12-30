@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, createMemoryRouter, createRoutesFromElements, Route } from 'react-router-dom';
+import { createRoutesFromElements, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';

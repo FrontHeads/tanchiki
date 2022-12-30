@@ -1,8 +1,6 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
-import type { createMemoryRouter } from 'react-router-dom';
-// import { type ViteDevServer, createServer as createViteServer, ModuleNode } from 'vite';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
 import { createClientAndConnect } from './db';
@@ -38,6 +36,10 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
+  app.get('/api', (_, res) => {
+    res.json('👋 Howdy from the server :)');
+  });
+
   if (isDev()) {
     vite = await createViteServer({
       server: { middlewareMode: true },
@@ -47,10 +49,6 @@ async function startServer() {
 
     app.use(vite.middlewares);
   }
-
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)');
-  });
 
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')));
