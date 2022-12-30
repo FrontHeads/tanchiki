@@ -343,9 +343,11 @@ export class View extends EventEmitter {
   }
 
   isSpriteImgLoaded() {
-    return this.spriteImg instanceof HTMLImageElement &&
+    return (
+      this.spriteImg instanceof HTMLImageElement &&
       this.spriteImg.complete &&
       this.spriteImg.width > 0 &&
-      this.spriteImg.height > 0;
+      this.spriteImg.height > 0
+    );
   }
 }

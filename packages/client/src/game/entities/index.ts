@@ -5,5 +5,5 @@ export { Flag } from './Flag';
 export { Projectile } from './Projectile';
 export { Tank } from './Tank';
 export { TankEnemy } from './TankEnemy';
-export { TankPlayer} from './TankPlayer';
+export { TankPlayer } from './TankPlayer';
 export { Terrain } from './Terrain';
