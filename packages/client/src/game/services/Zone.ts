@@ -177,13 +177,13 @@ export class Zone {
   doDamage(rect: Rect, entity: Entity) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
-        const mainLayerCell = this.matrix[0][x][y];
-        const secondaryLayerCell = this.matrix[1][x][y];
+        const mainLayerCell = this.matrix[0][x]?.[y];
+        const secondaryLayerCell = this.matrix[1][x]?.[y];
         const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
-        if (mainLayerCell !== null) {
+        if (mainLayerCell) {
           mainLayerCell.takeDamage(entity, damagedRect);
         }
-        if (secondaryLayerCell !== null) {
+        if (secondaryLayerCell) {
           secondaryLayerCell.takeDamage(entity, damagedRect);
         }
       }
@@ -198,8 +198,8 @@ export class Zone {
     let hasCollision = false;
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
-        const mainLayerCell = this.matrix[0][x][y];
-        const secondaryLayerCell = this.matrix[1][x][y];
+        const mainLayerCell = this.matrix[0][x]?.[y];
+        const secondaryLayerCell = this.matrix[1][x]?.[y];
 
         if (mainLayerCell === null && secondaryLayerCell === null) {
           continue;
