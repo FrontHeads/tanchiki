@@ -9,8 +9,7 @@ import { routes } from './config/router';
 import { store } from './store';
 import { registerServiceWorker } from './utils/serviceWorkerUtils';
 
-// TODO: comment out it
-// registerServiceWorker();
+registerServiceWorker();
 
 const router = createBrowserRouter(routes);
 
