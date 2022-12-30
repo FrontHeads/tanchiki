@@ -8,23 +8,29 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { useValidation } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
 import { SignInForm } from './typings';
 
 export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const validation = useValidation(signInFieldList);
 
   const { error, isLoading } = useAppSelector(authSelectors.authState);
-  const [formData, setFormData] = useState<SignInForm>(signInFormInitialState);
 
-  const submitHandler = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      dispatch(authThunks.signIn(formData));
-    },
-    [formData]
-  );
+  const [formData, setFormData] = useState<SignInForm>(signInFormInitialState);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+  const onFormSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setIsFormSubmitted(true);
+  }, []);
+
+  const onFormSubmitCallback = () => {
+    dispatch(authThunks.signIn(formData));
+  };
 
   useEffect(() => {
     if (error) {
@@ -34,11 +40,15 @@ export const SignIn: FC = () => {
   }, [error]);
 
   return (
-    <Form handlerSubmit={submitHandler} header="Вход">
+    <Form onSubmitHandler={onFormSubmit} header="Вход">
       <FieldList<SignInForm>
         fieldList={signInFieldList}
-        setFormData={setFormData}
+        isFormSubmitted={isFormSubmitted}
+        setIsFormSubmitted={setIsFormSubmitted}
+        onFormSubmitCallback={onFormSubmitCallback}
         formData={formData}
+        setFormData={setFormData}
+        validation={validation}
         disabled={isLoading}
       />
       <div className="form__buttons-wrapper">

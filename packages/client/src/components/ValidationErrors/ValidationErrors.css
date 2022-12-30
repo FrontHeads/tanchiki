@@ -1,0 +1,20 @@
+@import url("../../variables.css");
+
+.validation-errors {
+  white-space: pre-wrap;
+  margin-top: 12px;
+  color: $font_color_soft;
+  display: flex;
+  padding-left: 15px;
+  list-style: circle;
+  margin-bottom: 0;
+  flex-direction: column;
+
+  &__item {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

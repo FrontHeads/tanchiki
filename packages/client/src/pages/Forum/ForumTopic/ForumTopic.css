@@ -1,6 +1,10 @@
 @import url("../../../variables.css");
 
 .forum-topic {
+  width: 100%;
+  max-width: 940px;
+  margin: 0 auto;
+
   &__container {
     margin: 0 0 $vertical_margin;
     padding: 0 15px;
@@ -9,12 +13,6 @@
     @media (max-width: 730px) {
       padding: 0;
     }
-  }
-
-  &__wrapper {
-    width: 100%;
-    max-width: 940px;
-    margin: 0 auto;
   }
 
   &__title {
@@ -71,5 +69,9 @@
     box-sizing: border-box;
     border-radius: 6px;
     color: $font_color_bright;
+  }
+
+  &_has-errors .validation-errors {
+    color: $font_color_danger;
   }
 }
