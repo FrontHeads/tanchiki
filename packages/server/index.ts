@@ -54,6 +54,8 @@ async function startServer() {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')));
   }
 
+  app.use('/serviceWorker.js', express.static(path.resolve(distPath, 'serviceWorker.js')));
+
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
 
@@ -99,10 +101,21 @@ async function startServer() {
         req
       );
 
+      /** Пример установки штатного state */
+      const preloadedState = {
+        app: { isAppLoading: false },
+      };
+
       const writable = new HtmlWritable();
       writable.on('finish', () => {
         const appHtml = writable.getHtml();
-        const responseHtml = template.replace(`<!--ssr-outlet-->`, appHtml);
+        const responseHtml = template.replace(
+          `<div id="root" class="root"><!--ssr-outlet--></div>`,
+          `<div id="root" class="root">${appHtml}</div>
+            <script>
+                window.__PRELOADED_STATE__=${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
+            </script>`
+        );
 
         res.send(responseHtml);
       });
