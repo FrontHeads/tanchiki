@@ -80,6 +80,7 @@ describe('game/services/View', () => {
     const root = document.body.appendChild(document.createElement('div'));
     const game = Game.create();
     game.view.spriteImg = new Image();
+    game.view.isSpriteImgLoaded = () => true;
     game.view.build(root);
     game.loop.start();
 
