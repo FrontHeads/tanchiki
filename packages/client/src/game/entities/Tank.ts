@@ -30,6 +30,8 @@ export class Tank extends EntityDynamic {
         stopTimer: this.spawnTimeout,
       });
 
+      const color = this.color;
+      this.color = 'lightcyan';
       // Чтобы снаряды пролетали через спавнящийся танк (отображается в виде звезды)
       this.hittable = false;
       // Возвращаем танку подвижность после анимации спауна.
@@ -37,13 +39,14 @@ export class Tank extends EntityDynamic {
         this.frozen = false;
         this.canShoot = true;
         this.hittable = true;
+        this.color = color;
         this.emit(EntityEvent.READY);
       }, this.spawnTimeout);
     });
   }
 
   setMoveSpeed(speed: Speed) {
-    switch(speed) {
+    switch (speed) {
       case Speed.Low:
         this.moveSpeed = 0;
         break;
@@ -57,7 +60,7 @@ export class Tank extends EntityDynamic {
   }
 
   setShootSpeed(speed: Speed) {
-    switch(speed) {
+    switch (speed) {
       case Speed.Low:
         this.shootSpeed = 1;
         break;

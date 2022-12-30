@@ -182,13 +182,11 @@ export class View extends EventEmitter {
     const context = this.layers[layerId].context;
 
     // Отрисовка сущностей без спрайта
-    if (!entity.mainSpriteCoordinates && entity.color) {
-      context.fillStyle = entity.color;
-      context.fillRect(...this.getActualRect(entity));
-      return;
-    }
-
-    if (!(this.spriteImg instanceof HTMLImageElement)) {
+    if (!entity.mainSpriteCoordinates || !this.isSpriteImgLoaded()) {
+      if (entity.color) {
+        context.fillStyle = entity.color;
+        context.fillRect(...this.getActualRect(entity));
+      }
       return;
     }
 
@@ -222,7 +220,7 @@ export class View extends EventEmitter {
   drawMainEntitySprite(entity: Entity, context: CanvasRenderingContext2D) {
     const spriteCoordinates = this.getSpriteCoordinates({ entity });
 
-    if (!spriteCoordinates || !(this.spriteImg instanceof HTMLImageElement)) {
+    if (!spriteCoordinates) {
       return;
     }
 
@@ -342,5 +340,12 @@ export class View extends EventEmitter {
     const pixelRatio = smallerWindowSideSize / realZoneSize;
 
     return Math.floor(pixelRatio);
+  }
+
+  isSpriteImgLoaded() {
+    return this.spriteImg instanceof HTMLImageElement &&
+      this.spriteImg.complete &&
+      this.spriteImg.width > 0 &&
+      this.spriteImg.height > 0;
   }
 }
