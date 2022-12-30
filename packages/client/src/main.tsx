@@ -19,6 +19,6 @@ ReactDOM.hydrateRoot(
   document.getElementById('root') as HTMLElement,
   <Provider store={store}>
     <RouterProvider router={router} />
-    <ToastContainer theme="dark" position={toast.POSITION.TOP_CENTER} />
+    {/* <ToastContainer theme="dark" position={toast.POSITION.TOP_CENTER} /> */}
   </Provider>
 );

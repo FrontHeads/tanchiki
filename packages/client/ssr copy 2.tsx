@@ -1,6 +1,7 @@
 import { createStaticHandler } from '@remix-run/router';
 import type * as express from 'express';
-import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
+import React from 'react';
+import { type RenderToPipeableStreamOptions, renderToPipeableStream, renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 // import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';

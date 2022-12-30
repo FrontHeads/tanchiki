@@ -45,6 +45,12 @@ export function render(streamOptions: RenderToPipeableStreamOptions, request: ex
     initialEntries: [loadedPath],
   });
 
+  /**
+   * В связи с тем, что в приложении используется React.Suspend -
+   * нужно использовать renderToPipeableStream вместо renderToHtml.
+   * При этом возвращается stream, а не строка, который нужно
+   * обрабатывать на стороне сервера
+   */
   return {
     stream: renderToPipeableStream(
       <Provider store={store}>

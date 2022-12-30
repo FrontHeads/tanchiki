@@ -12,6 +12,7 @@ import { Logo } from '../../components/Logo';
 import { Paths } from '../../config/constants';
 import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
 import { ResponseType } from '../../utils/HTTP';
+import { toast, ToastContainer } from 'react-toastify';
 
 export const Root: FC = () => {
   const isAppLoading = useAppSelector(appSelectors.isAppLoading);
@@ -22,16 +23,14 @@ export const Root: FC = () => {
   const data = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
 
   useEffect(() => {
-    console.log('data', data);
-
-    // if (data?.user) {
-    //   data.user.then(response => {
-    //     if (response) {
-    //       return dispatch(authActions.setUserProfile(response.data));
-    //     }
-    //     return null;
-    //   });
-    // }
+    if (typeof data?.user?.then === 'function') {
+      data.user.then(response => {
+        if (response) {
+          return dispatch(authActions.setUserProfile(response.data));
+        }
+        return null;
+      });
+    }
   }, [data]);
 
   return (
@@ -52,6 +51,7 @@ export const Root: FC = () => {
           </main>
         </Await>
       </Suspense>
+      <ToastContainer theme="dark" position={toast.POSITION.TOP_CENTER} />
     </ErrorBoundary>
   );
 };

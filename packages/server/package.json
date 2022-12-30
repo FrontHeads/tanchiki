@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "rimraf dist && tsc --p ./tsconfig.prod.json",
-    "preview": "node ./dist/index.js",
+    "preview": "yarn build && node ./dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.ts",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
