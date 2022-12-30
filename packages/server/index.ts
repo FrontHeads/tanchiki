@@ -35,7 +35,7 @@ async function startServer() {
 
   let vite: ViteDevServer | undefined;
   const distPath = path.dirname(require.resolve('client/dist/index.html'));
-  const ssrClientPath = require.resolve('client/dist-ssr/client.cjs');
+  const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
   if (isDev()) {
@@ -49,15 +49,12 @@ async function startServer() {
   }
 
   app.get('/api', (_, res) => {
-    'client/dist-ssr/client.cjs';
     res.json('👋 Howdy from the server :)');
   });
 
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')));
   }
-
-  // app.use(express.static(distPath));
 
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
@@ -68,10 +65,7 @@ async function startServer() {
       let render: (
         streamOptions: RenderToPipeableStreamOptions,
         request: express.Request
-      ) => Promise<{
-        stream: ReturnType<typeof renderToPipeableStream>;
-        router: ReturnType<typeof createMemoryRouter>;
-      }>;
+      ) => Promise<ReturnType<typeof renderToPipeableStream>>;
 
       if (isDev() && vite) {
         template = fs.readFileSync(path.resolve(srcPath, 'index.html'), 'utf-8');
@@ -83,13 +77,13 @@ async function startServer() {
       }
 
       /**
-       * В ssr.tsx используется renderToPipeableStream вместо renderToHtml.
+       * В ssr.tsx используется renderToPipeableStream вместо renderToString.
        * Нам нужно перехватить события заверешния стрима и уже в нем подставить
        * HTML код приложения в index.html
        */
       let didError = false;
 
-      const { stream, router } = await render(
+      const stream = await render(
         {
           onShellReady() {
             res.status(didError ? 500 : 200).setHeader('Content-type', 'text/html');
@@ -107,19 +101,10 @@ async function startServer() {
         req
       );
 
-      console.log(router);
-
       const writable = new HtmlWritable();
       writable.on('finish', () => {
         const appHtml = writable.getHtml();
         const responseHtml = template.replace(`<!--ssr-outlet-->`, appHtml);
-
-        // const componentsToRender = router.getMatchedComponents();
-        // const componentsPath = componentsToRender.map(component => component.options.__file);
-        // const matchedModules = componentsModules(componentsPath, vite);
-        // const css = collectCss(matchedModules);
-
-        // responseHtml = responseHtml.replace('<!--dev-ssr-css-->', css);
 
         res.send(responseHtml);
       });
@@ -137,53 +122,3 @@ async function startServer() {
 }
 
 startServer();
-
-// /**
-//  * Collect SSR CSS for Vite
-//  */
-// export const componentsModules = (components: string[], vite: ViteDevServer) => {
-//   const matchedModules = new Set<ModuleNode>();
-//   components.forEach(component => {
-//     const modules = vite.moduleGraph.getModulesByFile(component);
-//     modules?.forEach(mod => matchedModules.add(mod));
-//   });
-//   return matchedModules;
-// };
-
-// export const collectCss = (
-//   mods: Set<ModuleNode>,
-//   styles = new Map<string, string>(),
-//   checkedComponents = new Set()
-// ) => {
-//   for (const mod of mods) {
-//     if (
-//       (mod.file?.endsWith('.scss') || mod.file?.endsWith('.css') || mod.id?.includes('vue&type=style')) &&
-//       mod.ssrModule
-//     ) {
-//       styles.set(mod.url, mod.ssrModule.default);
-//     }
-//     if (mod.importedModules.size > 0 && !checkedComponents.has(mod.id)) {
-//       checkedComponents.add(mod.id);
-//       collectCss(mod.importedModules, styles, checkedComponents);
-//     }
-//   }
-//   let result = '';
-//   styles.forEach((content, id) => {
-//     const styleTag = `<style type="text/css" vite-module-id="${hashCode(id)}">${content}</style>`;
-//     result = result.concat(styleTag);
-//   });
-//   return result;
-// };
-
-// const hashCode = (moduleId: string) => {
-//   let hash = 0,
-//     i,
-//     chr;
-//   if (moduleId.length === 0) return hash;
-//   for (i = 0; i < moduleId.length; i++) {
-//     chr = moduleId.charCodeAt(i);
-//     hash = (hash << 5) - hash + chr;
-//     hash |= 0; // Convert to 32bit integer
-//   }
-//   return hash;
-// };

@@ -1,12 +1,24 @@
 import './Home.css';
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import promoImg from '/assets/img/tankettes_game.png';
 
 import { Navigation } from '../../components/Navigation';
+import { HTTP } from '../../utils/HTTP';
 
 export const Home: FC = () => {
+  useEffect(() => {
+    const fetchServerData = async () => {
+      const data = await HTTP.get<Record<string, unknown>>('/', {
+        baseUrl: `http://localhost:${__SERVER_PORT__}/api`,
+      });
+      console.log(data.data);
+    };
+
+    fetchServerData();
+  }, []);
+
   return (
     <>
       <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />

@@ -19,20 +19,18 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
   const router = createStaticRouter(routes, context);
 
   /**
-   * В связи с тем, что в приложении используется React.Suspend -
-   * нужно использовать renderToPipeableStream вместо renderToHtml.
+   * В связи с тем, что в приложении используется React.Suspend-> Await -
+   * нужно использовать renderToPipeableStream вместо renderToString.
    * При этом возвращается stream, а не строка, который нужно
    * обрабатывать на стороне сервера
+   * https://github.com/reactwg/react-18/discussions/22
    */
-  return {
-    stream: renderToPipeableStream(
-      <Provider store={store}>
-        <StaticRouterProvider router={router} context={context} nonce="the-nonce" />
-      </Provider>,
-      streamOptions
-    ),
-    router,
-  };
+  return renderToPipeableStream(
+    <Provider store={store}>
+      <StaticRouterProvider router={router} context={context} nonce="the-nonce" />
+    </Provider>,
+    streamOptions
+  );
 }
 
 export function createFetchHeaders(requestHeaders: express.Request['headers']): Headers {
