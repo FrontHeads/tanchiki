@@ -180,7 +180,7 @@ export class Zone {
         const mainLayerCell = this.matrix[0][x]?.[y];
         const secondaryLayerCell = this.matrix[1][x]?.[y];
         const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
-        if (mainLayerCell) {
+        if (mainLayerCell && mainLayerCell.hittable) {
           mainLayerCell.takeDamage(entity, damagedRect);
         }
         if (secondaryLayerCell) {
