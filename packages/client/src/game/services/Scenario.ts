@@ -1,5 +1,5 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
-import { Entity, Explosion, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
+import { Entity, Explosion, Flag, Projectile, type Tank, TankEnemy, TankPlayer, Terrain } from '../entities';
 import {
   Direction,
   EnemyDestroyedPayload,
@@ -240,7 +240,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const settings = playerInitialSettings[playerType];
     const playerState = this.state.players[playerType];
 
-    const entity = new Tank(settings);
+    const entity = new TankPlayer(settings);
     playerState.entity = entity;
     this.game.addEntity(entity);
 

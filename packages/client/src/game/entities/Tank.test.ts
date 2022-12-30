@@ -1,10 +1,9 @@
 import { Zone } from '../services';
-import { Direction } from '../typings';
-import { EntityEvent } from './../typings/index';
-import { Projectile, Tank } from './';
+import { Direction, EntityEvent } from '../typings';
+import { Projectile, TankPlayer } from './';
 
 function mockTank() {
-  const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+  const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
   return tank;
 }
 
@@ -37,13 +36,6 @@ describe('game/entities/Tank', () => {
     tank.update();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
-  });
-
-  it('should be invincible immediately after spawn (until shield animation end)', () => {
-    const tank = mockTank();
-    tank.spawn();
-
-    expect(tank.invincible).toBeTruthy();
   });
 
   it('shouldn`t be able to move immediately after spawn (until spawn animation end)', () => {
@@ -97,6 +89,7 @@ describe('game/entities/Tank', () => {
     const zone = new Zone({ width: 6, height: 6 });
     const tank = mockTank();
     const mockFn = jest.fn();
+    const projectileUpdateCycles = 10;
 
     tank.spawn();
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
@@ -117,11 +110,9 @@ describe('game/entities/Tank', () => {
     zone.add(projectileOne);
     projectileOne.spawn();
 
-    projectileOne.update();
-    projectileOne.update();
-    projectileOne.update();
-    projectileOne.update();
-    projectileOne.update();
+    for (let i = projectileUpdateCycles; i > 0; --i) {
+      projectileOne.update();
+    }
 
     expect(projectileOne).toHaveProperty('shouldBeDestroyed', true);
 
