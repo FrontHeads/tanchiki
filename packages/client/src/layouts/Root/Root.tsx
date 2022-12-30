@@ -22,14 +22,16 @@ export const Root: FC = () => {
   const data = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
 
   useEffect(() => {
-    if (data) {
-      data.user.then(response => {
-        if (response) {
-          return dispatch(authActions.setUserProfile(response.data));
-        }
-        return null;
-      });
-    }
+    console.log('data', data);
+
+    // if (data?.user) {
+    //   data.user.then(response => {
+    //     if (response) {
+    //       return dispatch(authActions.setUserProfile(response.data));
+    //     }
+    //     return null;
+    //   });
+    // }
   }, [data]);
 
   return (

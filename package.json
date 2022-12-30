@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "bootstrap": "yarn && node init.js && lerna clean && yarn && lerna bootstrap && git config --local commit.template .gitcommittemplate",
-    "build": "lerna run build",
+    "build:client": "lerna run build --scope=client",
+    "build:server": "lerna run build --scope=server",
+    "build": "yarn build:client && yarn build:server",
     "dev:client": "lerna run dev --scope=client",
     "dev:server": "lerna run dev --scope=server",
     "dev": "lerna run dev",

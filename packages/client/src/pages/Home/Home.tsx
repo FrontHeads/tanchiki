@@ -1,6 +1,6 @@
 import './Home.css';
 
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 import promoImg from '/assets/img/tankettes_game.png';
 

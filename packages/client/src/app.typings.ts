@@ -1,7 +1,5 @@
 import { FieldProps } from './components/Form/FieldList/Field/typings';
 
-export type AppProps = { isSsr?: boolean };
-
 export type FormHeading = { heading: string };
 
 export type FormInputAndHeadingList = (FieldProps | FormHeading)[];

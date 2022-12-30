@@ -4,8 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "build:ssr": "tsc && vite build --config ssr.config.ts",
+    "build:client": "tsc && vite build --config vite.config.ts",
+    "_build:ssr": "tsc && vite build --config ssr.config.ts",
+    "build:ssr": "tsc && vite build --ssr ssr.tsx --outDir dist-ssr",
+    "build": "yarn build:ssr && yarn build:client",
     "preview": "yarn build && vite preview",
     "lint": "npm-run-all lint:*",
     "lint:ts": "yarn tsc --noEmit",
@@ -16,7 +18,6 @@
     "test:watch": "jest ./ --watch"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "1.9.0",
     "axios": "1.2.0",
     "classnames": "2.3.2",
     "dotenv": "16.0.2",
@@ -28,6 +29,7 @@
     "redux-thunk": "2.4.2"
   },
   "devDependencies": {
+    "@reduxjs/toolkit": "1.9.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.4.3",

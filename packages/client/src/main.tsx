@@ -2,10 +2,23 @@ import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
-import { App } from './App';
+import { routes } from './config/router';
+import { store } from './store';
 import { registerServiceWorker } from './utils/serviceWorkerUtils';
 
-registerServiceWorker();
+// TODO: comment out it
+// registerServiceWorker();
 
-ReactDOM.hydrateRoot(document.getElementById('root') as HTMLElement, <App />);
+const router = createBrowserRouter(routes);
+
+ReactDOM.hydrateRoot(
+  document.getElementById('root') as HTMLElement,
+  <Provider store={store}>
+    <RouterProvider router={router} />
+    <ToastContainer theme="dark" position={toast.POSITION.TOP_CENTER} />
+  </Provider>
+);

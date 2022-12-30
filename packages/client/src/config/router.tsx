@@ -29,7 +29,7 @@ export const rootLoader = () => {
   return { user };
 };
 
-const routerElements = createRoutesFromElements(
+export const routes = createRoutesFromElements(
   <>
     <Route element={<RootLayout />} errorElement={<ErrorPage />} loader={rootLoader}>
       <Route path={Paths.Home} element={<Home />}></Route>
@@ -62,7 +62,3 @@ const routerElements = createRoutesFromElements(
     <Route path={Paths.Error500} element={<ErrorPage status="500" message="Что-то пошло не так" />}></Route>
   </>
 );
-
-/** В случае, если рендер на стороне сервера - подключаем MemoryRouter */
-export const router =
-  typeof document === 'undefined' ? createMemoryRouter(routerElements) : createBrowserRouter(routerElements);
