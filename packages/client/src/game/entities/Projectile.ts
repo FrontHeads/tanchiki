@@ -5,9 +5,9 @@ import { EntityDynamic, type Tank } from './';
 export class Projectile extends EntityDynamic {
   width = 2;
   height = 2;
-  movePace = 1;
-  moveSpeed = 2;
-  moveStepsTotal = 4;
+  movePace = 2;
+  moveSpeed = 1;
+  moveStepsTotal = 5;
   exploding = false;
   explosionRadius = 1;
   explosionForce = 1;
@@ -29,8 +29,18 @@ export class Projectile extends EntityDynamic {
       this.explode();
     }
     if (!this.canMove) {
-      this.exploding = true;
-      this.emit(EntityEvent.WILL_DO_DAMAGE, this.calculateExposionRect());
+      if (this.movePace === 2) {
+        // Чтобы снаряд правильно определил место взрыва на следующем ходе
+        this.movePace = 1;
+        this.canMove = true;
+        this.moveStepsProgress = 0;
+      } else {
+        this.exploding = true;
+        this.emit(EntityEvent.WILL_DO_DAMAGE, this.calculateExposionRect());
+      }
+    } else if (this.movePace === 1) {
+      // Если цель успела уехать, то нужно вернуть снаряду прежний темп хода
+      this.movePace = 2;
     }
   }
 
