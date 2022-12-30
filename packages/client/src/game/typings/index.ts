@@ -30,6 +30,12 @@ export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
 
+export enum Speed {
+  Low,
+  Medium,
+  High,
+}
+
 export enum EntityEvent {
   MOVE = 'move',
   STOP = 'stop',

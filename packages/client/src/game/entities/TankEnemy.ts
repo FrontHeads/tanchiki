@@ -1,14 +1,9 @@
 import { spriteCoordinates } from '../data/constants';
-import { Direction, EntityDynamicSettings } from '../typings';
+import { Direction, type EntityDynamicSettings, EntityEvent, Speed } from '../typings';
 import { rand } from '../utils';
-import { EntityEvent } from './../typings/index';
 import { Tank } from './Tank';
 
 export class TankEnemy extends Tank {
-  width = 4;
-  height = 4;
-  moveSpeed = 0;
-  shootSpeed = 2;
   lastDirection: Direction = Direction.UP;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = false;
@@ -16,6 +11,9 @@ export class TankEnemy extends Tank {
   constructor(props: EntityDynamicSettings) {
     super(props);
     this.color = 'aqua';
+    this.role = 'enemy';
+    this.setMoveSpeed(Speed.Low);
+    this.setShootSpeed(Speed.Low);
     Object.assign(this, props);
     //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
     this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.a'];

@@ -1,35 +1,33 @@
 import { spriteCoordinates } from '../data/constants';
-import type { EntityDynamicSettings, Rect } from '../typings';
-import { EntityEvent } from './../typings/index';
+import { Direction, EntityEvent, Speed, type EntityDynamicSettings, type Rect } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
+  movePace = 2;
+  moveSpeed = 3;
+  moveStepsTotal = 12;
   shootSpeed = 2;
+  spawnTimeout = 1000;
   canShoot = false;
   shooting = false;
   /** Временно блокирует возможность перемещения (например на время анимации спауна). */
   frozen = true;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
-  invincible = true;
+  invincible = false;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
     Object.assign(this, props);
     this.color = props.color || 'yellow';
-    //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
-    this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
 
     this.on(EntityEvent.SPAWN, () => {
-      const spawnTimeout = 1000;
-      const shieldTimeout = 3000;
-
       this.startAnimation({
         delay: 50,
         spriteCoordinates: spriteCoordinates.spawn,
         looped: true,
-        stopTimer: spawnTimeout,
+        stopTimer: this.spawnTimeout,
       });
 
       // Чтобы снаряды пролетали через спавнящийся танк (отображается в виде звезды)
@@ -40,26 +38,36 @@ export class Tank extends EntityDynamic {
         this.canShoot = true;
         this.hittable = true;
         this.emit(EntityEvent.READY);
-      }, spawnTimeout);
-
-      if (this.role === 'player') {
-        this.setLoopDelay(
-          this.startAnimation.bind(this, {
-            delay: 25,
-            spriteCoordinates: spriteCoordinates.shield,
-            looped: true,
-            stopTimer: shieldTimeout,
-            showMainSprite: true,
-          }),
-          spawnTimeout
-        );
-
-        // Возвращаем танку уязимость после исчезновения силового поля после спауна.
-        this.setLoopDelay(() => {
-          this.invincible = false;
-        }, spawnTimeout + shieldTimeout);
-      }
+      }, this.spawnTimeout);
     });
+  }
+
+  setMoveSpeed(speed: Speed) {
+    switch(speed) {
+      case Speed.Low:
+        this.moveSpeed = 0;
+        break;
+      case Speed.Medium:
+        this.moveSpeed = 3;
+        break;
+      case Speed.High:
+        this.moveSpeed = 6;
+        break;
+    }
+  }
+
+  setShootSpeed(speed: Speed) {
+    switch(speed) {
+      case Speed.Low:
+        this.shootSpeed = 1;
+        break;
+      case Speed.Medium:
+        this.shootSpeed = 2;
+        break;
+      case Speed.High:
+        this.shootSpeed = 3;
+        break;
+    }
   }
 
   shoot() {
@@ -105,16 +113,14 @@ export class Tank extends EntityDynamic {
     const offsetY = Math.round((rect.height - defaultSize.height) / 2);
 
     switch (this.direction) {
-      case 'UP':
+      case Direction.UP:
         return { posX: rect.posX + offsetX, posY: rect.posY };
-      case 'DOWN':
+      case Direction.DOWN:
         return { posX: rect.posX + offsetX, posY: rect.posY + rect.height - defaultSize.height };
-      case 'LEFT':
+      case Direction.LEFT:
         return { posX: rect.posX, posY: rect.posY + offsetY };
-      case 'RIGHT':
+      case Direction.RIGHT:
         return { posX: rect.posX + rect.width - defaultSize.width, posY: rect.posY + offsetY };
-      default:
-        return { posX: rect.posX, posY: rect.posY }; // чтобы не ругался тайпскрипт (из-за enum Direction)
     }
   }
 }
