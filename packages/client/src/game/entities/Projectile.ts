@@ -36,7 +36,7 @@ export class Projectile extends EntityDynamic {
         this.moveStepsProgress = 0;
       } else {
         this.exploding = true;
-        this.emit(EntityEvent.WILL_DO_DAMAGE, this.calculateExposionRect());
+        this.emit(EntityEvent.WILL_DO_DAMAGE, this.calculateExplosionRect());
       }
     } else if (this.movePace === 1) {
       // Если цель успела уехать, то нужно вернуть снаряду прежний темп хода
@@ -44,7 +44,7 @@ export class Projectile extends EntityDynamic {
     }
   }
 
-  calculateExposionRect() {
+  calculateExplosionRect() {
     switch (this.direction) {
       case Direction.UP:
         return {
