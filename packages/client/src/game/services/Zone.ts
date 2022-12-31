@@ -80,15 +80,13 @@ export class Zone {
       let rect = entity.lastRect;
       if (rect) {
         this.updateMatrix(layer, rect, null);
-      } else if (entity.alignedToGrid) {
+      } else {
         rect = entity.getRect();
         this.updateMatrix(layer, rect, null);
       }
-      if (entity.canMove) {
+      if (entity.nextRect) {
         rect = entity.nextRect;
-        if (rect) {
-          this.updateMatrix(layer, rect, null);
-        }
+        this.updateMatrix(layer, rect, null);
       }
     }
   }
