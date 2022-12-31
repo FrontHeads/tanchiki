@@ -304,10 +304,17 @@ export class View extends EventEmitter {
 
   /** Меняет sprite-frame, который отрисуется в следующий раз. */
   setNextSpriteFrame(animation: AnimationSettings, entity: Entity) {
-    if (typeof animation.spriteFrame !== 'number') {
+    const time = performance.now();
+    if (!animation.lastTime) {
+      animation.lastTime = time;
+    }
+    const elapsed = time - animation.lastTime;
+
+    if (typeof animation.spriteFrame !== 'number' || elapsed < animation.delay) {
       return;
     }
 
+    animation.lastTime = time;
     animation.spriteFrame++;
 
     const isFinishFrame = animation.spriteFrame === animation.spriteCoordinates?.length;

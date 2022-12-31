@@ -237,6 +237,8 @@ export type AnimationSettings = {
   name?: string;
   /** Фрейм (кадр) который будет показан при следующем вызове анимации. */
   spriteFrame?: number;
+  /** Время последней отрисовки анимации */
+  lastTime?: number;
 };
 
 export type CancelAnimation =
