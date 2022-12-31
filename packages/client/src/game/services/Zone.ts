@@ -174,17 +174,20 @@ export class Zone {
     return false;
   }
 
-  doDamage(rect: Rect, entity: Entity) {
+  /** Наносит урон по заданному прямоугольнику */
+  doDamage(rect: Rect, source: Entity) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[0][x]?.[y];
         const secondaryLayerCell = this.matrix[1][x]?.[y];
+        // Урон наносится по каждой клетке, координаты которой передаются дальше
+        // (это нужно для частичного разрушения стен и уничтожения сразу нескольких объектов)
         const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
         if (mainLayerCell && mainLayerCell.hittable) {
-          mainLayerCell.takeDamage(entity, damagedRect);
+          mainLayerCell.takeDamage(source, damagedRect);
         }
         if (secondaryLayerCell) {
-          secondaryLayerCell.takeDamage(entity, damagedRect);
+          secondaryLayerCell.takeDamage(source, damagedRect);
         }
       }
     }
