@@ -30,6 +30,12 @@ export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
 
+export enum Speed {
+  Low,
+  Medium,
+  High,
+}
+
 export enum EntityEvent {
   MOVE = 'move',
   STOP = 'stop',
@@ -45,6 +51,7 @@ export enum EntityEvent {
   CLEAR_LOOP_INTERVAL = 'clearLoopInterval',
 
   WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
+  WILL_DO_DAMAGE = 'entityWillDoDamage',
   SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
   SHOULD_UPDATE = 'entityShouldUpdate',
   DID_UPDATE = 'entityDidUpdate',
@@ -230,6 +237,8 @@ export type AnimationSettings = {
   name?: string;
   /** Фрейм (кадр) который будет показан при следующем вызове анимации. */
   spriteFrame?: number;
+  /** Время последней отрисовки анимации */
+  lastTime?: number;
 };
 
 export type CancelAnimation =

@@ -39,7 +39,7 @@ serviceWorker.addEventListener('activate', (event: ExtendableEvent) => {
 });
 
 // Стратегия `stale-while-revalidate`
-serviceWorker.addEventListener('fetch', async (event: FetchEvent) => {
+serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
   REPORTING && console.log('SW: fetch', event.request.destination, event);
 
   // Проверка на тип контента

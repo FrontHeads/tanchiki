@@ -11,7 +11,7 @@ export class Explosion extends Entity {
     this.role = 'neutral';
     this.crossable = true;
     this.hittable = false;
-    this.color = 'orange';
+    this.color = 'transparent';
 
     switch (this.type) {
       case 'projectileExplosion':
@@ -44,28 +44,30 @@ export class Explosion extends Entity {
     if (entity.direction === 'UP' || entity.direction === 'DOWN') {
       if (entity.type === 'tank') {
         if (entity.direction === 'UP') {
-          posY += correction - 2;
           posX += correction;
+          posY += correction - 2;
         }
         if (entity.direction === 'DOWN') {
-          posY += correction - 2;
           posX += correction - 2;
+          posY += correction - 2;
         }
       } else {
+        posX -= 1;
         posY += correction;
       }
     } else {
       if (entity.type === 'tank') {
         if (entity.direction === 'RIGHT') {
-          posY += correction - 2;
           posX += correction;
+          posY += correction - 2;
         }
         if (entity.direction === 'LEFT') {
-          posY += correction;
           posX += correction;
+          posY += correction;
         }
       } else {
         posX += correction;
+        posY -= 1;
       }
     }
 

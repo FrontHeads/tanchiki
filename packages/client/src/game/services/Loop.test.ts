@@ -28,7 +28,7 @@ describe('game/services/Loop', () => {
     loop.start();
     loop.stop();
 
-    expect(loop.loopProcess).toBe(null);
+    expect(loop.active).toBe(false);
   });
 
   it('should set loop delays', async () => {

@@ -80,15 +80,13 @@ export class Zone {
       let rect = entity.lastRect;
       if (rect) {
         this.updateMatrix(layer, rect, null);
-      } else if (entity.alignedToGrid) {
+      } else {
         rect = entity.getRect();
         this.updateMatrix(layer, rect, null);
       }
-      if (entity.canMove) {
+      if (entity.nextRect) {
         rect = entity.nextRect;
-        if (rect) {
-          this.updateMatrix(layer, rect, null);
-        }
+        this.updateMatrix(layer, rect, null);
       }
     }
   }
@@ -108,6 +106,11 @@ export class Zone {
         this.updateMatrix(layer, rect, entity);
       }
     });
+
+    entity.on(EntityEvent.WILL_DO_DAMAGE, (rect: Rect) => {
+      this.doDamage(rect, entity);
+    });
+
     entity.on(EntityEvent.SHOULD_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
@@ -117,15 +120,18 @@ export class Zone {
       }
       this.deleteEntityFromMatrix(entity);
     });
+
     entity.on(EntityEvent.DID_UPDATE, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.writeEntityToMatrix(entity);
     });
+
     entity.on(EntityEvent.SHOULD_BE_DESTROYED, () => {
       this.deleteEntityFromMatrix(entity);
     });
+
     if (entity.type === 'brickWall') {
       entity.on(EntityEvent.DAMAGED, (rect: Rect) => {
         const layer = this.getLayerByEntityType(entity);
@@ -166,6 +172,25 @@ export class Zone {
     return false;
   }
 
+  /** Наносит урон по заданному прямоугольнику */
+  doDamage(rect: Rect, source: Entity) {
+    for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
+      for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
+        const mainLayerCell = this.matrix[0][x]?.[y];
+        const secondaryLayerCell = this.matrix[1][x]?.[y];
+        // Урон наносится по каждой клетке, координаты которой передаются дальше
+        // (это нужно для частичного разрушения стен и уничтожения сразу нескольких объектов)
+        const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
+        if (mainLayerCell && mainLayerCell.hittable) {
+          mainLayerCell.takeDamage(source, damagedRect);
+        }
+        if (secondaryLayerCell) {
+          secondaryLayerCell.takeDamage(source, damagedRect);
+        }
+      }
+    }
+  }
+
   /**
    * Проверяет, находится ли по заданным координатам какая-либо ещё сущность.
    * Если да, то совершает над ней необходимые операции
@@ -174,8 +199,8 @@ export class Zone {
     let hasCollision = false;
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
-        const mainLayerCell = this.matrix[0][x][y];
-        const secondaryLayerCell = this.matrix[1][x][y];
+        const mainLayerCell = this.matrix[0][x]?.[y];
+        const secondaryLayerCell = this.matrix[1][x]?.[y];
 
         if (mainLayerCell === null && secondaryLayerCell === null) {
           continue;
@@ -193,19 +218,14 @@ export class Zone {
           }
         }
         if (entity instanceof Projectile) {
-          const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
           if (mainLayerCell !== null && mainLayerCell.hittable && mainLayerCell !== entity.parent) {
             // Чтобы вражеские танки могли стрелять друг через друга
             if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
               continue;
             }
-            if (entity.exploding) {
-              mainLayerCell.takeDamage(entity, damagedRect);
-            }
             hasCollision = true;
           }
           if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
-            secondaryLayerCell.takeDamage(entity, damagedRect);
             hasCollision = true;
           }
         }

@@ -3,12 +3,13 @@ import { LoopDelays, LoopIntervals } from '../typings';
 import { EntityEvent } from './../typings';
 
 export class Loop {
-  loopProcess: ReturnType<typeof setTimeout> | null = null;
-  loopTimeMs = 25;
+  loopTimeMs = 16;
   loopCount = 0;
   loopDelays: LoopDelays = {};
   loopIntervals: LoopIntervals = {};
   loopEntities: Set<Tank | Projectile> = new Set();
+  active = false;
+  lastTimestamp = 0;
 
   load() {
     this.start();
@@ -27,15 +28,12 @@ export class Loop {
   }
 
   start() {
-    this.stop();
+    this.active = true;
     this.loop();
   }
 
   stop() {
-    if (this.loopProcess) {
-      clearTimeout(this.loopProcess);
-      this.loopProcess = null;
-    }
+    this.active = false;
   }
 
   add(entity: Entity) {
@@ -56,24 +54,28 @@ export class Loop {
     this.loopEntities = new Set();
   }
 
-  loop() {
-    const cycleStartTime = performance.now();
-    let nextCycleDelay = this.loopTimeMs;
-    ++this.loopCount;
-    this.checkLoopDelays();
-    this.checkLoopIntervals();
-    for (const entity of this.loopEntities) {
-      entity.update();
-      if (entity.shouldBeDestroyed) {
-        this.loopEntities.delete(entity);
-      }
-    }
-    nextCycleDelay -= cycleStartTime - performance.now();
-    if (nextCycleDelay < 0) {
-      nextCycleDelay = 0;
+  loop(timestamp = 0) {
+    if (!this.active) {
+      return;
     }
 
-    this.loopProcess = setTimeout(this.loop.bind(this), nextCycleDelay);
+    if (timestamp) {
+      const timeDifference = timestamp - this.lastTimestamp;
+      if (timeDifference >= this.loopTimeMs) {
+        ++this.loopCount;
+        this.checkLoopDelays();
+        this.checkLoopIntervals();
+        for (const entity of this.loopEntities) {
+          entity.update();
+          if (entity.shouldBeDestroyed) {
+            this.loopEntities.delete(entity);
+          }
+        }
+        this.lastTimestamp = timestamp;
+      }
+    }
+
+    requestAnimationFrame(this.loop.bind(this));
   }
 
   convertTimeToLoops(delay: number) {
