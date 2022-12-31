@@ -50,6 +50,9 @@ export class AudioManager extends EventEmitter {
   }
 
   load() {
+    this.isStopped = false;
+    this.isMuteKeyPressed = false;
+    this.isPauseKeyPressed = false;
     this.reset();
   }
 
@@ -62,9 +65,6 @@ export class AudioManager extends EventEmitter {
     this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
       this.stopSound(sound);
     });
-    this.isStopped = false;
-    this.isMuteKeyPressed = false;
-    this.isPauseKeyPressed = false;
   }
 
   /** Подписывает звуки на соответствующие события */
