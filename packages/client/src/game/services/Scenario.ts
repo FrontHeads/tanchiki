@@ -254,13 +254,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     /** Навешиваем события на котроллер, предварительно почистив старые */
     playerState.controller
-      .reset()
+      .offAll(ControllerEvent.MOVE)
       .on(ControllerEvent.MOVE, (direction: Direction) => {
         entity.move(direction);
       })
+      .offAll(ControllerEvent.STOP)
       .on(ControllerEvent.STOP, () => {
         entity.stop();
       })
+      .offAll(ControllerEvent.SHOOT)
       .on(ControllerEvent.SHOOT, () => {
         /** Если игра не на паузе, то вызываем выстрел у игрока */
         !this.game.paused && entity.shoot();
