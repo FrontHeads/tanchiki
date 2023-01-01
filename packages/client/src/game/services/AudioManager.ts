@@ -73,9 +73,10 @@ export class AudioManager extends EventEmitter {
     const isPlayer = entity.role === 'player';
     const isEnemy = entity.role === 'enemy';
     const isTerrain = entity instanceof Terrain;
+
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
-      /**появление */
+      /** Появление */
       entity.on(EntityEvent.READY, () => {
         if (entity.moving) {
           this.playSound('move');
@@ -83,21 +84,30 @@ export class AudioManager extends EventEmitter {
           this.playSound('idle');
         }
       });
-      /**стрельба */
+
+      /** Стрельба */
       entity.on(EntityEvent.SHOOT, () => {
         this.playSound('shoot');
       });
-      /**движение */
+
+      /** Движение */
       entity.on(EntityEvent.MOVE, () => {
         this.stopSound('idle');
         this.playSound('move');
       });
-      /**остановка */
+
+      /** Остановка */
       entity.on(EntityEvent.STOP, () => {
         this.stopSound('move');
         this.playSound('idle');
       });
-      /**взрыв игрока */
+
+      /** Занос на льду */
+      entity.on(EntityEvent.SLIDE, () => {
+        this.playSound('ice');
+      });
+
+      /** Взрыв игрока */
       entity.on(EntityEvent.DESTROYED, () => {
         this.stopSound('move');
         this.stopSound('idle');
@@ -130,7 +140,7 @@ export class AudioManager extends EventEmitter {
   }
 
   isPlaying(soundResource: HTMLAudioElement) {
-    return soundResource.currentTime > 0 && !soundResource.paused && !soundResource.ended;
+    return soundResource.currentTime >= 0 && !soundResource.paused && !soundResource.ended;
   }
 
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
@@ -141,7 +151,7 @@ export class AudioManager extends EventEmitter {
         soundResource.volume = 0.5;
       }
       soundResource.currentTime = 0;
-      soundResource.play();
+      soundResource.play().catch(() => {/* Чтобы не было ошибок в консоли */});
       this.activeSounds.add(sound);
       soundResource.addEventListener('ended', () => {
         if (sound === 'idle' || sound === 'move') {
@@ -179,7 +189,7 @@ export class AudioManager extends EventEmitter {
   resumeSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource && !this.isStopped) {
-      soundResource.play();
+      soundResource.play().catch(() => {/* Чтобы не было ошибок в консоли */});
     }
   }
 
