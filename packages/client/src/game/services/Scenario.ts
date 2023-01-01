@@ -1,5 +1,5 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
-import { Entity, Explosion, Flag, Projectile, Tank, TankEnemy, Terrain } from '../entities';
+import { Entity, Explosion, Flag, Projectile, type Tank, TankEnemy, TankPlayer, Terrain } from '../entities';
 import {
   Direction,
   EnemyDestroyedPayload,
@@ -191,7 +191,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const spawnPlace = this.mapManager.coordsToRect(spawnPlaces[0][spawnPlaceKey], 0);
 
     if (!entity.spawn(spawnPlace)) {
-      this.game.setLoopDelay(this.trySpawnTankEnemy.bind(this, entity), 200);
+      this.game.loop.setLoopDelay(this.trySpawnTankEnemy.bind(this, entity), 200);
     }
   }
 
@@ -240,7 +240,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const settings = playerInitialSettings[playerType];
     const playerState = this.state.players[playerType];
 
-    const entity = new Tank(settings);
+    const entity = new TankPlayer(settings);
     playerState.entity = entity;
     this.game.addEntity(entity);
 
@@ -254,13 +254,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     /** Навешиваем события на котроллер, предварительно почистив старые */
     playerState.controller
-      .reset()
+      .offAll(ControllerEvent.MOVE)
       .on(ControllerEvent.MOVE, (direction: Direction) => {
         entity.move(direction);
       })
+      .offAll(ControllerEvent.STOP)
       .on(ControllerEvent.STOP, () => {
         entity.stop();
       })
+      .offAll(ControllerEvent.SHOOT)
       .on(ControllerEvent.SHOOT, () => {
         /** Если игра не на паузе, то вызываем выстрел у игрока */
         !this.game.paused && entity.shoot();

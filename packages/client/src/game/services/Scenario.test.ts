@@ -16,9 +16,10 @@ describe('game/services/Scenario', () => {
     expect(tank.spawned).toBe(true);
     expect(tank.posX).toBe(playerInitialSettings[Player.PLAYER1].posX);
     expect(tank.posY).toBe(playerInitialSettings[Player.PLAYER1].posY);
-    expect(game.loopEntities.has(tank)).toBe(true);
+    expect(game.loop.loopEntities.has(tank)).toBe(true);
   });
 
+  // TODO: этот тест особо ничего не проверяет, его нужно отрефакторить
   it('should destroy entity', () => {
     const game = Game.create();
     game.createView(document.body);
@@ -27,10 +28,10 @@ describe('game/services/Scenario', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tank = scenario.state.players[Player.PLAYER1].entity!;
 
-    game.loopEntities.delete(tank);
+    game.loop.loopEntities.delete(tank);
 
     expect(tank.spawned).toBe(false);
-    expect(game.loopEntities.has(tank)).toBe(false);
+    expect(game.loop.loopEntities.has(tank)).toBe(false);
   });
 
   it('should create projectile and tank explosions', () => {

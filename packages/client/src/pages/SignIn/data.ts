@@ -7,6 +7,7 @@ export const signInFieldList: FieldProps[] = [
     type: 'text',
     id: 'login',
     placeholder: 'ivanIvanov',
+    validator: 'login',
     required: true,
   },
   {
@@ -14,6 +15,7 @@ export const signInFieldList: FieldProps[] = [
     type: 'password',
     id: 'password',
     placeholder: 'Латинские буквы и цифры',
+    validator: 'password',
     required: true,
   },
 ];

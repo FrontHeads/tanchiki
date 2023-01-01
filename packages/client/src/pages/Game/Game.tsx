@@ -13,6 +13,10 @@ export const Game = () => {
 
   useEffect(() => {
     game.init(gameRoot.current);
+
+    return () => {
+      game.unload();
+    };
   }, []);
 
   /** Если вкладка становится не активной, то ставим игру на паузу */

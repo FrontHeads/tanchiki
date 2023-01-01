@@ -1,13 +1,16 @@
-import { Entity, Tank } from '../entities';
+import { Entity, TankPlayer } from '../entities';
 import { Direction, Rect } from '../typings';
 import { EventEmitter } from '../utils';
 import { sleep } from '../utils/sleepTimer';
 import { EntityEvent } from './../typings/index';
 import { Game, View } from './';
 
+class TestEntity extends EventEmitter {}
+
 function mockEntity(rect: Rect) {
-  const entity = new EventEmitter() as Entity;
+  const entity = new TestEntity() as Entity;
   entity.type = 'tank';
+  entity.spawned = true;
   Object.assign(entity, rect);
   return entity;
 }
@@ -73,12 +76,13 @@ describe('game/services/View', () => {
     expect(rect).toEqual([22, 22, 16, 16]);
   });
 
-  it('animation should work. Checking the call of all animation methods in View.', async () => {
+  it('should have animations (checking the call of all animation methods)', async () => {
     const root = document.body.appendChild(document.createElement('div'));
     const game = Game.create();
-    game.startLoop();
     game.view.spriteImg = new Image();
+    game.view.isSpriteImgLoaded = () => true;
     game.view.build(root);
+    game.loop.start();
 
     const eraseFromLayerSpy = jest.spyOn(game.view, 'eraseFromLayer');
     const drawOnLayerSpy = jest.spyOn(game.view, 'drawOnLayer');
@@ -86,12 +90,12 @@ describe('game/services/View', () => {
     const drawMainEntitySpriteSpy = jest.spyOn(game.view, 'drawMainEntitySprite');
     const setNextSpriteFrameSpy = jest.spyOn(game.view, 'setNextSpriteFrame').mockImplementation();
 
-    const tank = new Tank({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
     const startAnimationSpy = jest.spyOn(tank, 'startAnimation');
     game.addEntity(tank);
     tank.spawn({ posX: 1, posY: 1 });
 
-    await sleep(200);
+    await sleep(300);
 
     expect(startAnimationSpy).toHaveBeenCalled();
     expect(eraseFromLayerSpy).toHaveBeenCalled();

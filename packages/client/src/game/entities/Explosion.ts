@@ -6,13 +6,12 @@ type ExplosionSettings = { explosionParentEntity: Tank | Projectile };
 
 export class Explosion extends Entity {
   constructor(props: ExplosionSettings) {
-    //@ts-expect-error не передаем posX и posY т.к. они есть в props.explosionParentEntity
-    super(props);
-    Object.assign(this, this.setExplosionProps(props.explosionParentEntity));
+    super({ posX: 0, posY: 0 });
+    Object.assign(this, this.calculateExplosionProps(props.explosionParentEntity));
     this.role = 'neutral';
     this.crossable = true;
     this.hittable = false;
-    this.color = 'orange';
+    this.color = 'transparent';
 
     switch (this.type) {
       case 'projectileExplosion':
@@ -32,7 +31,7 @@ export class Explosion extends Entity {
     });
   }
 
-  setExplosionProps(entity: Tank | Projectile) {
+  calculateExplosionProps(entity: Tank | Projectile) {
     const size = entity.type === 'projectile' ? 4 : 8;
     const type = entity.type === 'projectile' ? 'projectileExplosion' : 'tankExplosion';
     let posX = entity.posX;
@@ -45,28 +44,30 @@ export class Explosion extends Entity {
     if (entity.direction === 'UP' || entity.direction === 'DOWN') {
       if (entity.type === 'tank') {
         if (entity.direction === 'UP') {
-          posY += correction - 2;
           posX += correction;
+          posY += correction - 2;
         }
         if (entity.direction === 'DOWN') {
-          posY += correction - 2;
           posX += correction - 2;
+          posY += correction - 2;
         }
       } else {
+        posX -= 1;
         posY += correction;
       }
     } else {
       if (entity.type === 'tank') {
         if (entity.direction === 'RIGHT') {
-          posY += correction - 2;
           posX += correction;
+          posY += correction - 2;
         }
         if (entity.direction === 'LEFT') {
-          posY += correction;
           posX += correction;
+          posY += correction;
         }
       } else {
         posX += correction;
+        posY -= 1;
       }
     }
 

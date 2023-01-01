@@ -20,12 +20,12 @@ describe('game/services/AudioManager', () => {
     entity.spawn({ posX: 2, posY: 2 });
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     entity.canShoot = true;
+    entity.frozen = false;
 
     entity.shoot();
-    expect(entity.spawned).toBeTruthy();
+    entity.update();
 
-    expect(audioManager.playSound).toHaveBeenNthCalledWith(1, 'idle');
-    expect(audioManager.playSound).toHaveBeenNthCalledWith(2, 'shoot');
+    expect(audioManager.playSound).toHaveBeenNthCalledWith(1, 'shoot');
   });
 
   it('should play pause sound', () => {
@@ -47,6 +47,8 @@ describe('game/services/AudioManager', () => {
     entity.spawn({ posX: 2, posY: 2 });
 
     entity.shoot();
+    entity.update();
+
     expect(entity.spawned).toBeTruthy();
     expect(audioManager.activeSounds.has('shoot')).toBeFalsy();
   });
