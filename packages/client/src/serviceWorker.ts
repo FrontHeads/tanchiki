@@ -47,6 +47,11 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
     return;
   }
 
+  // Чтобы не проходили запросы типа chrome-extension://
+  if (!event.request.url.match(/^http/)) {
+    return;
+  }
+
   event.respondWith(
     caches
       .open(CACHE_NAME)
