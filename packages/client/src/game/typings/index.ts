@@ -39,6 +39,7 @@ export enum Speed {
 export enum EntityEvent {
   MOVE = 'move',
   STOP = 'stop',
+  SLIDE = 'slide',
   SPAWN = 'spawn',
   READY = 'ready',
   DAMAGED = 'damaged',

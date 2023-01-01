@@ -9,6 +9,10 @@ export abstract class EntityDynamic extends Entity {
   stopping = false;
   /** Может ли объект двигаться дальше*/
   canMove = true;
+  /** Клетка, где объект находился до начала движения*/
+  lastRect: Rect | null = null;
+  /** Клетка, куда объект движется*/
+  nextRect: Rect | null = null;
   /** На сколько клеток за раз перемещается объект*/
   movePace = 2;
   /** Скорость движения объекта*/
@@ -23,10 +27,6 @@ export abstract class EntityDynamic extends Entity {
    * Если танк едет, то он поворачивает сразу. А если стоит на месте - то при коротком нажатии клавиши
    * он поворачивает, не двигаясь в сторону.*/
   moveLoops = 0;
-  /** Клетка, где объект находился до начала движения*/
-  lastRect: Rect | null = null;
-  /** Клетка, куда объект движется*/
-  nextRect: Rect | null = null;
   /** Временно блокирует возможность перемещения (например на время отрисовки анимации спауна). */
   frozen = false;
 
@@ -65,6 +65,10 @@ export abstract class EntityDynamic extends Entity {
 
   turn(newDirection: Direction = this.nextDirection) {
     if (this.direction !== newDirection) {
+      this.emit(EntityEvent.STOP);
+      if (this.moving) {
+        this.emit(EntityEvent.MOVE);
+      }
       this.setState({ direction: newDirection });
       this.moveLoops = 0;
     }
@@ -92,7 +96,7 @@ export abstract class EntityDynamic extends Entity {
       return;
     }
 
-    const hasNewDirection = this.direction !== this.nextDirection;
+    const hasNewDirection = this.stopping ? false : this.direction !== this.nextDirection;
     const canTurnWithoutInterrupt = this.moveLoops > this.getMoveSteps();
     if (hasNewDirection) {
       /** Проверка для того, чтобы объект мог поворачивать на месте без последующего движения в сторону */
@@ -150,9 +154,6 @@ export abstract class EntityDynamic extends Entity {
       case Direction.RIGHT:
         return { posX: this.posX + movePace };
     }
-
-    // чтобы не ругался тайпскрипт (из-за enum Direction)
-    return {};
   }
 
   /** Выполняет микродвижение за игровой цикл */
