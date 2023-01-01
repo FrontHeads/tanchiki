@@ -45,23 +45,19 @@ export class TankEnemy extends Tank {
 
   getRandomDirection() {
     const directions = [
-      Direction.UP,
-      Direction.DOWN,
-      Direction.DOWN,
-      Direction.DOWN,
-      Direction.DOWN,
-      Direction.LEFT,
-      Direction.LEFT,
-      Direction.LEFT,
-      Direction.RIGHT,
-      Direction.RIGHT,
-      Direction.RIGHT,
+      ...new Array(1).fill(Direction.UP),
+      ...new Array(6).fill(Direction.DOWN),
+      ...new Array(3).fill(Direction.LEFT),
+      ...new Array(3).fill(Direction.RIGHT),
     ];
     return directions[Math.floor(Math.random() * directions.length)];
   }
 
   getRandomAction() {
-    const actions = ['move', 'move', 'move', 'move', 'move', 'turn'];
+    const actions = [
+      ...new Array(1).fill('turn'),
+      ...new Array(5).fill('move'), 
+    ];
     return actions[Math.floor(Math.random() * actions.length)];
   }
 
