@@ -118,7 +118,7 @@ export class Zone {
         const layer = this.getLayerByEntityType(entity);
         this.updateMatrix(layer, rect, entity);
 
-        if (entity instanceof Tank) {
+        if (entity instanceof Tank && entity.sliding) {
           entity.sliding = this.shouldSlide(rect);
         }
       }
@@ -151,7 +151,7 @@ export class Zone {
 
     if (entity instanceof Tank) {
       entity.on(EntityEvent.STOP, () => {
-        entity.slide(this.shouldSlide(entity.nextRect || entity.getRect()));
+        entity.slide(this.shouldSlide(entity.nextRect || entity.lastRect || entity.getRect()));
       });
     }
 
@@ -219,7 +219,7 @@ export class Zone {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const secondaryLayerCell = this.matrix[ZoneLayers.Secondary][x]?.[y];
-        if (secondaryLayerCell === null || secondaryLayerCell.type !== 'ice') {
+        if (!secondaryLayerCell || secondaryLayerCell.type !== 'ice') {
           return false;
         }
       }
