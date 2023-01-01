@@ -21,7 +21,7 @@ export class Tank extends EntityDynamic {
   /** Сколько циклов объект пробыл в заносе */
   slidingStepsProgress = 0;
   /** На сколько циклов объект должно заносить */
-  slidingStepsTotal = 24;
+  slidingStepsTotal = 20;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
