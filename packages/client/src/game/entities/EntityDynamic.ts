@@ -172,6 +172,8 @@ export abstract class EntityDynamic extends Entity {
       if (this.canMove) {
         this.setState(this.getNextMove());
         ++this.moveLoops;
+      } else {
+        this.refreshSprite();
       }
     }
   }
