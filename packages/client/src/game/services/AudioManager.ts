@@ -151,7 +151,9 @@ export class AudioManager extends EventEmitter {
         soundResource.volume = 0.5;
       }
       soundResource.currentTime = 0;
-      soundResource.play().catch(() => {/* Чтобы не было ошибок в консоли */});
+      soundResource.play().catch(() => {
+        /* Чтобы не было ошибок в консоли */
+      });
       this.activeSounds.add(sound);
       soundResource.addEventListener('ended', () => {
         if (sound === 'idle' || sound === 'move') {
@@ -189,7 +191,9 @@ export class AudioManager extends EventEmitter {
   resumeSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource && !this.isStopped) {
-      soundResource.play().catch(() => {/* Чтобы не было ошибок в консоли */});
+      soundResource.play().catch(() => {
+        /* Чтобы не было ошибок в консоли */
+      });
     }
   }
 
