@@ -244,14 +244,6 @@ export class Zone {
           if (mainLayerCell !== null && mainLayerCell !== entity && !mainLayerCell.crossable) {
             return true;
           }
-          /* Убрано для тестирования
-          if (
-            projectileLayerCell !== null &&
-            projectileLayerCell instanceof Projectile &&
-            projectileLayerCell.parent !== entity
-          ) {
-            return true;
-          }*/
         }
         if (entity instanceof Projectile) {
           if (mainLayerCell !== null && mainLayerCell.hittable && mainLayerCell !== entity.parent) {
