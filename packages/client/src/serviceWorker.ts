@@ -62,7 +62,11 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
             .then(networkResponse => {
               // Кладём ответ в кеш, если он содержит что-то субстантивное
               if (networkResponse.status === 200) {
-                cache.put(event.request, networkResponse.clone());
+                cache
+                  .put(event.request, networkResponse.clone())
+                  .catch(cacheError => {
+                    REPORTING && console.warn('SW: cache put error', cacheError);
+                  });
               }
               return networkResponse;
             })
@@ -83,7 +87,7 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
         });
       })
       .catch(cacheError => {
-        REPORTING && console.warn('SW: cache error', cacheError);
+        REPORTING && console.warn('SW: cache open error', cacheError);
         return new Response(FALLBACK_BODY, FALLBACK_HEADERS);
       })
   );
