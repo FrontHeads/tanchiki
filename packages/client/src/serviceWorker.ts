@@ -1,6 +1,6 @@
 const serviceWorker = self as unknown as ServiceWorkerGlobalScope; // чтобы не ругался тайпскрипт
 
-const REPORTING = true;
+const REPORTING = false;
 const CACHE_NAME = 'tanchiki-cache-1';
 const PRECACHE_URLS = ['/', '/index.html'];
 const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'object'];
