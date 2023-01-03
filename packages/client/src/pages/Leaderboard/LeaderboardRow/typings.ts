@@ -7,5 +7,5 @@ export type LeaderboardRecord = {
 };
 
 export type LeaderboardRowProps = {
-  row: LeaderboardRecord;
+  data: LeaderboardRecord;
 };

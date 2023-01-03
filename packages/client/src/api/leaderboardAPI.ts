@@ -1,4 +1,5 @@
 import { YANDEX_API_ENDPOINTS } from '../config/constants';
+import { LeaderboardFields } from '../pages/Leaderboard/typings';
 import { HTTP } from '../utils/HTTP';
 import { TEAM_NAME } from './../config/constants';
 import { LeaderboardRecord } from './../pages/Leaderboard/LeaderboardRow/typings';
@@ -14,7 +15,7 @@ export type NewLeaderboardRecordRequest = {
 };
 
 export type LeaderboardRequest = {
-  ratingFieldName: string;
+  ratingFieldName: LeaderboardFields;
 
   /**Используется для пагинации. Если limit=10, для 1-ой страницы cursor=0, для 2-ой cursor=10 */
   cursor: number;

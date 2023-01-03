@@ -4,7 +4,7 @@ import { FC } from 'react';
 
 import { LeaderboardRowProps } from './typings';
 
-export const LeaderboardRow: FC<LeaderboardRowProps> = ({ row: { place, username, score, time, matches } }) => {
+export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { place, username, score, time, matches } }) => {
   return (
     <tr className="leaderboard__row">
       <td>{place}</td>

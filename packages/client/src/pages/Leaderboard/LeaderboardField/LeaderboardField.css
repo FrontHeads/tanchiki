@@ -1,0 +1,12 @@
+.leaderboard {
+  &__cell-header {
+    cursor: pointer;
+  }
+
+  &__sort-marker {
+    display: inline-block;
+    &_hidden {
+      display: none;
+    }
+  }
+}

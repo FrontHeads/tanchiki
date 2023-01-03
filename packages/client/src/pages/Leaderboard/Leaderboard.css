@@ -22,20 +22,6 @@
     height: 70px;
   }
 
-  &__cell-header {
-    cursor: pointer;
-  }
-
-  &__sort-marker {
-    display: inline-block;
-  }
-
-  &__sort-marker:hover {
-    /* В продакшн версии этот hover не нужен. это чтобы показать как менять элемент при
-    изменении сортировки. */
-    transform: rotate(180deg);
-  }
-
   &__row:nth-child(odd) {
     background-color: $background_color;
   }
