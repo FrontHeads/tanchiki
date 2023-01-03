@@ -1,5 +1,3 @@
-// import { FieldError } from 'react-hook-form';
-
 export type FieldProps = {
   title: string;
   type: string;
@@ -7,8 +5,9 @@ export type FieldProps = {
   placeholder?: string;
   value?: string;
   required?: boolean;
+  validator?: string;
   labelText?: string;
   inputHeader?: string;
-  error?: string; //FieldError;
+  errorList?: string[] | null;
   pattern?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;

@@ -23,7 +23,7 @@
 
     &-line {
       transition: 0.2s ease;
-      background-color: $font_color_white;
+      background-color: $white_color;
       margin: 5px 0;
       width: 40px;
       height: 5px;

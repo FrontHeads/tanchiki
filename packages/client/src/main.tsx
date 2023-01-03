@@ -8,6 +8,9 @@ import { toast, ToastContainer } from 'react-toastify';
 
 import { router } from './config/router';
 import { store } from './store';
+import { registerServiceWorker } from './utils/serviceWorkerUtils';
+
+registerServiceWorker();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>

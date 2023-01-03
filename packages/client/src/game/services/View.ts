@@ -1,5 +1,5 @@
-import type { Entity } from '../entities';
-import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Pos, Rect, Size } from '../typings';
+import { Entity } from '../entities';
+import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
 import { EntityEvent } from './../typings/index';
@@ -108,22 +108,25 @@ export class View extends EventEmitter {
     const layerObject = {
       instance: entity,
       listeners: {
-        entityShouldUpdate: () => {
+        [EntityEvent.SHOULD_UPDATE]: () => {
+          if (!entity.spawned) {
+            return;
+          }
           this.eraseFromLayer(entity, layerId);
         },
-        entityDidUpdate: () => {
+        [EntityEvent.DID_UPDATE]: () => {
           this.drawOnLayer(entity, layerId);
         },
-        entityShouldRenderText: () => {
+        [EntityEvent.SHOULD_RENDER_TEXT]: () => {
           this.drawTextOnLayer(entity as UIElement, layerId);
         },
-        entityShouldBeDestroyed: () => {
+        [EntityEvent.SHOULD_BE_DESTROYED]: () => {
           this.eraseFromLayer(entity, layerId);
           this.removeEntityFromLayer(entity, layerId);
         },
-        damaged: (pos: Pos) => {
+        [EntityEvent.DAMAGED]: (rect: Rect) => {
           if (entity.type === 'brickWall') {
-            this.eraseFromLayer({ ...pos, width: 1, height: 1 }, layerId);
+            this.eraseFromLayer(rect, layerId);
           }
         },
       },
@@ -179,13 +182,11 @@ export class View extends EventEmitter {
     const context = this.layers[layerId].context;
 
     // Отрисовка сущностей без спрайта
-    if (!entity.mainSpriteCoordinates && entity.color) {
-      context.fillStyle = entity.color;
-      context.fillRect(...this.getActualRect(entity));
-      return;
-    }
-
-    if (!(this.spriteImg instanceof HTMLImageElement)) {
+    if (!entity.mainSpriteCoordinates || !this.isSpriteImgLoaded()) {
+      if (entity.color) {
+        context.fillStyle = entity.color;
+        context.fillRect(...this.getActualRect(entity));
+      }
       return;
     }
 
@@ -219,7 +220,7 @@ export class View extends EventEmitter {
   drawMainEntitySprite(entity: Entity, context: CanvasRenderingContext2D) {
     const spriteCoordinates = this.getSpriteCoordinates({ entity });
 
-    if (!spriteCoordinates || !(this.spriteImg instanceof HTMLImageElement)) {
+    if (!spriteCoordinates) {
       return;
     }
 
@@ -235,6 +236,9 @@ export class View extends EventEmitter {
 
   /** Перерисовывает все сущности на слое. */
   redrawAllEntitiesOnLayer(layerId: keyof LayerList) {
+    if (!this.layers[layerId]) {
+      return;
+    }
     const { entities: objects } = this.layers[layerId];
     this.eraseAllEntitiesOnLayer(layerId);
     for (const layerObject of objects) {
@@ -244,8 +248,12 @@ export class View extends EventEmitter {
 
   /** Стирает отображение всех сущностей с canvas-слоя. */
   eraseAllEntitiesOnLayer(layerId: keyof LayerList) {
+    if (!this.layers[layerId]) {
+      return;
+    }
     const { context } = this.layers[layerId];
     context.clearRect(0, 0, this.convertToPixels(this.width), this.convertToPixels(this.height));
+    this.layers[layerId].entities.clear();
   }
 
   /** Возвращает актуальные координаты на слое (в пикселях) */
@@ -296,10 +304,17 @@ export class View extends EventEmitter {
 
   /** Меняет sprite-frame, который отрисуется в следующий раз. */
   setNextSpriteFrame(animation: AnimationSettings, entity: Entity) {
-    if (typeof animation.spriteFrame !== 'number') {
+    const time = performance.now();
+    if (!animation.lastTime) {
+      animation.lastTime = time;
+    }
+    const elapsed = time - animation.lastTime;
+
+    if (typeof animation.spriteFrame !== 'number' || elapsed < animation.delay) {
       return;
     }
 
+    animation.lastTime = time;
     animation.spriteFrame++;
 
     const isFinishFrame = animation.spriteFrame === animation.spriteCoordinates?.length;
@@ -332,5 +347,14 @@ export class View extends EventEmitter {
     const pixelRatio = smallerWindowSideSize / realZoneSize;
 
     return Math.floor(pixelRatio);
+  }
+
+  isSpriteImgLoaded() {
+    return (
+      this.spriteImg instanceof HTMLImageElement &&
+      this.spriteImg.complete &&
+      this.spriteImg.width > 0 &&
+      this.spriteImg.height > 0
+    );
   }
 }

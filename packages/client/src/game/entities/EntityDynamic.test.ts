@@ -1,8 +1,14 @@
 import { Direction } from '../typings';
 import { EntityDynamic } from './';
 
+class TestEntityDynamic extends EntityDynamic {
+  stateCheck() {
+    return;
+  }
+}
+
 function mockEntityDynamic() {
-  const entity = new EntityDynamic({ posX: 0, posY: 0, width: 4, height: 4, direction: Direction.RIGHT });
+  const entity = new TestEntityDynamic({ posX: 0, posY: 0, width: 4, height: 4, direction: Direction.RIGHT });
   entity.moveSpeed = 2;
   entity.movePace = 2;
   entity.moveStepsTotal = 12;

@@ -1,4 +1,4 @@
-import { Entity, Tank, TankEnemy } from '../entities';
+import { Entity, Projectile, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 
 export type Fn = (...args: Array<any>) => void;
@@ -30,10 +30,17 @@ export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
 
+export enum Speed {
+  Low,
+  Medium,
+  High,
+}
+
 export enum EntityEvent {
   MOVE = 'move',
   STOP = 'stop',
   SPAWN = 'spawn',
+  READY = 'ready',
   DAMAGED = 'damaged',
   DESTROYED = 'destroyed',
   EXPLODING = 'exploding',
@@ -44,6 +51,7 @@ export enum EntityEvent {
   CLEAR_LOOP_INTERVAL = 'clearLoopInterval',
 
   WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
+  WILL_DO_DAMAGE = 'entityWillDoDamage',
   SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
   SHOULD_UPDATE = 'entityShouldUpdate',
   DID_UPDATE = 'entityDidUpdate',
@@ -67,11 +75,14 @@ export type EntityType =
   | 'tankExplosion'
   | 'custom';
 
+export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';
+
 export type EntitySettings = Pos &
   Partial<Size> &
   Partial<{
     direction: Direction;
     type: EntityType;
+    variant: TerrainVariant;
     role: EntityRole;
     color: string;
     img: HTMLImageElement;
@@ -83,6 +94,8 @@ export type EntityDynamicSettings = EntitySettings &
   }>;
 
 export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
+
+export type DamageSettings = Rect & { source: Projectile };
 
 export type UIElementSettings = Pos &
   Size &
@@ -224,6 +237,8 @@ export type AnimationSettings = {
   name?: string;
   /** Фрейм (кадр) который будет показан при следующем вызове анимации. */
   spriteFrame?: number;
+  /** Время последней отрисовки анимации */
+  lastTime?: number;
 };
 
 export type CancelAnimation =

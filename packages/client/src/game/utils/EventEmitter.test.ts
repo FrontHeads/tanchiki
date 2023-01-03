@@ -1,8 +1,10 @@
 import { EventEmitter } from './EventEmitter';
 
+class TestEventEmitter extends EventEmitter {}
+
 describe('utils/EventEmitter', () => {
   it('should subscribe to and publish custom events', () => {
-    const eventEmitter = new EventEmitter();
+    const eventEmitter = new TestEventEmitter();
     const mockFn = jest.fn();
 
     eventEmitter.on('mockEvent', mockFn);
@@ -13,7 +15,7 @@ describe('utils/EventEmitter', () => {
   });
 
   it('should unsubscribe from custom events', () => {
-    const eventEmitter = new EventEmitter();
+    const eventEmitter = new TestEventEmitter();
     const mockFn = jest.fn();
 
     eventEmitter.on('mockEvent', mockFn);

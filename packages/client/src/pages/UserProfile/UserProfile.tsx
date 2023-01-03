@@ -9,11 +9,13 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
+import { useValidation } from '../../utils/validation';
 import { userProfileFieldList } from './data';
 import { AvatarFile, UserProfileForm } from './typings';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
+  const validation = useValidation(userProfileFieldList);
 
   const userProfile = useAppSelector(authSelectors.userProfile);
   const { updateResult, isProfileLoading } = useAppSelector(profileSelectors.all);
@@ -32,6 +34,7 @@ export const UserProfile: FC = () => {
 
   const [formData, setFormData] = useState<UserProfileForm>(userFormData);
   const [avatarFile, setAvatarFile] = useState<AvatarFile>(null);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   useEffect(() => {
     if (updateResult) {
@@ -41,17 +44,17 @@ export const UserProfile: FC = () => {
     }
   }, [updateResult]);
 
-  const submitHandler: React.FormEventHandler<HTMLFormElement> = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+  const onFormSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-      dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
+    setIsFormSubmitted(true);
+  }, []);
 
-      setFormData({ ...formData, avatar: '', oldPassword: '', newPassword: '' });
-      setAvatarFile(null);
-    },
-    [formData]
-  );
+  const onFormSubmitCallback = () => {
+    dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
+    setFormData({ ...formData, avatar: '', oldPassword: '', newPassword: '' });
+    setAvatarFile(null);
+  };
 
   const avatarPath = userProfile?.avatar ? PATH.avatarBase + userProfile?.avatar : PATH.defaultAvatar;
   const header = userProfile?.first_name;
@@ -60,12 +63,16 @@ export const UserProfile: FC = () => {
     <div className="user-profile">
       <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
-      <Form handlerSubmit={submitHandler} header={header}>
-        <FieldList
+      <Form onSubmitHandler={onFormSubmit} header={header}>
+        <FieldList<UserProfileForm>
           setFile={setAvatarFile}
           fieldList={userProfileFieldList}
-          setFormData={setFormData}
+          isFormSubmitted={isFormSubmitted}
+          setIsFormSubmitted={setIsFormSubmitted}
+          onFormSubmitCallback={onFormSubmitCallback}
           formData={formData}
+          setFormData={setFormData}
+          validation={validation}
           disabled={isProfileLoading}
         />
         <div className="form__buttons-wrapper">
