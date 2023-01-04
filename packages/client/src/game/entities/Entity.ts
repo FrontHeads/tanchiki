@@ -29,7 +29,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   flying = false;
   crossable = false;
   hittable = true;
-  color = 'grey';
+  color = '#636363';
   shouldBeDestroyed = false;
   /** Значение true делает танк неуязвимым для снарядов. */
   invincible = false;

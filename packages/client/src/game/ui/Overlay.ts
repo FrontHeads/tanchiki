@@ -52,7 +52,7 @@ export class Overlay {
     return elem;
   }
 
-  renderSplashScreen(backgroundColor: 'black' | 'grey' = 'black') {
+  renderSplashScreen(backgroundColor: 'black' | '#636363' = 'black') {
     this.renderElement({
       posX: 0,
       posY: 0,

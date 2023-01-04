@@ -18,6 +18,7 @@ import { EventEmitter } from '../utils';
 import { ControllerEvent } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
+import { IndicatorManager } from './IndicatorManager';
 import { MapManager } from './MapManager';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
@@ -30,6 +31,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   mapManager!: MapManager;
   map!: MapData;
+  indicatorManager: IndicatorManager;
 
   constructor(private game: Game) {
     /**
@@ -41,6 +43,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     this.mapManager = new MapManager(game.settings);
     this.map = this.mapManager.getMap(game.level);
+    /** Индикаторы в боковой панели (сколько осталось танков врагов, сколько жизней, текущий уровень) */
+    this.indicatorManager = new IndicatorManager(game);
 
     if (this.game.mainMenuState === MainMenuState.SINGLEPLAYER) {
       this.createPlayerTank(Player.PLAYER1);
@@ -98,6 +102,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
         const playerState = this.state.players[playerType];
         --playerState.lives;
+        this.indicatorManager.renderPlayerLives(playerType, playerState.lives);
 
         /** Если не осталось жизней у всех игроков - триггерим game over */
         const isNoLivesLeft = Object.values(this.state.players).every(playerState => playerState.lives < 1);
@@ -128,6 +133,10 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     let entity: Entity;
     if (props.type === 'flag') {
       entity = new Flag(props).on(EntityEvent.DAMAGED, () => {
+        this.indicatorManager.renderPlayerLives(Player.PLAYER1, 0);
+        if (Object.keys(this.state.players).length > 1) {
+          this.indicatorManager.renderPlayerLives(Player.PLAYER2, 0);
+        }
         this.emit(ScenarioEvent.GAME_OVER);
       });
     } else {
@@ -162,7 +171,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       posX: 0,
       posY: settings.boundarySize,
     });
-    const rightBoundarySizeCorrection = 5;
+    const rightBoundarySizeCorrection = 6;
     this.createEntity({
       type: 'boundary',
       width: settings.boundarySize + rightBoundarySizeCorrection,
@@ -199,6 +208,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   /** Создаем вражеский танк */
   createTankEnemy() {
     --this.state.enemiesLeft;
+    this.indicatorManager.renderTankEnemiesLeft(this.state.enemiesLeft);
 
     const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
     entity.on(EntityEvent.SPAWN, () => {
@@ -229,6 +239,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       },
       controller: this.getGameController(playerType),
     };
+
+    this.indicatorManager.renderPlayerLives(playerType, this.state.players[playerType].lives);
   }
 
   /** Создаем танк игрока */

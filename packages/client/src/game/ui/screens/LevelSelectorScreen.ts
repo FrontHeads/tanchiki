@@ -3,7 +3,7 @@ import { Screen } from './Screen';
 
 export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
   show({ level, showHints = true }: LevelSelectorScreenProps) {
-    this.overlay.renderSplashScreen('grey');
+    this.overlay.renderSplashScreen('#636363');
     const text = `УРОВЕНЬ ${level.toString().padStart(2, ' ')}`;
 
     this.overlay.renderElement({

@@ -90,6 +90,7 @@ export class View extends EventEmitter {
         layer = 'projectiles';
         break;
       case 'trees':
+      case 'indicator':
         layer = 'ceiling';
         break;
       case 'projectileExplosion':

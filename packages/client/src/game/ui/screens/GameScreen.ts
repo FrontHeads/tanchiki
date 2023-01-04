@@ -22,14 +22,14 @@ export class GameScreen extends Screen<number> {
       posY: 0,
       width,
       height,
-      color: 'grey',
+      color: '#636363',
     });
     this.overlay.renderElement({
       posX: 0,
       posY: height + stage * 2,
       width,
       height,
-      color: 'grey',
+      color: '#636363',
     });
 
     return true;

@@ -13,7 +13,7 @@ export class Terrain extends Entity {
       case 'boundary':
         this.crossable = false;
         this.hittable = true;
-        this.color = 'grey';
+        this.color = '#636363';
         break;
       case 'brickWall':
         this.crossable = false;
