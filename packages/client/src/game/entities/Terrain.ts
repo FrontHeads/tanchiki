@@ -39,6 +39,12 @@ export class Terrain extends Entity {
         this.color = 'blue';
         this.mainSpriteCoordinates = spriteCoordinates['terrain.water'];
         break;
+      case 'ice':
+        this.crossable = true;
+        this.hittable = false;
+        this.color = 'aliceblue';
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.ice'];
+        break;
     }
 
     if (this.type === 'water') {

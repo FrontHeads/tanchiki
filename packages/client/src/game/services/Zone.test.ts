@@ -13,7 +13,7 @@ describe('game/services/Zone', () => {
   it('should build matrix on init', () => {
     const zone = new Zone({ width: 100, height: 100 });
 
-    expect(zone.matrix.length).toBe(3);
+    expect(zone.matrix.length).toBe(4);
     expect(zone.matrix[0].length).toBe(100);
     expect(zone.matrix[0][99].length).toBe(100);
     expect(zone.matrix[0][0][0]).toBe(null);

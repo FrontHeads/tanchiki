@@ -1,4 +1,4 @@
-import { Entity } from '../entities';
+import { Entity, Tank } from '../entities';
 import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
@@ -291,8 +291,12 @@ export class View extends EventEmitter {
 
       // Спрайты подвижных сущностей.
       if (entity.movable && !Array.isArray(entity.mainSpriteCoordinates)) {
-        // Без настроек анимации у сущности м.б. только 2 фрейма. Тут их меняем.
-        entity.mainSpriteFrame = +!entity.mainSpriteFrame;
+        // Если танк не едет, то не делаем анимацию движения гусениц
+        const isIdleTank = entity instanceof Tank && !entity.moving;
+        if (!isIdleTank) {
+          // Без настроек анимации у сущности м.б. только 2 фрейма. Тут их меняем.
+          entity.mainSpriteFrame = +!entity.mainSpriteFrame;
+        }
         return entity.mainSpriteCoordinates[entity.direction][entity.mainSpriteFrame];
       }
     }
