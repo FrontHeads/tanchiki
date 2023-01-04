@@ -3,7 +3,7 @@ import { UIElementSettings } from '../../typings';
 import { UIElement } from '../../ui';
 import { isOdd } from '../../utils';
 import { Game } from '../Game';
-import { playerLivesData } from './data';
+import { IndicatorNames, playerLivesData } from './data';
 
 export class IndicatorManager {
   tankEnemiesLeftRendered = false;
@@ -16,14 +16,12 @@ export class IndicatorManager {
   /** Рендерит иконки не отспаунившихся танков врагов. */
   renderTankEnemiesLeft(tankEnemiesLeft: number) {
     if (!this.tankEnemiesLeftRendered) {
-      let tankCounter = 0;
       let currentPosY = 2;
       let currentPosX = 56;
 
-      while (tankCounter <= tankEnemiesLeft) {
-        currentPosX = isOdd(tankCounter) ? 58 : 56;
-        currentPosY = tankCounter % 3 ? currentPosY : currentPosY + 2;
-        tankCounter++;
+      for (let i = 0; i < tankEnemiesLeft; i++) {
+        currentPosX = isOdd(i) ? 58 : 56;
+        currentPosY = i % 2 ? currentPosY : currentPosY + 2;
 
         this.renderElement({
           posX: currentPosX,
@@ -32,19 +30,21 @@ export class IndicatorManager {
           height: 2,
           color: 'black',
           mainSpriteCoordinates: spriteCoordinates['ui.enemy'],
-          indicatorName: 'enemyTankIcon',
+          indicatorName: IndicatorNames.TankEnemy,
         });
       }
+
       this.tankEnemiesLeftRendered = true;
+
       return;
     }
 
-    this.removeEntity('enemyTankIcon');
+    this.removeEntity(IndicatorNames.TankEnemy);
   }
 
   /** Рендерит количество жизней у Игрока 1 и Игрока 2. */
-  renderPlayerLives(playerType: number, lives: number) {
-    this.removeEntity('player' + playerType + 'Lives');
+  renderPlayerLives(playerType: keyof typeof playerLivesData, lives: number) {
+    this.removeEntity(playerType + IndicatorNames.Lives);
 
     this.renderElement({
       posX: 56,
@@ -53,7 +53,7 @@ export class IndicatorManager {
       height: 2,
       color: 'black',
       text: playerLivesData[playerType].header,
-      indicatorName: 'playerHeader',
+      indicatorName: IndicatorNames.PlayerHeader,
     });
 
     this.renderElement({
@@ -63,7 +63,7 @@ export class IndicatorManager {
       height: 2,
       color: 'orange',
       mainSpriteCoordinates: spriteCoordinates['ui.player'],
-      indicatorName: 'playerIcon',
+      indicatorName: IndicatorNames.PlayerIcon,
     });
 
     this.renderElement({
@@ -73,7 +73,7 @@ export class IndicatorManager {
       height: 2,
       color: 'black',
       text: lives.toString(),
-      indicatorName: 'player' + playerType + 'Lives',
+      indicatorName: playerType + IndicatorNames.Lives,
     });
   }
 
@@ -86,7 +86,7 @@ export class IndicatorManager {
       height: 4,
       color: 'orange',
       mainSpriteCoordinates: spriteCoordinates.flag,
-      indicatorName: 'flag',
+      indicatorName: IndicatorNames.Flag,
     });
 
     this.renderElement({
@@ -96,7 +96,7 @@ export class IndicatorManager {
       height: 2,
       color: 'black',
       text: level.toString(),
-      indicatorName: 'levelNumber',
+      indicatorName: IndicatorNames.Level,
     });
   }
 

@@ -125,8 +125,8 @@ export enum ScreenType {
 
 // Scenario
 export enum Player {
-  PLAYER1,
-  PLAYER2,
+  PLAYER1 = 'PLAYER1',
+  PLAYER2 = 'PLAYER2',
 }
 
 export enum TankEnemyType {
