@@ -1,5 +1,5 @@
 import { spriteCoordinates } from '../data/constants';
-import { Direction, EntityEvent, Speed, type EntityDynamicSettings, type Rect } from '../typings';
+import { type EntityDynamicSettings, type Rect, Direction, EntityEvent, Speed } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {

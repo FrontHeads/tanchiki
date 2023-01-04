@@ -5,6 +5,7 @@
 
   &__sort-marker {
     display: inline-block;
+
     &_hidden {
       display: none;
     }

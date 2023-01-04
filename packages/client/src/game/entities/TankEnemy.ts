@@ -1,5 +1,5 @@
 import { spriteCoordinates } from '../data/constants';
-import { Direction, type EntityDynamicSettings, EntityEvent, Speed } from '../typings';
+import { type EntityDynamicSettings, Direction, EntityEvent, Speed } from '../typings';
 import { rand } from '../utils';
 import { Tank } from './Tank';
 
