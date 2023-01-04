@@ -1,8 +1,9 @@
-import { spriteCoordinates } from '../data/constants';
-import { UIElementSettings } from '../typings';
-import { UIElement } from '../ui';
-import { isOdd } from '../utils';
-import { Game } from './Game';
+import { spriteCoordinates } from '../../data/constants';
+import { UIElementSettings } from '../../typings';
+import { UIElement } from '../../ui';
+import { isOdd } from '../../utils';
+import { Game } from '../Game';
+import { playerLivesData } from './data';
 
 export class IndicatorManager {
   tankEnemiesLeftRendered = false;
@@ -43,26 +44,21 @@ export class IndicatorManager {
 
   /** Рендерит количество жизней у Игрока 1 и Игрока 2. */
   renderPlayerLives(playerType: number, lives: number) {
-    const data = [
-      { header: '1P', posY: 30 },
-      { header: '2P', posY: 37 },
-    ];
-
     this.removeEntity('player' + playerType + 'Lives');
 
     this.renderElement({
       posX: 56,
-      posY: data[playerType].posY,
+      posY: playerLivesData[playerType].posY,
       width: 4,
       height: 2,
       color: 'black',
-      text: data[playerType].header,
+      text: playerLivesData[playerType].header,
       indicatorName: 'playerHeader',
     });
 
     this.renderElement({
       posX: 56,
-      posY: data[playerType].posY + 2,
+      posY: playerLivesData[playerType].posY + 2,
       width: 2,
       height: 2,
       color: 'orange',
@@ -72,7 +68,7 @@ export class IndicatorManager {
 
     this.renderElement({
       posX: 58,
-      posY: data[playerType].posY + 2,
+      posY: playerLivesData[playerType].posY + 2,
       width: 4,
       height: 2,
       color: 'black',

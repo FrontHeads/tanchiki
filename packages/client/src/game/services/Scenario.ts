@@ -16,9 +16,9 @@ import {
 } from '../typings';
 import { EventEmitter } from '../utils';
 import { ControllerEvent } from './../typings/index';
+import { IndicatorManager } from './';
 import { Controller } from './Controller';
 import { Game } from './Game';
-import { IndicatorManager } from './IndicatorManager';
 import { MapManager } from './MapManager';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
