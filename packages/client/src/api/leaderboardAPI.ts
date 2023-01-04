@@ -2,7 +2,7 @@ import { YANDEX_API_ENDPOINTS } from '../config/constants';
 import { LeaderboardFields } from '../pages/Leaderboard/typings';
 import { HTTP } from '../utils/HTTP';
 import { TEAM_NAME } from './../config/constants';
-import { LeaderboardRecord } from './../pages/Leaderboard/LeaderboardRow/typings';
+import { LeaderboardRecord, LeaderboardRowProps } from './../pages/Leaderboard/LeaderboardRow/typings';
 
 export type NewLeaderboardRecordRequest = {
   data: LeaderboardRecord;
@@ -24,7 +24,10 @@ export type LeaderboardRequest = {
   limit: number;
 };
 
+type GetLeaderboardResponseData = LeaderboardRowProps[];
+
 export const leaderboardAPI = {
   addScore: (data: LeaderboardRecord) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
-  getLeaderboard: (data: LeaderboardRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(TEAM_NAME), { data }),
+  getLeaderboard: (data: LeaderboardRequest) =>
+    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(TEAM_NAME), { data }),
 };

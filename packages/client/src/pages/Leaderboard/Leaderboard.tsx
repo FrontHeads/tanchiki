@@ -1,6 +1,6 @@
 import './Leaderboard.css';
 
-import { FC, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 
 import { Loader } from '../../components/Loader';
 import {
@@ -13,20 +13,21 @@ import {
 import { fieldNames } from './LeaderboardField/data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
 import { LeaderboardRow } from './LeaderboardRow';
-import { LeaderboardProps } from './typings';
+import { LeaderboardFields, LeaderboardProps, SortDirection } from './typings';
 
 export const headerText = 'Рейтинг игроков';
 
 export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector(leaderboardSelectors.all);
+  const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
 
-  const { isLoading, leaderboard } = useAppSelector(leaderboardSelectors.all);
-  console.log(leaderboard);
-
-  const handleSort = ({ fieldName, direction }: { fieldName: string; direction: string }) => {
-    console.log(fieldName, direction);
-    dispatch(leaderboardActions.sortLeaderboard({ fieldName, direction }));
-  };
+  const handleSort = useCallback(
+    ({ fieldName, direction }: { fieldName: LeaderboardFields; direction: SortDirection }) => {
+      dispatch(leaderboardActions.setSortParams({ fieldName, sortDirection: direction }));
+    },
+    []
+  );
 
   //**Так добавлять новый рекорд */
   // useEffect(() => {
@@ -48,6 +49,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   useEffect(() => {
     dispatch(
       leaderboardThunks.getLeaderboard({
+        // TODO: заменить название поля на константное
         ratingFieldName: 'score',
         cursor: 0,
         limit: 10,

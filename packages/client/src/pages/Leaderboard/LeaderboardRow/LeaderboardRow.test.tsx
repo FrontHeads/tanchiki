@@ -11,7 +11,7 @@ describe('LeaderboardRow', () => {
     render(
       <table>
         <tbody>
-          <LeaderboardRow row={row} />
+          <LeaderboardRow data={row} />
         </tbody>
       </table>
     );
@@ -25,7 +25,7 @@ describe('LeaderboardRow', () => {
     render(
       <table>
         <tbody>
-          <LeaderboardRow row={row} />
+          <LeaderboardRow data={row} />
         </tbody>
       </table>
     );
