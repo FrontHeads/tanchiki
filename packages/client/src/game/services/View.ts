@@ -239,8 +239,10 @@ export class View extends EventEmitter {
     if (!this.layers[layerId]) {
       return;
     }
+
     const { entities: objects } = this.layers[layerId];
     this.eraseAllEntitiesOnLayer(layerId);
+
     for (const layerObject of objects) {
       this.drawOnLayer(layerObject.instance, layerId);
     }
@@ -340,13 +342,29 @@ export class View extends EventEmitter {
 
   /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. */
   private getPixelRatio() {
-    /** Размер игрового поля с учетом отступов от канваса до края экрана. +4 - это отступы. */
-    const realZoneSize = this.width + 4;
+    /** Задает шаг для округления результатов вычисления. 
+     Важно чтобы метод возвращал число округленное до целого или 0.5. Иначе будут баги при отрисовке. */
+    const resizeStep = 0.5;
+    /** Выясняем какая сторона окна меньше */
+    const windowSmallerSideSize = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+    /** Выясняем какая сторона игрового поля меньше */
+    const zoneSmallerSideSize = window.innerWidth < window.innerHeight ? this.width : this.height;
+    let pixelRatio = windowSmallerSideSize / zoneSmallerSideSize;
 
-    const smallerWindowSideSize = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
-    const pixelRatio = smallerWindowSideSize / realZoneSize;
+    const isCanvasBiggerThanWindow = zoneSmallerSideSize * pixelRatio >= windowSmallerSideSize;
+    if (isCanvasBiggerThanWindow) {
+      // Это немного уменьшит размер игрового поля, чтобы были отступы от края экрана.
+      pixelRatio -= resizeStep;
+    }
 
-    return Math.floor(pixelRatio);
+    // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
+    window.addEventListener('resize', () => {
+      const scale = Math.min(window.innerWidth / windowSmallerSideSize, window.innerHeight / windowSmallerSideSize);
+      this.root.style.transform = 'scale(' + scale * 100 + '%)';
+    });
+
+    // Округляем до чисел с шагом 0.5 (например 1.5, 2, 2.5, и т.д.). Иначе будут баги при отрисовке.
+    return Math.round(pixelRatio / resizeStep) * resizeStep;
   }
 
   isSpriteImgLoaded() {
