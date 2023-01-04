@@ -16,6 +16,12 @@ export class Tank extends EntityDynamic {
   frozen = true;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = false;
+  /** Заносит ли объект на льду */
+  sliding = false;
+  /** Сколько циклов объект пробыл в заносе */
+  slidingStepsProgress = 0;
+  /** На сколько циклов объект должно заносить */
+  slidingStepsTotal = 20;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
@@ -83,6 +89,14 @@ export class Tank extends EntityDynamic {
   }
 
   stateCheck() {
+    if (this.sliding) {
+      if (!this.canMove || ++this.slidingStepsProgress > this.slidingStepsTotal) {
+        this.sliding = false;
+      } else {
+        this.stopping = true;
+      }
+    }
+
     if (!this.shooting) {
       return;
     }
@@ -106,12 +120,7 @@ export class Tank extends EntityDynamic {
 
   calculateProjectileInitPos() {
     const defaultSize = { width: 2, height: 2 };
-    let rect: Rect;
-    if ((this.moving || this.stopping) && this.canMove && this.nextRect) {
-      rect = this.nextRect;
-    } else {
-      rect = this.getRect();
-    }
+    const rect = this.nextRect || this.lastRect || this.getRect();
     const offsetX = Math.round((rect.width - defaultSize.width) / 2);
     const offsetY = Math.round((rect.height - defaultSize.height) / 2);
 
@@ -124,6 +133,18 @@ export class Tank extends EntityDynamic {
         return { posX: rect.posX, posY: rect.posY + offsetY };
       case Direction.RIGHT:
         return { posX: rect.posX + rect.width - defaultSize.width, posY: rect.posY + offsetY };
+    }
+  }
+
+  slide(shouldSlide = true) {
+    if (shouldSlide) {
+      if (!this.sliding) {
+        this.emit(EntityEvent.SLIDE);
+      }
+      this.sliding = true;
+      this.slidingStepsProgress = 0;
+    } else {
+      this.sliding = false;
     }
   }
 }

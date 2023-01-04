@@ -39,6 +39,7 @@ export enum Speed {
 export enum EntityEvent {
   MOVE = 'move',
   STOP = 'stop',
+  SLIDE = 'slide',
   SPAWN = 'spawn',
   READY = 'ready',
   DAMAGED = 'damaged',
@@ -77,12 +78,14 @@ export type EntityType =
 
 export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';
 
+export type PlayerVariant = 'PLAYER1' | 'PLAYER2';
+
 export type EntitySettings = Pos &
   Partial<Size> &
   Partial<{
     direction: Direction;
     type: EntityType;
-    variant: TerrainVariant;
+    variant: TerrainVariant | PlayerVariant; // Здесь нужен рефакторинг в дальнейшем
     role: EntityRole;
     color: string;
     img: HTMLImageElement;

@@ -2,6 +2,13 @@ import { Entity, EntityDynamic, Projectile, Tank } from '../entities';
 import type { PosState, Rect, Size } from '../typings';
 import { EntityEvent } from './../typings/index';
 
+enum ZoneLayers {
+  Main,
+  Secondary,
+  Projectiles,
+  Powerups,
+}
+
 export class Zone {
   width = 0;
   height = 0;
@@ -16,13 +23,30 @@ export class Zone {
      * Используется три уровня/слоя для отдельных типов сущностей,
      * т.к. некоторые из них могут накладываться друг на друга
      */
-    const layers = ['main', 'projectiles', 'powerups'];
-    this.matrix = Array(layers.length);
-    for (let z = 0; z < this.matrix.length; ++z) {
+    this.matrix = [];
+    for (const z of Object.values(ZoneLayers)) {
+      if (typeof z !== 'number') {
+        continue;
+      }
       this.matrix[z] = Array(this.width);
       for (let x = 0; x < this.matrix[z].length; ++x) {
         this.matrix[z][x] = Array(this.height).fill(null);
       }
+    }
+  }
+
+  /** Возвращает слой матрицы, на которой должна находиться сущность */
+  getLayerByEntityType(entity: Entity) {
+    switch (entity.type) {
+      case 'ice':
+      case 'trees':
+        return ZoneLayers.Secondary;
+      case 'projectile':
+        return ZoneLayers.Projectiles;
+      case 'powerup':
+        return ZoneLayers.Powerups;
+      default:
+        return ZoneLayers.Main;
     }
   }
 
@@ -36,17 +60,6 @@ export class Zone {
   /** Алиас для registerEntity */
   add(entity: Entity) {
     this.registerEntity(entity);
-  }
-
-  getLayerByEntityType(entity: Entity) {
-    switch (entity.type) {
-      case 'projectile':
-        return 1;
-      case 'powerup':
-        return 2;
-      default:
-        return 0;
-    }
   }
 
   /** Добавляет сущность в заданный прямоугольник на определённом слое */
@@ -104,11 +117,11 @@ export class Zone {
       } else {
         const layer = this.getLayerByEntityType(entity);
         this.updateMatrix(layer, rect, entity);
-      }
-    });
 
-    entity.on(EntityEvent.WILL_DO_DAMAGE, (rect: Rect) => {
-      this.doDamage(rect, entity);
+        if (entity instanceof Tank && entity.sliding) {
+          entity.sliding = this.shouldSlide(rect);
+        }
+      }
     });
 
     entity.on(EntityEvent.SHOULD_UPDATE, (newState: Partial<Entity>) => {
@@ -131,6 +144,16 @@ export class Zone {
     entity.on(EntityEvent.SHOULD_BE_DESTROYED, () => {
       this.deleteEntityFromMatrix(entity);
     });
+
+    entity.on(EntityEvent.WILL_DO_DAMAGE, (rect: Rect) => {
+      this.doDamage(rect, entity);
+    });
+
+    if (entity instanceof Tank) {
+      entity.on(EntityEvent.STOP, () => {
+        entity.slide(this.shouldSlide(entity.nextRect || entity.lastRect || entity.getRect()));
+      });
+    }
 
     if (entity.type === 'brickWall') {
       entity.on(EntityEvent.DAMAGED, (rect: Rect) => {
@@ -176,19 +199,32 @@ export class Zone {
   doDamage(rect: Rect, source: Entity) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
-        const mainLayerCell = this.matrix[0][x]?.[y];
-        const secondaryLayerCell = this.matrix[1][x]?.[y];
+        const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
+        const projectileLayerCell = this.matrix[ZoneLayers.Projectiles][x]?.[y];
         // Урон наносится по каждой клетке, координаты которой передаются дальше
         // (это нужно для частичного разрушения стен и уничтожения сразу нескольких объектов)
         const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
         if (mainLayerCell && mainLayerCell.hittable) {
           mainLayerCell.takeDamage(source, damagedRect);
         }
-        if (secondaryLayerCell) {
-          secondaryLayerCell.takeDamage(source, damagedRect);
+        if (projectileLayerCell) {
+          projectileLayerCell.takeDamage(source, damagedRect);
         }
       }
     }
+  }
+
+  /** Проверяет, должен ли скользить объект на льду */
+  shouldSlide(rect: Rect) {
+    for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
+      for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
+        const secondaryLayerCell = this.matrix[ZoneLayers.Secondary][x]?.[y];
+        if (!secondaryLayerCell || secondaryLayerCell.type !== 'ice') {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**
@@ -196,25 +232,17 @@ export class Zone {
    * Если да, то совершает над ней необходимые операции
    */
   hasCollisionsWithMatrix(rect: Rect, entity: Entity) {
-    let hasCollision = false;
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
-        const mainLayerCell = this.matrix[0][x]?.[y];
-        const secondaryLayerCell = this.matrix[1][x]?.[y];
+        const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
+        const projectileLayerCell = this.matrix[ZoneLayers.Projectiles][x]?.[y];
 
-        if (mainLayerCell === null && secondaryLayerCell === null) {
+        if (!mainLayerCell && !projectileLayerCell) {
           continue;
         }
         if (entity instanceof Tank) {
           if (mainLayerCell !== null && mainLayerCell !== entity && !mainLayerCell.crossable) {
-            hasCollision = true;
-          }
-          if (
-            secondaryLayerCell !== null &&
-            secondaryLayerCell instanceof Projectile &&
-            secondaryLayerCell.parent !== entity
-          ) {
-            hasCollision = true;
+            return true;
           }
         }
         if (entity instanceof Projectile) {
@@ -223,15 +251,19 @@ export class Zone {
             if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
               continue;
             }
-            hasCollision = true;
+            return true;
           }
-          if (secondaryLayerCell !== null && secondaryLayerCell !== entity) {
-            hasCollision = true;
+          if (projectileLayerCell !== null && projectileLayerCell !== entity) {
+            // Чтобы вражеские снаряды могли пролетать друг через друга
+            if (entity.role === 'enemy' && entity.role === projectileLayerCell.role) {
+              continue;
+            }
+            return true;
           }
         }
       }
     }
-    return hasCollision;
+    return false;
   }
 
   /** Проверка на предмет столкновений сущностей и координат, которые выходят за пределы матрицы */

@@ -16,6 +16,7 @@ export enum SoundPathList {
   pause = '/assets/sounds/pause.mp3',
   move = '/assets/sounds/tank-move.mp3',
   idle = '/assets/sounds/tank-idle.mp3',
+  ice = '/assets/sounds/ice.mp3',
   shoot = '/assets/sounds/shoot.mp3',
   hitEnemy = '/assets/sounds/hit-enemy.mp3',
   hitBrick = '/assets/sounds/hit-brick.mp3',

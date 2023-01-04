@@ -220,6 +220,10 @@ export class Game {
   }
 
   initGameOver() {
+    if (this.screen === ScreenType.GAME_OVER) {
+      return;
+    }
+
     const redirectDelay = 3000;
     this.screen = ScreenType.GAME_OVER;
 

@@ -4,7 +4,7 @@ import { rand } from '../utils';
 import { Tank } from './Tank';
 
 export class TankEnemy extends Tank {
-  lastDirection: Direction = Direction.UP;
+  lastDirection = Direction.DOWN;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = false;
 
@@ -18,7 +18,8 @@ export class TankEnemy extends Tank {
     //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
     this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.a'];
 
-    this.on(EntityEvent.SPAWN, () => {
+    this.on(EntityEvent.READY, () => {
+      this.move(Direction.DOWN);
       this.autoMove();
       this.autoShoot();
     });
@@ -30,7 +31,7 @@ export class TankEnemy extends Tank {
         this.move(this.getMoveDirection());
         this.autoMove();
       }
-    }, rand(1000, 2000));
+    }, rand(500, 1000));
   }
 
   autoShoot() {
@@ -39,18 +40,44 @@ export class TankEnemy extends Tank {
         this.shoot();
         this.autoShoot();
       }
-    }, rand(1000, 2000));
+    }, rand(500, 1000));
+  }
+
+  getRandomDirection() {
+    const directions = [
+      ...new Array(1).fill(Direction.UP),
+      ...new Array(6).fill(Direction.DOWN),
+      ...new Array(3).fill(Direction.LEFT),
+      ...new Array(3).fill(Direction.RIGHT),
+    ];
+    return directions[Math.floor(Math.random() * directions.length)];
+  }
+
+  getRandomAction() {
+    const actions = [
+      ...new Array(1).fill('turn'),
+      ...new Array(5).fill('move'), 
+    ];
+    return actions[Math.floor(Math.random() * actions.length)];
   }
 
   getMoveDirection() {
-    let direction: Direction;
-    do {
-      const rand = Math.floor(Math.random() * Object.keys(Direction).length);
-      const randValue = Object.keys(Direction)[rand];
-      direction = Direction[randValue as keyof typeof Direction];
-    } while (this.lastDirection === direction);
+    if (this.canMove && this.getRandomAction() === 'move') {
+      return this.direction;
+    }
 
-    this.lastDirection = direction;
-    return direction;
+    let newDirection: Direction;
+    do {
+      newDirection = this.getRandomDirection();
+    } while (
+      this.lastDirection === newDirection ||
+      (newDirection === Direction.UP && this.posY === 2) ||
+      (newDirection === Direction.DOWN && this.posY === 50) ||
+      (newDirection === Direction.LEFT && this.posX === 2) ||
+      (newDirection === Direction.RIGHT && this.posX === 50)
+    );
+
+    this.lastDirection = newDirection;
+    return newDirection;
   }
 }
