@@ -1,5 +1,5 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
-import { Entity, Explosion, Flag, Projectile, type Tank, TankEnemy, TankPlayer, Terrain } from '../entities';
+import { type Tank, Entity, Explosion, Flag, Projectile, TankEnemy, TankPlayer, Terrain } from '../entities';
 import {
   Direction,
   EnemyDestroyedPayload,
@@ -162,11 +162,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       posX: 0,
       posY: settings.boundarySize,
     });
+    const rightBoundarySizeCorrection = 5;
     this.createEntity({
       type: 'boundary',
-      width: settings.boundarySize,
+      width: settings.boundarySize + rightBoundarySizeCorrection,
       height: settings.height - settings.boundarySize * 2,
-      posX: settings.width - settings.boundarySize,
+      posX: settings.width - settings.boundarySize - rightBoundarySizeCorrection,
       posY: settings.boundarySize,
     });
   }
