@@ -205,6 +205,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     --this.state.enemiesLeft;
     this.indicatorManager.renderTankEnemiesLeft(this.state.enemiesLeft);
 
+    //TODO Свойства role и color здесь лишние. Желательно их убрать.
     const entity = new TankEnemy({ role: 'enemy', color: Color.Pink } as EntityDynamicSettings);
     entity.on(EntityEvent.SPAWN, () => {
       entity.on(EntityEvent.SHOOT, this.onTankShoot.bind(this)).on(EntityEvent.DESTROYED, sourceProjectile => {
