@@ -1,4 +1,4 @@
-import { spriteCoordinates } from '../../data/constants';
+import { Color, spriteCoordinates } from '../../data/constants';
 import { resources } from '../../services';
 import { MainMenuState } from '../../typings';
 import { Screen } from './Screen';
@@ -19,7 +19,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: this.mainMenuStateYPos[state] + verticalCenteringCorrection,
       width: 4,
       height: 4,
-      color: 'yellow',
+      color: Color.Yellow,
       mainSpriteCoordinates: spriteCoordinates['tank.player.primary.a'].RIGHT,
     });
 
@@ -62,7 +62,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: this.mainMenuStateYPos[MainMenuState.SINGLEPLAYER],
       width: 20,
       height: 2.2,
-      color: 'white',
+      color: Color.White,
       text: '1 ИГРОК',
     });
 
@@ -71,7 +71,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: this.mainMenuStateYPos[MainMenuState.MULTIPLAYER],
       width: 20,
       height: 2.2,
-      color: 'white',
+      color: Color.White,
       text: '2 ИГРОКА',
     });
 
@@ -80,7 +80,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 50,
       width: view.width,
       height: 1,
-      color: 'lightgrey',
+      color: Color.LightGrey,
       text: 'WASD ИЛИ СТРЕЛКИ ДЛЯ ДВИЖЕНИЯ',
       align: 'center',
     });
@@ -90,7 +90,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 52,
       width: view.width,
       height: 1,
-      color: 'lightgrey',
+      color: Color.LightGrey,
       text: 'ПРОБЕЛ ИЛИ ВВОД ДЛЯ СТРЕЛЬБЫ',
       align: 'center',
     });

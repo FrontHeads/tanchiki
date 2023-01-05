@@ -3,6 +3,25 @@ import { GameOverScreen, GameScreen, LevelSelectorScreen, LoadingScreen, MainMen
 import { PauseScreen } from './../ui/screens/PauseScreen';
 import { classicDesignSprite } from './spriteCoordinates';
 
+export enum Color {
+  Yellow = 'yellow',
+  Lime = 'lime',
+  Black = 'black',
+  Grey = '#636363',
+  LightGrey = 'lightgrey',
+  Orange = 'red',
+  Red = 'red',
+  White = 'white',
+  Transparent = 'transparent',
+  LightCyan = 'lightcyan',
+  Aqua = 'aqua',
+  Brown = 'brown',
+  Green = 'green',
+  Blue = 'blue',
+  AliceBlue = 'aliceblue',
+  Pink = '#483D8B',
+}
+
 export const concreteCells: Cell[] = [
   Cell.CONCRETE,
   Cell.CONCRETE_TOP,
@@ -33,8 +52,8 @@ export const screenClasses = {
 };
 
 export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
-  [Player.PLAYER1]: { posX: 18, posY: 50, color: 'yellow', variant: 'PLAYER1' },
-  [Player.PLAYER2]: { posX: 34, posY: 50, color: 'lime', variant: 'PLAYER2' },
+  [Player.PLAYER1]: { posX: 18, posY: 50, color: Color.Yellow, variant: 'PLAYER1' },
+  [Player.PLAYER2]: { posX: 34, posY: 50, color: Color.Lime, variant: 'PLAYER2' },
 };
 
 /**

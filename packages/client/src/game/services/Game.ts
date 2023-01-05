@@ -20,7 +20,7 @@ export class Game {
   controllerAll: Controller;
   controllerWasd: Controller;
   controllerArrows: Controller;
-  settings: GameSettings = { width: 62, height: 56, boundarySize: 2 };
+  settings: GameSettings = { width: 62, height: 56, boundarySize: 2, indicatorsSidebarSize: 6 };
   screen: ScreenType = ScreenType.LOADING;
   mainMenuState = MainMenuState.SINGLEPLAYER;
   level = 1;

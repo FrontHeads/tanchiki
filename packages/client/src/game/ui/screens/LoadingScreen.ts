@@ -1,3 +1,4 @@
+import { Color } from '../../data/constants';
 import { Screen } from './Screen';
 
 export class LoadingScreen extends Screen {
@@ -8,7 +9,7 @@ export class LoadingScreen extends Screen {
       posY: 26,
       width: this.overlay.view.width,
       height: 4,
-      color: 'white',
+      color: Color.White,
       text: 'ЗАГРУЗКА...',
       align: 'center',
     });

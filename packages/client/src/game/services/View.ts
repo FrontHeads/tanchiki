@@ -1,3 +1,4 @@
+import { Color } from '../data/constants';
 import { Entity, Tank } from '../entities';
 import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
@@ -8,7 +9,7 @@ export class View extends EventEmitter {
   width = 0;
   height = 0;
   pixelRatio = 10;
-  gameBgColor = 'black';
+  gameBgColor = Color.Black;
   layerZIndexCount = 0;
   /** Содержит список canvas-слоев, canvasContext этих слоев, а также прикрепленные к слоям сущности. */
   layers: LayerList = {};
@@ -20,7 +21,7 @@ export class View extends EventEmitter {
     super();
     this.width = width;
     this.height = height;
-    this.pixelRatio = this.getPixelRatio();
+    this.initResizing();
   }
 
   toggleFullScreen() {
@@ -345,10 +346,12 @@ export class View extends EventEmitter {
     return Math.round(value * this.pixelRatio + correction);
   }
 
-  /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. */
-  private getPixelRatio() {
+  /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. 
+   Навешивает обработчик изменения канваса при изменении размера окна.
+  */
+  private initResizing() {
     /** Задает шаг для округления результатов вычисления. 
-     Важно чтобы метод возвращал число округленное до целого или 0.5. Иначе будут баги при отрисовке. */
+     Важно чтобы pixelRatio равнялся числу округленному до целого или 0.5. Иначе будут баги при отрисовке. */
     const resizeStep = 0.5;
     /** Выясняем какая сторона окна меньше */
     const windowSmallerSideSize = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
@@ -368,8 +371,8 @@ export class View extends EventEmitter {
       this.root.style.transform = 'scale(' + scale * 100 + '%)';
     });
 
-    // Округляем до чисел с шагом 0.5 (например 1.5, 2, 2.5, и т.д.). Иначе будут баги при отрисовке.
-    return Math.round(pixelRatio / resizeStep) * resizeStep;
+    // pixelRatio д.б. округлен до чисел с шагом 0.5 (например 1.5, 2, 2.5, и т.д.). Иначе будут баги при отрисовке.
+    this.pixelRatio = Math.round(pixelRatio / resizeStep) * resizeStep;
   }
 
   isSpriteImgLoaded() {

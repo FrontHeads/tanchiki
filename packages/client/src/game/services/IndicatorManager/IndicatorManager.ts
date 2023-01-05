@@ -1,4 +1,4 @@
-import { spriteCoordinates } from '../../data/constants';
+import { Color, spriteCoordinates } from '../../data/constants';
 import { UIElementSettings } from '../../typings';
 import { UIElement } from '../../ui';
 import { isOdd } from '../../utils';
@@ -28,7 +28,7 @@ export class IndicatorManager {
           posY: currentPosY,
           width: 2,
           height: 2,
-          color: 'black',
+          color: Color.Black,
           mainSpriteCoordinates: spriteCoordinates['ui.enemy'],
           indicatorName: IndicatorNames.TankEnemy,
         });
@@ -51,7 +51,7 @@ export class IndicatorManager {
       posY: playerLivesData[playerType].posY,
       width: 4,
       height: 2,
-      color: 'black',
+      color: Color.Black,
       text: playerLivesData[playerType].header,
       indicatorName: IndicatorNames.PlayerHeader,
     });
@@ -61,17 +61,17 @@ export class IndicatorManager {
       posY: playerLivesData[playerType].posY + 2,
       width: 2,
       height: 2,
-      color: 'orange',
+      color: Color.Orange,
       mainSpriteCoordinates: spriteCoordinates['ui.player'],
       indicatorName: IndicatorNames.PlayerIcon,
     });
 
     this.renderElement({
-      posX: 58,
+      posX: 58.3,
       posY: playerLivesData[playerType].posY + 2,
       width: 4,
       height: 2,
-      color: 'black',
+      color: Color.Black,
       text: lives.toString(),
       indicatorName: playerType + IndicatorNames.Lives,
     });
@@ -84,7 +84,7 @@ export class IndicatorManager {
       posY: 44,
       width: 4,
       height: 4,
-      color: 'orange',
+      color: Color.Orange,
       mainSpriteCoordinates: spriteCoordinates.flag,
       indicatorName: IndicatorNames.Flag,
     });
@@ -94,7 +94,7 @@ export class IndicatorManager {
       posY: 48,
       width: 4,
       height: 2,
-      color: 'black',
+      color: Color.Black,
       text: level.toString(),
       indicatorName: IndicatorNames.Level,
     });
@@ -119,7 +119,6 @@ export class IndicatorManager {
   /** Рендерит конкретную сущность индикатора. */
   renderElement(props: UIElementSettings) {
     const elem = new UIElement(props);
-    this.game.loop.registerTimerHandlers(elem);
     this.game.view.add(elem);
     elem.render();
     return elem;

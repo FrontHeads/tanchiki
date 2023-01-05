@@ -1,4 +1,4 @@
-import { spriteCoordinates } from '../data/constants';
+import { Color, spriteCoordinates } from '../data/constants';
 import { EntityEvent, EntitySettings, TerrainVariant } from '../typings';
 import { Entity } from './';
 
@@ -13,36 +13,36 @@ export class Terrain extends Entity {
       case 'boundary':
         this.crossable = false;
         this.hittable = true;
-        this.color = '#636363';
+        this.color = Color.Grey;
         break;
       case 'brickWall':
         this.crossable = false;
         this.hittable = true;
-        this.color = 'brown';
+        this.color = Color.Brown;
         this.mainSpriteCoordinates = spriteCoordinates['terrain.brick'][this.variant];
         break;
       case 'concreteWall':
         this.crossable = false;
         this.hittable = true;
-        this.color = 'lightgrey';
+        this.color = Color.LightGrey;
         this.mainSpriteCoordinates = spriteCoordinates['terrain.concrete'][this.variant];
         break;
       case 'trees':
         this.crossable = true;
         this.hittable = false;
-        this.color = 'green';
+        this.color = Color.Green;
         this.mainSpriteCoordinates = spriteCoordinates['terrain.trees'];
         break;
       case 'water':
         this.crossable = false;
         this.hittable = false;
-        this.color = 'blue';
+        this.color = Color.Blue;
         this.mainSpriteCoordinates = spriteCoordinates['terrain.water'];
         break;
       case 'ice':
         this.crossable = true;
         this.hittable = false;
-        this.color = 'aliceblue';
+        this.color = Color.AliceBlue;
         this.mainSpriteCoordinates = spriteCoordinates['terrain.ice'];
         break;
     }

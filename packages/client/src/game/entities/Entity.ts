@@ -29,7 +29,8 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   flying = false;
   crossable = false;
   hittable = true;
-  color = '#636363';
+  // В этом файле нельзя подключать Color из Constants т.к. образуются циклические зависимости и тесты падают.
+  color = 'grey';
   shouldBeDestroyed = false;
   /** Значение true делает танк неуязвимым для снарядов. */
   invincible = false;

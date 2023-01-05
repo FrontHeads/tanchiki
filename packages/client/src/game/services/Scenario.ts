@@ -1,4 +1,4 @@
-import { playerInitialSettings, spawnPlaces } from '../data/constants';
+import { Color, playerInitialSettings, spawnPlaces } from '../data/constants';
 import { type Tank, Entity, Explosion, Flag, Projectile, TankEnemy, TankPlayer, Terrain } from '../entities';
 import {
   Direction,
@@ -133,10 +133,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     let entity: Entity;
     if (props.type === 'flag') {
       entity = new Flag(props).on(EntityEvent.DAMAGED, () => {
-        this.indicatorManager.renderPlayerLives(Player.PLAYER1, 0);
-        if (Object.keys(this.state.players).length > 1) {
-          this.indicatorManager.renderPlayerLives(Player.PLAYER2, 0);
-        }
         this.emit(ScenarioEvent.GAME_OVER);
       });
     } else {
@@ -171,12 +167,11 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       posX: 0,
       posY: settings.boundarySize,
     });
-    const rightBoundarySizeCorrection = 6;
     this.createEntity({
       type: 'boundary',
-      width: settings.boundarySize + rightBoundarySizeCorrection,
+      width: settings.boundarySize + settings.indicatorsSidebarSize,
       height: settings.height - settings.boundarySize * 2,
-      posX: settings.width - settings.boundarySize - rightBoundarySizeCorrection,
+      posX: settings.width - settings.boundarySize - settings.indicatorsSidebarSize,
       posY: settings.boundarySize,
     });
   }
@@ -210,7 +205,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     --this.state.enemiesLeft;
     this.indicatorManager.renderTankEnemiesLeft(this.state.enemiesLeft);
 
-    const entity = new TankEnemy({ role: 'enemy', color: '#483D8B' } as EntityDynamicSettings);
+    const entity = new TankEnemy({ role: 'enemy', color: Color.Pink } as EntityDynamicSettings);
     entity.on(EntityEvent.SPAWN, () => {
       entity.on(EntityEvent.SHOOT, this.onTankShoot.bind(this)).on(EntityEvent.DESTROYED, sourceProjectile => {
         this.emit<[EnemyDestroyedPayload]>(ScenarioEvent.TANK_ENEMY_DESTROYED, {

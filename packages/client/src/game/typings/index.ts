@@ -1,3 +1,4 @@
+import { Color } from '../data/constants';
 import { Entity, Projectile, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 
@@ -7,6 +8,7 @@ export type GameSettings = {
   width: number;
   height: number;
   boundarySize: number;
+  indicatorsSidebarSize: number;
 };
 
 export enum Direction {
@@ -88,7 +90,7 @@ export type EntitySettings = Pos &
     type: EntityType;
     variant: TerrainVariant | PlayerVariant; // Здесь нужен рефакторинг в дальнейшем
     role: EntityRole;
-    color: string;
+    color: Color | string;
     img: HTMLImageElement;
   }>;
 
@@ -106,7 +108,7 @@ export type UIElementSettings = Pos &
   Partial<{
     text: string;
     align: CanvasTextAlign;
-    color: string;
+    color: Color | string;
     backImg: HTMLImageElement;
     mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
     indicatorName?: string;

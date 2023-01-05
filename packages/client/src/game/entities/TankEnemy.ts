@@ -1,4 +1,4 @@
-import { spriteCoordinates } from '../data/constants';
+import { Color, spriteCoordinates } from '../data/constants';
 import { type EntityDynamicSettings, Direction, EntityEvent, Speed } from '../typings';
 import { rand } from '../utils';
 import { Tank } from './Tank';
@@ -10,7 +10,7 @@ export class TankEnemy extends Tank {
 
   constructor(props: EntityDynamicSettings) {
     super(props);
-    this.color = 'aqua';
+    this.color = Color.Aqua;
     this.role = 'enemy';
     this.setMoveSpeed(Speed.Low);
     this.setShootSpeed(Speed.Low);
@@ -54,10 +54,7 @@ export class TankEnemy extends Tank {
   }
 
   getRandomAction() {
-    const actions = [
-      ...new Array(1).fill('turn'),
-      ...new Array(5).fill('move'), 
-    ];
+    const actions = [...new Array(1).fill('turn'), ...new Array(5).fill('move')];
     return actions[Math.floor(Math.random() * actions.length)];
   }
 

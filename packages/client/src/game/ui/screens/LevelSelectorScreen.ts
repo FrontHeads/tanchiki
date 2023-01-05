@@ -1,9 +1,10 @@
+import { Color } from '../../data/constants';
 import { LevelSelectorScreenProps } from './LevelSelectorScreen.typings';
 import { Screen } from './Screen';
 
 export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
   show({ level, showHints = true }: LevelSelectorScreenProps) {
-    this.overlay.renderSplashScreen('#636363');
+    this.overlay.renderSplashScreen(Color.Grey);
     const text = `УРОВЕНЬ ${level.toString().padStart(2, ' ')}`;
 
     this.overlay.renderElement({
@@ -11,7 +12,7 @@ export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
       posY: Math.round(this.overlay.view.height / 2) - 2,
       width: this.overlay.view.width,
       height: 2,
-      color: 'black',
+      color: Color.Black,
       text: text,
       align: 'center',
     });
@@ -22,7 +23,7 @@ export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
         posY: 50,
         width: this.overlay.view.width,
         height: 1,
-        color: 'black',
+        color: Color.Black,
         text: 'ДЛЯ ВЫБОРА УРОВНЯ ВОСПОЛЬЗУЙТЕСЬ',
         align: 'center',
       });
@@ -32,7 +33,7 @@ export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
         posY: 52,
         width: this.overlay.view.width,
         height: 1,
-        color: 'black',
+        color: Color.Black,
         text: 'СТРЕЛКАМИ ВВЕРХ И ВНИЗ',
         align: 'center',
       });
