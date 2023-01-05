@@ -81,6 +81,7 @@ export class View extends EventEmitter {
     let layer = '';
     switch (entity.type) {
       case 'custom':
+      case 'score':
         layer = 'overlay';
         break;
       case 'tank':
@@ -159,7 +160,7 @@ export class View extends EventEmitter {
   /** Рисует текст на canvas-слое. */
   drawTextOnLayer(elem: UIElement, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
-    context.font = `${this.convertToPixels(elem.height)}px "Press Start 2P"`;
+    context.font = `${this.convertToPixels(elem.height) - 1}px "Press Start 2P"`;
     context.textAlign = elem.align;
     context.textBaseline = 'top';
     if (elem.backImg) {
@@ -174,7 +175,8 @@ export class View extends EventEmitter {
     if (elem.align === 'center') {
       posX += Math.round(elem.width / 2);
     }
-    context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY));
+    // Прибавляем к posY 1 пиксель, чтобы убрать баг с затиранием текста, когда его верхняя часть остаётся на слое
+    context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY) + 1);
   }
 
   /** Рисует отображение сущности на canvas-слое. Заполняет цветом или отображает спрайт.*/

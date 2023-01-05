@@ -7,6 +7,8 @@ export class TankEnemy extends Tank {
   lastDirection = Direction.DOWN;
   /** Дает танку неуязвимость (снаряды не причиняют вреда) */
   invincible = false;
+  /** Сколько очков дают за подбитие танка */
+  scorePoints = 100;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
