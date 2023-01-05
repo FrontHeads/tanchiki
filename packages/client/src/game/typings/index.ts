@@ -41,6 +41,7 @@ export enum EntityEvent {
   STOP = 'stop',
   SLIDE = 'slide',
   SPAWN = 'spawn',
+  DESPAWN = 'despawn',
   READY = 'ready',
   DAMAGED = 'damaged',
   DESTROYED = 'destroyed',
@@ -57,6 +58,9 @@ export enum EntityEvent {
   SHOULD_UPDATE = 'entityShouldUpdate',
   DID_UPDATE = 'entityDidUpdate',
   SHOULD_RENDER_TEXT = 'entityShouldRenderText',
+
+  ANIMATION_STARTED = 'animationStarted',
+  ANIMATION_ENDED = 'animationEnded',
 }
 
 export type EntityRole = 'player' | 'enemy' | 'neutral';
@@ -74,6 +78,7 @@ export type EntityType =
   | 'powerup'
   | 'projectileExplosion'
   | 'tankExplosion'
+  | 'score'
   | 'custom';
 
 export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';

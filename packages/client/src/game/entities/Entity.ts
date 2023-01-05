@@ -80,6 +80,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     }
     this.shouldBeDestroyed = true;
     this.emit(EntityEvent.SHOULD_BE_DESTROYED);
+    this.emit(EntityEvent.DESPAWN);
     this.spawned = false;
   }
 
@@ -114,6 +115,8 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
       settings.name
     );
 
+    this.emit(EntityEvent.ANIMATION_STARTED, settings.name);
+
     // По умолчанию анимации убиваются в Game.reset()
     if (settings.stopTimer) {
       this.setLoopDelay(this.cancelAnimation.bind(this, 'showEntity', settings.name), settings.stopTimer);
@@ -126,6 +129,8 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
 
     const animationIndex = this.animationList.findIndex(animation => animation.name === name);
     this.animationList.splice(animationIndex, 1);
+
+    this.emit(EntityEvent.ANIMATION_ENDED, name);
 
     // Обновляем вид сущности и оставляем видимой на канвасе после завершения анимации.
     if (type === 'showEntity') {

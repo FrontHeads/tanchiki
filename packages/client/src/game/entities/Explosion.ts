@@ -2,32 +2,38 @@ import { spriteCoordinates } from '../data/constants';
 import { EntityEvent } from './../typings/index';
 import { Entity, Projectile, Tank } from './';
 
-type ExplosionSettings = { explosionParentEntity: Tank | Projectile };
+type ExplosionSettings = { parentEntity: Tank | Projectile };
 
 export class Explosion extends Entity {
   constructor(props: ExplosionSettings) {
     super({ posX: 0, posY: 0 });
-    Object.assign(this, this.calculateExplosionProps(props.explosionParentEntity));
+    Object.assign(this, this.calculateExplosionProps(props.parentEntity));
     this.role = 'neutral';
     this.crossable = true;
     this.hittable = false;
     this.color = 'transparent';
 
+    let delay = 0;
     switch (this.type) {
       case 'projectileExplosion':
         this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
         break;
       case 'tankExplosion':
         this.mainSpriteCoordinates = spriteCoordinates.tankExplosion;
+        delay = 16; // для более красивой отрисовки взрыва танка нужна задержка
         break;
     }
 
     this.on(EntityEvent.SPAWN, () => {
       this.startAnimation({
-        delay: 0,
+        delay,
         spriteCoordinates: this.mainSpriteCoordinates,
         looped: false,
       });
+    });
+
+    this.on(EntityEvent.ANIMATION_ENDED, () => {
+      this.despawn();
     });
   }
 
