@@ -1,6 +1,6 @@
 import { Zone } from '../services';
 import { Direction, EntityEvent } from '../typings';
-import { Projectile, TankPlayer } from './';
+import { Projectile, TankPlayer, Terrain } from './';
 
 function mockTank() {
   const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
@@ -91,6 +91,7 @@ describe('game/entities/Tank', () => {
     const mockFn = jest.fn();
     const projectileUpdateCycles = 10;
 
+    zone.add(tank);
     tank.spawn();
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
@@ -121,5 +122,57 @@ describe('game/entities/Tank', () => {
 
     const projectileThree = mockFn.mock.calls[1]?.[0];
     expect(projectileThree).toBeTruthy();
+  });
+
+  it('should slide on ice', () => {
+    const zone = new Zone({ width: 10, height: 10 });
+    const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 9, height: 9 });
+    const tank = mockTank();
+    const slideObserver = jest.fn();
+    const tankUpdateCycles = 30;
+    tank.on(EntityEvent.SLIDE, slideObserver);
+
+    zone.add(ice);
+    ice.spawn();
+    zone.add(tank);
+    tank.spawn({ posX: 0, posY: 0 });
+    tank.frozen = false;
+    tank.move(Direction.DOWN);
+    tank.update();
+    tank.stop();
+
+    expect(tank.sliding).toBe(true);
+
+    for (let i = tankUpdateCycles; i > 0; --i) {
+      tank.update();
+    }
+
+    expect(tank.sliding).toBe(false);
+    expect(tank.posY).toBeGreaterThan(2);
+    expect(slideObserver).toHaveBeenCalledTimes(1);
+  });
+
+  it('should stop on ice edge after sliding', () => {
+    const zone = new Zone({ width: 10, height: 10 });
+    const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 4, height: 4 });
+    const tank = mockTank();
+    const slideObserver = jest.fn();
+    const tankUpdateCycles = 30;
+
+    zone.add(ice);
+    ice.spawn();
+    zone.add(tank);
+    tank.spawn({ posX: 0, posY: 0 });
+    tank.frozen = false;
+    tank.move(Direction.DOWN);
+    tank.update();
+    tank.stop();
+
+    for (let i = tankUpdateCycles; i > 0; --i) {
+      tank.update();
+    }
+
+    expect(tank.sliding).toBe(false);
+    expect(tank.posY).toBe(4);
   });
 });

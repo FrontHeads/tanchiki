@@ -33,8 +33,8 @@ export const screenClasses = {
 };
 
 export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
-  [Player.PLAYER1]: { posX: 18, posY: 50 },
-  [Player.PLAYER2]: { posX: 34, posY: 50, color: 'lime' },
+  [Player.PLAYER1]: { posX: 18, posY: 50, color: 'yellow', variant: 'PLAYER1' },
+  [Player.PLAYER2]: { posX: 34, posY: 50, color: 'lime', variant: 'PLAYER2' },
 };
 
 /**
