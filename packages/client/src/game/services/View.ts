@@ -93,8 +93,7 @@ export class View extends EventEmitter {
       case 'trees':
         layer = 'ceiling';
         break;
-      case 'projectileExplosion':
-      case 'tankExplosion':
+      case 'explosion':
         layer = 'explosions';
         break;
       default:

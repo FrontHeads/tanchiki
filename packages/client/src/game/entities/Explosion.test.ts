@@ -1,7 +1,6 @@
 import { spriteCoordinates } from '../data/constants';
 import { Direction } from '../typings';
-import { Explosion, Tank } from './';
-import { Projectile } from './Projectile';
+import { Explosion, Projectile, Tank } from './';
 
 describe('game/entities/Explosion', () => {
   it('should have right explosion properties', () => {

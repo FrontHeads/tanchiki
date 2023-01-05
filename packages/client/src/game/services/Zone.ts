@@ -106,7 +106,7 @@ export class Zone {
 
   /** Подписывается на события сущности, которые отслеживаются для обновления матрицы */
   registerEntity(entity: Entity) {
-    if (entity.type === 'score' || entity.type === 'tankExplosion' || entity.type === 'projectileExplosion') {
+    if (entity.type === 'score' || entity.type === 'explosion') {
       return;
     }
 

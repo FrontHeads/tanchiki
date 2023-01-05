@@ -76,8 +76,7 @@ export type EntityType =
   | 'water'
   | 'ice'
   | 'powerup'
-  | 'projectileExplosion'
-  | 'tankExplosion'
+  | 'explosion'
   | 'score'
   | 'custom';
 
@@ -85,12 +84,14 @@ export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LE
 
 export type PlayerVariant = 'PLAYER1' | 'PLAYER2';
 
+export type ExplosionVariant = 'TANK_EXPLOSION' | 'PROJECTILE_EXPLOSION';
+
 export type EntitySettings = Pos &
   Partial<Size> &
   Partial<{
     direction: Direction;
     type: EntityType;
-    variant: TerrainVariant | PlayerVariant; // Здесь нужен рефакторинг в дальнейшем
+    variant: TerrainVariant | PlayerVariant | ExplosionVariant; // Здесь нужен рефакторинг в дальнейшем
     role: EntityRole;
     color: string;
     img: HTMLImageElement;
