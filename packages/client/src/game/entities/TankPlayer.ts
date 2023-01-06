@@ -3,9 +3,7 @@ import { type EntityDynamicSettings, EntityEvent, PlayerVariant, Speed } from '.
 import { Tank } from './Tank';
 
 export class TankPlayer extends Tank {
-  /** Дает танку неуязвимость (снаряды не причиняют вреда) */
-  invincible = true;
-  shieldTimeout = 3000;
+  spawnShieldTimeout = 3000;
   variant: PlayerVariant = 'PLAYER1';
 
   constructor(props: EntityDynamicSettings) {
@@ -22,22 +20,24 @@ export class TankPlayer extends Tank {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.secondary.a'];
     }
 
-    this.on(EntityEvent.SPAWN, () => {
-      this.setLoopDelay(
-        this.startAnimation.bind(this, {
-          delay: 50,
-          spriteCoordinates: spriteCoordinates.shield,
-          looped: true,
-          stopTimer: this.shieldTimeout,
-          showMainSprite: true,
-        }),
-        this.spawnTimeout
-      );
-
-      // Возвращаем танку уязимость после исчезновения силового поля после спауна.
-      this.setLoopDelay(() => {
-        this.invincible = false;
-      }, this.spawnTimeout + this.shieldTimeout);
+    this.on(EntityEvent.READY, () => {
+      this.useShield(this.spawnShieldTimeout);
     });
+  }
+
+  useShield(timeout: number) {
+    this.startAnimation({
+      delay: 50,
+      spriteCoordinates: spriteCoordinates.shield,
+      looped: true,
+      stopTimer: timeout,
+      showMainSprite: true,
+    });
+
+    this.invincible = true;
+    // Возвращаем танку уязимость после исчезновения силового поля после спауна.
+    this.setLoopDelay(() => {
+      this.invincible = false;
+    }, timeout);
   }
 }
