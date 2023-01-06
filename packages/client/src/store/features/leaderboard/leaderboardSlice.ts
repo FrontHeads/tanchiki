@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { LeaderboardRowProps } from './../../../pages/Leaderboard/LeaderboardRow/typings';
-import { LeaderboardFields, SortDirection } from './../../../pages/Leaderboard/typings';
+import { SortOption } from './../../../pages/Leaderboard/typings';
 import { RootState } from './../../store';
 import { leaderboardThunks } from './leaderboardThunks';
 import { LeaderboardState } from './typings';
@@ -10,9 +10,9 @@ export const leaderboardSlice = createSlice({
   name: 'leaderboard',
   initialState: {
     isLoading: false,
-    leaderboard: [],
-    fieldName: 'username',
-    sortDirection: 'asc',
+    leaderboardTable: [],
+    sortOption: 'score',
+    sortDirection: 'desc',
   } as LeaderboardState,
 
   reducers: {
@@ -21,12 +21,11 @@ export const leaderboardSlice = createSlice({
       {
         payload,
       }: PayloadAction<{
-        fieldName: LeaderboardFields;
-        sortDirection: SortDirection;
+        sortOption: SortOption;
       }>
     ) => {
-      state.fieldName = payload.fieldName;
-      state.sortDirection = payload.sortDirection;
+      state.sortOption = payload.sortOption;
+      state.sortDirection === 'desc' ? (state.sortDirection = 'asc') : (state.sortDirection = 'desc');
     },
   },
 
@@ -37,7 +36,7 @@ export const leaderboardSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(leaderboardThunks.getLeaderboard.fulfilled, (state, { payload }) => {
-        state.leaderboard = payload;
+        state.leaderboardTable = payload;
         state.isLoading = false;
       })
       .addCase(leaderboardThunks.getLeaderboard.rejected, state => {
@@ -57,15 +56,17 @@ export const leaderboardSlice = createSlice({
   },
 });
 
-export const leaderboardSelectors = {
-  all: (state: RootState) => state.leaderboard,
-  sortedData: ({ leaderboard: leaderboardState }: RootState) => {
-    const { fieldName, sortDirection, leaderboard } = leaderboardState;
+const sortParamsSelector = ({ leaderboard: { sortOption, sortDirection, leaderboardTable } }: RootState) => {
+  return { sortOption, sortDirection, leaderboardTable };
+};
 
-    if (fieldName === 'username') {
-      return [...leaderboard].sort((a: LeaderboardRowProps, b: LeaderboardRowProps) => {
-        const string_1 = String(a.data[fieldName]);
-        const string_2 = String(b.data[fieldName]);
+export const sortedLeaderboardSelector = createSelector(
+  sortParamsSelector,
+  ({ sortOption, sortDirection, leaderboardTable }) => {
+    if (sortOption === 'username') {
+      return [...leaderboardTable].sort((a: LeaderboardRowProps, b: LeaderboardRowProps) => {
+        const string_1 = String(a.data[sortOption]);
+        const string_2 = String(b.data[sortOption]);
 
         switch (sortDirection) {
           case 'desc':
@@ -76,17 +77,22 @@ export const leaderboardSelectors = {
       });
     }
 
-    return [...leaderboard].sort((a, b) => {
+    return [...leaderboardTable].sort((a, b) => {
       switch (sortDirection) {
-        case 'desc':
-          return a.data[fieldName] - b.data[fieldName];
         case 'asc':
-          return b.data[fieldName] - a.data[fieldName];
+          return a.data[sortOption] - b.data[sortOption];
+        case 'desc':
+          return b.data[sortOption] - a.data[sortOption];
         default:
           return 0;
       }
     });
-  },
+  }
+);
+
+export const leaderboardSelectors = {
+  all: (state: RootState) => state.leaderboard,
+  sortedData: sortedLeaderboardSelector,
 };
 
 export const leaderboardActions = leaderboardSlice.actions;

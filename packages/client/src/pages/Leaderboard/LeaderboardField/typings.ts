@@ -1,6 +1,3 @@
-import { LeaderboardFields } from './../typings';
-export type LeaderboardFieldProps = {
-  fieldName: string;
-  sortOption?: LeaderboardFields;
-  onClick: ({ fieldName, value }: any) => void;
-};
+import { SortOption } from '../typings';
+
+export type LeaderboardFieldProps = { fieldName: string; fieldId: SortOption };

@@ -1,31 +1,23 @@
 import './LeaderboardField.css';
 
-import cn from 'classnames';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
-import { fieldNames } from './data';
+import { leaderboardActions, leaderboardSelectors, useAppDispatch, useAppSelector } from '../../../store';
+import { SortOption } from '../typings';
+import { SortMarker } from './SortMarker/SortMarker';
 import { LeaderboardFieldProps } from './typings';
 
-export const LeaderboardField: FC<LeaderboardFieldProps> = ({ fieldName, onClick, sortOption }) => {
-  const sortMarkerClassName = cn('leaderboard__sort-marker', {
-    'leaderboard__sort-marker_hidden': sortOption !== name,
-  });
+export const LeaderboardField: FC<LeaderboardFieldProps> = ({ fieldName, fieldId }) => {
+  const { sortOption, sortDirection } = useAppSelector(leaderboardSelectors.all);
+  const dispatch = useAppDispatch();
 
-  const [sortValue, setSortValue] = useState('desc');
-
-  const handleClick = () => {
-    if (sortValue === 'desc') {
-      setSortValue('asc');
-    }
-    if (sortValue === 'asc') {
-      setSortValue('desc');
-    }
-    onClick({ fieldName: fieldNames[fieldName], direction: sortValue });
-  };
+  const handleSort = ({ fieldId }: { fieldId: SortOption }) =>
+    dispatch(leaderboardActions.setSortParams({ sortOption: fieldId }));
 
   return (
-    <th onClick={handleClick} className="leaderboard__cell-header">
-      {fieldName} <div className={sortMarkerClassName}>▾</div>
+    <th onClick={() => handleSort({ fieldId })} className="leaderboard__cell-header">
+      {fieldName}
+      {fieldId === sortOption ? <SortMarker sortDirection={sortDirection} /> : ''}
     </th>
   );
 };

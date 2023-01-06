@@ -1,19 +1,13 @@
 import './Leaderboard.css';
 
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
 import { Loader } from '../../components/Loader';
-import {
-  leaderboardActions,
-  leaderboardSelectors,
-  leaderboardThunks,
-  useAppDispatch,
-  useAppSelector,
-} from '../../store';
-import { fieldNames } from './LeaderboardField/data';
+import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
+import { leaderboardFields } from './data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
 import { LeaderboardRow } from './LeaderboardRow';
-import { LeaderboardFields, LeaderboardProps, SortDirection } from './typings';
+import { LeaderboardProps } from './typings';
 
 export const headerText = 'Рейтинг игроков';
 
@@ -21,13 +15,6 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector(leaderboardSelectors.all);
   const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
-
-  const handleSort = useCallback(
-    ({ fieldName, direction }: { fieldName: LeaderboardFields; direction: SortDirection }) => {
-      dispatch(leaderboardActions.setSortParams({ fieldName, sortDirection: direction }));
-    },
-    []
-  );
 
   //**Так добавлять новый рекорд */
   // useEffect(() => {
@@ -67,8 +54,8 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
       <table border={1} className="leaderboard">
         <thead className="leaderboard__row-header">
           <tr>
-            {Object.keys(fieldNames).map(fieldName => (
-              <LeaderboardField key={fieldName} fieldName={fieldName} onClick={handleSort} />
+            {leaderboardFields.map(field => (
+              <LeaderboardField key={field.fieldId} fieldName={field.fieldName} fieldId={field.fieldId} />
             ))}
           </tr>
         </thead>
