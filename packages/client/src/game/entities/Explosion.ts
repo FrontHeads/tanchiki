@@ -32,10 +32,10 @@ export class Explosion extends Entity {
         spriteCoordinates: this.mainSpriteCoordinates,
         looped: false,
       });
-    });
 
-    this.on(EntityEvent.ANIMATION_ENDED, () => {
-      this.despawn();
+      // Деспаун взрыва после завершения анимации или спустя 200мс
+      this.on(EntityEvent.ANIMATION_ENDED, this.despawn.bind(this));
+      this.setLoopDelay(this.despawn.bind(this), 200);
     });
   }
 

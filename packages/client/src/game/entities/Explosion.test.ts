@@ -1,15 +1,38 @@
 import { spriteCoordinates } from '../data/constants';
-import { Direction } from '../typings';
-import { Explosion, Projectile, Tank } from './';
+import { Direction, EntityEvent } from '../typings';
+import { Explosion, Projectile, TankEnemy } from './';
+import { sleep } from '../utils';
+import { Loop, View } from '../services';
 
 describe('game/entities/Explosion', () => {
-  it('should have right explosion properties', () => {
-    const tank = {} as Tank;
+  it('should have right properties', () => {
+    const tank = {} as TankEnemy;
     const projectile = new Projectile({ parent: tank, posX: 0, posY: 0, moveSpeed: 2, direction: Direction.LEFT });
     const explosion = new Explosion({ parentEntity: projectile });
 
     expect(explosion).toHaveProperty('crossable', true);
     expect(explosion).toHaveProperty('hittable', false);
     expect(explosion).toHaveProperty('mainSpriteCoordinates', spriteCoordinates['projectileExplosion']);
+  });
+
+  it('should despawn after showing', async () => {
+    const loop = new Loop();
+    const view = new View({ width: 10, height: 10 });
+    const root = document.body.appendChild(document.createElement('div'));
+    const tank = { posX: 2, posY: 2, width: 4, height: 4, scorePoints: 200 } as TankEnemy;
+    const explosion = new Explosion({ parentEntity: tank });
+    const despawnObserver = jest.fn();
+
+    loop.load();
+    loop.add(explosion);
+    view.build(root);
+    view.add(explosion);
+    explosion.on(EntityEvent.DESPAWN, despawnObserver);
+    explosion.spawn();
+
+    await sleep(500);
+
+    expect(explosion.spawned).toBe(false);
+    expect(despawnObserver).toHaveBeenCalled();
   });
 });
