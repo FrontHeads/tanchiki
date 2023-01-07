@@ -2,7 +2,7 @@ import { spriteCoordinates } from '../data/constants';
 import { Entity, TankEnemy } from './';
 import { EntityEvent, ScoreVariant } from '../typings';
 
-type ScoreSettings = { points: number, parent: TankEnemy };
+type ScoreSettings = { points: number; parent: TankEnemy };
 
 export class Score extends Entity {
   points: ScoreVariant = 100;

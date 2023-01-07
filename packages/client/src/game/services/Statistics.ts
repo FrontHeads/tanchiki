@@ -46,7 +46,7 @@ export class Statistics {
   }
 
   getPlayerIndex(playerVariant: PlayerVariant) {
-    return (playerVariant === 'PLAYER1') ? 0 : 1;
+    return playerVariant === 'PLAYER1' ? 0 : 1;
   }
 
   add(entity: Entity) {
