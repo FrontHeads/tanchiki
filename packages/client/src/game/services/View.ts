@@ -18,6 +18,8 @@ export class View extends EventEmitter {
   spriteImg: HTMLImageElement | null = null;
   /** Выясняем какая сторона окна меньше */
   windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
+  /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
+  canvasResizeListener = this.canvasResizeHandler.bind(this);
 
   constructor({ width, height }: Size) {
     super();
@@ -46,6 +48,7 @@ export class View extends EventEmitter {
     if (root === null) {
       throw new Error('proper DOM root for the game should be set');
     }
+    this.windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
     this.root = root;
     if (this.isRootEmpty()) {
       this.createLayer('floor').style.background = this.gameBgColor;
@@ -57,7 +60,7 @@ export class View extends EventEmitter {
     }
 
     // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
-    window.addEventListener('resize', this.canvasResizeListener.bind(this));
+    window.addEventListener('resize', this.canvasResizeListener);
   }
 
   unload() {
@@ -375,7 +378,8 @@ export class View extends EventEmitter {
     return Math.round(pixelRatio / resizeStep) * resizeStep;
   }
 
-  canvasResizeListener() {
+  /** Обработчик для события изменения размера окна. Автоматически ресайзит размер канваса. */
+  canvasResizeHandler() {
     if (!this.windowSmallerSideSize) {
       return;
     }
