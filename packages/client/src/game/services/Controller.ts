@@ -1,6 +1,5 @@
-import { ControllerEvent, Direction } from '../typings';
+import { ControllerEvent, Direction, Fn } from '../typings';
 import { EventEmitter } from '../utils';
-import { Fn } from './../typings/index';
 import { BindingConfig, KeyBinding } from './KeyBindings';
 
 export class Controller extends EventEmitter<ControllerEvent> {

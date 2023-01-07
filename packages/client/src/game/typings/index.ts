@@ -9,6 +9,8 @@ export type GameSettings = {
   boundarySize: number;
 };
 
+export type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';
+
 export enum Direction {
   UP = 'UP',
   DOWN = 'DOWN',
@@ -286,4 +288,7 @@ export enum ControllerEvent {
   PAUSE = 'pause',
   FULLSCREEN = 'fullscreen',
   MUTE = 'mute',
+  ESCAPE = 'escape',
 }
+
+export type EnemiesKilledState = Record<EnemyVariant, number[]>;
