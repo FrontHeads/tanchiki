@@ -19,7 +19,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
   }
 
   update(stage = 0) {
-    if (stage > 50) {
+    if (stage > 2) {
       return false;
     }
 
@@ -41,7 +41,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       text: `УРОВЕНЬ ${this.state.level}`,
     });
 
-    /** Игроки */
+    /** Игрок 1: имя */
     this.overlay.renderElement({
       posX: 0,
       posY: 16,
@@ -52,7 +52,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       text: 'ИГРОК 1',
     });
 
-    /** Очки игроков */
+    /** Игрок 1: очки */
     this.overlay.renderElement({
       posX: 0,
       posY: 20,
@@ -63,13 +63,38 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       text: `${this.state.sessionScore[0]}`,
     });
 
+    if (this.state.mode === 'MULTIPLAYER') {
+      /** Игрок 2: имя */
+      this.overlay.renderElement({
+        posX: oneThirdWidth * 2,
+        posY: 16,
+        width: oneThirdWidth,
+        height: 2,
+        align: 'left',
+        color: 'red',
+        text: 'ИГРОК 2',
+      });
+
+      /** Игрок 2: очки */
+      this.overlay.renderElement({
+        posX: oneThirdWidth * 2,
+        posY: 20,
+        width: oneThirdWidth,
+        height: 2,
+        align: 'left',
+        color: 'orange',
+        text: `${this.state.sessionScore[1]}`,
+      });
+    }
+
     /** Вражеские танки */
-    let currentPosY = 20;
     /** Общее количество убитых танков: [игрок-1, игрок-2] */
     const mapEnemiesKilledCountTotal = [0, 0];
     const mapEnemiesKilledScore = Object.values(this.state.mapEnemiesKilledScore);
     const mapEnemiesKilledCount = Object.values(this.state.mapEnemiesKilledCount);
     const mapEnemiesKilledVariants = Object.keys(this.state.mapEnemiesKilledCount);
+
+    let currentPosY = 20;
 
     for (let i = 0; i < mapEnemiesKilledCount.length; ++i) {
       currentPosY += 5;
@@ -80,6 +105,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       mapEnemiesKilledCountTotal[0] += count[0];
       mapEnemiesKilledCountTotal[1] += count[1];
 
+      /** Игрок 1: количество очков за конкретный тип вражеских танков */
       this.overlay.renderElement({
         posX: 0,
         posY: currentPosY,
@@ -90,14 +116,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
         text: `${score[0]} ОЧКОВ`,
       });
 
-      this.overlay.renderElement({
-        posX: halfWidth - 1.5,
-        posY: currentPosY - 0.8,
-        width: 3,
-        height: 3,
-        mainSpriteCoordinates: spriteCoordinates['tank.enemy.default.a'].UP,
-      });
-
+      /** Игрок 1: количество подбитых вражеских танков конкретного типа */
       this.overlay.renderElement({
         posX: 0,
         posY: currentPosY,
@@ -108,9 +127,40 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
         text: `${count[0]}<`,
       });
 
+      /** Картинка вражеского танка */
+      this.overlay.renderElement({
+        posX: halfWidth - 1.5,
+        posY: currentPosY - 0.8,
+        width: 3,
+        height: 3,
+        mainSpriteCoordinates: spriteCoordinates['tank.enemy.default.a'].UP,
+      });
+  
       if (this.state.mode === 'SINGLEPLAYER') {
         continue;
       }
+
+      /** Игрок 2: количество очков за конкретный тип вражеских танков */
+      this.overlay.renderElement({
+        posX: oneThirdWidth * 2,
+        posY: currentPosY,
+        width: oneThirdWidth,
+        height: 2,
+        align: 'left',
+        color: 'white',
+        text: `${score[1]} ОЧКОВ`,
+      });
+
+      /** Игрок 2: количество подбитых вражеских танков конкретного типа */
+      this.overlay.renderElement({
+        posX: halfWidth + 1.5,
+        posY: currentPosY,
+        width: halfWidth - 1.5,
+        height: 2,
+        align: 'left',
+        color: 'white',
+        text: `>${count[1]}`,
+      });
     }
 
     //** Горизонтальная линия */
@@ -122,7 +172,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       color: 'white',
     });
 
-    //** Танков подбито всего */
+    //** Игрок 1: надпись "Всего" */
     this.overlay.renderElement({
       posX: 0,
       posY: currentPosY + 5,
@@ -133,6 +183,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       text: `ВСЕГО`,
     });
 
+    //** Игрок 1: танков подбито всего */
     this.overlay.renderElement({
       posX: 0,
       posY: currentPosY + 5,
@@ -146,6 +197,28 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
     if (this.state.mode === 'SINGLEPLAYER') {
       return true;
     }
+
+    //** Игрок 2: надпись "Всего" */
+    this.overlay.renderElement({
+      posX: oneThirdWidth * 2,
+      posY: currentPosY + 5,
+      width: oneThirdWidth,
+      height: 2,
+      align: 'left',
+      color: 'white',
+      text: `ВСЕГО`,
+    });
+
+    //** Игрок 2: танков подбито всего */
+    this.overlay.renderElement({
+      posX: halfWidth + 1.5,
+      posY: currentPosY + 5,
+      width: halfWidth - 1.5,
+      height: 2,
+      align: 'left',
+      color: 'white',
+      text: ` ${mapEnemiesKilledCountTotal[1]}`,
+    });
 
     return true;
   }
