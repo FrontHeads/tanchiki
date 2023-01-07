@@ -31,6 +31,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   hittable = true;
   color = 'grey';
   shouldBeDestroyed = false;
+  destroyedBy: Entity | null = null;
   /** Значение true делает танк неуязвимым для снарядов. */
   invincible = false;
   /** Хранит координаты сущности на спрайте. Это основной спрайт, на который сверху могут накладываться анимации. */
@@ -96,6 +97,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     } else if (this.type === 'tank' && !this.invincible) {
       if (this.role !== source.role) {
         this.explode();
+        this.destroyedBy = source;
         this.emit(EntityEvent.DESTROYED, source);
       }
     }
