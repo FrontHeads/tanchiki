@@ -17,7 +17,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=15"
+    "node": ">=19"
   },
   "devDependencies": {
     "@commitlint/cli": "17.3.0",

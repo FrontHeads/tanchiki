@@ -1,3 +1,4 @@
+import { Color } from '../data/colors';
 import {
   Animations,
   AnimationSettings,
@@ -29,7 +30,8 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   flying = false;
   crossable = false;
   hittable = true;
-  color = 'grey';
+
+  color: Color | string = Color.Grey;
   shouldBeDestroyed = false;
   /** Значение true делает танк неуязвимым для снарядов. */
   invincible = false;
