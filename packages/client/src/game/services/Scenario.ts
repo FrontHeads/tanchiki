@@ -1,4 +1,5 @@
-import { Color, playerInitialSettings, spawnPlaces } from '../data/constants';
+import { Color } from '../data/colors';
+import { playerInitialSettings, spawnPlaces } from '../data/constants';
 import { type Tank, Entity, Explosion, Flag, Projectile, TankEnemy, TankPlayer, Terrain } from '../entities';
 import {
   Direction,

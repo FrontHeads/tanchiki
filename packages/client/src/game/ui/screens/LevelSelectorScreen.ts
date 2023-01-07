@@ -1,4 +1,4 @@
-import { Color } from '../../data/constants';
+import { Color } from '../../data/colors';
 import { LevelSelectorScreenProps } from './LevelSelectorScreen.typings';
 import { Screen } from './Screen';
 

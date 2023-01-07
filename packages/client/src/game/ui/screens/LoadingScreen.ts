@@ -1,4 +1,4 @@
-import { Color } from '../../data/constants';
+import { Color } from '../../data/colors';
 import { Screen } from './Screen';
 
 export class LoadingScreen extends Screen {

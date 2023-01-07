@@ -1,4 +1,4 @@
-import { Color } from '../data/constants';
+import { Color } from '../data/colors';
 import { Entity, Tank } from '../entities';
 import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
@@ -16,12 +16,14 @@ export class View extends EventEmitter {
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
   spriteImg: HTMLImageElement | null = null;
+  /** Выясняем какая сторона окна меньше */
+  windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
 
   constructor({ width, height }: Size) {
     super();
     this.width = width;
     this.height = height;
-    this.initResizing();
+    this.pixelRatio = this.getPixelRatio();
   }
 
   toggleFullScreen() {
@@ -40,7 +42,7 @@ export class View extends EventEmitter {
   }
 
   /** Инициализирует создание DOM-элементов canvas-слоев и их добавление в корневой DOM-элемент root. */
-  build(root: HTMLElement | null) {
+  load(root: HTMLElement | null) {
     if (root === null) {
       throw new Error('proper DOM root for the game should be set');
     }
@@ -53,6 +55,13 @@ export class View extends EventEmitter {
       this.createLayer('explosions');
       this.createLayer('overlay').style.position = 'relative';
     }
+
+    // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
+    window.addEventListener('resize', this.canvasResizeListener.bind(this));
+  }
+
+  unload() {
+    document.removeEventListener('resize', this.canvasResizeListener);
   }
 
   /** Создает DOM-элементы canvas-слоев и добавляет в корневой DOM-элемент root. */
@@ -346,33 +355,37 @@ export class View extends EventEmitter {
     return Math.round(value * this.pixelRatio + correction);
   }
 
-  /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. 
-   Навешивает обработчик изменения канваса при изменении размера окна.
-  */
-  private initResizing() {
+  /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. */
+  private getPixelRatio() {
     /** Задает шаг для округления результатов вычисления. 
      Важно чтобы pixelRatio равнялся числу округленному до целого или 0.5. Иначе будут баги при отрисовке. */
     const resizeStep = 0.5;
-    /** Выясняем какая сторона окна меньше */
-    const windowSmallerSideSize = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
-    /** Выясняем какая сторона игрового поля меньше */
-    const zoneSmallerSideSize = window.innerWidth < window.innerHeight ? this.width : this.height;
-    let pixelRatio = windowSmallerSideSize / zoneSmallerSideSize;
 
-    const isCanvasBiggerThanWindow = zoneSmallerSideSize * pixelRatio >= windowSmallerSideSize;
+    /** Выясняем какая сторона игрового поля меньше */
+    const zoneSmallerSideSize = Math.min(this.width, this.height);
+    let pixelRatio = this.windowSmallerSideSize / zoneSmallerSideSize;
+
+    const isCanvasBiggerThanWindow = zoneSmallerSideSize * pixelRatio >= this.windowSmallerSideSize;
     if (isCanvasBiggerThanWindow) {
       // Это немного уменьшит размер игрового поля, чтобы были отступы от края экрана.
       pixelRatio -= resizeStep;
     }
 
-    // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
-    window.addEventListener('resize', () => {
-      const scale = Math.min(window.innerWidth / windowSmallerSideSize, window.innerHeight / windowSmallerSideSize);
-      this.root.style.transform = 'scale(' + scale * 100 + '%)';
-    });
-
     // pixelRatio д.б. округлен до чисел с шагом 0.5 (например 1.5, 2, 2.5, и т.д.). Иначе будут баги при отрисовке.
-    this.pixelRatio = Math.round(pixelRatio / resizeStep) * resizeStep;
+    return Math.round(pixelRatio / resizeStep) * resizeStep;
+  }
+
+  canvasResizeListener() {
+    if (!this.windowSmallerSideSize) {
+      return;
+    }
+
+    const scale = Math.min(
+      window.innerWidth / this.windowSmallerSideSize,
+      window.innerHeight / this.windowSmallerSideSize
+    );
+
+    this.root.style.transform = 'scale(' + scale * 100 + '%)';
   }
 
   isSpriteImgLoaded() {

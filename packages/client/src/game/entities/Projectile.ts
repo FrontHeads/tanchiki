@@ -1,4 +1,5 @@
-import { Color, spriteCoordinates } from '../data/constants';
+import { Color } from '../data/colors';
+import { spriteCoordinates } from '../data/constants';
 import { type ProjectileSettings, Direction, EntityEvent } from '../typings';
 import { type Tank, EntityDynamic } from './';
 

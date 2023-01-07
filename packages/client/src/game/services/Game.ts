@@ -65,6 +65,7 @@ export class Game {
 
   unload() {
     this.loop.unload();
+    this.view.unload();
     this.overlay.unload();
     this.audioManager.unload();
     this.controllerAll.unload();
@@ -90,7 +91,7 @@ export class Game {
   }
 
   createView(root: HTMLElement | null) {
-    this.view.build(root);
+    this.view.load(root);
   }
 
   addEntity(entity: Entity) {

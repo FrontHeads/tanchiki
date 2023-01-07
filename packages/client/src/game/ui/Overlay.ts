@@ -1,4 +1,5 @@
-import { Color, screenClasses } from '../data/constants';
+import { Color } from '../data/colors';
+import { screenClasses } from '../data/constants';
 import { Game, View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';

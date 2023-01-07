@@ -1,4 +1,5 @@
-import { Color, spriteCoordinates } from '../../data/constants';
+import { Color } from '../../data/colors';
+import { spriteCoordinates } from '../../data/constants';
 import { resources } from '../../services';
 import { MainMenuState } from '../../typings';
 import { Screen } from './Screen';

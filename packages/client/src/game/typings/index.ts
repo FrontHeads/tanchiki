@@ -1,4 +1,4 @@
-import { Color } from '../data/constants';
+import { Color } from '../data/colors';
 import { Entity, Projectile, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 

@@ -1,4 +1,5 @@
-import { Color, spriteCoordinates } from '../../data/constants';
+import { Color } from '../../data/colors';
+import { spriteCoordinates } from '../../data/constants';
 import { UIElementSettings } from '../../typings';
 import { UIElement } from '../../ui';
 import { isOdd } from '../../utils';

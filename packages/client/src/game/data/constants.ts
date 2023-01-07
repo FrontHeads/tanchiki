@@ -1,26 +1,8 @@
 import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import { GameOverScreen, GameScreen, LevelSelectorScreen, LoadingScreen, MainMenuScreen } from '../ui/screens';
 import { PauseScreen } from './../ui/screens/PauseScreen';
+import { Color } from './colors';
 import { classicDesignSprite } from './spriteCoordinates';
-
-export enum Color {
-  Yellow = 'yellow',
-  Lime = 'lime',
-  Black = 'black',
-  Grey = '#636363',
-  LightGrey = 'lightgrey',
-  Orange = 'red',
-  Red = 'red',
-  White = 'white',
-  Transparent = 'transparent',
-  LightCyan = 'lightcyan',
-  Aqua = 'aqua',
-  Brown = 'brown',
-  Green = 'green',
-  Blue = 'blue',
-  AliceBlue = 'aliceblue',
-  Pink = '#483D8B',
-}
 
 export const concreteCells: Cell[] = [
   Cell.CONCRETE,
