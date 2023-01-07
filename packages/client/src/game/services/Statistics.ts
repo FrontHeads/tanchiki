@@ -57,7 +57,7 @@ export class Statistics {
     const { mode, sessionScore, mapEnemiesKilledCount } = this;
     const mapEnemiesKilledScore: Partial<EnemiesKilledState> = {};
 
-    Object.entries(mapEnemiesKilledCount).forEach((entry) => {
+    Object.entries(mapEnemiesKilledCount).forEach(entry => {
       const enemyVariant = entry[0] as EnemyVariant;
       const [enemyCountForPlayerOne, enemyCountForPlayerTwo] = entry[1];
       const scoreMultiplyer = this.getScoreByEnemyVariant(enemyVariant);
@@ -103,7 +103,7 @@ export class Statistics {
 
   countEnemy(enemy: TankEnemy) {
     const score = this.getScoreByEnemyVariant(enemy.variant);
-  
+
     if (!(enemy.destroyedBy instanceof Projectile && enemy.destroyedBy.parent instanceof TankPlayer)) {
       return 0;
     }

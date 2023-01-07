@@ -3,11 +3,11 @@ import { EnemiesKilledState, GameMode } from '../../typings';
 import { Screen } from './Screen';
 
 type StatisticsScreenState = {
-  mode: GameMode,
-  sessionScore: number[],
-  mapEnemiesKilledCount: EnemiesKilledState,
-  mapEnemiesKilledScore: EnemiesKilledState,
-  level: number,
+  mode: GameMode;
+  sessionScore: number[];
+  mapEnemiesKilledCount: EnemiesKilledState;
+  mapEnemiesKilledScore: EnemiesKilledState;
+  level: number;
 };
 
 export class StatisticsScreen extends Screen<StatisticsScreenState> {
@@ -121,7 +121,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       height: 0.5,
       color: 'white',
     });
-  
+
     //** Танков подбито всего */
     this.overlay.renderElement({
       posX: 0,

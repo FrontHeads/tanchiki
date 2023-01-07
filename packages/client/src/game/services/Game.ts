@@ -173,7 +173,7 @@ export class Game {
   }
 
   initLevelSelector() {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       this.reset();
 
       this.screen = ScreenType.LEVEL_SELECTOR;
@@ -229,21 +229,21 @@ export class Game {
   }
 
   initGameOver() {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       if (this.screen === ScreenType.GAME_OVER) {
         return;
       }
 
       const redirectDelay = 3000;
       this.screen = ScreenType.GAME_OVER;
-  
+
       this.overlay.show(this.screen);
       this.audioManager.emit('gameOver');
-  
+
       this.controllerAll.reset();
       this.controllerWasd.reset();
       this.controllerArrows.reset();
-  
+
       this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
       setTimeout(resolve, redirectDelay);
     });
@@ -251,7 +251,7 @@ export class Game {
 
   /** Анимация перехода с экрана выбора уровня в игру */
   initGameIntro() {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       const startAnimationDelay = 2000;
 
       this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: false });
@@ -259,8 +259,7 @@ export class Game {
 
       this.controllerAll.on(ControllerEvent.SHOOT, resolve);
       setTimeout(resolve, startAnimationDelay);
-    })
-    .then(() => {
+    }).then(() => {
       this.controllerAll.offAll(ControllerEvent.SHOOT);
       this.screen = ScreenType.GAME;
       this.overlay.show(this.screen);
@@ -271,9 +270,7 @@ export class Game {
     this.reset();
 
     if (firstInit) {
-      this.statistics.startSession(
-        this.mainMenuState === MainMenuState.SINGLEPLAYER ? 'SINGLEPLAYER' : 'MULTIPLAYER'
-      );
+      this.statistics.startSession(this.mainMenuState === MainMenuState.SINGLEPLAYER ? 'SINGLEPLAYER' : 'MULTIPLAYER');
     } else {
       if (this.level < this.maxLevels) {
         this.level++;
@@ -315,7 +312,7 @@ export class Game {
   }
 
   initGameStatistics() {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       const stats = this.statistics.getCurrentStatistics();
       this.reset();
       this.screen = ScreenType.STATISTICS;
