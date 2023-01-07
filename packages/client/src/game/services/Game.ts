@@ -1,11 +1,11 @@
 import { Entity } from '../entities';
-import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
+import { ControllerEvent, Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
-import { ControllerEvent } from './../typings/index';
 import { Controller, Loop, resources, Scenario, Statistics, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
+import { sleep } from '../utils';
 
 export class Game {
   static __instance: Game;
@@ -130,15 +130,15 @@ export class Game {
     this.screen = ScreenType.LOADING;
     this.overlay.show(this.screen);
     resources.loadAll().then(() => {
-      this.view.spriteImg = resources.getImage('classicDesignSprite');
+      this.view.spriteImg = resources.getImage('classicDesignSprite'); //TODO: это нужно вынести в класс View
       this.initMenu();
     });
   }
 
   initMenu() {
-    this.screen = ScreenType.MAIN_MENU;
-
     this.reset();
+
+    this.screen = ScreenType.MAIN_MENU;
     this.overlay.show(this.screen, this.mainMenuState);
 
     // Обрабатываем переходы по пунктам меню
@@ -159,132 +159,172 @@ export class Game {
         this.overlay.show(this.screen, this.mainMenuState);
       })
       // Обрабатываем нажатие на указанном пункте меню
-      .on(ControllerEvent.SHOOT, () => {
+      .on(ControllerEvent.SHOOT, async () => {
         if (this.screen !== ScreenType.MAIN_MENU) {
           return;
         }
 
         // Открываем экран выбора уровня
-        this.initLevelSelector();
-      });
-  }
-
-  initLevelSelector() {
-    this.reset();
-
-    this.screen = ScreenType.LEVEL_SELECTOR;
-
-    this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: true });
-
-    this.controllerAll.reset();
-
-    /** Объект setInterval для обработки непрерывного изменения уровня */
-    let changeLevelInterval: ReturnType<typeof setInterval>;
-
-    const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
-    const handleMove = (direction: Direction) => {
-      let shouldTrigger = false;
-      if (direction === Direction.UP && this.level < this.maxLevels) {
-        this.level++;
-        shouldTrigger = true;
-      } else if (direction === Direction.DOWN && this.level > 1) {
-        this.level--;
-        shouldTrigger = true;
-      } else {
-        resetLevelInterval();
-      }
-      // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
-      if (shouldTrigger) {
-        this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level });
-      }
-    };
-
-    this.controllerAll
-      .on(ControllerEvent.STOP, () => {
-        if (this.screen === ScreenType.LEVEL_SELECTOR) {
-          resetLevelInterval();
-        }
-      })
-      .on(ControllerEvent.MOVE, (direction: Direction) => {
-        if (this.screen !== ScreenType.LEVEL_SELECTOR) {
-          return;
-        }
-
-        resetLevelInterval();
-        handleMove.call(this, direction);
-
-        changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
-      })
-      .on(ControllerEvent.SHOOT, () => {
-        if (this.screen !== ScreenType.LEVEL_SELECTOR) {
-          return;
-        }
+        await this.initLevelSelector();
 
         // Запускаем игру после выбора уровня
         this.initGameLevel(true);
       });
   }
 
-  initGameOver() {
-    if (this.screen === ScreenType.GAME_OVER) {
-      return;
-    }
+  initLevelSelector() {
+    return new Promise<void>((resolve) => {
+      this.reset();
 
-    const redirectDelay = 3000;
-    this.screen = ScreenType.GAME_OVER;
+      this.screen = ScreenType.LEVEL_SELECTOR;
+      this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: true });
 
-    this.overlay.show(this.screen);
-    this.audioManager.emit('gameOver');
+      /** Объект setInterval для обработки непрерывного изменения уровня */
+      let changeLevelInterval: ReturnType<typeof setInterval>;
 
-    this.controllerAll.reset();
-    this.controllerWasd.reset();
-    this.controllerArrows.reset();
-
-    setTimeout(() => {
-      this.initMenu();
-    }, redirectDelay);
-  }
-
-  initGameLevel(firstInit = false) {
-    this.screen = ScreenType.GAME;
-    this.reset();
-
-    const missionAccomplishedDelay = 1000;
-    /** Анимация перехода с экрана выбора уровня в игру */
-    const startAnimationDelay = firstInit ? 100 : 2000;
-    this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: false });
-    this.overlay.show(this.screen, startAnimationDelay);
-
-    /** Стартуем сценарий после окончания анимации */
-    this.loop.setLoopDelay(() => {
-      /** Инициализируем инстанс сценария */
-      this.scenario = new Scenario(this)
-        .on(ScenarioEvent.GAME_OVER, () => {
-          this.initGameOver();
-        })
-        .on(ScenarioEvent.MISSION_ACCOMPLISHED, () => {
-          this.loop.setLoopDelay(() => {
-            if (this.level < this.maxLevels) {
-              this.level++;
-            } else {
-              this.level = 1;
-            }
-            this.initGameLevel();
-          }, missionAccomplishedDelay);
-        });
+      const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
+      const handleMove = (direction: Direction) => {
+        let shouldTrigger = false;
+        if ((direction === Direction.UP || direction === Direction.RIGHT) && this.level < this.maxLevels) {
+          this.level++;
+          shouldTrigger = true;
+        } else if ((direction === Direction.DOWN || direction === Direction.LEFT) && this.level > 1) {
+          this.level--;
+          shouldTrigger = true;
+        } else {
+          resetLevelInterval();
+        }
+        // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
+        if (shouldTrigger) {
+          this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level });
+        }
+      };
 
       this.controllerAll
-        .on(ControllerEvent.PAUSE, () => {
-          this.togglePause();
+        .on(ControllerEvent.STOP, () => {
+          if (this.screen === ScreenType.LEVEL_SELECTOR) {
+            resetLevelInterval();
+          }
         })
-        .on(ControllerEvent.MUTE, () => {
-          this.audioManager.emit('pause', { isMuteKey: true });
-        })
-        .on(ControllerEvent.FULLSCREEN, () => {
-          this.view.toggleFullScreen();
-        });
-    }, startAnimationDelay);
+        .on(ControllerEvent.MOVE, (direction: Direction) => {
+          if (this.screen !== ScreenType.LEVEL_SELECTOR) {
+            return;
+          }
 
-    this.audioManager.emit('levelIntro');
+          resetLevelInterval();
+          handleMove.call(this, direction);
+
+          changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
+        })
+        .on(ControllerEvent.SHOOT, () => {
+          if (this.screen !== ScreenType.LEVEL_SELECTOR) {
+            return;
+          }
+          resolve();
+        })
+        .on(ControllerEvent.ESCAPE, () => {
+          this.initMenu();
+        });
+    });
+  }
+
+  initGameOver() {
+    return new Promise<void>((resolve) => {
+      if (this.screen === ScreenType.GAME_OVER) {
+        return;
+      }
+
+      const redirectDelay = 3000;
+      this.screen = ScreenType.GAME_OVER;
+  
+      this.overlay.show(this.screen);
+      this.audioManager.emit('gameOver');
+  
+      this.controllerAll.reset();
+      this.controllerWasd.reset();
+      this.controllerArrows.reset();
+  
+      this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
+      setTimeout(resolve, redirectDelay);
+    });
+  }
+
+  /** Анимация перехода с экрана выбора уровня в игру */
+  initGameIntro() {
+    return new Promise<void>((resolve) => {
+      const startAnimationDelay = 2000;
+
+      this.overlay.show(ScreenType.LEVEL_SELECTOR, { level: this.level, showHints: false });
+      this.audioManager.emit('levelIntro');
+
+      this.controllerAll.on(ControllerEvent.SHOOT, resolve);
+      setTimeout(resolve, startAnimationDelay);
+    })
+    .then(() => {
+      this.controllerAll.offAll(ControllerEvent.SHOOT);
+      this.screen = ScreenType.GAME;
+      this.overlay.show(this.screen);
+    });
+  }
+
+  async initGameLevel(firstInit = false) {
+    this.reset();
+
+    if (firstInit) {
+      this.statistics.startSession(
+        this.mainMenuState === MainMenuState.SINGLEPLAYER ? 'SINGLEPLAYER' : 'MULTIPLAYER'
+      );
+    } else {
+      if (this.level < this.maxLevels) {
+        this.level++;
+      } else {
+        this.level = 1;
+      }
+    }
+
+    await this.initGameIntro();
+
+    this.statistics.startMap();
+
+    /** Инициализируем инстанс сценария */
+    this.scenario = new Scenario(this)
+      .on(ScenarioEvent.GAME_OVER, async () => {
+        this.statistics.finishSession();
+        await this.initGameOver();
+        await this.initGameStatistics();
+        this.initMenu();
+      })
+      .on(ScenarioEvent.MISSION_ACCOMPLISHED, async () => {
+        const missionAccomplishedDelay = 1000;
+        await sleep(missionAccomplishedDelay);
+        this.statistics.finishMap();
+        await this.initGameStatistics();
+        this.initGameLevel();
+      });
+
+    this.controllerAll
+      .on(ControllerEvent.PAUSE, () => {
+        this.togglePause();
+      })
+      .on(ControllerEvent.MUTE, () => {
+        this.audioManager.emit('pause', { isMuteKey: true });
+      })
+      .on(ControllerEvent.FULLSCREEN, () => {
+        this.view.toggleFullScreen();
+      });
+  }
+
+  initGameStatistics() {
+    return new Promise<void>((resolve) => {
+      const stats = this.statistics.getCurrentStatistics();
+      this.reset();
+      this.screen = ScreenType.STATISTICS;
+      this.overlay.show(this.screen, { level: this.level, ...stats });
+      const redirectDelay = 10000;
+
+      this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
+      this.controllerAll.on(ControllerEvent.SHOOT, resolve);
+      setTimeout(resolve, redirectDelay);
+    });
   }
 }
