@@ -1,22 +1,22 @@
 import { Game } from './';
 import { Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
-import { EnemyVariant, EntityEvent, PlayerVariant } from '../typings';
-
-type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';
+import { EnemiesKilledState, EnemyVariant, EntityEvent, GameMode, PlayerVariant } from '../typings';
 
 export class Statistics {
   game: Game;
   mode: GameMode = 'SINGLEPLAYER';
+  active = false;
   /** Очки топ-1 игрока из лидерборда (TODO: реализовать их подгрузку) */
   highestScore = 20000;
   /** Статистика за текущую игровую сессию: [игрок-1, игрок-2] */
   sessionScore = [0, 0];
-  sessionMaps = 0;
-  sessionTime = 0;
+  sessionCompletedMaps = 0;
+  sessionElapsedTime = 0;
   /** Статистика за конкретную карту: [игрок-1, игрок-2] */
   mapScore = [0, 0];
-  mapEnemiesKilled: Record<EnemyVariant, number[]> = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
-  mapTime = 0;
+  mapEnemiesKilledCount: EnemiesKilledState = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
+  mapElapsedTime = 0;
+  mapStartTime = 0;
 
   constructor(game: Game) {
     this.game = game;
@@ -24,25 +24,64 @@ export class Statistics {
 
   load() {
     this.sessionScore = [0, 0];
-    this.sessionMaps = 0;
-    this.sessionTime = 0;
+    this.sessionCompletedMaps = 0;
+    this.sessionElapsedTime = 0;
     this.reset();
   }
 
   unload() {
+    this.finishSession();
     this.reset();
-    this.updateLeaderboard();
   }
 
   reset() {
     this.mapScore = [0, 0];
-    this.mapEnemiesKilled = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
-    this.mapTime = 0;
-    this.updateLeaderboard();
+    this.mapEnemiesKilledCount = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
+    this.mapElapsedTime = 0;
   }
 
   updateLeaderboard() {
     //TODO: сделать отправку данных на сервер
+    const { mode, sessionScore, sessionCompletedMaps, sessionElapsedTime } = this;
+    const [sessionScorePlayerOne, sessionScorePlayerTwo] = sessionScore;
+    console.log('GAME SESSION STATISTICS: ', {
+      mode,
+      sessionCompletedMaps,
+      sessionElapsedTime,
+      sessionScorePlayerOne,
+      sessionScorePlayerTwo,
+    });
+  }
+
+  getCurrentStatistics() {
+    const { mode, sessionScore, mapEnemiesKilledCount } = this;
+    const mapEnemiesKilledScore: Partial<EnemiesKilledState> = {};
+
+    Object.entries(mapEnemiesKilledCount).forEach((entry) => {
+      const enemyVariant = entry[0] as EnemyVariant;
+      const [enemyCountForPlayerOne, enemyCountForPlayerTwo] = entry[1];
+      const scoreMultiplyer = this.getScoreByEnemyVariant(enemyVariant);
+
+      mapEnemiesKilledScore[enemyVariant] = [
+        enemyCountForPlayerOne * scoreMultiplyer,
+        enemyCountForPlayerTwo * scoreMultiplyer,
+      ];
+    });
+
+    return { mode, sessionScore, mapEnemiesKilledCount, mapEnemiesKilledScore };
+  }
+
+  getScoreByEnemyVariant(enemyVariant: EnemyVariant) {
+    switch (enemyVariant) {
+      case 'ARMOR':
+        return 400;
+      case 'POWER':
+        return 300;
+      case 'FAST':
+        return 200;
+      case 'BASIC':
+        return 100;
+    }
   }
 
   getPlayerIndex(playerVariant: PlayerVariant) {
@@ -63,23 +102,8 @@ export class Statistics {
   }
 
   countEnemy(enemy: TankEnemy) {
-    let score = 0;
-
-    switch (enemy.variant) {
-      case 'ARMOR':
-        score = 400;
-        break;
-      case 'POWER':
-        score = 300;
-        break;
-      case 'FAST':
-        score = 200;
-        break;
-      case 'BASIC':
-        score = 100;
-        break;
-    }
-
+    const score = this.getScoreByEnemyVariant(enemy.variant);
+  
     if (!(enemy.destroyedBy instanceof Projectile && enemy.destroyedBy.parent instanceof TankPlayer)) {
       return 0;
     }
@@ -89,11 +113,42 @@ export class Statistics {
 
     this.sessionScore[playerIndex] += score;
     this.mapScore[playerIndex] += score;
-    ++this.mapEnemiesKilled[enemy.variant][playerIndex];
+    ++this.mapEnemiesKilledCount[enemy.variant][playerIndex];
 
     return score;
   }
 
-  //TODO: после создание класса бонусов нужно будет реализовать здесь соотв.метод
-  //countBonus() {}
+  countBonus() {
+    //TODO: после создание класса бонусов нужно будет реализовать здесь соотв.метод
+  }
+
+  startSession(mode: GameMode) {
+    if (this.active) {
+      return;
+    }
+    this.active = true;
+    this.mode = mode;
+    this.load();
+  }
+
+  finishSession() {
+    if (!this.active) {
+      return;
+    }
+    this.finishMap(true);
+    this.updateLeaderboard();
+    this.active = false;
+  }
+
+  startMap() {
+    this.mapStartTime = Date.now();
+  }
+
+  finishMap(gameover = false) {
+    if (!gameover) {
+      ++this.sessionCompletedMaps;
+    }
+    this.mapElapsedTime = Date.now() - this.mapStartTime;
+    this.sessionElapsedTime += this.mapElapsedTime;
+  }
 }
