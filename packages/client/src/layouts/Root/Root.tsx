@@ -58,7 +58,7 @@ export const Root: FC = () => {
             <Outlet />
             {printHeaderAndFooter ? <Footer /> : null}
 
-            {typeof document !== 'undefined' ? <ScrollRestoration /> : null}
+            <ScrollRestoration />
             {isAppLoading ? <Loader data-testid="app-loader" /> : null}
           </main>
         </Await>
