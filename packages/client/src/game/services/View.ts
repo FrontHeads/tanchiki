@@ -174,6 +174,9 @@ export class View extends EventEmitter {
     if (elem.align === 'center') {
       posX += Math.round(elem.width / 2);
     }
+    if (elem.align === 'right') {
+      posX += elem.width;
+    }
     // Прибавляем к posY 1 пиксель, чтобы убрать баг с затиранием текста, когда его верхняя часть остаётся на слое
     context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY) + 1);
   }
