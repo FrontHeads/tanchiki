@@ -1,6 +1,7 @@
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
-import { Entity, Explosion, Flag, Projectile, Score, Tank, TankEnemy, TankPlayer, Terrain } from '../entities';
+import { Entity, Explosion, Flag, Projectile, Tank, TankEnemy, TankPlayer, Terrain } from '../entities';
 import {
+  ControllerEvent,
   Direction,
   EnemyDestroyedPayload,
   EntityDynamicSettings,
@@ -12,10 +13,8 @@ import {
   ScenarioEvent,
   ScenarioPlayerState,
   ScenarioState,
-  TankEnemyType,
 } from '../typings';
 import { EventEmitter } from '../utils';
-import { ControllerEvent } from './../typings/index';
 import { Controller } from './Controller';
 import { Game } from './Game';
 import { MapManager } from './MapManager';
@@ -220,12 +219,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   initPlayerState(playerType: Player) {
     this.state.players[playerType] = {
       lives: 2,
-      statistics: {
-        [TankEnemyType.ARMOR]: 0,
-        [TankEnemyType.BASIC]: 0,
-        [TankEnemyType.FAST]: 0,
-        [TankEnemyType.POWER]: 0,
-      },
       controller: this.getGameController(playerType),
     };
   }
@@ -292,16 +285,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   }
 
   createExplosion(entity: Tank | Projectile) {
-    const explosion = new Explosion({ parentEntity: entity });
+    const explosion = new Explosion({ parent: entity });
     this.game.addEntity(explosion);
     explosion.spawn();
-
-    if (entity instanceof TankEnemy) {
-      explosion.on(EntityEvent.DESPAWN, () => {
-        const score = new Score({ parentEntity: entity });
-        this.game.addEntity(score);
-        score.spawn();
-      });
-    }
   }
 }

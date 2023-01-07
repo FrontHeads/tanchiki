@@ -1,29 +1,33 @@
 import { spriteCoordinates } from '../data/constants';
 import { Entity, TankEnemy } from './';
-import { EntityEvent } from '../typings';
+import { EntityEvent, ScoreVariant } from '../typings';
 
-type ScoreSettings = { parentEntity: TankEnemy };
+type ScoreSettings = { points: number, parent: TankEnemy };
 
 export class Score extends Entity {
-  constructor(props: ScoreSettings) {
+  points: ScoreVariant = 100;
+  /** Через сколько миллисекунд пропадёт надпись с очками */
+  despawnTime = 100;
+
+  constructor(settings: ScoreSettings) {
     super({ posX: 0, posY: 0 });
-    Object.assign(this, this.calculateProps(props.parentEntity));
     this.type = 'score';
     this.crossable = true;
     this.hittable = false;
     this.color = 'transparent';
+    Object.assign(this, this.calculateProps(settings));
 
     this.on(EntityEvent.SPAWN, () => {
       this.setLoopDelay(() => {
         this.despawn();
-      }, 100);
+      }, this.despawnTime);
     });
   }
 
-  calculateProps(entity: TankEnemy) {
+  calculateProps({ points, parent }: ScoreSettings) {
     let mainSpriteCoordinates;
 
-    switch (entity.scorePoints) {
+    switch (points) {
       case 500:
         mainSpriteCoordinates = spriteCoordinates['points.500'];
         break;
@@ -36,16 +40,19 @@ export class Score extends Entity {
       case 200:
         mainSpriteCoordinates = spriteCoordinates['points.200'];
         break;
-      default:
+      case 100:
         mainSpriteCoordinates = spriteCoordinates['points.100'];
+        break;
+      default:
+        mainSpriteCoordinates = null;
     }
 
     return {
       mainSpriteCoordinates,
-      posX: entity.posX,
-      posY: entity.posY,
-      width: entity.width,
-      height: entity.height,
+      posX: parent.posX,
+      posY: parent.posY,
+      width: parent.width,
+      height: parent.height,
     };
   }
 }

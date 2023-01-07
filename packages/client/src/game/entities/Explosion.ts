@@ -2,18 +2,20 @@ import { spriteCoordinates } from '../data/constants';
 import { EntityEvent, ExplosionVariant } from '../typings';
 import { Entity, Projectile, Tank } from './';
 
-type ExplosionSettings = { parentEntity: Tank | Projectile };
+type ExplosionSettings = { parent: Tank | Projectile };
 
 export class Explosion extends Entity {
   variant: ExplosionVariant = 'PROJECTILE_EXPLOSION';
+  parent: ExplosionSettings['parent'];
 
-  constructor(props: ExplosionSettings) {
+  constructor(settings: ExplosionSettings) {
     super({ posX: 0, posY: 0 });
-    Object.assign(this, this.calculateExplosionProps(props.parentEntity));
     this.type = 'explosion';
     this.crossable = true;
     this.hittable = false;
     this.color = 'transparent';
+    this.parent = settings.parent;
+    Object.assign(this, this.calculateProps(settings));
 
     let delay = 0;
     switch (this.variant) {
@@ -39,23 +41,23 @@ export class Explosion extends Entity {
     });
   }
 
-  calculateExplosionProps(entity: Tank | Projectile) {
-    const size = entity.type === 'projectile' ? 4 : 8;
-    const variant = entity.type === 'projectile' ? 'PROJECTILE_EXPLOSION' : 'TANK_EXPLOSION';
-    let posX = entity.posX;
-    let posY = entity.posY;
+  calculateProps({ parent }: ExplosionSettings) {
+    const size = parent.type === 'projectile' ? 4 : 8;
+    const variant = parent.type === 'projectile' ? 'PROJECTILE_EXPLOSION' : 'TANK_EXPLOSION';
+    let posX = parent.posX;
+    let posY = parent.posY;
 
     /** Без коррекции взрыв рисуется не по центру обьекта в который попал снаряд 
     из-за несовпадения координат и разницы в размерах взрыва и обьекта. */
-    const correction = entity.direction === 'UP' || entity.direction === 'LEFT' ? -2 : 0;
+    const correction = parent.direction === 'UP' || parent.direction === 'LEFT' ? -2 : 0;
 
-    if (entity.direction === 'UP' || entity.direction === 'DOWN') {
-      if (entity.type === 'tank') {
-        if (entity.direction === 'UP') {
+    if (parent.direction === 'UP' || parent.direction === 'DOWN') {
+      if (parent.type === 'tank') {
+        if (parent.direction === 'UP') {
           posX += correction;
           posY += correction - 2;
         }
-        if (entity.direction === 'DOWN') {
+        if (parent.direction === 'DOWN') {
           posX += correction - 2;
           posY += correction - 2;
         }
@@ -64,12 +66,12 @@ export class Explosion extends Entity {
         posY += correction;
       }
     } else {
-      if (entity.type === 'tank') {
-        if (entity.direction === 'RIGHT') {
+      if (parent.type === 'tank') {
+        if (parent.direction === 'RIGHT') {
           posX += correction;
           posY += correction - 2;
         }
-        if (entity.direction === 'LEFT') {
+        if (parent.direction === 'LEFT') {
           posX += correction;
           posY += correction;
         }

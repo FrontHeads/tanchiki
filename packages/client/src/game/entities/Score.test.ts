@@ -6,8 +6,8 @@ import { Loop } from '../services';
 
 describe('game/entities/Score', () => {
   it('should have right properties', () => {
-    const tank = { posX: 1, posY: 1, width: 2, height: 2, scorePoints: 200 } as TankEnemy;
-    const score = new Score({ parentEntity: tank });
+    const tank = { posX: 1, posY: 1, width: 2, height: 2, variant: 'FAST' } as TankEnemy;
+    const score = new Score({ points: 200, parent: tank });
 
     expect(score).toHaveProperty('crossable', true);
     expect(score).toHaveProperty('hittable', false);
@@ -20,8 +20,8 @@ describe('game/entities/Score', () => {
 
   it('should despawn after showing', async () => {
     const loop = new Loop();
-    const tank = { posX: 1, posY: 1, width: 2, height: 2, scorePoints: 200 } as TankEnemy;
-    const score = new Score({ parentEntity: tank });
+    const tank = { posX: 1, posY: 1, width: 2, height: 2, variant: 'FAST' } as TankEnemy;
+    const score = new Score({ points: 200, parent: tank });
     const despawnObserver = jest.fn();
 
     loop.load();

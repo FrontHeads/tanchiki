@@ -84,14 +84,19 @@ export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LE
 
 export type PlayerVariant = 'PLAYER1' | 'PLAYER2';
 
+export type EnemyVariant = 'BASIC' | 'FAST' | 'POWER' | 'ARMOR';
+
 export type ExplosionVariant = 'TANK_EXPLOSION' | 'PROJECTILE_EXPLOSION';
+
+export type ScoreVariant = 100 | 200 | 300 | 400 | 500;
 
 export type EntitySettings = Pos &
   Partial<Size> &
   Partial<{
     direction: Direction;
     type: EntityType;
-    variant: TerrainVariant | PlayerVariant | ExplosionVariant; // Здесь нужен рефакторинг в дальнейшем
+    //TODO: отрефакторить, чтобы варианты были для конкретных типов
+    variant: TerrainVariant | PlayerVariant | EnemyVariant | ExplosionVariant;
     role: EntityRole;
     color: string;
     img: HTMLImageElement;
@@ -126,6 +131,7 @@ export enum ScreenType {
   LOADING,
   LEVEL_SELECTOR,
   GAME_OVER,
+  STATISTICS,
   GAME,
   PAUSE,
 }
@@ -178,12 +184,9 @@ export type ScenarioState = {
 
 export type ScenarioPlayerState = {
   entity?: Tank;
-  statistics: ScenarioStat;
   lives: number;
   controller: Controller;
 };
-
-export type ScenarioStat = Record<TankEnemyType, number>;
 
 export type EnemyDestroyedPayload = {
   source: Tank;
