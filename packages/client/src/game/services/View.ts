@@ -1,3 +1,4 @@
+import { Color } from '../data/colors';
 import { Entity, Tank } from '../entities';
 import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
 import type { UIElement } from '../ui';
@@ -8,13 +9,17 @@ export class View extends EventEmitter {
   width = 0;
   height = 0;
   pixelRatio = 10;
-  gameBgColor = 'black';
+  gameBgColor = Color.Black;
   layerZIndexCount = 0;
   /** Содержит список canvas-слоев, canvasContext этих слоев, а также прикрепленные к слоям сущности. */
   layers: LayerList = {};
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
   spriteImg: HTMLImageElement | null = null;
+  /** Выясняем какая сторона окна меньше */
+  windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
+  /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
+  canvasResizeListener = this.canvasResizeHandler.bind(this);
 
   constructor({ width, height }: Size) {
     super();
@@ -39,10 +44,11 @@ export class View extends EventEmitter {
   }
 
   /** Инициализирует создание DOM-элементов canvas-слоев и их добавление в корневой DOM-элемент root. */
-  build(root: HTMLElement | null) {
+  load(root: HTMLElement | null) {
     if (root === null) {
       throw new Error('proper DOM root for the game should be set');
     }
+    this.windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
     this.root = root;
     if (this.isRootEmpty()) {
       this.createLayer('floor').style.background = this.gameBgColor;
@@ -52,6 +58,13 @@ export class View extends EventEmitter {
       this.createLayer('explosions');
       this.createLayer('overlay').style.position = 'relative';
     }
+
+    // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
+    window.addEventListener('resize', this.canvasResizeListener);
+  }
+
+  unload() {
+    document.removeEventListener('resize', this.canvasResizeListener);
   }
 
   /** Создает DOM-элементы canvas-слоев и добавляет в корневой DOM-элемент root. */
@@ -90,6 +103,7 @@ export class View extends EventEmitter {
         layer = 'projectiles';
         break;
       case 'trees':
+      case 'indicator':
         layer = 'ceiling';
         break;
       case 'projectileExplosion':
@@ -239,8 +253,10 @@ export class View extends EventEmitter {
     if (!this.layers[layerId]) {
       return;
     }
+
     const { entities: objects } = this.layers[layerId];
     this.eraseAllEntitiesOnLayer(layerId);
+
     for (const layerObject of objects) {
       this.drawOnLayer(layerObject.instance, layerId);
     }
@@ -344,13 +360,36 @@ export class View extends EventEmitter {
 
   /** Высчитывает pixelRatio, который нужен для определения размера канваса и его содержимого. */
   private getPixelRatio() {
-    /** Размер игрового поля с учетом отступов от канваса до края экрана. +4 - это отступы. */
-    const realZoneSize = this.width + 4;
+    /** Задает шаг для округления результатов вычисления. 
+     Важно чтобы pixelRatio равнялся числу округленному до целого или 0.5. Иначе будут баги при отрисовке. */
+    const resizeStep = 0.5;
 
-    const smallerWindowSideSize = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
-    const pixelRatio = smallerWindowSideSize / realZoneSize;
+    /** Выясняем какая сторона игрового поля меньше */
+    const zoneSmallerSideSize = Math.min(this.width, this.height);
+    let pixelRatio = this.windowSmallerSideSize / zoneSmallerSideSize;
 
-    return Math.floor(pixelRatio);
+    const isCanvasBiggerThanWindow = zoneSmallerSideSize * pixelRatio >= this.windowSmallerSideSize;
+    if (isCanvasBiggerThanWindow) {
+      // Это немного уменьшит размер игрового поля, чтобы были отступы от края экрана.
+      pixelRatio -= resizeStep;
+    }
+
+    // pixelRatio д.б. округлен до чисел с шагом 0.5 (например 1.5, 2, 2.5, и т.д.). Иначе будут баги при отрисовке.
+    return Math.round(pixelRatio / resizeStep) * resizeStep;
+  }
+
+  /** Обработчик для события изменения размера окна. Автоматически ресайзит размер канваса. */
+  canvasResizeHandler() {
+    if (!this.windowSmallerSideSize) {
+      return;
+    }
+
+    const scale = Math.min(
+      window.innerWidth / this.windowSmallerSideSize,
+      window.innerHeight / this.windowSmallerSideSize
+    );
+
+    this.root.style.transform = 'scale(' + scale * 100 + '%)';
   }
 
   isSpriteImgLoaded() {

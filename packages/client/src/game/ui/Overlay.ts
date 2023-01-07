@@ -1,3 +1,4 @@
+import { Color } from '../data/colors';
 import { screenClasses } from '../data/constants';
 import { Game, View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
@@ -52,7 +53,7 @@ export class Overlay {
     return elem;
   }
 
-  renderSplashScreen(backgroundColor: 'black' | 'grey' = 'black') {
+  renderSplashScreen(backgroundColor: Color.Black | Color.Grey = Color.Black) {
     this.renderElement({
       posX: 0,
       posY: 0,

@@ -20,7 +20,7 @@ describe('game/services/View', () => {
     const view = new View({ width: 10, height: 10 });
     const root = document.body.appendChild(document.createElement('div'));
 
-    view.build(root);
+    view.load(root);
 
     expect(view.root).toBe(root);
     expect(Object.keys(view.layers).length).not.toBe(0);
@@ -31,7 +31,7 @@ describe('game/services/View', () => {
     const view = new View({ width: 10, height: 10 });
     const root = document.body.appendChild(document.createElement('div'));
 
-    view.build(root);
+    view.load(root);
 
     view.drawOnLayer = jest.fn();
     view.eraseFromLayer = jest.fn();
@@ -52,7 +52,7 @@ describe('game/services/View', () => {
     view.eraseFromLayer = jest.fn();
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
-    view.build(root);
+    view.load(root);
     view.add(entity);
     const layerObjectsCount1 = Array.from(view.layers['tanks'].entities).length;
     entity.emit(EntityEvent.SHOULD_BE_DESTROYED);
@@ -70,7 +70,7 @@ describe('game/services/View', () => {
     view.pixelRatio = 10;
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
-    view.build(root);
+    view.load(root);
     const rect = view.getActualRect(entity);
 
     expect(rect).toEqual([22, 22, 16, 16]);
@@ -81,7 +81,7 @@ describe('game/services/View', () => {
     const game = Game.create();
     game.view.spriteImg = new Image();
     game.view.isSpriteImgLoaded = () => true;
-    game.view.build(root);
+    game.view.load(root);
     game.loop.start();
 
     const eraseFromLayerSpy = jest.spyOn(game.view, 'eraseFromLayer');
