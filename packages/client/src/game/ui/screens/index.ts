@@ -5,3 +5,4 @@ export { LoadingScreen } from './LoadingScreen';
 export { MainMenuScreen } from './MainMenuScreen';
 export { PauseScreen } from './PauseScreen';
 export { Screen } from './Screen';
+export { StatisticsScreen } from './StatisticsScreen';
