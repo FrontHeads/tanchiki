@@ -3,7 +3,7 @@ import { Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } fro
 import { Overlay } from '../ui';
 import { levels } from './../data/levels';
 import { ControllerEvent } from './../typings/index';
-import { Controller, Loop, resources, Scenario, View, Zone } from './';
+import { Controller, Loop, resources, Scenario, Statistics, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
@@ -20,6 +20,7 @@ export class Game {
   controllerAll: Controller;
   controllerWasd: Controller;
   controllerArrows: Controller;
+  statistics: Statistics;
   settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
   screen: ScreenType = ScreenType.LOADING;
   mainMenuState = MainMenuState.SINGLEPLAYER;
@@ -35,6 +36,7 @@ export class Game {
     this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerWasd = new Controller(KeyBindingsWasd);
     this.controllerArrows = new Controller(KeyBindingsArrows);
+    this.statistics = new Statistics(this);
   }
 
   static create() {
@@ -60,6 +62,7 @@ export class Game {
     this.controllerAll.load();
     this.controllerWasd.load();
     this.controllerArrows.load();
+    this.statistics.load();
     this.inited = true;
   }
 
@@ -70,6 +73,7 @@ export class Game {
     this.controllerAll.unload();
     this.controllerWasd.unload();
     this.controllerArrows.unload();
+    this.statistics.unload();
     this.inited = false;
     this.paused = false;
   }
@@ -86,6 +90,7 @@ export class Game {
     this.controllerAll.reset();
     this.controllerWasd.reset();
     this.controllerArrows.reset();
+    this.statistics.reset();
     this.paused = false;
   }
 
@@ -98,6 +103,7 @@ export class Game {
     this.view.add(entity);
     this.zone.add(entity);
     this.audioManager.add(entity);
+    this.statistics.add(entity);
   }
 
   togglePause(newState: boolean | null = null) {
