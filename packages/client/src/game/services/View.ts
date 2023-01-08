@@ -48,7 +48,6 @@ export class View extends EventEmitter {
     if (root === null) {
       throw new Error('proper DOM root for the game should be set');
     }
-    this.windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
     this.root = root;
     if (this.isRootEmpty()) {
       this.createLayer('floor').style.background = this.gameBgColor;
