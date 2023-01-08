@@ -14,7 +14,7 @@ export const Game = () => {
   useEffect(() => {
     game.init(gameRoot.current);
 
-    game.on(GameEvents.UpdateLeaderboard, (data) => {
+    game.on(GameEvents.UpdateLeaderboard, data => {
       //TODO: сделать отправку данных на сервер
       console.log('Обновление лидерборда:', data);
     });

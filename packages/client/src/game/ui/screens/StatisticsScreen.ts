@@ -109,8 +109,8 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
             count[playerTwoIndex] = this.allowedItemsCounter[cat];
           }
 
-          const shouldPlaySound = this.allowedItemsCounter[cat] > 0 &&
-            this.allowedItemsCounter[cat] <= Math.max(...count);
+          const shouldPlaySound =
+            this.allowedItemsCounter[cat] > 0 && this.allowedItemsCounter[cat] <= Math.max(...count);
 
           if (shouldPlaySound) {
             this.overlay.emit('score');
