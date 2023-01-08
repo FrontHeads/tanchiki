@@ -5,6 +5,8 @@ import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
 export class Flag extends Entity {
+  destroyed = false;
+
   constructor(props: EntitySettings) {
     super(props);
     Object.assign(this, props);
@@ -14,9 +16,17 @@ export class Flag extends Entity {
     this.hittable = true;
     this.mainSpriteCoordinates = spriteCoordinates['base.heart.alive'];
 
-    this.on(EntityEvent.DAMAGED, () => {
-      this.mainSpriteCoordinates = spriteCoordinates['base.heart.dead'];
-      this.refreshSprite();
-    });
+    this.registerFlagEvents();
   }
+
+  registerFlagEvents() {
+    this.on(EntityEvent.DAMAGED, ({ source }) => {
+      if (!this.destroyed) {
+        this.mainSpriteCoordinates = spriteCoordinates['base.heart.dead'];
+        this.refreshSprite();
+        this.emit(EntityEvent.DESTROYED, source);
+        this.destroyed = true;
+      }
+    });
+  } 
 }

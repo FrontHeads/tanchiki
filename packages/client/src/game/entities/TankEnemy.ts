@@ -19,6 +19,10 @@ export class TankEnemy extends Tank {
     //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
     this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.a'];
 
+    this.registerTankEnemyEvents();
+  }
+
+  registerTankEnemyEvents() {
     this.on(EntityEvent.READY, () => {
       this.move(Direction.DOWN);
       this.autoMove();

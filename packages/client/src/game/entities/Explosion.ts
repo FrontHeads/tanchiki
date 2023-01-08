@@ -8,6 +8,7 @@ type ExplosionSettings = { parent: Tank | Projectile };
 export class Explosion extends Entity {
   variant: ExplosionVariant = 'PROJECTILE_EXPLOSION';
   parent: ExplosionSettings['parent'];
+  despawnTime = 200;
 
   constructor(settings: ExplosionSettings) {
     super({ posX: 0, posY: 0 });
@@ -18,27 +19,31 @@ export class Explosion extends Entity {
     this.parent = settings.parent;
     Object.assign(this, this.calculateProps(settings));
 
-    let delay = 0;
+    let animationDelay = 0;
     switch (this.variant) {
       case 'PROJECTILE_EXPLOSION':
         this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
         break;
       case 'TANK_EXPLOSION':
         this.mainSpriteCoordinates = spriteCoordinates.tankExplosion;
-        delay = 16; // для более красивой отрисовки взрыва танка нужна задержка
+        animationDelay = 16; // для более красивой отрисовки взрыва танка нужна задержка
         break;
     }
 
+    this.registerExplosionEvents({ animationDelay });
+  }
+
+  registerExplosionEvents({ animationDelay }: { animationDelay: number }) {
     this.on(EntityEvent.SPAWN, () => {
       this.startAnimation({
-        delay,
+        delay: animationDelay,
         spriteCoordinates: this.mainSpriteCoordinates,
         looped: false,
       });
 
-      // Деспаун взрыва после завершения анимации или спустя 200мс
+      // Деспаун взрыва после завершения анимации или спустя время (последнее - для тестов)
       this.on(EntityEvent.ANIMATION_ENDED, this.despawn.bind(this));
-      this.setLoopDelay(this.despawn.bind(this), 200);
+      this.setLoopDelay(this.despawn.bind(this), this.despawnTime);
     });
   }
 

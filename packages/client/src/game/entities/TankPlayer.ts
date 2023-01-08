@@ -20,6 +20,10 @@ export class TankPlayer extends Tank {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.secondary.a'];
     }
 
+    this.registerTankPlayerEvents();
+  }
+
+  registerTankPlayerEvents() {
     this.on(EntityEvent.READY, () => {
       this.useShield(this.spawnShieldTimeout);
     });

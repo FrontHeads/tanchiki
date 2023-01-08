@@ -17,6 +17,10 @@ export class Score extends Entity {
     this.color = 'transparent';
     Object.assign(this, this.calculateProps(settings));
 
+    this.registerScoreEvents();
+  }
+
+  registerScoreEvents() {
     this.on(EntityEvent.SPAWN, () => {
       this.setLoopDelay(() => {
         this.despawn();

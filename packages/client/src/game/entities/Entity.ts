@@ -94,15 +94,6 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
 
   takeDamage(source: Entity, rect: Rect) {
     this.emit(EntityEvent.DAMAGED, { ...rect, source });
-    if (this.type === 'projectile') {
-      this.explode();
-    } else if (this.type === 'tank' && !this.invincible) {
-      if (this.role !== source.role) {
-        this.explode();
-        this.destroyedBy = source;
-        this.emit(EntityEvent.DESTROYED, source);
-      }
-    }
   }
 
   /** Запускает анимацию  */
