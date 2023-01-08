@@ -25,7 +25,7 @@ describe('game/entities/Explosion', () => {
 
     loop.load();
     loop.add(explosion);
-    view.build(root);
+    view.load(root);
     view.add(explosion);
     explosion.on(EntityEvent.DESPAWN, despawnObserver);
     explosion.spawn();
