@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { Link, Outlet, Route, useLocation } from 'react-router-dom';
 
-import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
 import { ErrorPage } from '../pages/ErrorPage';
 
@@ -32,7 +31,7 @@ export const TestAppLayout: FC = () => (
 
 export const testAppRoutes = (
   <Route element={<TestAppLayout />} errorElement={<ErrorPage />}>
-    <Route element={<Root />} loader={rootLoader}>
+    <Route element={<Root />}>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/game" element={<Game />} />

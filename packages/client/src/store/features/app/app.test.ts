@@ -4,7 +4,7 @@ import { appActions } from './appSlice';
 describe('Redux app state', () => {
   test('should contain correct initial values', () => {
     const state = store.getState().app;
-    expect(state.isAppLoading).toEqual(false);
+    expect(state.isAppLoading).toEqual(true);
   });
 
   test('should contain correct values', () => {

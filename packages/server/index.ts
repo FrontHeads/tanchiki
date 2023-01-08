@@ -132,7 +132,7 @@ async function startServer() {
        * приложения, в которых необходима авторизацияы
        **/
       const preloadedState = {
-        app: { isAppLoading: false },
+        app: { isAppLoading: true },
       };
 
       /**

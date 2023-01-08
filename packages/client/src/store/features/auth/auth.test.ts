@@ -15,7 +15,7 @@ describe('Redux auth state', () => {
 
     const state = store.getState();
 
-    expect(state.app.isAppLoading).toEqual(false);
+    expect(state.app.isAppLoading).toEqual(true);
     expect(state.auth.userProfile).toEqual(fakeUserProfile);
     expect(state.auth.isLoading).toEqual(false);
   });
@@ -25,7 +25,7 @@ describe('Redux auth state', () => {
 
     const state = store.getState();
 
-    expect(state.app.isAppLoading).toEqual(false);
+    expect(state.app.isAppLoading).toEqual(true);
     expect(state.auth.userProfile).toEqual(null);
     expect(state.auth.isLoading).toEqual(false);
   });
@@ -35,7 +35,7 @@ describe('Redux auth state', () => {
 
     const state = store.getState();
 
-    expect(state.app.isAppLoading).toEqual(false);
+    expect(state.app.isAppLoading).toEqual(true);
     expect(state.auth.userProfile).toEqual(fakeUserProfile);
     expect(state.auth.isLoading).toEqual(false);
   });
@@ -47,7 +47,7 @@ describe('Redux auth state', () => {
 
     const state = store.getState();
 
-    expect(state.app.isAppLoading).toEqual(false);
+    expect(state.app.isAppLoading).toEqual(true);
     expect(state.auth.userProfile).toEqual(fakeUserProfile);
     expect(state.auth.isLoading).toEqual(false);
   });
