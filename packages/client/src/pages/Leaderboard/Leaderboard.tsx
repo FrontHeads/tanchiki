@@ -21,11 +21,11 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   //   dispatch(
   //     leaderboardThunks.addScore({
   //       data: {
-  //         place: 4,
-  //         username: 'ivan',
-  //         score: 201,
-  //         time: 4000,
-  //         matches: 33,
+  //         place: 1,
+  //         username: 'yatx',
+  //         score: 6003,
+  //         time: 121234,
+  //         matches: 34,
   //       },
   //       ratingFieldName: 'score',
   //       teamName: 'FrontHeadsTest',

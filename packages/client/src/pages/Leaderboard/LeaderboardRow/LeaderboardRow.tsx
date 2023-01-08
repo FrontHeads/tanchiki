@@ -3,6 +3,7 @@ import './LeaderboardRow.css';
 import cn from 'classnames';
 import { FC } from 'react';
 
+import { convertMsToTime } from '../../../utils/dateUtils';
 import { LeaderboardRowProps } from './typings';
 
 export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { place, username, score, time, matches } }) => {
@@ -17,7 +18,7 @@ export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { place, usernam
       <td>{place}</td>
       <td>{username}</td>
       <td>{score}</td>
-      <td>{time}</td>
+      <td>{convertMsToTime(time)}</td>
       <td>{matches}</td>
     </tr>
   );
