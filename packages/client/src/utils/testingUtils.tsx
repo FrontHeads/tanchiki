@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 import { Provider } from 'react-redux';
 import { createMemoryRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 
+import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
 import { store } from '../store';
 import { testAppRoutes } from '../tests/TestApp';
@@ -30,7 +31,11 @@ export const renderWithRouter = ({ component, route = '/', wrapWithRootLayout = 
   } else {
     routes = <Route path={route} element={component} />;
     if (wrapWithRootLayout) {
-      routes = <Route element={<Root />}>{routes}</Route>;
+      routes = (
+        <Route element={<Root />} loader={rootLoader}>
+          {routes}
+        </Route>
+      );
     }
   }
 
@@ -48,8 +53,6 @@ export const createMemoryRouterRoutes = (routes: JSX.Element, opts?: Parameters<
 
 // Waits until the <Loader/> is removed from the user interface and the application loads the real content
 export const waitUntilLoaderToBeRemoved = async () => {
-  await waitFor(() => expect(screen.getByTestId('app-loader')).toBeInTheDocument());
-  // await waitFor(() => expect(screen.getByTestId('fallback-loader')).toBeInTheDocument());
-  await waitForElementToBeRemoved(() => screen.getByTestId('app-loader'));
-  // await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
+  await waitFor(() => expect(screen.getByTestId('fallback-loader')).toBeInTheDocument());
+  await waitForElementToBeRemoved(() => screen.getByTestId('fallback-loader'));
 };

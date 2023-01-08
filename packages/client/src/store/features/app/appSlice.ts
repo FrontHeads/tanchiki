@@ -6,7 +6,7 @@ import { AppState } from './typings';
 export const appSlice = createSlice({
   name: 'app',
   initialState: {
-    isAppLoading: true,
+    isAppLoading: false,
   } as AppState,
   reducers: {
     setIsLoading: (state, { payload }: PayloadAction<boolean>) => {
