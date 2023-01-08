@@ -44,9 +44,9 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
     );
   }, []);
 
-  // if (isLoading) {
-  //   return <Loader />;
-  // }
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <section className="leaderboard__wrapper">
