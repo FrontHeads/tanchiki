@@ -19,6 +19,7 @@ type CategoryData = {
 };
 
 export class StatisticsScreen extends Screen<StatisticsScreenState> {
+  animationInterval = 150;
   mode!: GameMode;
   sizing!: { full: number; half: number; third: number };
   currentPosY = 0;
@@ -34,7 +35,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
   mapEnemiesKilledCount!: number[][];
   mapEnemiesKilledScore!: number[][];
   categories!: number;
-  renderedItemsCounter!: number[];
+  allowedItemsCounter!: number[];
 
   show(state: StatisticsScreenState) {
     this.sizing = {
@@ -50,18 +51,18 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
     this.mapEnemiesKilledCount = Object.values(state.mapEnemiesKilledCount);
     this.mapEnemiesKilledScore = Object.values(state.mapEnemiesKilledScore);
     this.categories = this.mapEnemiesKilledCount.length;
-    this.renderedItemsCounter = new Array(this.categories).fill(-1);
+    this.allowedItemsCounter = new Array(this.categories).fill(-1);
 
     if (state.skip) {
-      this.renderedItemsCounter = new Array(this.categories).fill(20);
+      this.allowedItemsCounter = new Array(this.categories).fill(20);
       this.update();
     } else {
-      this.overlay.animate(this.update.bind(this), 200);
+      this.overlay.animate(this.update.bind(this), this.animationInterval);
     }
   }
 
   update(stage = 0) {
-    if (stage > 25) {
+    if (stage > 27) {
       return false;
     }
 
@@ -85,27 +86,34 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
       }
       let emptyCategory = false;
 
-      if (cat !== 0 && this.renderedItemsCounter[cat] === -1) {
+      if (cat !== 0 && this.allowedItemsCounter[cat] === -1) {
         emptyCategory = true;
       } else {
-        if (this.renderedItemsCounter[cat] > Math.max(...count)) {
-          if (typeof this.renderedItemsCounter[cat + 1] !== 'undefined') {
-            if (this.renderedItemsCounter[cat + 1] === -1) {
-              this.renderedItemsCounter[cat + 1] = 0;
+        if (this.allowedItemsCounter[cat] > Math.max(...count)) {
+          if (typeof this.allowedItemsCounter[cat + 1] !== 'undefined') {
+            if (this.allowedItemsCounter[cat + 1] === -1) {
+              this.allowedItemsCounter[cat + 1] = 0;
             }
           } else {
             showFooter = true;
           }
         }
 
-        ++this.renderedItemsCounter[cat];
+        ++this.allowedItemsCounter[cat];
 
-        if (this.renderedItemsCounter[cat] >= 0) {
-          if (this.renderedItemsCounter[cat] < count[playerOneIndex]) {
-            count[playerOneIndex] = this.renderedItemsCounter[cat];
+        if (this.allowedItemsCounter[cat] >= 0) {
+          if (this.allowedItemsCounter[cat] < count[playerOneIndex]) {
+            count[playerOneIndex] = this.allowedItemsCounter[cat];
           }
-          if (this.renderedItemsCounter[cat] < count[playerTwoIndex]) {
-            count[playerTwoIndex] = this.renderedItemsCounter[cat];
+          if (this.allowedItemsCounter[cat] < count[playerTwoIndex]) {
+            count[playerTwoIndex] = this.allowedItemsCounter[cat];
+          }
+
+          const shouldPlaySound = this.allowedItemsCounter[cat] > 0 &&
+            this.allowedItemsCounter[cat] <= Math.max(...count);
+
+          if (shouldPlaySound) {
+            this.overlay.emit('score');
           }
         }
 

@@ -322,6 +322,10 @@ export class Game extends EventEmitter {
       this.overlay.show(this.screen, { level: this.level, ...stats });
       const redirectDelay = 10000;
 
+      this.overlay.on('score', () => {
+        this.audioManager.emit('score');
+      });
+
       const skip = () => {
         this.overlay.show(this.screen, { level: this.level, ...stats, skip: true });
         this.controllerAll.offAll(ControllerEvent.ESCAPE);

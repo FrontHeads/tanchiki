@@ -23,6 +23,8 @@ export enum SoundPathList {
   hitSteel = '/assets/sounds/hit-steel.mp3',
   playerExplosion = '/assets/sounds/player-explosion.mp3',
   enemyExplosion = '/assets/sounds/enemy-explosion.mp3',
+  score = '/assets/sounds/score.mp3',
+  score2 = '/assets/sounds/score.mp3',
 }
 
 export const assetPathList: AssetPathList = { ...ImagePathList, ...SoundPathList };
