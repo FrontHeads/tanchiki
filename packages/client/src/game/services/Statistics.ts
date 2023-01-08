@@ -49,13 +49,15 @@ export class Statistics {
     this.game.emit(GameEvents.UpdateLeaderboard, {
       score: this.sessionScore[0],
       matches: this.sessionCompletedMaps,
-      time: Math.ceil(this.sessionElapsedTime / 1000 / 60), // переводим в минуты
+      time: this.sessionElapsedTime,
     });
   }
 
   getCurrentStatistics() {
     const { mode, sessionScore, mapEnemiesKilledCount } = this;
     const mapEnemiesKilledScore: Partial<EnemiesKilledState> = {};
+
+    const mapEnemiesKilledTotal = [0, 0];
 
     Object.entries(mapEnemiesKilledCount).forEach(entry => {
       const enemyVariant = entry[0] as EnemyVariant;
@@ -66,9 +68,12 @@ export class Statistics {
         enemyCountForPlayerOne * scoreMultiplyer,
         enemyCountForPlayerTwo * scoreMultiplyer,
       ];
+
+      mapEnemiesKilledTotal[0] += enemyCountForPlayerOne;
+      mapEnemiesKilledTotal[1] += enemyCountForPlayerTwo;
     });
 
-    return { mode, sessionScore, mapEnemiesKilledCount, mapEnemiesKilledScore };
+    return { mode, sessionScore, mapEnemiesKilledScore, mapEnemiesKilledCount, mapEnemiesKilledTotal };
   }
 
   getScoreByEnemyVariant(enemyVariant: EnemyVariant) {

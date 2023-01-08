@@ -322,8 +322,16 @@ export class Game extends EventEmitter {
       this.overlay.show(this.screen, { level: this.level, ...stats });
       const redirectDelay = 10000;
 
-      this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
-      this.controllerAll.on(ControllerEvent.SHOOT, resolve);
+      const skip = () => {
+        this.overlay.show(this.screen, { level: this.level, ...stats, skip: true });
+        this.controllerAll.offAll(ControllerEvent.ESCAPE);
+        this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
+        this.controllerAll.offAll(ControllerEvent.SHOOT);
+        this.controllerAll.on(ControllerEvent.SHOOT, resolve);
+      };
+
+      this.controllerAll.on(ControllerEvent.ESCAPE, skip);
+      this.controllerAll.on(ControllerEvent.SHOOT, skip);
       setTimeout(resolve, redirectDelay);
     });
   }

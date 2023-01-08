@@ -5,47 +5,144 @@ import { Screen } from './Screen';
 type StatisticsScreenState = {
   mode: GameMode;
   sessionScore: number[];
+  mapEnemiesKilledTotal: number[];
   mapEnemiesKilledCount: EnemiesKilledState;
   mapEnemiesKilledScore: EnemiesKilledState;
   level: number;
+  skip?: boolean;
+};
+
+type CategoryData = {
+  score: Array<number | string>;
+  count: Array<number | string>;
+  enemyTankSprite: number[][];
 };
 
 export class StatisticsScreen extends Screen<StatisticsScreenState> {
-  state!: StatisticsScreenState;
+  mode!: GameMode;
+  sizing!: { full: number; half: number; third: number };
+  currentPosY = 0;
+  enemyTankSprites = [
+    spriteCoordinates['tank.enemy.default.a'].UP,
+    spriteCoordinates['tank.enemy.default.b'].UP,
+    spriteCoordinates['tank.enemy.default.c'].UP,
+    spriteCoordinates['tank.enemy.default.d'].UP,
+  ];
+  level!: number;
+  sessionScore!: number[];
+  mapEnemiesKilledTotal!: number[];
+  mapEnemiesKilledCount!: number[][];
+  mapEnemiesKilledScore!: number[][];
+  categories!: number;
+  renderedItemsCounter!: number[];
 
   show(state: StatisticsScreenState) {
-    this.state = state;
-    this.overlay.animate(this.update.bind(this));
+    this.sizing = {
+      full: this.overlay.view.width,
+      half: Math.round(this.overlay.view.width / 2),
+      third: Math.round(this.overlay.view.width / 3),
+    };
+
+    this.mode = state.mode;
+    this.level = state.level;
+    this.sessionScore = state.sessionScore;
+    this.mapEnemiesKilledTotal = state.mapEnemiesKilledTotal;
+    this.mapEnemiesKilledCount = Object.values(state.mapEnemiesKilledCount);
+    this.mapEnemiesKilledScore = Object.values(state.mapEnemiesKilledScore);
+    this.categories = this.mapEnemiesKilledCount.length;
+    this.renderedItemsCounter = new Array(this.categories).fill(-1);
+
+    if (state.skip) {
+      this.renderedItemsCounter = new Array(this.categories).fill(20);
+      this.update();
+    } else {
+      this.overlay.animate(this.update.bind(this), 200);
+    }
   }
 
   update(stage = 0) {
-    if (stage > 2) {
+    if (stage > 25) {
       return false;
     }
 
     this.overlay.clearScreen();
     this.overlay.renderSplashScreen();
 
-    const fullWidth = this.overlay.view.width;
-    const halfWidth = Math.round(fullWidth / 2);
-    const oneThirdWidth = Math.round(fullWidth / 3);
+    this.renderHeader();
 
+    this.currentPosY = 20;
+    let showFooter = false;
+
+    for (let cat = 0; cat < this.categories; ++cat) {
+      const playerOneIndex = 0;
+      const playerTwoIndex = 1;
+      const enemyTankSprite = this.enemyTankSprites[cat];
+      let score = this.mapEnemiesKilledScore[cat];
+      const count = [...this.mapEnemiesKilledCount[cat]];
+      let scoreMultiplyer = Math.max(...score) / Math.max(...count);
+      if (isNaN(scoreMultiplyer) || scoreMultiplyer === Infinity) {
+        scoreMultiplyer = 1;
+      }
+      let emptyCategory = false;
+
+      if (cat !== 0 && this.renderedItemsCounter[cat] === -1) {
+        emptyCategory = true;
+      } else {
+        if (this.renderedItemsCounter[cat] > Math.max(...count)) {
+          if (typeof this.renderedItemsCounter[cat + 1] !== 'undefined') {
+            if (this.renderedItemsCounter[cat + 1] === -1) {
+              this.renderedItemsCounter[cat + 1] = 0;
+            }
+          } else {
+            showFooter = true;
+          }
+        }
+
+        ++this.renderedItemsCounter[cat];
+
+        if (this.renderedItemsCounter[cat] >= 0) {
+          if (this.renderedItemsCounter[cat] < count[playerOneIndex]) {
+            count[playerOneIndex] = this.renderedItemsCounter[cat];
+          }
+          if (this.renderedItemsCounter[cat] < count[playerTwoIndex]) {
+            count[playerTwoIndex] = this.renderedItemsCounter[cat];
+          }
+        }
+
+        if (typeof count[playerOneIndex] === 'number' && typeof count[playerTwoIndex] === 'number') {
+          score = [count[playerOneIndex] * scoreMultiplyer, count[playerTwoIndex] * scoreMultiplyer];
+        }
+      }
+
+      this.renderCategory({
+        score: emptyCategory ? [' ', ' '] : score,
+        count: emptyCategory ? [' ', ' '] : count,
+        enemyTankSprite,
+      });
+    }
+
+    this.renderFooter({ count: showFooter ? this.mapEnemiesKilledTotal : [' ', ' '] });
+
+    return true;
+  }
+
+  renderHeader() {
     /** Название уровня */
     this.overlay.renderElement({
       posX: 0,
       posY: 12,
-      width: fullWidth,
+      width: this.sizing.full,
       height: 2,
       align: 'center',
       color: 'white',
-      text: `УРОВЕНЬ ${this.state.level}`,
+      text: `УРОВЕНЬ ${this.level}`,
     });
 
     /** Игрок 1: имя */
     this.overlay.renderElement({
       posX: 0,
       posY: 16,
-      width: oneThirdWidth,
+      width: this.sizing.third,
       height: 2,
       align: 'right',
       color: 'red',
@@ -56,170 +153,157 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
     this.overlay.renderElement({
       posX: 0,
       posY: 20,
-      width: oneThirdWidth,
+      width: this.sizing.third,
       height: 2,
       align: 'right',
       color: 'orange',
-      text: `${this.state.sessionScore[0]}`,
+      text: `${this.sessionScore[0]}`,
     });
 
-    if (this.state.mode === 'MULTIPLAYER') {
-      /** Игрок 2: имя */
-      this.overlay.renderElement({
-        posX: oneThirdWidth * 2,
-        posY: 16,
-        width: oneThirdWidth,
-        height: 2,
-        align: 'left',
-        color: 'red',
-        text: 'ИГРОК 2',
-      });
-
-      /** Игрок 2: очки */
-      this.overlay.renderElement({
-        posX: oneThirdWidth * 2,
-        posY: 20,
-        width: oneThirdWidth,
-        height: 2,
-        align: 'left',
-        color: 'orange',
-        text: `${this.state.sessionScore[1]}`,
-      });
+    if (this.mode === 'SINGLEPLAYER') {
+      return;
     }
 
-    /** Вражеские танки */
-    /** Общее количество убитых танков: [игрок-1, игрок-2] */
-    const mapEnemiesKilledCountTotal = [0, 0];
-    const mapEnemiesKilledScore = Object.values(this.state.mapEnemiesKilledScore);
-    const mapEnemiesKilledCount = Object.values(this.state.mapEnemiesKilledCount);
-    const mapEnemiesKilledVariants = Object.keys(this.state.mapEnemiesKilledCount);
-
-    let currentPosY = 20;
-
-    for (let i = 0; i < mapEnemiesKilledCount.length; ++i) {
-      currentPosY += 5;
-      const variant = mapEnemiesKilledVariants[i];
-      const score = mapEnemiesKilledScore[i];
-      const count = mapEnemiesKilledCount[i];
-
-      mapEnemiesKilledCountTotal[0] += count[0];
-      mapEnemiesKilledCountTotal[1] += count[1];
-
-      /** Игрок 1: количество очков за конкретный тип вражеских танков */
-      this.overlay.renderElement({
-        posX: 0,
-        posY: currentPosY,
-        width: oneThirdWidth,
-        height: 2,
-        align: 'right',
-        color: 'white',
-        text: `${score[0]} ОЧКОВ`,
-      });
-
-      /** Игрок 1: количество подбитых вражеских танков конкретного типа */
-      this.overlay.renderElement({
-        posX: 0,
-        posY: currentPosY,
-        width: halfWidth - 1.5,
-        height: 2,
-        align: 'right',
-        color: 'white',
-        text: `${count[0]}<`,
-      });
-
-      /** Картинка вражеского танка */
-      this.overlay.renderElement({
-        posX: halfWidth - 1.5,
-        posY: currentPosY - 0.8,
-        width: 3,
-        height: 3,
-        mainSpriteCoordinates: spriteCoordinates['tank.enemy.default.a'].UP,
-      });
-  
-      if (this.state.mode === 'SINGLEPLAYER') {
-        continue;
-      }
-
-      /** Игрок 2: количество очков за конкретный тип вражеских танков */
-      this.overlay.renderElement({
-        posX: oneThirdWidth * 2,
-        posY: currentPosY,
-        width: oneThirdWidth,
-        height: 2,
-        align: 'left',
-        color: 'white',
-        text: `${score[1]} ОЧКОВ`,
-      });
-
-      /** Игрок 2: количество подбитых вражеских танков конкретного типа */
-      this.overlay.renderElement({
-        posX: halfWidth + 1.5,
-        posY: currentPosY,
-        width: halfWidth - 1.5,
-        height: 2,
-        align: 'left',
-        color: 'white',
-        text: `>${count[1]}`,
-      });
-    }
-
-    //** Горизонтальная линия */
+    /** Игрок 2: имя */
     this.overlay.renderElement({
-      posX: oneThirdWidth + 2,
-      posY: currentPosY + 3.5,
-      width: oneThirdWidth - 4,
+      posX: this.sizing.third * 2,
+      posY: 16,
+      width: this.sizing.third,
+      height: 2,
+      align: 'left',
+      color: 'red',
+      text: 'ИГРОК 2',
+    });
+
+    /** Игрок 2: очки */
+    this.overlay.renderElement({
+      posX: this.sizing.third * 2,
+      posY: 20,
+      width: this.sizing.third,
+      height: 2,
+      align: 'left',
+      color: 'orange',
+      text: `${this.sessionScore[1]}`,
+    });
+  }
+
+  renderCategory({ score, count, enemyTankSprite }: CategoryData) {
+    this.currentPosY += 5;
+
+    /** Игрок 1: количество очков за конкретный тип вражеских танков */
+    this.overlay.renderElement({
+      posX: 0,
+      posY: this.currentPosY,
+      width: this.sizing.third,
+      height: 2,
+      align: 'right',
+      color: 'white',
+      text: `${score[0]} ОЧКОВ`,
+    });
+
+    /** Игрок 1: количество подбитых вражеских танков конкретного типа */
+    this.overlay.renderElement({
+      posX: 0,
+      posY: this.currentPosY,
+      width: this.sizing.half - 1.5,
+      height: 2,
+      align: 'right',
+      color: 'white',
+      text: `${count[0]}<`,
+    });
+
+    /** Картинка вражеского танка */
+    this.overlay.renderElement({
+      posX: this.sizing.half - 1,
+      posY: this.currentPosY - 0.8,
+      width: 3,
+      height: 3,
+      mainSpriteCoordinates: enemyTankSprite,
+    });
+
+    if (this.mode === 'SINGLEPLAYER') {
+      return;
+    }
+
+    /** Игрок 2: количество подбитых вражеских танков конкретного типа */
+    this.overlay.renderElement({
+      posX: this.sizing.half + 2.5,
+      posY: this.currentPosY,
+      width: this.sizing.half - 2.5,
+      height: 2,
+      align: 'left',
+      color: 'white',
+      text: `>${count[1]}`,
+    });
+
+    /** Игрок 2: количество очков за конкретный тип вражеских танков */
+    this.overlay.renderElement({
+      posX: this.sizing.third * 2,
+      posY: this.currentPosY,
+      width: this.sizing.third,
+      height: 2,
+      align: 'left',
+      color: 'white',
+      text: `${score[1]} ОЧКОВ`,
+    });
+  }
+
+  renderFooter({ count }: { count: Array<number | string> }) {
+    /** Горизонтальная линия */
+    this.overlay.renderElement({
+      posX: this.sizing.third + 2,
+      posY: this.currentPosY + 3.5,
+      width: this.sizing.third - 4,
       height: 0.5,
       color: 'white',
     });
 
-    //** Игрок 1: надпись "Всего" */
+    /** Игрок 1: надпись "Всего" */
     this.overlay.renderElement({
       posX: 0,
-      posY: currentPosY + 5,
-      width: oneThirdWidth,
+      posY: this.currentPosY + 5,
+      width: this.sizing.third,
       height: 2,
       align: 'right',
       color: 'white',
       text: `ВСЕГО`,
     });
 
-    //** Игрок 1: танков подбито всего */
+    /** Игрок 1: танков подбито всего */
     this.overlay.renderElement({
       posX: 0,
-      posY: currentPosY + 5,
-      width: halfWidth - 1.5,
+      posY: this.currentPosY + 5,
+      width: this.sizing.half - 1.5,
       height: 2,
       align: 'right',
       color: 'white',
-      text: `${mapEnemiesKilledCountTotal[0]} `,
+      text: `${count[0]} `,
     });
 
-    if (this.state.mode === 'SINGLEPLAYER') {
-      return true;
+    if (this.mode === 'SINGLEPLAYER') {
+      return;
     }
 
-    //** Игрок 2: надпись "Всего" */
+    /** Игрок 2: танков подбито всего */
     this.overlay.renderElement({
-      posX: oneThirdWidth * 2,
-      posY: currentPosY + 5,
-      width: oneThirdWidth,
+      posX: this.sizing.half + 2.5,
+      posY: this.currentPosY + 5,
+      width: this.sizing.half - 2.5,
+      height: 2,
+      align: 'left',
+      color: 'white',
+      text: ` ${count[1]}`,
+    });
+
+    /** Игрок 2: надпись "Всего" */
+    this.overlay.renderElement({
+      posX: this.sizing.third * 2,
+      posY: this.currentPosY + 5,
+      width: this.sizing.third,
       height: 2,
       align: 'left',
       color: 'white',
       text: `ВСЕГО`,
     });
-
-    //** Игрок 2: танков подбито всего */
-    this.overlay.renderElement({
-      posX: halfWidth + 1.5,
-      posY: currentPosY + 5,
-      width: halfWidth - 1.5,
-      height: 2,
-      align: 'left',
-      color: 'white',
-      text: ` ${mapEnemiesKilledCountTotal[1]}`,
-    });
-
-    return true;
   }
 }
