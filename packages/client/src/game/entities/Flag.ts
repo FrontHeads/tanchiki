@@ -28,5 +28,5 @@ export class Flag extends Entity {
         this.destroyed = true;
       }
     });
-  } 
+  }
 }

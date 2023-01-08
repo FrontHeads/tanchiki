@@ -132,7 +132,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   createEntity(props: EntitySettings) {
     let entity: Entity;
     if (props.type === 'flag') {
-      entity = new Flag(props).on(EntityEvent.DAMAGED, () => {
+      entity = new Flag(props).on(EntityEvent.DESTROYED, () => {
         this.emit(ScenarioEvent.GAME_OVER);
       });
     } else {
