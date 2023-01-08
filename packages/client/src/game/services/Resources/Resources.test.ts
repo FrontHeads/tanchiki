@@ -38,7 +38,7 @@ describe('game/services/Resources', () => {
     global.Image = class {
       constructor() {
         setTimeout(() => {
-          // @ts-expect-error: property 'onload' does not exist on type 'Image'.
+          // @ts-expect-error: property 'onerror' does not exist on type 'Image'.
           this.onerror(); // simulate error
         }, 100);
       }

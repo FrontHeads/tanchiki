@@ -1,3 +1,4 @@
+import { Color } from '../../data/colors';
 import { Screen } from './Screen';
 
 export class GameOverScreen extends Screen {
@@ -38,7 +39,7 @@ export class GameOverScreen extends Screen {
       width: view.width,
       height: fontSize,
       text: 'ПОТРАЧЕНО',
-      color: 'red',
+      color: Color.Red,
       // Выравнивание по ширине
       align: 'center',
     });

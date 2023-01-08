@@ -1,5 +1,6 @@
+import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { type EntityDynamicSettings, type Rect, Direction, EntityEvent, Speed } from '../typings';
+import { type EntityDynamicSettings, Direction, EntityEvent, Speed } from '../typings';
 import { EntityDynamic, Projectile } from './';
 
 export class Tank extends EntityDynamic {
@@ -26,7 +27,7 @@ export class Tank extends EntityDynamic {
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
     Object.assign(this, props);
-    this.color = props.color || 'yellow';
+    this.color = props.color || Color.Yellow;
 
     this.on(EntityEvent.SPAWN, () => {
       this.startAnimation({
@@ -37,7 +38,7 @@ export class Tank extends EntityDynamic {
       });
 
       const color = this.color;
-      this.color = 'lightcyan';
+      this.color = Color.LightCyan;
       // Чтобы снаряды пролетали через спавнящийся танк (отображается в виде звезды)
       this.hittable = false;
       // Возвращаем танку подвижность после анимации спауна.
