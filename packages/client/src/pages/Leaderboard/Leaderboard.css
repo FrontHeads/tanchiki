@@ -25,18 +25,6 @@
   &__row:nth-child(odd) {
     background-color: $background_color;
   }
-
-  &__row:nth-child(1) {
-    background-color: $dendy_button_primary;
-  }
-
-  &__row:nth-child(2) {
-    background-color: $dendy_button_secondary;
-  }
-
-  &__row:nth-child(3) {
-    background-color: $dendy_button_third;
-  }
 }
 
 .no-margin-top {

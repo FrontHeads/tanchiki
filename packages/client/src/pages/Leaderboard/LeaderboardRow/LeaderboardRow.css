@@ -1,5 +1,15 @@
+@import url("../../../variables.css");
 .leaderboard {
   &__row {
     height: 40px;
   }
+}
+.first-place {
+  background-color: $dendy_button_primary !important;
+}
+.second-place {
+  background-color: $dendy_button_secondary !important;
+}
+.third-place {
+  background-color: $dendy_button_third !important;
 }

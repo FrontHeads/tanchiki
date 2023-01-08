@@ -11,14 +11,14 @@ export const leaderboardFields: LeaderboardFieldProps[] = [
   },
   {
     fieldId: 'score',
-    fieldName: 'Рекорд',
+    fieldName: 'Рекорд по очкам',
   },
   {
     fieldId: 'time',
-    fieldName: 'Время',
+    fieldName: 'Время в игре',
   },
   {
     fieldId: 'matches',
-    fieldName: 'Матчи',
+    fieldName: 'Пройдено уровней',
   },
 ];

@@ -1,15 +1,18 @@
 import '@testing-library/jest-dom';
 
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 
 import { renderWithRouter } from '../../utils/testingUtils';
-import { headerText, Leaderboard } from './Leaderboard';
+import { Leaderboard } from './Leaderboard';
 describe('Leaderboard', () => {
   test('it renders', () => {
-    renderWithRouter({ component: <Leaderboard header={headerText} /> });
+    const headerText = 'Рейтинг игроков';
+    act(() => {
+      renderWithRouter({ component: <Leaderboard header={headerText} /> });
 
-    const renderedLeaderboard = screen.getByText(headerText);
+      const renderedLeaderboard = screen.getByText(headerText);
 
-    expect(renderedLeaderboard).toBeInTheDocument();
+      expect(renderedLeaderboard).toBeInTheDocument();
+    });
   });
 });
