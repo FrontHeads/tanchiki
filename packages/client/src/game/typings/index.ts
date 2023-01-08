@@ -13,6 +13,10 @@ export type GameSettings = {
 
 export type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';
 
+export enum GameEvents {
+  UpdateLeaderboard = 'UPDATE_LEADERBOARD',
+}
+
 export enum Direction {
   UP = 'UP',
   DOWN = 'DOWN',

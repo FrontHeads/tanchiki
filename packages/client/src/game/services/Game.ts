@@ -5,9 +5,9 @@ import { levels } from './../data/levels';
 import { Controller, Loop, resources, Scenario, Statistics, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
-import { sleep } from '../utils';
+import { EventEmitter, sleep } from '../utils';
 
-export class Game {
+export class Game extends EventEmitter {
   static __instance: Game;
   inited = false;
   paused = false;
@@ -28,6 +28,7 @@ export class Game {
   maxLevels = levels.length;
 
   private constructor() {
+    super();
     this.loop = new Loop();
     this.zone = new Zone(this.settings);
     this.view = new View(this.settings);
@@ -67,6 +68,7 @@ export class Game {
   }
 
   unload() {
+    this.listeners = {};
     this.loop.unload();
     this.view.unload();
     this.overlay.unload();

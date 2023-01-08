@@ -1,6 +1,6 @@
 import { Game } from './';
 import { Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
-import { EnemiesKilledState, EnemyVariant, EntityEvent, GameMode, PlayerVariant } from '../typings';
+import { EnemiesKilledState, EnemyVariant, EntityEvent, GameEvents, GameMode, PlayerVariant } from '../typings';
 
 export class Statistics {
   game: Game;
@@ -41,15 +41,15 @@ export class Statistics {
   }
 
   updateLeaderboard() {
-    //TODO: сделать отправку данных на сервер
-    const { mode, sessionScore, sessionCompletedMaps, sessionElapsedTime } = this;
-    const [sessionScorePlayerOne, sessionScorePlayerTwo] = sessionScore;
-    console.log('GAME SESSION STATISTICS: ', {
-      mode,
-      sessionCompletedMaps,
-      sessionElapsedTime,
-      sessionScorePlayerOne,
-      sessionScorePlayerTwo,
+    // Если не синглплеер, то лидерборд не обновляем
+    if (this.mode === 'MULTIPLAYER') {
+      return;
+    }
+
+    this.game.emit(GameEvents.UpdateLeaderboard, {
+      score: this.sessionScore[0],
+      matches: this.sessionCompletedMaps,
+      time: Math.ceil(this.sessionElapsedTime / 1000 / 60), // переводим в минуты
     });
   }
 
