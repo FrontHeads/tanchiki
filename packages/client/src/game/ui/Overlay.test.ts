@@ -12,7 +12,7 @@ describe('game/ui/Overlay', () => {
     const root = document.body.appendChild(document.createElement('div'));
     const overlay = new Overlay(game);
 
-    game.view.build(root);
+    game.view.load(root);
     overlay.renderElement({ posX: 0, posY: 0, width: 2, height: 2 });
 
     expect(game.view.drawOnLayer).toHaveBeenCalled();

@@ -8,6 +8,7 @@ import {
   PauseScreen,
   StatisticsScreen,
 } from '../ui/screens';
+import { Color } from './colors';
 import { classicDesignSprite } from './spriteCoordinates';
 
 export const concreteCells: Cell[] = [
@@ -41,8 +42,8 @@ export const screenClasses = {
 };
 
 export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
-  [Player.PLAYER1]: { posX: 18, posY: 50, color: 'yellow', variant: 'PLAYER1' },
-  [Player.PLAYER2]: { posX: 34, posY: 50, color: 'lime', variant: 'PLAYER2' },
+  [Player.PLAYER1]: { posX: 18, posY: 50, color: Color.Yellow, variant: 'PLAYER1' },
+  [Player.PLAYER2]: { posX: 34, posY: 50, color: Color.Lime, variant: 'PLAYER2' },
 };
 
 /**

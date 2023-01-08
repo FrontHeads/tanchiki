@@ -21,7 +21,7 @@ export class Game {
   controllerWasd: Controller;
   controllerArrows: Controller;
   statistics: Statistics;
-  settings: GameSettings = { width: 56, height: 56, boundarySize: 2 };
+  settings: GameSettings = { width: 62, height: 56, boundarySize: 2, indicatorsSidebarSize: 6 };
   screen: ScreenType = ScreenType.LOADING;
   mainMenuState = MainMenuState.SINGLEPLAYER;
   level = 1;
@@ -68,6 +68,7 @@ export class Game {
 
   unload() {
     this.loop.unload();
+    this.view.unload();
     this.overlay.unload();
     this.audioManager.unload();
     this.controllerAll.unload();
@@ -95,7 +96,7 @@ export class Game {
   }
 
   createView(root: HTMLElement | null) {
-    this.view.build(root);
+    this.view.load(root);
   }
 
   addEntity(entity: Entity) {

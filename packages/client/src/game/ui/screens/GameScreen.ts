@@ -1,3 +1,4 @@
+import { Color } from '../../data/colors';
 import { Screen } from './Screen';
 
 export class GameScreen extends Screen<number> {
@@ -20,14 +21,14 @@ export class GameScreen extends Screen<number> {
       posY: 0,
       width,
       height,
-      color: 'grey',
+      color: Color.Grey,
     });
     this.overlay.renderElement({
       posX: 0,
       posY: height + stage * 2,
       width,
       height,
-      color: 'grey',
+      color: Color.Grey,
     });
 
     return true;

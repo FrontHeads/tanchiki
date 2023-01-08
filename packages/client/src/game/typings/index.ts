@@ -1,3 +1,4 @@
+import { Color } from '../data/colors';
 import { Entity, Projectile, Tank, TankEnemy } from '../entities';
 import { Controller } from './../services/Controller';
 
@@ -7,6 +8,7 @@ export type GameSettings = {
   width: number;
   height: number;
   boundarySize: number;
+  indicatorsSidebarSize: number;
 };
 
 export type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';
@@ -80,6 +82,7 @@ export type EntityType =
   | 'powerup'
   | 'explosion'
   | 'score'
+  | 'indicator'
   | 'custom';
 
 export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';
@@ -100,7 +103,7 @@ export type EntitySettings = Pos &
     //TODO: отрефакторить, чтобы варианты были для конкретных типов
     variant: TerrainVariant | PlayerVariant | EnemyVariant | ExplosionVariant;
     role: EntityRole;
-    color: string;
+    color: Color | string;
     img: HTMLImageElement;
   }>;
 
@@ -118,9 +121,10 @@ export type UIElementSettings = Pos &
   Partial<{
     text: string;
     align: CanvasTextAlign;
-    color: string;
+    color: Color | string;
     backImg: HTMLImageElement;
     mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
+    indicatorName?: string;
   }>;
 
 export enum MainMenuState {
@@ -140,8 +144,8 @@ export enum ScreenType {
 
 // Scenario
 export enum Player {
-  PLAYER1,
-  PLAYER2,
+  PLAYER1 = 'PLAYER1',
+  PLAYER2 = 'PLAYER2',
 }
 
 export enum TankEnemyType {

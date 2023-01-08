@@ -7,10 +7,11 @@ export class UIElement extends Entity {
   align: CanvasTextAlign = 'left';
   backImg: HTMLImageElement | null = null;
   spawned = true;
+  indicatorName = '';
 
   constructor(props: UIElementSettings) {
     super(props);
-    this.type = 'custom';
+    this.type = props.indicatorName ? 'indicator' : 'custom';
     Object.assign(this, props);
   }
 

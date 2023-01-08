@@ -1,3 +1,4 @@
+import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
 import { EntityEvent, ExplosionVariant } from '../typings';
 import { Entity, Projectile, Tank } from './';
@@ -13,7 +14,7 @@ export class Explosion extends Entity {
     this.type = 'explosion';
     this.crossable = true;
     this.hittable = false;
-    this.color = 'transparent';
+    this.color = Color.Transparent;
     this.parent = settings.parent;
     Object.assign(this, this.calculateProps(settings));
 
