@@ -126,7 +126,7 @@ export type UIElementSettings = Pos &
     text: string;
     align: CanvasTextAlign;
     color: Color | string;
-    backImg: HTMLImageElement;
+    backImg: HTMLImageElement | HTMLCanvasElement;
     mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
     indicatorName?: string;
   }>;

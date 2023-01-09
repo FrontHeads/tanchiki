@@ -5,7 +5,7 @@ import { EntityEvent } from './../typings/index';
 export class UIElement extends Entity {
   text = '';
   align: CanvasTextAlign = 'left';
-  backImg: HTMLImageElement | null = null;
+  backImg: HTMLImageElement | HTMLCanvasElement | null = null;
   spawned = true;
   indicatorName = '';
 

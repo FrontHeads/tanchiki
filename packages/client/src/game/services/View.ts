@@ -1,9 +1,17 @@
 import { Color } from '../data/colors';
 import { Entity, Tank } from '../entities';
-import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
+import {
+  AnimationSettings,
+  EntityEvent,
+  GetSpriteCoordinates,
+  LayerEntity,
+  LayerList,
+  Rect,
+  Size,
+  SpriteCoordinatesNoAnimations
+} from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
-import { EntityEvent } from './../typings/index';
 
 export class View extends EventEmitter {
   width = 0;
@@ -293,6 +301,24 @@ export class View extends EventEmitter {
       this.convertToPixels(item.width, correctTankSize),
       this.convertToPixels(item.height, correctTankSize),
     ] as const;
+  }
+
+  /** Возвращает канвас с отдельным изображением из спрайта. Используется, чтобы задать шрифтовой фон из спрайта. */
+  getSpriteContent(spriteCoordinates: SpriteCoordinatesNoAnimations) {
+    const tempCanvas = document.createElement('canvas');
+    if (!spriteCoordinates) {
+      return null;
+    }
+    tempCanvas.width = spriteCoordinates[0][2];
+    tempCanvas.height = spriteCoordinates[0][3];
+
+    const rect = [0, 0, tempCanvas.width, tempCanvas.height];
+
+    const tempContext = tempCanvas.getContext('2d');
+    //@ts-expect-error tuple создавать неудобно, влечет лишние проверки.
+    tempContext?.drawImage(this.spriteImg, ...spriteCoordinates[0], ...rect);
+
+    return tempCanvas;
   }
 
   /** Возвращает координаты сущности на спрайте */
