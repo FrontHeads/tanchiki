@@ -25,7 +25,7 @@ export class Overlay extends EventEmitter {
   }
 
   reset() {
-    this.listeners = {};
+    this.clearAllListeners();
     for (const animateProcess of this.activeAnimations) {
       clearInterval(animateProcess);
     }

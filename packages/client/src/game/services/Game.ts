@@ -68,7 +68,7 @@ export class Game extends EventEmitter {
   }
 
   unload() {
-    this.listeners = {};
+    this.clearAllListeners();
     this.loop.unload();
     this.view.unload();
     this.overlay.unload();

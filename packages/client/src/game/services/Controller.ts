@@ -20,7 +20,7 @@ export class Controller extends EventEmitter<ControllerEvent> {
   }
 
   reset() {
-    this.listeners = {} as Record<ControllerEvent, Fn[]>;
+    this.clearAllListeners();
     return this;
   }
 
