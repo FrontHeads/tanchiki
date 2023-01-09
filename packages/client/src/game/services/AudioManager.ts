@@ -162,7 +162,7 @@ export class AudioManager extends EventEmitter {
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isStopped) { 
+    if (soundResource && !this.isStopped) {
       if (sound === 'idle' || sound === 'move' || sound === 'ice') {
         soundResource.volume = 0.5;
       }

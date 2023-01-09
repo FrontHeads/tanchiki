@@ -8,7 +8,7 @@ import {
   LayerList,
   Rect,
   Size,
-  SpriteCoordinatesNoAnimations
+  SpriteCoordinatesNoAnimations,
 } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
