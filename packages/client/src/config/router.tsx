@@ -33,23 +33,22 @@ export const routes = createRoutesFromElements(
   <>
     <Route element={<RootLayout />} errorElement={<ErrorPage />} loader={rootLoader}>
       <Route path={Paths.Home} element={<Home />}></Route>
+      <Route path={Paths.Leaderboard} element={<Leaderboard />}></Route>
+      <Route
+        path={Paths.Game}
+        element={
+          <Suspense fallback={<>Загрузка...</>}>
+            <Game />
+          </Suspense>
+        }></Route>
 
       <Route element={<PublicRoutes />}>
         <Route path={Paths.SignIn} element={<SignIn />}></Route>
-
         <Route path={Paths.SignUp} element={<SignUp />}></Route>
       </Route>
 
       <Route element={<ProtectedRoutes />}>
         <Route path={Paths.UserProfile} element={<UserProfile />}></Route>
-        <Route path={Paths.Leaderboard} element={<Leaderboard />}></Route>
-        <Route
-          path={Paths.Game}
-          element={
-            <Suspense fallback={<>Загрузка...</>}>
-              <Game />
-            </Suspense>
-          }></Route>
         <Route path={Paths.Forum}>
           <Route index={true} element={<Forum />}></Route>
           <Route path={`${Paths.Section}/:sectionId`}>
