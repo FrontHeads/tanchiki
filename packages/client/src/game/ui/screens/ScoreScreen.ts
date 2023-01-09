@@ -62,6 +62,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
   }
 
   update(stage = 0) {
+    // Число 27 выбрано опытным путём, чтобы успели отсчитаться все подбитые танки.
     if (stage > 27) {
       return false;
     }
