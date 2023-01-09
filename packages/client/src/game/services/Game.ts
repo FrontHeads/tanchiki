@@ -271,6 +271,7 @@ export class Game extends EventEmitter {
         this.statistics.finishSession();
         await this.initGameOverPopup();
         await this.initGameScore();
+        await this.initGameOverFinal();
         this.initMenu();
       })
       .on(ScenarioEvent.MISSION_ACCOMPLISHED, async () => {
@@ -299,7 +300,7 @@ export class Game extends EventEmitter {
       this.reset();
       this.screen = ScreenType.Score;
       this.overlay.show(this.screen, { level: this.level, ...stats });
-      const redirectDelay = 10000;
+      const redirectDelay = 7000;
 
       this.overlay.on('score', () => {
         this.audioManager.emit('score');
@@ -327,14 +328,27 @@ export class Game extends EventEmitter {
 
       const redirectDelay = 3000;
       this.screen = ScreenType.GameOverPopup;
-
       this.overlay.show(this.screen);
-      this.audioManager.emit('gameOver');
 
       this.controllerAll.reset();
       this.controllerWasd.reset();
       this.controllerArrows.reset();
 
+      this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
+      setTimeout(resolve, redirectDelay);
+    });
+  }
+
+  initGameOverFinal() {
+    return new Promise<void>(resolve => {
+      this.reset();
+
+      const redirectDelay = 3000;
+      this.screen = ScreenType.GameOverFinal;
+      this.overlay.show(this.screen);
+      this.audioManager.emit('gameOver');
+
+      this.controllerAll.on(ControllerEvent.SHOOT, resolve);
       this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
       setTimeout(resolve, redirectDelay);
     });
