@@ -2,8 +2,15 @@ import { YANDEX_API_ENDPOINTS } from '../config/constants';
 import { SortOption } from '../pages/Leaderboard/typings';
 import { HTTP } from '../utils/HTTP';
 import { TEAM_NAME } from './../config/constants';
-import { LeaderboardRecord, LeaderboardRowProps } from './../pages/Leaderboard/LeaderboardRow/typings';
+import { LeaderboardRowProps } from './../pages/Leaderboard/LeaderboardRow/typings';
 
+export type LeaderboardRecord = {
+  place: number;
+  username: string;
+  score: number;
+  time: number;
+  matches: number;
+};
 export type NewLeaderboardRecordRequest = {
   data: LeaderboardRecord;
 

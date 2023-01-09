@@ -1,10 +1,4 @@
-export type LeaderboardRecord = {
-  place: number;
-  username: string;
-  score: number;
-  time: number;
-  matches: number;
-};
+import { LeaderboardRecord } from '../../../api/leaderboardAPI';
 
 export type LeaderboardRowProps = {
   data: LeaderboardRecord;

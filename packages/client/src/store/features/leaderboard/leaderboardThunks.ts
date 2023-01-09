@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { leaderboardAPI, LeaderboardRequest } from './../../../api/leaderboardAPI';
-import { LeaderboardRecord } from './../../../pages/Leaderboard/LeaderboardRow/typings';
+import { leaderboardAPI, LeaderboardRecord, LeaderboardRequest } from './../../../api/leaderboardAPI';
 
 export const addScore = createAsyncThunk('leaderboard/add', async (payload: LeaderboardRecord) => {
   const { data } = await leaderboardAPI.addScore(payload);
