@@ -40,9 +40,10 @@ export class Statistics {
     this.mapElapsedTime = 0;
   }
 
+  /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
   updateLeaderboard() {
     // Если не синглплеер, то лидерборд не обновляем
-    if (this.mode === 'MULTIPLAYER') {
+    if (this.mode !== 'SINGLEPLAYER') {
       return;
     }
 
@@ -53,6 +54,7 @@ export class Statistics {
     });
   }
 
+  /** Возвращает данные для показа на соответствующем экране после прохождения карты. */
   getCurrentStatistics() {
     const { mode, sessionScore, mapEnemiesKilledCount } = this;
     const mapEnemiesKilledScore: Partial<EnemiesKilledState> = {};
@@ -96,7 +98,7 @@ export class Statistics {
   add(entity: Entity) {
     if (entity instanceof Explosion && entity.parent instanceof TankEnemy) {
       const enemyTank = entity.parent;
-      // После окончания анимации взрыва показываем надпись с очками
+      // После окончания анимации взрыва подсчитываем очки и показываем надпись с их количеством
       entity.on(EntityEvent.DESPAWN, () => {
         const points = this.countEnemy(enemyTank);
         const score = new Score({ points, parent: enemyTank });
@@ -127,6 +129,7 @@ export class Statistics {
     //TODO: после создание класса бонусов нужно будет реализовать здесь соотв.метод
   }
 
+  /** Запускает игровую сессию, данные которой учитываются в лидерборде. */
   startSession(mode: GameMode) {
     if (this.active) {
       return;
@@ -141,7 +144,6 @@ export class Statistics {
       return;
     }
     this.finishMap(true);
-    this.updateLeaderboard();
     this.active = false;
   }
 
@@ -150,10 +152,11 @@ export class Statistics {
   }
 
   finishMap(gameover = false) {
+    this.mapElapsedTime = Date.now() - this.mapStartTime;
+    this.sessionElapsedTime += this.mapElapsedTime;
     if (!gameover) {
       ++this.sessionCompletedMaps;
     }
-    this.mapElapsedTime = Date.now() - this.mapStartTime;
-    this.sessionElapsedTime += this.mapElapsedTime;
+    this.updateLeaderboard();
   }
 }
