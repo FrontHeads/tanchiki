@@ -7,7 +7,7 @@ export const leaderboardFields: LeaderboardFieldProps[] = [
   },
   {
     fieldId: 'username',
-    fieldName: 'Пользователь',
+    fieldName: 'Игрок',
   },
   {
     fieldId: 'score',
