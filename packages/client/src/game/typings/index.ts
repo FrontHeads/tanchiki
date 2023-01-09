@@ -137,13 +137,14 @@ export enum MainMenuState {
 }
 
 export enum ScreenType {
-  MAIN_MENU,
-  LOADING,
-  LEVEL_SELECTOR,
-  GAME_OVER,
-  STATISTICS,
-  GAME,
-  PAUSE,
+  Loading,
+  MainMenu,
+  LevelSelector,
+  GameStart,
+  Pause,
+  Score,
+  GameOverPopup,
+  GameOverFinal,
 }
 
 // Scenario

@@ -2,7 +2,7 @@ import { spriteCoordinates } from '../../data/constants';
 import { EnemiesKilledState, GameMode } from '../../typings';
 import { Screen } from './Screen';
 
-type StatisticsScreenState = {
+type ScoreScreenState = {
   mode: GameMode;
   sessionScore: number[];
   mapEnemiesKilledTotal: number[];
@@ -18,7 +18,7 @@ type CategoryData = {
   enemyTankSprite: number[][];
 };
 
-export class StatisticsScreen extends Screen<StatisticsScreenState> {
+export class ScoreScreen extends Screen<ScoreScreenState> {
   animationInterval = 150;
   mode!: GameMode;
   sizing!: { full: number; half: number; third: number };
@@ -37,7 +37,7 @@ export class StatisticsScreen extends Screen<StatisticsScreenState> {
   categories!: number;
   allowedItemsCounter!: number[];
 
-  show(state: StatisticsScreenState) {
+  show(state: ScoreScreenState) {
     this.sizing = {
       full: this.overlay.view.width,
       half: Math.round(this.overlay.view.width / 2),

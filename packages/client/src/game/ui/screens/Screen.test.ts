@@ -17,7 +17,7 @@ describe('game/ui/screens/Screen', () => {
   it('should call Screen.show()', () => {
     const game = Game.create();
     const overlay = new Overlay(game);
-    overlay.show(ScreenType.MAIN_MENU);
+    overlay.show(ScreenType.MainMenu);
 
     expect(mockShow).toHaveBeenCalled();
   });

@@ -26,7 +26,7 @@ export const Game = () => {
 
   /** Если вкладка становится не активной, то ставим игру на паузу */
   useEffect(() => {
-    if (isTabActive === false && !game.paused && game.screen === ScreenType.GAME) {
+    if (isTabActive === false && !game.paused && game.screen === ScreenType.GameStart) {
       game.togglePause();
     }
   }, [isTabActive]);

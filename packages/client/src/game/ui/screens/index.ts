@@ -1,8 +1,9 @@
-export { GameOverScreen } from './GameOverScreen';
-export { GameScreen } from './GameScreen';
+export { GameOverFinalScreen } from './GameOverFinalScreen';
+export { GameOverPopupScreen } from './GameOverPopupScreen';
+export { GameStartScreen } from './GameStartScreen';
 export { LevelSelectorScreen } from './LevelSelectorScreen';
 export { LoadingScreen } from './LoadingScreen';
 export { MainMenuScreen } from './MainMenuScreen';
-export { PauseScreen } from './PauseScreen';
+export { PausePopupScreen } from './PausePopupScreen';
 export { Screen } from './Screen';
-export { StatisticsScreen } from './StatisticsScreen';
+export { ScoreScreen } from './ScoreScreen';

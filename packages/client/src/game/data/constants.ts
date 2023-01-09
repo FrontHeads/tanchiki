@@ -1,12 +1,13 @@
 import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import {
-  GameOverScreen,
-  GameScreen,
+  GameOverFinalScreen,
+  GameOverPopupScreen,
+  GameStartScreen,
   LevelSelectorScreen,
   LoadingScreen,
   MainMenuScreen,
-  PauseScreen,
-  StatisticsScreen,
+  PausePopupScreen,
+  ScoreScreen,
 } from '../ui/screens';
 import { Color } from './colors';
 import { classicDesignSprite } from './spriteCoordinates';
@@ -32,13 +33,14 @@ export const brickCells: Cell[] = [
 ];
 
 export const screenClasses = {
-  [ScreenType.MAIN_MENU]: MainMenuScreen,
-  [ScreenType.LOADING]: LoadingScreen,
-  [ScreenType.LEVEL_SELECTOR]: LevelSelectorScreen,
-  [ScreenType.GAME]: GameScreen,
-  [ScreenType.PAUSE]: PauseScreen,
-  [ScreenType.GAME_OVER]: GameOverScreen,
-  [ScreenType.STATISTICS]: StatisticsScreen,
+  [ScreenType.Loading]: LoadingScreen,
+  [ScreenType.MainMenu]: MainMenuScreen,
+  [ScreenType.LevelSelector]: LevelSelectorScreen,
+  [ScreenType.GameStart]: GameStartScreen,
+  [ScreenType.Pause]: PausePopupScreen,
+  [ScreenType.Score]: ScoreScreen,
+  [ScreenType.GameOverPopup]: GameOverPopupScreen,
+  [ScreenType.GameOverFinal]: GameOverFinalScreen,
 };
 
 export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {

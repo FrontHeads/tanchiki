@@ -1,7 +1,7 @@
 import { Color } from '../../data/colors';
 import { Screen } from './Screen';
 
-export class GameScreen extends Screen<number> {
+export class GameStartScreen extends Screen<number> {
   show() {
     this.overlay.animate(this.updateStage.bind(this));
   }
