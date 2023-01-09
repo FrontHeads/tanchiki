@@ -255,6 +255,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       .on(EntityEvent.SHOOT, this.onTankShoot.bind(this))
       .spawn(settings);
 
+    this.on(ScenarioEvent.GAME_OVER, () => {
+      if (entity && entity.spawned) {
+        entity.stop();
+      }
+    });
+
     /** Навешиваем события на котроллер, предварительно почистив старые */
     playerState.controller
       .offAll(ControllerEvent.MOVE)
