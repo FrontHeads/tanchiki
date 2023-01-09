@@ -45,6 +45,7 @@ export class AudioManager extends EventEmitter {
       this.playSound('gameOver');
     });
 
+    // Нужны два одинаковых звука, иначе из-за быстрого проигрывания происходят искажения
     let shouldPlaySecondOne = false;
     this.on('score', () => {
       if (shouldPlaySecondOne) {
@@ -161,12 +162,12 @@ export class AudioManager extends EventEmitter {
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
-    if (soundResource && !this.isStopped) {
+    if (soundResource && !this.isStopped) { 
       if (sound === 'idle' || sound === 'move' || sound === 'ice') {
         soundResource.volume = 0.5;
       }
       soundResource.currentTime = 0;
-      soundResource.play().catch(() => {
+      soundResource.play()?.catch(() => {
         /* Чтобы не было ошибок в консоли */
       });
       this.activeSounds.add(sound);
