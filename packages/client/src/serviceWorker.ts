@@ -1,6 +1,6 @@
 const serviceWorker = self as unknown as ServiceWorkerGlobalScope; // чтобы не ругался тайпскрипт
 
-const REPORTING = true;
+const REPORTING = false;
 const CACHE_NAME = 'tanchiki-cache-1';
 const PRECACHE_URLS = ['/', '/index.html'];
 const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'object'];
@@ -47,6 +47,11 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
     return;
   }
 
+  // Чтобы не проходили запросы типа chrome-extension://
+  if (!event.request.url.match(/^http/)) {
+    return;
+  }
+
   event.respondWith(
     caches
       .open(CACHE_NAME)
@@ -57,7 +62,9 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
             .then(networkResponse => {
               // Кладём ответ в кеш, если он содержит что-то субстантивное
               if (networkResponse.status === 200) {
-                cache.put(event.request, networkResponse.clone());
+                cache.put(event.request, networkResponse.clone()).catch(cacheError => {
+                  REPORTING && console.warn('SW: cache put error', cacheError);
+                });
               }
               return networkResponse;
             })
@@ -78,7 +85,7 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
         });
       })
       .catch(cacheError => {
-        REPORTING && console.warn('SW: cache error', cacheError);
+        REPORTING && console.warn('SW: cache open error', cacheError);
         return new Response(FALLBACK_BODY, FALLBACK_HEADERS);
       })
   );
