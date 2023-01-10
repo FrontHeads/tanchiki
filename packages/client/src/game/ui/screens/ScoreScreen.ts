@@ -1,3 +1,4 @@
+import { Color } from '../../data/colors';
 import { spriteCoordinates } from '../../data/constants';
 import { EnemiesKilledState, GameMode } from '../../typings';
 import { Screen } from './Screen';
@@ -35,6 +36,8 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
   mapEnemiesKilledCount!: number[][];
   mapEnemiesKilledScore!: number[][];
   categories!: number;
+  /** Счётчик от -1 до 20, который нужен для работы анимации,
+   * чтобы на каждой её итерации в текущей категории прибавлялось по одному танку для отображения. */
   allowedItemsCounter!: number[];
 
   show(state: ScoreScreenState) {
@@ -53,6 +56,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     this.categories = this.mapEnemiesKilledCount.length;
     this.allowedItemsCounter = new Array(this.categories).fill(-1);
 
+    // Чтобы пропустить анимацию с подсчётом
     if (state.skip) {
       this.allowedItemsCounter = new Array(this.categories).fill(20);
       this.update();
@@ -62,7 +66,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
   }
 
   update(stage = 0) {
-    // Число 27 выбрано опытным путём, чтобы успели отсчитаться все подбитые танки.
+    // Число 27 выбрано опытным путём, чтобы успели отсчитаться все подбитые танки с учётом анимаций.
     if (stage > 27) {
       return false;
     }
@@ -73,68 +77,83 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     this.renderHeader();
 
     this.currentPosY = 20;
-    let showFooter = false;
+    let shouldShowTotalCountFooter = false;
 
-    for (let cat = 0; cat < this.categories; ++cat) {
+    for (let categoryIndex = 0; categoryIndex < this.categories; ++categoryIndex) {
+      const enemyTankSprite = this.enemyTankSprites[categoryIndex];
+
+      const shouldSkipCategory = categoryIndex !== 0 && this.allowedItemsCounter[categoryIndex] === -1;
+
+      if (shouldSkipCategory) {
+        this.renderCategory({
+          score: [' ', ' '],
+          count: [' ', ' '],
+          enemyTankSprite,
+        });
+        continue;
+      }
+
       const playerOneIndex = 0;
       const playerTwoIndex = 1;
-      const enemyTankSprite = this.enemyTankSprites[cat];
-      let score = this.mapEnemiesKilledScore[cat];
-      const count = [...this.mapEnemiesKilledCount[cat]];
-      let scoreMultiplyer = Math.max(...score) / Math.max(...count);
-      if (isNaN(scoreMultiplyer) || scoreMultiplyer === Infinity) {
-        scoreMultiplyer = 1;
+      let scoreArray = this.mapEnemiesKilledScore[categoryIndex];
+      const countArray = [...this.mapEnemiesKilledCount[categoryIndex]];
+      let scoreMultiplier = Math.max(...scoreArray) / Math.max(...countArray);
+      if (isNaN(scoreMultiplier) || scoreMultiplier === Infinity) {
+        scoreMultiplier = 1;
       }
-      let emptyCategory = false;
 
-      if (cat !== 0 && this.allowedItemsCounter[cat] === -1) {
-        emptyCategory = true;
+      const isCurrentCategoryFinished = this.allowedItemsCounter[categoryIndex] > Math.max(...countArray);
+      const doesNextCategoryExist = typeof this.allowedItemsCounter[categoryIndex + 1] !== 'undefined';
+      const isNextCategoryUncounted = this.allowedItemsCounter[categoryIndex + 1] === -1;
+
+      if (isCurrentCategoryFinished) {
+        if (doesNextCategoryExist) {
+          if (isNextCategoryUncounted) {
+            this.allowedItemsCounter[categoryIndex + 1] = 0;
+          }
+        } else {
+          shouldShowTotalCountFooter = true;
+        }
       } else {
-        if (this.allowedItemsCounter[cat] > Math.max(...count)) {
-          if (typeof this.allowedItemsCounter[cat + 1] !== 'undefined') {
-            if (this.allowedItemsCounter[cat + 1] === -1) {
-              this.allowedItemsCounter[cat + 1] = 0;
-            }
-          } else {
-            showFooter = true;
-          }
+        ++this.allowedItemsCounter[categoryIndex];
+
+        const shouldReduceToThreshholdForPlayerOne =
+          this.allowedItemsCounter[categoryIndex] < countArray[playerOneIndex];
+        const shouldReduceToThreshholdForPlayerTwo =
+          this.allowedItemsCounter[categoryIndex] < countArray[playerTwoIndex];
+
+        if (shouldReduceToThreshholdForPlayerOne) {
+          countArray[playerOneIndex] = this.allowedItemsCounter[categoryIndex];
+        }
+        if (shouldReduceToThreshholdForPlayerTwo) {
+          countArray[playerTwoIndex] = this.allowedItemsCounter[categoryIndex];
         }
 
-        ++this.allowedItemsCounter[cat];
+        const shouldPlaySound =
+          this.allowedItemsCounter[categoryIndex] > 0 &&
+          this.allowedItemsCounter[categoryIndex] <= Math.max(...countArray);
 
-        if (this.allowedItemsCounter[cat] >= 0) {
-          if (this.allowedItemsCounter[cat] < count[playerOneIndex]) {
-            count[playerOneIndex] = this.allowedItemsCounter[cat];
-          }
-          if (this.allowedItemsCounter[cat] < count[playerTwoIndex]) {
-            count[playerTwoIndex] = this.allowedItemsCounter[cat];
-          }
-
-          const shouldPlaySound =
-            this.allowedItemsCounter[cat] > 0 && this.allowedItemsCounter[cat] <= Math.max(...count);
-
-          if (shouldPlaySound) {
-            this.overlay.emit('score');
-          }
-        }
-
-        if (typeof count[playerOneIndex] === 'number' && typeof count[playerTwoIndex] === 'number') {
-          score = [count[playerOneIndex] * scoreMultiplyer, count[playerTwoIndex] * scoreMultiplyer];
+        if (shouldPlaySound) {
+          this.overlay.emit('score');
         }
       }
+
+      // Чтобы получить актуальное количество очков, используем количество танков, которое будет отображаться 
+      scoreArray = [countArray[playerOneIndex] * scoreMultiplier, countArray[playerTwoIndex] * scoreMultiplier];
 
       this.renderCategory({
-        score: emptyCategory ? [' ', ' '] : score,
-        count: emptyCategory ? [' ', ' '] : count,
+        score: scoreArray,
+        count: countArray,
         enemyTankSprite,
       });
     }
 
-    this.renderFooter({ count: showFooter ? this.mapEnemiesKilledTotal : [' ', ' '] });
+    this.renderFooter({ count: shouldShowTotalCountFooter ? this.mapEnemiesKilledTotal : [' ', ' '] });
 
     return true;
   }
 
+  /** Отображает название уровня, игроков, их текущие очки. */
   renderHeader() {
     /** Название уровня */
     this.overlay.renderElement({
@@ -143,7 +162,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.full,
       height: 2,
       align: 'center',
-      color: 'white',
+      color: Color.White,
       text: `УРОВЕНЬ ${this.level}`,
     });
 
@@ -154,7 +173,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.third,
       height: 2,
       align: 'right',
-      color: 'red',
+      color: Color.Red,
       text: 'ИГРОК 1',
     });
 
@@ -165,7 +184,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.third,
       height: 2,
       align: 'right',
-      color: 'orange',
+      color: Color.Orange,
       text: `${this.sessionScore[0]}`,
     });
 
@@ -180,7 +199,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.third,
       height: 2,
       align: 'left',
-      color: 'red',
+      color: Color.Red,
       text: 'ИГРОК 2',
     });
 
@@ -191,11 +210,12 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.third,
       height: 2,
       align: 'left',
-      color: 'orange',
+      color: Color.Orange,
       text: `${this.sessionScore[1]}`,
     });
   }
 
+  /** Отображает категорию подбитых вражеских танков с их количеством и очками. */
   renderCategory({ score, count, enemyTankSprite }: CategoryData) {
     this.currentPosY += 5;
 
@@ -217,7 +237,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.half - 1.5,
       height: 2,
       align: 'right',
-      color: 'white',
+      color: Color.White,
       text: `${count[0]}<`,
     });
 
@@ -241,7 +261,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.half - 2.5,
       height: 2,
       align: 'left',
-      color: 'white',
+      color: Color.White,
       text: `>${count[1]}`,
     });
 
@@ -252,11 +272,12 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.third,
       height: 2,
       align: 'left',
-      color: 'white',
+      color: Color.White,
       text: `${score[1]} ОЧКОВ`,
     });
   }
 
+  /** Отображает суммарное количество подбитых вражеских танков. */
   renderFooter({ count }: { count: Array<number | string> }) {
     /** Горизонтальная линия */
     this.overlay.renderElement({
@@ -264,7 +285,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       posY: this.currentPosY + 3.5,
       width: this.sizing.third - 4,
       height: 0.5,
-      color: 'white',
+      color: Color.White,
     });
 
     /** Игрок 1: надпись "Всего" */
@@ -274,7 +295,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.third,
       height: 2,
       align: 'right',
-      color: 'white',
+      color: Color.White,
       text: `ВСЕГО`,
     });
 
@@ -300,7 +321,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.half - 2.5,
       height: 2,
       align: 'left',
-      color: 'white',
+      color: Color.White,
       text: ` ${count[1]}`,
     });
 
@@ -311,7 +332,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.sizing.third,
       height: 2,
       align: 'left',
-      color: 'white',
+      color: Color.White,
       text: `ВСЕГО`,
     });
   }
