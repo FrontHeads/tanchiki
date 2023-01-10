@@ -6,13 +6,13 @@ export class Statistics {
   game: Game;
   mode: GameMode = 'SINGLEPLAYER';
   active = false;
-  /** Очки топ-1 игрока из лидерборда (TODO: реализовать их подгрузку) */
+  /** Очки топ-1 игрока из лидерборда (TODO: реализовать их подгрузку и отображение) */
   highestScore = 20000;
-  /** Статистика за текущую игровую сессию: [игрок-1, игрок-2] */
+  /** Статистика за текущую игровую сессию: [игрок-1, игрок-2], общая */
   sessionScore = [0, 0];
   sessionCompletedMaps = 0;
   sessionElapsedTime = 0;
-  /** Статистика за конкретную карту: [игрок-1, игрок-2] */
+  /** Статистика за конкретный игровой уровень: [игрок-1, игрок-2], общая */
   mapScore = [0, 0];
   mapEnemiesKilledCount: EnemiesKilledState = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
   mapElapsedTime = 0;
@@ -64,11 +64,11 @@ export class Statistics {
     Object.entries(mapEnemiesKilledCount).forEach(entry => {
       const enemyVariant = entry[0] as EnemyVariant;
       const [enemyCountForPlayerOne, enemyCountForPlayerTwo] = entry[1];
-      const scoreMultiplyer = this.getScoreByEnemyVariant(enemyVariant);
+      const scoreMultiplier = this.getScoreByEnemyVariant(enemyVariant);
 
       mapEnemiesKilledScore[enemyVariant] = [
-        enemyCountForPlayerOne * scoreMultiplyer,
-        enemyCountForPlayerTwo * scoreMultiplyer,
+        enemyCountForPlayerOne * scoreMultiplier,
+        enemyCountForPlayerTwo * scoreMultiplier,
       ];
 
       mapEnemiesKilledTotal[0] += enemyCountForPlayerOne;
@@ -78,6 +78,7 @@ export class Statistics {
     return { mode, sessionScore, mapEnemiesKilledScore, mapEnemiesKilledCount, mapEnemiesKilledTotal };
   }
 
+  /** Возвращает множитель с очками за конкретный тип вражеского танка. */
   getScoreByEnemyVariant(enemyVariant: EnemyVariant) {
     switch (enemyVariant) {
       case 'ARMOR':
@@ -91,11 +92,16 @@ export class Statistics {
     }
   }
 
+  /** Возвращает индекс массива со статданными конкретного пользователя.
+   * Большинство данных записывеются в массивы типа [игрок-1, игрок-2].
+  */
   getPlayerIndex(playerVariant: PlayerVariant) {
     return playerVariant === 'PLAYER1' ? 0 : 1;
   }
 
+  /** Добавляет сущность в сервис для отслеживания. */
   add(entity: Entity) {
+    // Привязываем подсчёт очков к взрыву вражеских танков
     if (entity instanceof Explosion && entity.parent instanceof TankEnemy) {
       const enemyTank = entity.parent;
       // После окончания анимации взрыва подсчитываем очки и показываем надпись с их количеством
@@ -108,6 +114,7 @@ export class Statistics {
     }
   }
 
+  /** Определяет, какому игроку записать очки, и обновляет соответствующие показатели. */
   countEnemy(enemy: TankEnemy) {
     const score = this.getScoreByEnemyVariant(enemy.variant);
 
@@ -139,6 +146,7 @@ export class Statistics {
     this.load();
   }
 
+  /** Завершает игровую сессию, данные которой учитываются в лидерборде. */
   finishSession() {
     if (!this.active) {
       return;
@@ -147,10 +155,12 @@ export class Statistics {
     this.active = false;
   }
 
+  /** Начинает подсчёт статистики на конкретном игровом уровне. */
   startMap() {
     this.mapStartTime = Date.now();
   }
 
+  /** Завершает подсчёт статистики на конкретном игровом уровне. */
   finishMap(gameover = false) {
     this.mapElapsedTime = Date.now() - this.mapStartTime;
     this.sessionElapsedTime += this.mapElapsedTime;

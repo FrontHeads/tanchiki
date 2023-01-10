@@ -181,6 +181,8 @@ export class View extends EventEmitter {
   /** Рисует текст на canvas-слое. */
   drawTextOnLayer(elem: UIElement, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
+    // Убавляем здесь 1 пиксель, чтобы ниже прибавить его к posY, - тем самым убираем баг с затиранием текста
+    // (когда его верхняя часть остаётся на слое)
     context.font = `${this.convertToPixels(elem.height) - 1}px "Press Start 2P"`;
     context.textAlign = elem.align;
     context.textBaseline = 'top';
