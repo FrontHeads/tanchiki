@@ -1,6 +1,5 @@
 import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
 import {
-  GameOverFinalScreen,
   GameOverPopupScreen,
   GameStartScreen,
   LevelSelectorScreen,
@@ -40,7 +39,6 @@ export const screenClasses = {
   [ScreenType.Pause]: PausePopupScreen,
   [ScreenType.Score]: ScoreScreen,
   [ScreenType.GameOverPopup]: GameOverPopupScreen,
-  [ScreenType.GameOverFinal]: GameOverFinalScreen,
 };
 
 export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {

@@ -1,4 +1,3 @@
-export { GameOverFinalScreen } from './GameOverFinalScreen';
 export { GameOverPopupScreen } from './GameOverPopupScreen';
 export { GameStartScreen } from './GameStartScreen';
 export { LevelSelectorScreen } from './LevelSelectorScreen';
