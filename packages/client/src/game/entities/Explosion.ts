@@ -1,6 +1,6 @@
 import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { EntityEvent, ExplosionVariant } from '../typings';
+import { Direction, EntityEvent, ExplosionVariant } from '../typings';
 import { Entity, Projectile, Tank } from './';
 
 type ExplosionSettings = { parent: Tank | Projectile };
@@ -55,15 +55,15 @@ export class Explosion extends Entity {
 
     /** Без коррекции взрыв рисуется не по центру обьекта в который попал снаряд 
     из-за несовпадения координат и разницы в размерах взрыва и обьекта. */
-    const correction = parent.direction === 'UP' || parent.direction === 'LEFT' ? -2 : 0;
+    const correction = parent.direction === Direction.UP || parent.direction === Direction.LEFT ? -2 : 0;
 
-    if (parent.direction === 'UP' || parent.direction === 'DOWN') {
+    if (parent.direction === Direction.UP || parent.direction === Direction.DOWN) {
       if (parent.type === 'tank') {
-        if (parent.direction === 'UP') {
+        if (parent.direction === Direction.UP) {
           posX += correction;
           posY += correction - 2;
         }
-        if (parent.direction === 'DOWN') {
+        if (parent.direction === Direction.DOWN) {
           posX += correction - 2;
           posY += correction - 2;
         }
@@ -73,11 +73,11 @@ export class Explosion extends Entity {
       }
     } else {
       if (parent.type === 'tank') {
-        if (parent.direction === 'RIGHT') {
+        if (parent.direction === Direction.RIGHT) {
           posX += correction;
           posY += correction - 2;
         }
-        if (parent.direction === 'LEFT') {
+        if (parent.direction === Direction.LEFT) {
           posX += correction;
           posY += correction;
         }
