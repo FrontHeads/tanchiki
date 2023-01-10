@@ -1,22 +1,17 @@
 import './LeaderboardRow.css';
 
-import cn from 'classnames';
 import { FC, useMemo } from 'react';
 
+import { leaderboardSelectors, useAppSelector } from '../../../store';
 import { convertMsToTime } from '../../../utils/dateUtils';
 import { LeaderboardRowProps } from './typings';
 
 export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { place, username, score, time, matches } }) => {
-  const LeaderboardRowClassName = cn('leaderboard__row', {
-    'first-place': place === 1,
-    'second-place': place === 2,
-    'third-place': place === 3,
-  });
-
+  const { sortDirection } = useAppSelector(leaderboardSelectors.all);
   const convertedTime = useMemo(() => convertMsToTime(time), [time]);
 
   return (
-    <tr className={LeaderboardRowClassName}>
+    <tr className={`leaderboard__row${sortDirection == 'desc' ? '_desc' : '_asc'}`}>
       <td>{place}</td>
       <td>{username}</td>
       <td>{score}</td>

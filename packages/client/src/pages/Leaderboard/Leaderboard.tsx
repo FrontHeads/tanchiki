@@ -15,7 +15,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector(leaderboardSelectors.all);
   const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
-
+  //
   //**Так добавлять новый рекорд */
   // useEffect(() => {
   //   dispatch(
