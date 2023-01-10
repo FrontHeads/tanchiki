@@ -94,7 +94,7 @@ export class Statistics {
 
   /** Возвращает индекс массива со статданными конкретного пользователя.
    * Большинство данных записывеются в массивы типа [игрок-1, игрок-2].
-  */
+   */
   getPlayerIndex(playerVariant: PlayerVariant) {
     return playerVariant === 'PLAYER1' ? 0 : 1;
   }

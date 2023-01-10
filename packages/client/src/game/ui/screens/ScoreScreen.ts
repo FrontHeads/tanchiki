@@ -138,7 +138,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
         }
       }
 
-      // Чтобы получить актуальное количество очков, используем количество танков, которое будет отображаться 
+      // Чтобы получить актуальное количество очков, используем количество танков, которое будет отображаться
       scoreArray = [countArray[playerOneIndex] * scoreMultiplier, countArray[playerTwoIndex] * scoreMultiplier];
 
       this.renderCategory({
