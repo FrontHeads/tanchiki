@@ -44,3 +44,4 @@ export const YANDEX_API_ENDPOINTS = {
 };
 
 export const TEAM_NAME = 'FrontHeadsTest';
+export const DEFAULT_SORT = 'score';

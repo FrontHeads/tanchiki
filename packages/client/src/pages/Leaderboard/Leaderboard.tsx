@@ -3,6 +3,7 @@ import './Leaderboard.css';
 import { FC, useEffect } from 'react';
 
 import { Loader } from '../../components/Loader';
+import { DEFAULT_SORT } from '../../config/constants';
 import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { leaderboardFields } from './data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
@@ -15,29 +16,11 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector(leaderboardSelectors.all);
   const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
-  //
-  //**Так добавлять новый рекорд */
-  // useEffect(() => {
-  //   dispatch(
-  //     leaderboardThunks.addScore({
-  //       data: {
-  //         place: 1,
-  //         username: 'yatx',
-  //         score: 6003,
-  //         time: 121234,
-  //         matches: 34,
-  //       },
-  //       ratingFieldName: 'score',
-  //       teamName: 'FrontHeadsTest',
-  //     })
-  //   );
-  // }, []);
 
   useEffect(() => {
     dispatch(
       leaderboardThunks.getLeaderboard({
-        // TODO: заменить название поля на константное
-        ratingFieldName: 'score',
+        ratingFieldName: DEFAULT_SORT,
         cursor: 0,
         limit: 10,
       })
@@ -63,8 +46,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
         </thead>
         <tbody>
           {leaderboard.map(row => {
-            /**TODO: Убрать ?? row.data.username */
-            return <LeaderboardRow key={row.data.place ?? row.data.username} data={row.data} />;
+            return <LeaderboardRow key={row.data.place} data={row.data} />;
           })}
         </tbody>
       </table>
