@@ -3,7 +3,7 @@ import './Leaderboard.css';
 import { FC, useEffect } from 'react';
 
 import { Loader } from '../../components/Loader';
-import { DEFAULT_SORT } from '../../config/constants';
+import { DEFAULT_LIMIT, DEFAULT_SORT } from '../../config/constants';
 import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { leaderboardFields } from './data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
@@ -22,7 +22,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
       leaderboardThunks.getLeaderboard({
         ratingFieldName: DEFAULT_SORT,
         cursor: 0,
-        limit: 10,
+        limit: DEFAULT_LIMIT,
       })
     );
   }, []);
