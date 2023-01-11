@@ -1,6 +1,5 @@
 import './LeaderboardRow.css';
 
-import cn from 'classnames';
 import { FC, useMemo } from 'react';
 
 import { leaderboardSelectors, useAppSelector } from '../../../store';
