@@ -13,7 +13,7 @@ export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { place, usernam
 
   let leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_desc' : '_asc'}`;
 
-  if (sortOption === 'place' || sortOption === 'time') {
+  if (sortOption === 'place') {
     leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_asc' : '_desc'}`;
   }
 
