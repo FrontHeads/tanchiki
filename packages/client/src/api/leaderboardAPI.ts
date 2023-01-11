@@ -41,22 +41,18 @@ export const leaderboardAPI = {
 };
 
 const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>) => {
-  const responseFields = ['username', 'score', 'time', 'matches'];
   /**Валидируем поля */
   const validatedData = response.data
     .filter((record: LeaderboardRowProps) => {
       const { data } = record;
-      const recordKeys = Object.keys(data);
 
-      let keepItem = true;
+      const isValidNumber = (num: number) => {
+        return typeof num === 'number' && num >= 0 && num % 1 === 0;
+      };
+      if (typeof data.username !== 'string' || data.username.trim() === '') return false;
+      if (!isValidNumber(data.score) || !isValidNumber(data.time) || !isValidNumber(data.matches)) return false;
 
-      responseFields.forEach((field: string) => {
-        if (!recordKeys.includes(field) || data[field as keyof LeaderboardRecord].toString().trim() === '') {
-          keepItem = false;
-          return false;
-        }
-      });
-      return keepItem;
+      return true;
     })
     /**Назначаем место в таблице рейтинга */
     .map((item: LeaderboardRowProps, index: number) => {

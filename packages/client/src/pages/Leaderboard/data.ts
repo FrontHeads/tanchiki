@@ -13,7 +13,7 @@ export const leaderboardFields: LeaderboardFieldProps[] = [
   },
   {
     fieldId: 'score',
-    fieldName: 'Рекорд',
+    fieldName: 'Очки ',
     title: 'Рекорд по очкам',
   },
   {
