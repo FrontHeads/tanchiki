@@ -1,7 +1,7 @@
 import { Color } from '../../data/colors';
 import { Screen } from './Screen';
 
-export class GameOverScreen extends Screen {
+export class GameOverPopupScreen extends Screen {
   show() {
     this.overlay.animate(this.updateStage.bind(this));
   }

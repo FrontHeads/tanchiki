@@ -1,54 +1,69 @@
 import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { EntityEvent } from './../typings/index';
+import { Direction, EntityEvent, ExplosionVariant } from '../typings';
 import { Entity, Projectile, Tank } from './';
 
-type ExplosionSettings = { explosionParentEntity: Tank | Projectile };
+type ExplosionSettings = { parent: Tank | Projectile };
 
 export class Explosion extends Entity {
-  constructor(props: ExplosionSettings) {
+  variant: ExplosionVariant = 'PROJECTILE_EXPLOSION';
+  parent: ExplosionSettings['parent'];
+  despawnTime = 200;
+
+  constructor(settings: ExplosionSettings) {
     super({ posX: 0, posY: 0 });
-    Object.assign(this, this.calculateExplosionProps(props.explosionParentEntity));
-    this.role = 'neutral';
+    this.type = 'explosion';
     this.crossable = true;
     this.hittable = false;
     this.color = Color.Transparent;
+    this.parent = settings.parent;
+    Object.assign(this, this.calculateProps(settings));
 
-    switch (this.type) {
-      case 'projectileExplosion':
+    let animationDelay = 0;
+    switch (this.variant) {
+      case 'PROJECTILE_EXPLOSION':
         this.mainSpriteCoordinates = spriteCoordinates.projectileExplosion;
         break;
-      case 'tankExplosion':
+      case 'TANK_EXPLOSION':
         this.mainSpriteCoordinates = spriteCoordinates.tankExplosion;
+        animationDelay = 16; // для более красивой отрисовки взрыва танка нужна задержка
         break;
     }
 
+    this.registerExplosionEvents({ animationDelay });
+  }
+
+  registerExplosionEvents({ animationDelay }: { animationDelay: number }) {
     this.on(EntityEvent.SPAWN, () => {
       this.startAnimation({
-        delay: 0,
+        delay: animationDelay,
         spriteCoordinates: this.mainSpriteCoordinates,
         looped: false,
       });
+
+      // Деспаун взрыва после завершения анимации или спустя время (последнее - для тестов)
+      this.on(EntityEvent.ANIMATION_ENDED, this.despawn.bind(this));
+      this.setLoopDelay(this.despawn.bind(this), this.despawnTime);
     });
   }
 
-  calculateExplosionProps(entity: Tank | Projectile) {
-    const size = entity.type === 'projectile' ? 4 : 8;
-    const type = entity.type === 'projectile' ? 'projectileExplosion' : 'tankExplosion';
-    let posX = entity.posX;
-    let posY = entity.posY;
+  calculateProps({ parent }: ExplosionSettings) {
+    const size = parent.type === 'projectile' ? 4 : 8;
+    const variant = parent.type === 'projectile' ? 'PROJECTILE_EXPLOSION' : 'TANK_EXPLOSION';
+    let posX = parent.posX;
+    let posY = parent.posY;
 
-    /**Без коррекции взрыв рисуется не по центру обьекта в который попал снаряд 
+    /** Без коррекции взрыв рисуется не по центру обьекта в который попал снаряд 
     из-за несовпадения координат и разницы в размерах взрыва и обьекта. */
-    const correction = entity.direction === 'UP' || entity.direction === 'LEFT' ? -2 : 0;
+    const correction = parent.direction === Direction.UP || parent.direction === Direction.LEFT ? -2 : 0;
 
-    if (entity.direction === 'UP' || entity.direction === 'DOWN') {
-      if (entity.type === 'tank') {
-        if (entity.direction === 'UP') {
+    if (parent.direction === Direction.UP || parent.direction === Direction.DOWN) {
+      if (parent.type === 'tank') {
+        if (parent.direction === Direction.UP) {
           posX += correction;
           posY += correction - 2;
         }
-        if (entity.direction === 'DOWN') {
+        if (parent.direction === Direction.DOWN) {
           posX += correction - 2;
           posY += correction - 2;
         }
@@ -57,12 +72,12 @@ export class Explosion extends Entity {
         posY += correction;
       }
     } else {
-      if (entity.type === 'tank') {
-        if (entity.direction === 'RIGHT') {
+      if (parent.type === 'tank') {
+        if (parent.direction === Direction.RIGHT) {
           posX += correction;
           posY += correction - 2;
         }
-        if (entity.direction === 'LEFT') {
+        if (parent.direction === Direction.LEFT) {
           posX += correction;
           posY += correction;
         }
@@ -72,6 +87,6 @@ export class Explosion extends Entity {
       }
     }
 
-    return { type, posX, posY, width: size, height: size };
+    return { variant, posX, posY, width: size, height: size };
   }
 }

@@ -14,6 +14,48 @@ export class AudioManager extends EventEmitter {
   constructor() {
     super();
 
+    this.registerGlobalEvents();
+  }
+
+  load() {
+    this.isStopped = false;
+    this.isMuteKeyPressed = false;
+    this.isPauseKeyPressed = false;
+    this.reset();
+  }
+
+  unload() {
+    this.reset();
+  }
+
+  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
+  reset() {
+    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
+      this.stopSound(sound);
+    });
+  }
+
+  registerGlobalEvents() {
+    this.on('levelIntro', () => {
+      this.playSound('levelIntro');
+    });
+
+    this.on('gameOver', () => {
+      this.pauseSoundAll();
+      this.playSound('gameOver');
+    });
+
+    // Нужны два одинаковых звука, иначе из-за быстрого проигрывания происходят искажения
+    let shouldPlaySecondOne = false;
+    this.on('score', () => {
+      if (shouldPlaySecondOne) {
+        this.playSound('score2');
+      } else {
+        this.playSound('score');
+      }
+      shouldPlaySecondOne = !shouldPlaySecondOne;
+    });
+
     this.on('pause', ({ isMuteKey = false }) => {
       if (isMuteKey) {
         this.isMuteKeyPressed = !this.isMuteKeyPressed;
@@ -38,32 +80,6 @@ export class AudioManager extends EventEmitter {
         this.playSound('pause');
         this.resumeSoundAll();
       }
-    });
-
-    this.on('levelIntro', () => {
-      this.playSound('levelIntro');
-    });
-    this.on('gameOver', () => {
-      this.pauseSoundAll();
-      this.playSound('gameOver');
-    });
-  }
-
-  load() {
-    this.isStopped = false;
-    this.isMuteKeyPressed = false;
-    this.isPauseKeyPressed = false;
-    this.reset();
-  }
-
-  unload() {
-    this.reset();
-  }
-
-  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
-  reset() {
-    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.stopSound(sound);
     });
   }
 

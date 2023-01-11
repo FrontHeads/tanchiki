@@ -1,9 +1,17 @@
 import { Color } from '../data/colors';
 import { Entity, Tank } from '../entities';
-import type { AnimationSettings, GetSpriteCoordinates, LayerEntity, LayerList, Rect, Size } from '../typings';
+import {
+  AnimationSettings,
+  EntityEvent,
+  GetSpriteCoordinates,
+  LayerEntity,
+  LayerList,
+  Rect,
+  Size,
+  SpriteCoordinatesNoAnimations,
+} from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
-import { EntityEvent } from './../typings/index';
 
 export class View extends EventEmitter {
   width = 0;
@@ -93,6 +101,7 @@ export class View extends EventEmitter {
     let layer = '';
     switch (entity.type) {
       case 'custom':
+      case 'score':
         layer = 'overlay';
         break;
       case 'tank':
@@ -105,8 +114,7 @@ export class View extends EventEmitter {
       case 'indicator':
         layer = 'ceiling';
         break;
-      case 'projectileExplosion':
-      case 'tankExplosion':
+      case 'explosion':
         layer = 'explosions';
         break;
       default:
@@ -172,7 +180,9 @@ export class View extends EventEmitter {
   /** Рисует текст на canvas-слое. */
   drawTextOnLayer(elem: UIElement, layerId: keyof LayerList) {
     const context = this.layers[layerId].context;
-    context.font = `${this.convertToPixels(elem.height)}px "Press Start 2P"`;
+    // Убавляем здесь 1 пиксель, чтобы ниже прибавить его к posY, - тем самым убираем баг с затиранием текста
+    // (когда его верхняя часть остаётся на слое)
+    context.font = `${this.convertToPixels(elem.height) - 1}px "Press Start 2P"`;
     context.textAlign = elem.align;
     context.textBaseline = 'top';
     if (elem.backImg) {
@@ -187,7 +197,11 @@ export class View extends EventEmitter {
     if (elem.align === 'center') {
       posX += Math.round(elem.width / 2);
     }
-    context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY));
+    if (elem.align === 'right') {
+      posX += elem.width;
+    }
+    // Прибавляем к posY 1 пиксель, чтобы убрать баг с затиранием текста, когда его верхняя часть остаётся на слое
+    context.fillText(elem.text, this.convertToPixels(posX), this.convertToPixels(elem.posY) + 1);
   }
 
   /** Рисует отображение сущности на canvas-слое. Заполняет цветом или отображает спрайт.*/
@@ -288,6 +302,24 @@ export class View extends EventEmitter {
       this.convertToPixels(item.width, correctTankSize),
       this.convertToPixels(item.height, correctTankSize),
     ] as const;
+  }
+
+  /** Возвращает канвас с отдельным изображением из спрайта. Используется, чтобы задать шрифтовой фон из спрайта. */
+  getSpriteContent(spriteCoordinates: SpriteCoordinatesNoAnimations) {
+    const tempCanvas = document.createElement('canvas');
+    if (!spriteCoordinates) {
+      return null;
+    }
+    tempCanvas.width = spriteCoordinates[0][2];
+    tempCanvas.height = spriteCoordinates[0][3];
+
+    const rect = [0, 0, tempCanvas.width, tempCanvas.height];
+
+    const tempContext = tempCanvas.getContext('2d');
+    //@ts-expect-error tuple создавать неудобно, влечет лишние проверки.
+    tempContext?.drawImage(this.spriteImg, ...spriteCoordinates[0], ...rect);
+
+    return tempCanvas;
   }
 
   /** Возвращает координаты сущности на спрайте */
