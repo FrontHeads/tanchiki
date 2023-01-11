@@ -1,4 +1,4 @@
-import { TEAM_NAME, YANDEX_API_ENDPOINTS } from '../config/constants';
+import { LEADERBOARD_TEAM_NAME, YANDEX_API_ENDPOINTS } from '../config/constants';
 import { LeaderboardRowProps } from '../pages/Leaderboard/LeaderboardRow/typings';
 import { SortOption } from '../pages/Leaderboard/typings';
 import { HTTP } from '../utils/HTTP';
@@ -19,7 +19,7 @@ export type NewLeaderboardRecordRequest = {
   ratingFieldName: string;
 
   /**Название команды. Используется чтобы создоть уникольный лидерборд для каждого проекта (взято из Swagger) */
-  teamName: typeof TEAM_NAME;
+  teamName: typeof LEADERBOARD_TEAM_NAME;
 };
 
 export type LeaderboardRequest = {
@@ -36,7 +36,7 @@ type GetLeaderboardResponseData = LeaderboardRowProps[];
 export const leaderboardAPI = {
   addScore: (data: LeaderboardRecord) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
   getLeaderboard: (data: LeaderboardRequest) =>
-    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(TEAM_NAME), { data }).then(
+    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data }).then(
       validateLeaderboard
     ),
 };
@@ -47,7 +47,7 @@ const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>)
     .filter((record: LeaderboardRowProps) => {
       const { data } = record;
       const isValidNumber = (num: number) => {
-        return typeof num === 'number' && num >= 0 && num % 1 === 0 && num.toString().length <= 20;
+        return typeof num === 'number' && num >= 0 && num % 1 === 0;
       };
 
       const usernameLimitation =
@@ -55,7 +55,7 @@ const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>)
 
       const scoreLimitation = !isValidNumber(data.score) || data.score > 9999999;
 
-      const timeLimitation = !isValidNumber(data.time) || data.time > 3.564e8;
+      const timeLimitation = !isValidNumber(data.time) || data.time > 3.564e8; //3.564e8 === 99 часов
 
       const matchesLimitation = !isValidNumber(data.matches) || data.matches > 999;
 

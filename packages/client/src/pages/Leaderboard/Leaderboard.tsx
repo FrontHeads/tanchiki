@@ -3,7 +3,7 @@ import './Leaderboard.css';
 import { FC, useEffect } from 'react';
 
 import { Loader } from '../../components/Loader';
-import { DEFAULT_LIMIT, DEFAULT_SORT } from '../../config/constants';
+import { LEADERBOARD_RECORDS_DISPLAY_LIMIT, LEADERBOARD_SORT_FIELD } from '../../config/constants';
 import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { leaderboardFields } from './data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
@@ -20,9 +20,9 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   useEffect(() => {
     dispatch(
       leaderboardThunks.getLeaderboard({
-        ratingFieldName: DEFAULT_SORT,
+        ratingFieldName: LEADERBOARD_SORT_FIELD,
         cursor: 0,
-        limit: DEFAULT_LIMIT,
+        limit: LEADERBOARD_RECORDS_DISPLAY_LIMIT,
       })
     );
   }, []);

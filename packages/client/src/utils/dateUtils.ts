@@ -24,11 +24,10 @@ const padTo2Digits = (num: number) => {
 };
 
 export const convertMsToTime = (milliseconds: number) => {
-  let seconds = Math.floor(milliseconds / 1000);
+  const seconds = Math.floor(milliseconds / 1000);
   let minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
 
-  seconds = seconds % 60;
   minutes = minutes % 60;
 
   return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}`;

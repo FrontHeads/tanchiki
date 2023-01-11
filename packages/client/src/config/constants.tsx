@@ -43,6 +43,6 @@ export const YANDEX_API_ENDPOINTS = {
   },
 };
 
-export const TEAM_NAME = 'FrontHeadsTest';
-export const DEFAULT_SORT = 'score';
-export const DEFAULT_LIMIT = 999;
+export const LEADERBOARD_TEAM_NAME = 'FrontHeadsTest';
+export const LEADERBOARD_SORT_FIELD = 'score';
+export const LEADERBOARD_RECORDS_DISPLAY_LIMIT = 999;
