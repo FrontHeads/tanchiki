@@ -46,12 +46,20 @@ const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>)
   const validatedData = response.data
     .filter((record: LeaderboardRowProps) => {
       const { data } = record;
-
       const isValidNumber = (num: number) => {
-        return typeof num === 'number' && num >= 0 && num % 1 === 0;
+        return typeof num === 'number' && num >= 0 && num % 1 === 0 && num.toString().length <= 20;
       };
-      if (typeof data.username !== 'string' || data.username.trim() === '') return false;
-      if (!isValidNumber(data.score) || !isValidNumber(data.time) || !isValidNumber(data.matches)) return false;
+
+      const usernameLimitation =
+        typeof data.username !== 'string' || data.username.trim() === '' || data.username.length > 20;
+
+      const scoreLimitation = !isValidNumber(data.score) || data.score > 9999999;
+
+      const timeLimitation = !isValidNumber(data.time) || data.time > 3.564e8;
+
+      const matchesLimitation = !isValidNumber(data.matches) || data.matches > 999;
+
+      if (usernameLimitation || scoreLimitation || timeLimitation || matchesLimitation) return false;
 
       return true;
     })
