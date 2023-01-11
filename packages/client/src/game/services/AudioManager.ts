@@ -167,7 +167,7 @@ export class AudioManager extends EventEmitter {
         soundResource.volume = 0.5;
       }
       soundResource.currentTime = 0;
-      soundResource.play()?.catch(() => {
+      soundResource.play().catch(() => {
         /* Чтобы не было ошибок в консоли */
       });
       this.activeSounds.add(sound);

@@ -47,6 +47,7 @@ export class Statistics {
       return;
     }
 
+    // TODO: нужно переделать, т.к. странно, что кто-то снаружи может заставить другой объект сгенерировать событие
     this.game.emit(GameEvents.UpdateLeaderboard, {
       score: this.sessionScore[0],
       matches: this.sessionCompletedMaps,
