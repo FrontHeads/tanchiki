@@ -40,7 +40,12 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
         <thead className="leaderboard__row-header">
           <tr>
             {leaderboardFields.map(field => (
-              <LeaderboardField key={field.fieldId} fieldName={field.fieldName} fieldId={field.fieldId} />
+              <LeaderboardField
+                key={field.fieldId}
+                fieldName={field.fieldName}
+                fieldId={field.fieldId}
+                title={field.title}
+              />
             ))}
           </tr>
         </thead>
