@@ -46,7 +46,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
           {leaderboard.map((row, index) => {
             return (
               <LeaderboardRow
-                key={row.data.place}
+                key={row.data.username}
                 data={row.data}
                 place={sortDirection === 'desc' ? index + 1 : leaderboard.length - index}
               />
