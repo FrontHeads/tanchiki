@@ -3,7 +3,6 @@ import './Leaderboard.css';
 import { FC, useEffect } from 'react';
 
 import { Loader } from '../../components/Loader';
-import { LEADERBOARD_RECORDS_DISPLAY_LIMIT, LEADERBOARD_SORT_FIELD } from '../../config/constants';
 import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { leaderboardFields } from './data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
@@ -18,13 +17,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
 
   useEffect(() => {
-    dispatch(
-      leaderboardThunks.getLeaderboard({
-        ratingFieldName: LEADERBOARD_SORT_FIELD,
-        cursor: 0,
-        limit: LEADERBOARD_RECORDS_DISPLAY_LIMIT,
-      })
-    );
+    dispatch(leaderboardThunks.getLeaderboard());
   }, []);
 
   if (isLoading) {
