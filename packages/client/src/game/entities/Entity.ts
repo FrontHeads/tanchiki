@@ -33,6 +33,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
 
   color: Color | string = Color.Grey;
   shouldBeDestroyed = false;
+  destroyedBy: Entity | null = null;
   /** Значение true делает танк неуязвимым для снарядов. */
   invincible = false;
   /** Хранит координаты сущности на спрайте. Это основной спрайт, на который сверху могут накладываться анимации. */
@@ -82,6 +83,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     }
     this.shouldBeDestroyed = true;
     this.emit(EntityEvent.SHOULD_BE_DESTROYED);
+    this.emit(EntityEvent.DESPAWN);
     this.spawned = false;
   }
 
@@ -92,14 +94,6 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
 
   takeDamage(source: Entity, rect: Rect) {
     this.emit(EntityEvent.DAMAGED, { ...rect, source });
-    if (this.type === 'projectile') {
-      this.explode();
-    } else if (this.type === 'tank' && !this.invincible) {
-      if (this.role !== source.role) {
-        this.explode();
-        this.emit(EntityEvent.DESTROYED, source);
-      }
-    }
   }
 
   /** Запускает анимацию  */
@@ -116,6 +110,8 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
       settings.name
     );
 
+    this.emit(EntityEvent.ANIMATION_STARTED, settings.name);
+
     // По умолчанию анимации убиваются в Game.reset()
     if (settings.stopTimer) {
       this.setLoopDelay(this.cancelAnimation.bind(this, 'showEntity', settings.name), settings.stopTimer);
@@ -128,6 +124,8 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
 
     const animationIndex = this.animationList.findIndex(animation => animation.name === name);
     this.animationList.splice(animationIndex, 1);
+
+    this.emit(EntityEvent.ANIMATION_ENDED, name);
 
     // Обновляем вид сущности и оставляем видимой на канвасе после завершения анимации.
     if (type === 'showEntity') {

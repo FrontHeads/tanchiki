@@ -48,6 +48,10 @@ export class Terrain extends Entity {
         break;
     }
 
+    this.registerTerrainEvents();
+  }
+
+  registerTerrainEvents() {
     if (this.type === 'water') {
       this.on(EntityEvent.SPAWN, () => {
         this.startAnimation({

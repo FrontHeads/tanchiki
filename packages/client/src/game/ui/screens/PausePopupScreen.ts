@@ -1,6 +1,7 @@
 import { isOdd } from '../../utils';
 import { Screen } from './Screen';
-export class PauseScreen extends Screen {
+
+export class PausePopupScreen extends Screen {
   show() {
     /**Рендерим паузу один раз без задержки с opacity: 1*/
     this.showPause(1);

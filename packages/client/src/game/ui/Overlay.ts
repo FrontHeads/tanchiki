@@ -4,13 +4,15 @@ import { Game, View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
 import { Screen } from './screens';
+import { EventEmitter } from '../utils';
 
-export class Overlay {
+export class Overlay extends EventEmitter {
   currentScreen?: Screen;
   view: View;
   activeAnimations: Set<ReturnType<typeof setTimeout>> = new Set();
 
   constructor(public game: Game) {
+    super();
     this.view = game.view;
   }
 
@@ -23,6 +25,7 @@ export class Overlay {
   }
 
   reset() {
+    this.clearAllListeners();
     for (const animateProcess of this.activeAnimations) {
       clearInterval(animateProcess);
     }
