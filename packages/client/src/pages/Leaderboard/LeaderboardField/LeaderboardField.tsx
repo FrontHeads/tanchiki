@@ -12,7 +12,9 @@ export const LeaderboardField: FC<LeaderboardFieldProps> = ({ fieldName, fieldId
   const dispatch = useAppDispatch();
 
   const handleSort = ({ fieldId }: { fieldId: SortOption }) => {
-    dispatch(leaderboardActions.setSortParams({ sortOption: fieldId }));
+    if (fieldId !== 'place') {
+      dispatch(leaderboardActions.setSortParams({ sortOption: fieldId }));
+    }
   };
 
   return (
