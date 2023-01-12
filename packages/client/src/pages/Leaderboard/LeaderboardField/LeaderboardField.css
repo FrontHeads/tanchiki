@@ -1,0 +1,5 @@
+.leaderboard {
+  &__cell-header {
+    cursor: pointer;
+  }
+}

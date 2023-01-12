@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { appReducer } from './features/app/appSlice';
 import { authReducer } from './features/auth/authSlice';
+import { leaderboardReducer } from './features/leaderboard/leaderboardSlice';
 import { profileReducer } from './features/profile/profileSlice';
 import { uiReducer } from './features/ui/uiSlice';
 
@@ -13,6 +14,7 @@ export const store = configureStore({
     profile: profileReducer,
     auth: authReducer,
     ui: uiReducer,
+    leaderboard: leaderboardReducer,
   },
   /** Загружаем начальное состояние, которое было передано из SSR сборки с сервера */
   preloadedState,

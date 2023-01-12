@@ -1,11 +1,6 @@
-type LeaderboardRecord = {
-  place: number;
-  username: string;
-  record: number;
-  time: number;
-  matches: number;
-};
+import { LeaderboardRecord } from '../../../api/leaderboardAPI';
 
 export type LeaderboardRowProps = {
-  row: LeaderboardRecord;
+  data: LeaderboardRecord;
+  place: number;
 };
