@@ -1,4 +1,4 @@
-import { SortDirection } from '../../typings';
+import { type SortDirection } from '../../typings';
 
 export type SortMarkerProps = {
   sortDirection: SortDirection;

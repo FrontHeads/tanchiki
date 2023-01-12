@@ -1,6 +1,6 @@
 import './Logo.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Paths } from '../../config/constants';

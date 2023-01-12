@@ -1,18 +1,18 @@
 import { Color } from '../data/colors';
 import {
-  Animations,
-  AnimationSettings,
-  CancelAnimation,
+  type Animations,
+  type AnimationSettings,
+  type CancelAnimation,
+  type EntityRole,
+  type EntitySettings,
+  type EntityType,
+  type Pos,
+  type PosState,
+  type Rect,
+  type SpriteCoordinatesNoAnimations,
+  type SpriteCoordinatesWithAnimations,
   Direction,
   EntityEvent,
-  EntityRole,
-  EntitySettings,
-  EntityType,
-  Pos,
-  PosState,
-  Rect,
-  SpriteCoordinatesNoAnimations,
-  SpriteCoordinatesWithAnimations,
 } from '../typings';
 import { EventEmitter } from '../utils';
 
@@ -21,7 +21,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   posY = 0;
   width = 0;
   height = 0;
-  direction = Direction.UP;
+  direction = Direction.Up;
   role: EntityRole = 'neutral';
   type: EntityType = 'custom';
   alignedToGrid = true;
@@ -49,9 +49,9 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   }
 
   setState(newState: Partial<Entity>) {
-    this.emit(EntityEvent.SHOULD_UPDATE, newState);
+    this.emit(EntityEvent.ShouldUpdate, newState);
     Object.assign(this, newState);
-    this.emit(EntityEvent.DID_UPDATE, newState);
+    this.emit(EntityEvent.DidUpdate, newState);
   }
 
   getRect() {
@@ -65,11 +65,11 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
       hasCollision: undefined,
       nextRect: { posX, posY, width: this.width, height: this.height },
     };
-    this.emit(EntityEvent.WILL_HAVE_NEW_POS, posState);
+    this.emit(EntityEvent.WillHaveNewPos, posState);
     if (!posState.hasCollision) {
       this.setState({ posX, posY });
       this.spawned = true;
-      this.emit(EntityEvent.SPAWN);
+      this.emit(EntityEvent.Spawn);
     } else if (this.type === 'projectile') {
       this.explode();
     }
@@ -82,18 +82,18 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
       return;
     }
     this.shouldBeDestroyed = true;
-    this.emit(EntityEvent.SHOULD_BE_DESTROYED);
-    this.emit(EntityEvent.DESPAWN);
+    this.emit(EntityEvent.ShouldBeDestroyed);
+    this.emit(EntityEvent.Despawn);
     this.spawned = false;
   }
 
   explode() {
-    this.emit(EntityEvent.EXPLODING);
+    this.emit(EntityEvent.Exploding);
     this.despawn();
   }
 
   takeDamage(source: Entity, rect: Rect) {
-    this.emit(EntityEvent.DAMAGED, { ...rect, source });
+    this.emit(EntityEvent.Damaged, { ...rect, source });
   }
 
   /** Запускает анимацию  */
@@ -110,7 +110,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
       settings.name
     );
 
-    this.emit(EntityEvent.ANIMATION_STARTED, settings.name);
+    this.emit(EntityEvent.AnimationStarted, settings.name);
 
     // По умолчанию анимации убиваются в Game.reset()
     if (settings.stopTimer) {
@@ -125,7 +125,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     const animationIndex = this.animationList.findIndex(animation => animation.name === name);
     this.animationList.splice(animationIndex, 1);
 
-    this.emit(EntityEvent.ANIMATION_ENDED, name);
+    this.emit(EntityEvent.AnimationEnded, name);
 
     // Обновляем вид сущности и оставляем видимой на канвасе после завершения анимации.
     if (type === 'showEntity') {
@@ -135,28 +135,28 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
 
     // Стираем сущность с канваса после завершения анимации.
     if (type === 'eraseEntity') {
-      this.emit(EntityEvent.SHOULD_UPDATE);
+      this.emit(EntityEvent.ShouldUpdate);
     }
   }
 
   /** Стирает и заново отрисовывает сущность на канвасе. Т.е. обновляет вид сущности в игре. */
   refreshSprite() {
-    this.emit(EntityEvent.SHOULD_UPDATE);
-    this.emit(EntityEvent.DID_UPDATE);
+    this.emit(EntityEvent.ShouldUpdate);
+    this.emit(EntityEvent.DidUpdate);
   }
 
   /** Аналог setInterval. Метод описан в Game. */
   setLoopInterval(callback: () => void, delay: number, name: string | number) {
-    this.emit(EntityEvent.SET_LOOP_INTERVAL, callback, delay, name);
+    this.emit(EntityEvent.SetLoopInterval, callback, delay, name);
   }
 
   /** Удаляет интервал по его имени. Метод описан в Game. */
   clearLoopInterval(name: string | number) {
-    this.emit(EntityEvent.CLEAR_LOOP_INTERVAL, name);
+    this.emit(EntityEvent.ClearLoopInterval, name);
   }
 
   /** Аналог setTimeout. Метод описан в Game. */
   setLoopDelay(callback: () => void, delay: number) {
-    this.emit(EntityEvent.SET_LOOP_DELAY, callback, delay);
+    this.emit(EntityEvent.SetLoopDelay, callback, delay);
   }
 }

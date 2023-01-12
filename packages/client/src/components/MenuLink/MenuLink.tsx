@@ -1,11 +1,11 @@
 import './MenuLink.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import linkTank from '/assets/img/link_tank.png';
 
-import { MenuLinkProps } from './typings';
+import { type MenuLinkProps } from './typings';
 
 export const MenuLink: FC<MenuLinkProps> = ({ title, to, onClick }) => {
   return (

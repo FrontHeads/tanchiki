@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import { FormInputAndHeadingList } from '../../app.typings';
-import { FieldProps } from '../../components/Form/FieldList/Field/typings';
-import { ValidationResponse } from './typings';
+import { type FormInputAndHeadingList } from '../../app.typings';
+import { type FieldProps } from '../../components/Form/FieldList/Field/typings';
+import { type ValidationResponse } from './typings';
 import { validators } from './validators';
 
 export function useValidation(formInputAndHeadingList: FormInputAndHeadingList) {

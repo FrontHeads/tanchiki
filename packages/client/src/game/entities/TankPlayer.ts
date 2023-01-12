@@ -1,10 +1,10 @@
 import { spriteCoordinates } from '../data/constants';
-import { type EntityDynamicSettings, EntityEvent, PlayerVariant, Speed } from '../typings';
+import { type EntityDynamicSettings, type PlayerVariant, EntityEvent, Speed } from '../typings';
 import { Tank } from './Tank';
 
 export class TankPlayer extends Tank {
   spawnShieldTimeout = 3000;
-  variant: PlayerVariant = 'PLAYER1';
+  variant: PlayerVariant = 'Player1';
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -14,7 +14,7 @@ export class TankPlayer extends Tank {
     Object.assign(this, props);
 
     //TODO выбор спрайта танка также должен зависеть от типа танка (большой/маленький)
-    if (!props.variant || props.variant === 'PLAYER1') {
+    if (!props.variant || props.variant === 'Player1') {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
     } else {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.secondary.a'];
@@ -24,7 +24,7 @@ export class TankPlayer extends Tank {
   }
 
   registerTankPlayerEvents() {
-    this.on(EntityEvent.READY, () => {
+    this.on(EntityEvent.Ready, () => {
       this.useShield(this.spawnShieldTimeout);
     });
   }

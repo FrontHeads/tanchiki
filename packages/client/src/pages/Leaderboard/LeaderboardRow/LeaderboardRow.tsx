@@ -1,10 +1,10 @@
 import './LeaderboardRow.css';
 
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 
 import { leaderboardSelectors, useAppSelector } from '../../../store';
 import { convertMsToTime } from '../../../utils/dateUtils';
-import { LeaderboardRowProps } from './typings';
+import { type LeaderboardRowProps } from './typings';
 
 export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { username, score, time, matches }, place }) => {
   const { sortOption, sortDirection } = useAppSelector(leaderboardSelectors.all);

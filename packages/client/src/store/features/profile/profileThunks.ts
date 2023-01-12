@@ -1,15 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import {
-  UpdatePasswordRequestData,
-  UpdateProfileAvatarRequestData,
-  UpdateProfileRequestData,
+  type UpdatePasswordRequestData,
+  type UpdateProfileAvatarRequestData,
+  type UpdateProfileRequestData,
   userAPI,
 } from '../../../api/userAPI';
-import { UserProfile } from '../../../app.typings';
-import { RootState } from '../../store';
+import { type UserProfile } from '../../../app.typings';
+import { type RootState } from '../../store';
 import { me } from '../auth/authThunks';
-import { UpdateAllProfileData, UpdateResult } from './typings';
+import { type UpdateAllProfileData, type UpdateResult } from './typings';
 
 /**
  * В зависимости от полученного статуса промиса, создаем сообщение либо об ошибке, либо об успешном обновлении полей

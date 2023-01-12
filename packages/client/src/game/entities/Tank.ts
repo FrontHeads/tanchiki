@@ -33,7 +33,7 @@ export class Tank extends EntityDynamic {
   }
 
   registerTankEvents() {
-    this.on(EntityEvent.SPAWN, () => {
+    this.on(EntityEvent.Spawn, () => {
       this.startAnimation({
         delay: 50,
         spriteCoordinates: spriteCoordinates.spawn,
@@ -51,15 +51,15 @@ export class Tank extends EntityDynamic {
         this.canShoot = true;
         this.hittable = true;
         this.color = color;
-        this.emit(EntityEvent.READY);
+        this.emit(EntityEvent.Ready);
       }, this.spawnTimeout);
     });
 
-    this.on(EntityEvent.DAMAGED, ({ source }) => {
+    this.on(EntityEvent.Damaged, ({ source }) => {
       if (!this.invincible && this.role !== source.role) {
         this.explode();
         this.destroyedBy = source;
-        this.emit(EntityEvent.DESTROYED, source);
+        this.emit(EntityEvent.Destroyed, source);
       }
     });
   }
@@ -122,11 +122,11 @@ export class Tank extends EntityDynamic {
       moveSpeed: this.shootSpeed,
     });
 
-    projectile.on(EntityEvent.EXPLODING, () => {
+    projectile.on(EntityEvent.Exploding, () => {
       this.canShoot = true;
     });
 
-    this.emit(EntityEvent.SHOOT, projectile);
+    this.emit(EntityEvent.Shoot, projectile);
 
     this.shooting = false;
   }
@@ -138,13 +138,13 @@ export class Tank extends EntityDynamic {
     const offsetY = Math.round((rect.height - defaultSize.height) / 2);
 
     switch (this.direction) {
-      case Direction.UP:
+      case Direction.Up:
         return { posX: rect.posX + offsetX, posY: rect.posY };
-      case Direction.DOWN:
+      case Direction.Down:
         return { posX: rect.posX + offsetX, posY: rect.posY + rect.height - defaultSize.height };
-      case Direction.LEFT:
+      case Direction.Left:
         return { posX: rect.posX, posY: rect.posY + offsetY };
-      case Direction.RIGHT:
+      case Direction.Right:
         return { posX: rect.posX + rect.width - defaultSize.width, posY: rect.posY + offsetY };
     }
   }
@@ -152,7 +152,7 @@ export class Tank extends EntityDynamic {
   slide(shouldSlide = true) {
     if (shouldSlide) {
       if (!this.sliding) {
-        this.emit(EntityEvent.SLIDE);
+        this.emit(EntityEvent.Slide);
       }
       this.sliding = true;
       this.slidingStepsProgress = 0;

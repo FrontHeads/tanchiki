@@ -7,8 +7,8 @@ import { Screen } from './Screen';
 export class MainMenuScreen extends Screen<MainMenuState> {
   tankElemInterval: string | null = null;
   mainMenuStateYPos = {
-    [MainMenuState.SINGLEPLAYER]: 32,
-    [MainMenuState.MULTIPLAYER]: 37,
+    [MainMenuState.Singleplayer]: 32,
+    [MainMenuState.Multiplayer]: 37,
   };
 
   show(state: MainMenuState) {
@@ -60,7 +60,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
 
     this.overlay.renderElement({
       posX: 23,
-      posY: this.mainMenuStateYPos[MainMenuState.SINGLEPLAYER],
+      posY: this.mainMenuStateYPos[MainMenuState.Singleplayer],
       width: 20,
       height: 2.2,
       color: Color.White,
@@ -69,7 +69,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
 
     this.overlay.renderElement({
       posX: 23,
-      posY: this.mainMenuStateYPos[MainMenuState.MULTIPLAYER],
+      posY: this.mainMenuStateYPos[MainMenuState.Multiplayer],
       width: 20,
       height: 2.2,
       color: Color.White,

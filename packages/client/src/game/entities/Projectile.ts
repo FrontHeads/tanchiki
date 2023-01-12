@@ -28,7 +28,7 @@ export class Projectile extends EntityDynamic {
   }
 
   registerProjectileEvents() {
-    this.on(EntityEvent.DAMAGED, () => {
+    this.on(EntityEvent.Damaged, () => {
       this.explode();
     });
   }
@@ -45,7 +45,7 @@ export class Projectile extends EntityDynamic {
         this.moveStepsProgress = 0;
       } else {
         this.exploding = true;
-        this.emit(EntityEvent.WILL_DO_DAMAGE, this.calculateExplosionRect());
+        this.emit(EntityEvent.WillDoDamage, this.calculateExplosionRect());
       }
     } else if (this.movePace === 1) {
       // Если цель успела уехать, то нужно вернуть снаряду прежний темп хода
@@ -55,28 +55,28 @@ export class Projectile extends EntityDynamic {
 
   calculateExplosionRect() {
     switch (this.direction) {
-      case Direction.UP:
+      case Direction.Up:
         return {
           posX: this.posX - this.explosionRadius,
           posY: this.posY - this.explosionForce,
           width: this.width + this.explosionRadius * 2,
           height: this.height,
         };
-      case Direction.DOWN:
+      case Direction.Down:
         return {
           posX: this.posX - this.explosionRadius,
           posY: this.posY + this.explosionForce,
           width: this.width + this.explosionRadius * 2,
           height: this.height,
         };
-      case Direction.LEFT:
+      case Direction.Left:
         return {
           posX: this.posX - this.explosionForce,
           posY: this.posY - this.explosionRadius,
           width: this.width,
           height: this.height + this.explosionRadius * 2,
         };
-      case Direction.RIGHT:
+      case Direction.Right:
         return {
           posX: this.posX + this.explosionForce,
           posY: this.posY - this.explosionRadius,

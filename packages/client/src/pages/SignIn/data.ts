@@ -1,5 +1,5 @@
-import { FieldProps } from '../../components/Form/FieldList/Field/typings';
-import { SignInForm } from './typings';
+import { type FieldProps } from '../../components/Form/FieldList/Field/typings';
+import { type SignInForm } from './typings';
 
 export const signInFieldList: FieldProps[] = [
   {

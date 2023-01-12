@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Paths } from '../../../../config/constants';
-import { ForumTopicListProps } from './typings';
+import { type ForumTopicListProps } from './typings';
 
 export const ForumTopicList: FC<ForumTopicListProps> = ({ topicList, sectionId }) => {
   return (

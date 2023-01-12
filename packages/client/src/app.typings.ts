@@ -1,4 +1,4 @@
-import { FieldProps } from './components/Form/FieldList/Field/typings';
+import { type FieldProps } from './components/Form/FieldList/Field/typings';
 
 export type FormHeading = { heading: string };
 

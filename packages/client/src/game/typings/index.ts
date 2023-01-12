@@ -1,27 +1,28 @@
-import { Color } from '../data/colors';
-import { Entity, Projectile, Tank, TankEnemy } from '../entities';
-import { Controller } from './../services/Controller';
+import { type Color } from '../data/colors';
+import { type Entity, type Projectile, type Tank, type TankEnemy } from '../entities';
+import { type Controller } from './../services/Controller';
 
 export type Fn = (...args: Array<any>) => void;
 
 export type GameSettings = {
+  //gaeme
   width: number;
   height: number;
   boundarySize: number;
   indicatorsSidebarSize: number;
 };
 
-export type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';
+export type GameMode = 'Singleplayer' | 'Multiplayer';
 
 export enum GameEvents {
   UpdateLeaderboard = 'UPDATE_LEADERBOARD',
 }
 
-export enum Direction {
-  UP = 'UP',
-  DOWN = 'DOWN',
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT',
+export enum Direction { //zone
+  Up = 'UP',
+  Down = 'DOWN',
+  Left = 'LEFT',
+  Right = 'RIGHT',
 }
 
 export type Pos = {
@@ -38,37 +39,37 @@ export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
 
-export enum Speed {
-  Low,
-  Medium,
-  High,
+export enum Speed { //entitydynamic
+  Low = 'LOW',
+  Medium = 'MEDIUM',
+  High = 'HIGH',
 }
 
-export enum EntityEvent {
-  MOVE = 'move',
-  STOP = 'stop',
-  SLIDE = 'slide',
-  SPAWN = 'spawn',
-  DESPAWN = 'despawn',
-  READY = 'ready',
-  DAMAGED = 'damaged',
-  DESTROYED = 'destroyed',
-  EXPLODING = 'exploding',
-  SHOOT = 'shoot',
+export enum EntityEvent { //entity
+  Move = 'MOVE',
+  Stop = 'STOP',
+  Slide = 'SLIDE',
+  Spawn = 'SPAWN',
+  Despawn = 'DESPAWN',
+  Ready = 'READY',
+  Damaged = 'DAMAGED',
+  Destroyed = 'DESTROYED',
+  Exploding = 'EXPLODING',
+  Shoot = 'SHOOT',
 
-  SET_LOOP_DELAY = 'setLoopDelay',
-  SET_LOOP_INTERVAL = 'setLoopInterval',
-  CLEAR_LOOP_INTERVAL = 'clearLoopInterval',
+  SetLoopDelay = 'SET_LOOP_DELAY',
+  SetLoopInterval = 'SET_LOOP_INTERVAL',
+  ClearLoopInterval = 'CLEAR_LOOP_INTERVAL',
 
-  WILL_HAVE_NEW_POS = 'entityWillHaveNewPos',
-  WILL_DO_DAMAGE = 'entityWillDoDamage',
-  SHOULD_BE_DESTROYED = 'entityShouldBeDestroyed',
-  SHOULD_UPDATE = 'entityShouldUpdate',
-  DID_UPDATE = 'entityDidUpdate',
-  SHOULD_RENDER_TEXT = 'entityShouldRenderText',
+  WillHaveNewPos = 'ENTITY_WILL_HAVE_NEW_POS',
+  WillDoDamage = 'ENTITY_WILL_DO_DAMAGE',
+  ShouldBeDestroyed = 'ENTITY_SHOULD_BE_DESTROYED',
+  ShouldUpdate = 'ENTITY_SHOULD_UPDATE',
+  DidUpdate = 'ENTITY_DID_UPDATE',
+  ShouldRenderText = 'ENTITY_SHOULD_RENDER_TEXT',
 
-  ANIMATION_STARTED = 'animationStarted',
-  ANIMATION_ENDED = 'animationEnded',
+  AnimationStarted = 'ANIMATION_STARTED',
+  AnimationEnded = 'ANIMATION_ENDED',
 }
 
 export type EntityRole = 'player' | 'enemy' | 'neutral';
@@ -81,8 +82,8 @@ export type EntityType =
   | 'brickWall'
   | 'concreteWall'
   | 'trees'
-  | 'water'
-  | 'ice'
+  | 'Water'
+  | 'Ice'
   | 'powerup'
   | 'explosion'
   | 'score'
@@ -91,9 +92,9 @@ export type EntityType =
 
 export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';
 
-export type PlayerVariant = 'PLAYER1' | 'PLAYER2';
+export type PlayerVariant = 'Player1' | 'Player2'; //playertank
 
-export type EnemyVariant = 'BASIC' | 'FAST' | 'POWER' | 'ARMOR';
+export type EnemyVariant = 'Basic' | 'Fast' | 'Power' | 'Armor';
 
 export type ExplosionVariant = 'TANK_EXPLOSION' | 'PROJECTILE_EXPLOSION';
 
@@ -118,7 +119,7 @@ export type EntityDynamicSettings = EntitySettings &
 
 export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
 
-export type DamageSettings = Rect & { source: Projectile };
+export type DamageSettings = Rect & { source: Projectile }; //zone
 
 export type UIElementSettings = Pos &
   Size &
@@ -131,9 +132,9 @@ export type UIElementSettings = Pos &
     indicatorName?: string;
   }>;
 
-export enum MainMenuState {
-  SINGLEPLAYER,
-  MULTIPLAYER,
+export enum MainMenuState { //screen
+  Singleplayer,
+  Multiplayer,
 }
 
 export enum ScreenType {
@@ -143,37 +144,38 @@ export enum ScreenType {
   GameStart = 'GAME_START',
   Pause = 'PAUSE',
   Score = 'SCORE',
-  GameOverPopup = 'GAME_OVER',
+  GameOverPopup = 'GAME_OVER_POPUP',
 }
 
 // Scenario
+//TODO: REFCACTOR???
 export enum Player {
-  PLAYER1 = 'PLAYER1',
-  PLAYER2 = 'PLAYER2',
+  Player1 = 'Player1',
+  Player2 = 'Player2',
 }
 
 export enum TankEnemyType {
-  BASIC,
-  FAST,
-  POWER,
-  ARMOR,
+  Basic = 'BASIC',
+  Fast = 'FAST',
+  Power = 'POWER',
+  Armor = 'ARMOR',
 }
 
 export enum ScenarioEvent {
-  GAME_OVER = 'game_over',
-  MISSION_ACCOMPLISHED = 'mission_accomplished',
+  GameOver = 'GAME_OVER',
+  MissionAccomplished = 'MISSION_ACCOMPLISHED',
 
   /** Танк игрока размещен на карте (в момент старта игры и респаун после убийства в случае наличия жизни. */
-  TANK_PLAYER_SPAWNED = 'tank_player_spawned',
+  TankPlayerSpawned = 'TANK_PLAYER_SPAWNED',
   /** Танк игрока был убит */
-  TANK_PLAYER_DESTROYED = 'tank_player_destroyed',
+  TankPlayerDestroyed = 'TANK_PLAYER_DESTROYED',
 
   /** Вражеский танк размежен на карте. */
-  TANK_ENEMY_SPAWNED = 'tank_enemy_spawned',
+  TankEnemySpawned = 'TANK_ENEMY_SPAWNED',
   /** Вражеский танк был убит. */
-  TANK_ENEMY_DESTROYED = 'tank_enemy_destroyed',
+  TankEnemyDestroyed = 'TANK_ENEMY_DESTROYED',
   /** Попадание снаряда куда-либо. */
-  PROJECTILE_HIT = 'projectile_hit',
+  ProjectileHit = 'PROJECTILE_HIT',
 }
 
 export type ScenarioState = {
@@ -205,28 +207,28 @@ export type EnemyDestroyedPayload = {
 
 export type MapData = TupleArray<TupleArray<number, 13>, 13>;
 
-export enum Cell {
-  BLANK = 0,
-  FOREST = 11,
-  ICE = 12,
-  WATER = 13,
-  BASE = 15,
+export enum Cell { //mapmanager
+  Blank = 0,
+  Forest = 11,
+  Ice = 12,
+  Water = 13,
+  Base = 15,
 
-  BRICK = 1,
-  BRICK_TOP = 2,
-  BRICK_RIGHT = 3,
-  BRICK_BOTTOM = 4,
-  BRICK_LEFT = 5,
-  BRICK_LEFT_BOTTOM = 17,
-  BRICK_RIGHT_BOTTOM = 18,
+  Brick = 1,
+  BrickTop = 2,
+  BrickRight = 3,
+  BrickBottom = 4,
+  BrickLeft = 5,
+  BrickBottomLeft = 17,
+  BrickBottomRight = 18,
 
-  CONCRETE = 6,
-  CONCRETE_TOP = 7,
-  CONCRETE_RIGHT = 8,
-  CONCRETE_BOTTOM = 9,
-  CONCRETE_LEFT = 10,
-  CONCRETE_LEFT_BOTTOM = 19,
-  CONCRETE_RIGHT_BOTTOM = 20,
+  Concrete = 6,
+  ConcreteTop = 7,
+  ConcreteRight = 8,
+  ConcreteBottom = 9,
+  ConcreteLeft = 10,
+  ConcreteBottomLeft = 19,
+  ConcreteBottomRight = 20,
 }
 
 export type LoopDelays = Record<number, Array<() => void>>;
@@ -239,7 +241,7 @@ export type LoopInterval = {
   callback: () => void;
 };
 
-export type SpriteCoordinatesNoAnimations = null | number[][];
+export type SpriteCoordinatesNoAnimations = null | number[][]; //view
 export type SpriteCoordinatesWithAnimations = Record<string, number[][]>;
 
 export type Animations = AnimationSettings[];
@@ -271,6 +273,7 @@ export type CancelAnimation =
 
 /** Список canvas-слоев и прикрепленных к ним сущностей. */
 export type LayerList = Record<
+  //view
   string,
   {
     context: CanvasRenderingContext2D;
@@ -280,6 +283,7 @@ export type LayerList = Record<
 
 /** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
 export type LayerEntity = {
+  //view
   instance: Entity;
   listeners: Record<string, (...args: Array<any>) => void>;
 };
@@ -290,13 +294,13 @@ export type GetSpriteCoordinates = {
 };
 
 export enum ControllerEvent {
-  STOP = 'stop',
-  MOVE = 'move',
-  SHOOT = 'shoot',
-  PAUSE = 'pause',
-  FULLSCREEN = 'fullscreen',
-  MUTE = 'mute',
-  ESCAPE = 'escape',
+  Stop = 'STOP',
+  Move = 'MOVE',
+  Shoot = 'SHOOT',
+  Pause = 'PAUSE',
+  Fullscreen = 'FULLSCREEN',
+  Mute = 'MUTE',
+  Escape = 'ESCAPE',
 }
 
 export type EnemiesKilledState = Record<EnemyVariant, number[]>;

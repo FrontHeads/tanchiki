@@ -1,5 +1,5 @@
-import { LeaderboardRowProps } from '../../../pages/Leaderboard/LeaderboardRow/typings';
-import { SortDirection, SortOption } from './../../../pages/Leaderboard/typings';
+import { type LeaderboardRowProps } from '../../../pages/Leaderboard/LeaderboardRow/typings';
+import { type SortDirection, type SortOption } from './../../../pages/Leaderboard/typings';
 
 export type LeaderboardState = {
   isLoading: boolean;

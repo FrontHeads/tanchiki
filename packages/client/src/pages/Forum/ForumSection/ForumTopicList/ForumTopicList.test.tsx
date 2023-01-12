@@ -4,7 +4,7 @@ import { screen } from '@testing-library/react';
 
 import { renderWithRouter } from '../../../../utils/testingUtils';
 import { ForumTopicList } from './ForumTopicList';
-import { ForumTopicItem } from './typings';
+import { type ForumTopicItem } from './typings';
 
 describe('ForumTopicList', () => {
   const topicList = [{ id: 1, name: 'Как побеждать?', messages: 100 } as ForumTopicItem];

@@ -1,9 +1,6 @@
-import { ButtonHTMLAttributes, MouseEventHandler } from 'react';
+import { type ButtonHTMLAttributes, type MouseEventHandler } from 'react';
 
-export enum ButtonVariant {
-  Primary = 'primary',
-  Secondary = 'secondary',
-}
+import { type ButtonVariant } from './data';
 
 export type ButtonProps = {
   text: string;

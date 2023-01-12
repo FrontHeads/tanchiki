@@ -1,7 +1,7 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../store';
-import { AppState } from './typings';
+import { type RootState } from '../../store';
+import { type AppState } from './typings';
 
 export const appSlice = createSlice({
   name: 'app',

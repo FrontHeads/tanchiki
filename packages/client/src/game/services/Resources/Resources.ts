@@ -1,5 +1,5 @@
-import { assetPathList, errorMsg, extensionList, ImagePathList, SoundPathList, timeoutMsg } from './data';
-import { AssetPathList, ImageList, Resource, SoundList } from './typings';
+import { type ImagePathList, type SoundPathList, assetPathList, errorMsg, extensionList, timeoutMsg } from './data';
+import { type AssetPathList, type ImageList, type Resource, type SoundList } from './typings';
 
 /** Загружает и хранит изображения и звуки. */
 class Resources {

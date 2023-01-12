@@ -1,9 +1,9 @@
 import { Color } from '../../data/colors';
 import { spriteCoordinates } from '../../data/constants';
-import { UIElementSettings } from '../../typings';
+import { type UIElementSettings } from '../../typings';
 import { UIElement } from '../../ui';
 import { isOdd } from '../../utils';
-import { Game } from '../Game';
+import { type Game } from '../Game';
 import { IndicatorNames, playerLivesData } from './data';
 
 export class IndicatorManager {

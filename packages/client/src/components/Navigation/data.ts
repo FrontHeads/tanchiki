@@ -1,5 +1,5 @@
 import { Paths } from '../../config/constants';
-import { MenuLinkProps } from '../MenuLink/typings';
+import { type MenuLinkProps } from '../MenuLink/typings';
 
 export const NAVIGATION_LIST: Array<MenuLinkProps> = [
   { name: 'home', title: 'На главную', to: Paths.Home },

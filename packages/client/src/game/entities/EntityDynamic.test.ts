@@ -8,7 +8,7 @@ class TestEntityDynamic extends EntityDynamic {
 }
 
 function mockEntityDynamic() {
-  const entity = new TestEntityDynamic({ posX: 0, posY: 0, width: 4, height: 4, direction: Direction.RIGHT });
+  const entity = new TestEntityDynamic({ posX: 0, posY: 0, width: 4, height: 4, direction: Direction.Right });
   entity.moveSpeed = 2;
   entity.movePace = 2;
   entity.moveStepsTotal = 12;
@@ -20,18 +20,18 @@ describe('game/entities/EntityDynamic', () => {
   it('should turn', () => {
     const entity = mockEntityDynamic();
 
-    entity.turn(Direction.UP);
+    entity.turn(Direction.Up);
 
-    expect(entity.direction).toBe(Direction.UP);
+    expect(entity.direction).toBe(Direction.Up);
   });
 
   it('should start moving', () => {
     const entity = mockEntityDynamic();
 
-    entity.move(Direction.DOWN);
+    entity.move(Direction.Down);
 
     expect(entity.moving).toBe(true);
-    expect(entity).toHaveProperty('nextDirection', Direction.DOWN);
+    expect(entity).toHaveProperty('nextDirection', Direction.Down);
     expect(entity).toHaveProperty('canMove', true);
   });
 
@@ -49,7 +49,7 @@ describe('game/entities/EntityDynamic', () => {
     const entity = mockEntityDynamic();
     const ticks = 5;
 
-    entity.move(Direction.RIGHT);
+    entity.move(Direction.Right);
     for (let i = 0; i < ticks; ++i) {
       entity.update();
     }
@@ -62,12 +62,12 @@ describe('game/entities/EntityDynamic', () => {
     const entity = mockEntityDynamic();
     const ticks = 5;
 
-    entity.move(Direction.DOWN);
+    entity.move(Direction.Down);
     for (let i = 0; i < ticks; ++i) {
       entity.update();
     }
 
-    expect(entity.direction).toBe(Direction.DOWN);
+    expect(entity.direction).toBe(Direction.Down);
     expect(entity.posX).toBe(0);
     expect(entity.posY).toBe(0);
   });
@@ -76,28 +76,28 @@ describe('game/entities/EntityDynamic', () => {
     const entity = mockEntityDynamic();
     const ticks = 5;
 
-    entity.move(Direction.RIGHT);
+    entity.move(Direction.Right);
     for (let i = 0; i < ticks; ++i) {
       entity.update();
     }
-    entity.move(Direction.DOWN);
+    entity.move(Direction.Down);
 
-    expect(entity.direction).toBe(Direction.RIGHT);
+    expect(entity.direction).toBe(Direction.Right);
   });
 
   it('should turn after making full move', () => {
     const entity = mockEntityDynamic();
     const ticks = 5;
 
-    entity.move(Direction.RIGHT);
+    entity.move(Direction.Right);
     for (let i = 0; i < ticks; ++i) {
       entity.update();
     }
-    entity.move(Direction.DOWN);
+    entity.move(Direction.Down);
     for (let i = 0; i < 10; ++i) {
       entity.update();
     }
 
-    expect(entity.direction).toBe(Direction.DOWN);
+    expect(entity.direction).toBe(Direction.Down);
   });
 });

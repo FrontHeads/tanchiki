@@ -1,4 +1,4 @@
-import { Cell, EntityDynamicSettings, Player, ScreenType } from '../typings';
+import { type EntityDynamicSettings, Cell, Player, ScreenType } from '../typings';
 import {
   GameOverPopupScreen,
   GameStartScreen,
@@ -12,26 +12,29 @@ import { Color } from './colors';
 import { classicDesignSprite } from './spriteCoordinates';
 
 export const concreteCells: Cell[] = [
-  Cell.CONCRETE,
-  Cell.CONCRETE_TOP,
-  Cell.CONCRETE_RIGHT,
-  Cell.CONCRETE_BOTTOM,
-  Cell.CONCRETE_LEFT,
-  Cell.CONCRETE_LEFT_BOTTOM,
-  Cell.CONCRETE_RIGHT_BOTTOM,
+  //mapmanager
+  Cell.Concrete,
+  Cell.ConcreteTop,
+  Cell.ConcreteRight,
+  Cell.ConcreteBottom,
+  Cell.ConcreteLeft,
+  Cell.ConcreteBottomLeft,
+  Cell.ConcreteBottomRight,
 ];
 
 export const brickCells: Cell[] = [
-  Cell.BRICK,
-  Cell.BRICK_TOP,
-  Cell.BRICK_RIGHT,
-  Cell.BRICK_BOTTOM,
-  Cell.BRICK_LEFT,
-  Cell.BRICK_LEFT_BOTTOM,
-  Cell.BRICK_RIGHT_BOTTOM,
+  //mapmanager
+  Cell.Brick,
+  Cell.BrickTop,
+  Cell.BrickRight,
+  Cell.BrickBottom,
+  Cell.BrickLeft,
+  Cell.BrickBottomLeft,
+  Cell.BrickBottomRight,
 ];
 
 export const screenClasses = {
+  //screens
   [ScreenType.Loading]: LoadingScreen,
   [ScreenType.MainMenu]: MainMenuScreen,
   [ScreenType.LevelSelector]: LevelSelectorScreen,
@@ -42,8 +45,9 @@ export const screenClasses = {
 };
 
 export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
-  [Player.PLAYER1]: { posX: 18, posY: 50, color: Color.Yellow, variant: 'PLAYER1' },
-  [Player.PLAYER2]: { posX: 34, posY: 50, color: Color.Lime, variant: 'PLAYER2' },
+  //scenario
+  [Player.Player1]: { posX: 18, posY: 50, color: Color.Yellow, variant: 'Player1' },
+  [Player.Player2]: { posX: 34, posY: 50, color: Color.Lime, variant: 'Player2' },
 };
 
 /**
@@ -53,13 +57,14 @@ export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
  * был установлен какой-то предмет
  */
 export const spawnPlaces: Record<number, number[]> = {
+  //mapmanager
   0: [0, 6, 12],
   12: [4, 8],
 };
 
 //TODO тут будут координаты для спрайта с современным дизайном.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const modernDesignSprite = {};
+const modernDesignSprite = {}; //view
 
 /** Координаты сущностей на sprite-изображении */
-export const spriteCoordinates = classicDesignSprite;
+export const spriteCoordinates = classicDesignSprite; //view

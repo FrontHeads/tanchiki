@@ -1,7 +1,4 @@
-export enum BreadcrumbsVariant {
-  Wide = 'wide',
-  Normal = 'normal',
-}
+import { type BreadcrumbsVariant } from './data';
 
 export type BreadcrumbsItem = {
   href?: string;

@@ -14,17 +14,17 @@ export class Flag extends Entity {
     this.color = Color.White;
     this.crossable = false;
     this.hittable = true;
-    this.mainSpriteCoordinates = spriteCoordinates['base.heart.alive'];
+    this.mainSpriteCoordinates = spriteCoordinates['Base.heart.alive'];
 
     this.registerFlagEvents();
   }
 
   registerFlagEvents() {
-    this.on(EntityEvent.DAMAGED, ({ source }) => {
+    this.on(EntityEvent.Damaged, ({ source }) => {
       if (!this.destroyed) {
-        this.mainSpriteCoordinates = spriteCoordinates['base.heart.dead'];
+        this.mainSpriteCoordinates = spriteCoordinates['Base.heart.dead'];
         this.refreshSprite();
-        this.emit(EntityEvent.DESTROYED, source);
+        this.emit(EntityEvent.Destroyed, source);
         this.destroyed = true;
       }
     });

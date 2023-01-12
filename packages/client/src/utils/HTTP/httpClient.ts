@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-import { APIError } from '../../api/typings';
+import { type APIError } from '../../api/typings';
 import { apiHasError } from '../apiUtils';
 
 // Check if error response body contains reason of error

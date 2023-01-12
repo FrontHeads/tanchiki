@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 
-import { FormInputAndHeadingList } from '../../../app.typings';
-import { useValidation } from '../../../utils/validation';
+import { type FormInputAndHeadingList } from '../../../app.typings';
+import { type useValidation } from '../../../utils/validation';
 
 export type FieldListProps<T> = {
   setFile?: Dispatch<File>;

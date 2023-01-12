@@ -1,4 +1,4 @@
-import { AssetPathList } from './typings';
+import { type AssetPathList } from './typings';
 
 export const timeoutMsg =
   'Не удалось загрузить данные для игры в течение минуты. Загрузка отменена. Попробуйте обновить страницу.';
@@ -16,10 +16,10 @@ export enum SoundPathList {
   pause = '/assets/sounds/pause.mp3',
   move = '/assets/sounds/tank-move.mp3',
   idle = '/assets/sounds/tank-idle.mp3',
-  ice = '/assets/sounds/ice.mp3',
+  Ice = '/assets/sounds/Ice.mp3',
   shoot = '/assets/sounds/shoot.mp3',
   hitEnemy = '/assets/sounds/hit-enemy.mp3',
-  hitBrick = '/assets/sounds/hit-brick.mp3',
+  hitBrick = '/assets/sounds/hit-Brick.mp3',
   hitSteel = '/assets/sounds/hit-steel.mp3',
   playerExplosion = '/assets/sounds/player-explosion.mp3',
   enemyExplosion = '/assets/sounds/enemy-explosion.mp3',

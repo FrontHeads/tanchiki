@@ -1,14 +1,14 @@
 import { Color } from '../data/colors';
-import { Entity, Tank } from '../entities';
+import { type Entity, Tank } from '../entities';
 import {
-  AnimationSettings,
+  type AnimationSettings,
+  type GetSpriteCoordinates,
+  type LayerEntity,
+  type LayerList,
+  type Rect,
+  type Size,
+  type SpriteCoordinatesNoAnimations,
   EntityEvent,
-  GetSpriteCoordinates,
-  LayerEntity,
-  LayerList,
-  Rect,
-  Size,
-  SpriteCoordinatesNoAnimations,
 } from '../typings';
 import type { UIElement } from '../ui';
 import { EventEmitter } from '../utils';
@@ -129,23 +129,23 @@ export class View extends EventEmitter {
     const layerObject = {
       instance: entity,
       listeners: {
-        [EntityEvent.SHOULD_UPDATE]: () => {
+        [EntityEvent.ShouldUpdate]: () => {
           if (!entity.spawned) {
             return;
           }
           this.eraseFromLayer(entity, layerId);
         },
-        [EntityEvent.DID_UPDATE]: () => {
+        [EntityEvent.DidUpdate]: () => {
           this.drawOnLayer(entity, layerId);
         },
-        [EntityEvent.SHOULD_RENDER_TEXT]: () => {
+        [EntityEvent.ShouldRenderText]: () => {
           this.drawTextOnLayer(entity as UIElement, layerId);
         },
-        [EntityEvent.SHOULD_BE_DESTROYED]: () => {
+        [EntityEvent.ShouldBeDestroyed]: () => {
           this.eraseFromLayer(entity, layerId);
           this.removeEntityFromLayer(entity, layerId);
         },
-        [EntityEvent.DAMAGED]: (rect: Rect) => {
+        [EntityEvent.Damaged]: (rect: Rect) => {
           if (entity.type === 'brickWall') {
             this.eraseFromLayer(rect, layerId);
           }

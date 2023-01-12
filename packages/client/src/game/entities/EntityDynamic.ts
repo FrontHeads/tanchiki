@@ -1,4 +1,4 @@
-import { Direction, EntityDynamicSettings, PosState, Rect } from '../typings';
+import { type EntityDynamicSettings, type PosState, type Rect, Direction } from '../typings';
 import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
@@ -22,7 +22,7 @@ export abstract class EntityDynamic extends Entity {
   /** За сколько игровых циклов объект совершает один ход*/
   moveStepsTotal = 12;
   /** Новое направление, по которому объект начнёт движение после завершения полного хода*/
-  nextDirection = Direction.UP;
+  nextDirection = Direction.Up;
   /** В этом свойстве подсчитываются циклы движения после последнего поворота.
    * Если танк едет, то он поворачивает сразу. А если стоит на месте - то при коротком нажатии клавиши
    * он поворачивает, не двигаясь в сторону.*/
@@ -50,7 +50,7 @@ export abstract class EntityDynamic extends Entity {
     this.nextDirection = direction;
 
     if (this.spawned && !this.frozen) {
-      this.emit(EntityEvent.MOVE);
+      this.emit(EntityEvent.Move);
     }
   }
 
@@ -60,14 +60,14 @@ export abstract class EntityDynamic extends Entity {
       this.stopping = true;
     }
 
-    this.emit(EntityEvent.STOP);
+    this.emit(EntityEvent.Stop);
   }
 
   turn(newDirection: Direction = this.nextDirection) {
     if (this.direction !== newDirection) {
-      this.emit(EntityEvent.STOP);
+      this.emit(EntityEvent.Stop);
       if (this.moving) {
-        this.emit(EntityEvent.MOVE);
+        this.emit(EntityEvent.Move);
       }
       this.setState({ direction: newDirection });
       this.moveLoops = 0;
@@ -125,7 +125,7 @@ export abstract class EntityDynamic extends Entity {
       hasCollision: undefined,
       nextRect,
     };
-    this.emit(EntityEvent.WILL_HAVE_NEW_POS, posState);
+    this.emit(EntityEvent.WillHaveNewPos, posState);
     if (!posState.hasCollision) {
       this.canMove = true;
       this.nextRect = nextRect;
@@ -145,13 +145,13 @@ export abstract class EntityDynamic extends Entity {
     }
 
     switch (this.direction) {
-      case Direction.UP:
+      case Direction.Up:
         return { posY: this.posY - movePace };
-      case Direction.DOWN:
+      case Direction.Down:
         return { posY: this.posY + movePace };
-      case Direction.LEFT:
+      case Direction.Left:
         return { posX: this.posX - movePace };
-      case Direction.RIGHT:
+      case Direction.Right:
         return { posX: this.posX + movePace };
     }
   }

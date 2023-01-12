@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import { Link, Outlet, Route, useLocation } from 'react-router-dom';
 
 import { rootLoader } from '../config/router';

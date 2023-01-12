@@ -1,11 +1,11 @@
 import { LEADERBOARD_TEAM_NAME, YANDEX_API_ENDPOINTS } from '../config/constants';
-import { LeaderboardRowProps } from '../pages/Leaderboard/LeaderboardRow/typings';
-import { SortOption } from '../pages/Leaderboard/typings';
+import { type LeaderboardRowProps } from '../pages/Leaderboard/LeaderboardRow/typings';
+import { type SortOption } from '../pages/Leaderboard/typings';
 import { HTTP } from '../utils/HTTP';
-import { ResponseType } from './../utils/HTTP/HTTP';
+import { type ResponseType } from './../utils/HTTP/HTTP';
 
 export type LeaderboardRecord = {
-  place: number;
+  place: number; //убрать + добавить тип convertedLBrecord
   username: string;
   score: number;
   time: number;
@@ -36,7 +36,7 @@ type GetLeaderboardResponseData = LeaderboardRowProps[];
 export const leaderboardAPI = {
   addScore: (data: LeaderboardRecord) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
   getLeaderboard: (data: LeaderboardRequest) =>
-    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data }).then(
+    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.Get(LEADERBOARD_TEAM_NAME), { data }).then(
       validateLeaderboard
     ),
 };

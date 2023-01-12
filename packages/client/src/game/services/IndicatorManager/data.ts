@@ -1,6 +1,6 @@
 export const playerLivesData = {
-  PLAYER1: { header: '1 И', posY: 30 },
-  PLAYER2: { header: '2 И', posY: 37 },
+  Player1: { header: '1 И', posY: 30 },
+  Player2: { header: '2 И', posY: 37 },
 };
 
 export enum IndicatorNames {

@@ -1,8 +1,8 @@
 import cn from 'classnames';
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import { ValidationErrors } from '../../../ValidationErrors';
-import { FieldProps } from './typings';
+import { type FieldProps } from './typings';
 
 export const Field: FC<FieldProps> = ({
   id,

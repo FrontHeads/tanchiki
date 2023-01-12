@@ -1,4 +1,4 @@
-import { UserProfile } from '../../../app.typings';
+import { type UserProfile } from '../../../app.typings';
 
 export type AuthState = {
   isLoading: boolean;

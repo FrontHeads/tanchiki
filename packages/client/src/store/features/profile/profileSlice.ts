@@ -1,8 +1,8 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../store';
+import { type RootState } from '../../store';
 import { profileThunks } from './profileThunks';
-import { ProfileState, UpdateResult } from './typings';
+import { type ProfileState, type UpdateResult } from './typings';
 
 export const profileSlice = createSlice({
   name: 'profile',

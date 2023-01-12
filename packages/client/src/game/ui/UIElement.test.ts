@@ -6,8 +6,8 @@ describe('game/ui/UIElement', () => {
     const elem = new UIElement({ posX: 0, posY: 0, width: 10, height: 2 });
     const mockFn = jest.fn();
 
-    elem.on(EntityEvent.SHOULD_UPDATE, mockFn);
-    elem.on(EntityEvent.DID_UPDATE, mockFn);
+    elem.on(EntityEvent.ShouldUpdate, mockFn);
+    elem.on(EntityEvent.DidUpdate, mockFn);
     elem.render();
 
     expect(mockFn).toHaveBeenCalledTimes(2);
@@ -17,7 +17,7 @@ describe('game/ui/UIElement', () => {
     const elem = new UIElement({ posX: 0, posY: 0, width: 10, height: 2, text: 'test' });
     const mockFn = jest.fn();
 
-    elem.on(EntityEvent.SHOULD_RENDER_TEXT, mockFn);
+    elem.on(EntityEvent.ShouldRenderText, mockFn);
     elem.render();
 
     expect(mockFn).toHaveBeenCalled();

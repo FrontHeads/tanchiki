@@ -1,4 +1,4 @@
-import { FormInputAndHeadingList } from '../../app.typings';
+import { type FormInputAndHeadingList } from '../../app.typings';
 
 export const userProfileFieldList: FormInputAndHeadingList = [
   {

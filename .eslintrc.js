@@ -13,6 +13,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/ban-ts-comment': 1,
+    '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
     'react-hooks/rules-of-hooks': 'error',
     'simple-import-sort/exports': 'warn',
     'simple-import-sort/imports': 'warn',

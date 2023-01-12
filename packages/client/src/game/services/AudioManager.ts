@@ -1,7 +1,7 @@
-import { Entity, Tank, Terrain } from '../entities';
-import { DamageSettings, EntityEvent } from '../typings/';
+import { type Entity, Tank, Terrain } from '../entities';
+import { type DamageSettings, EntityEvent } from '../typings/';
 import { EventEmitter } from '../utils';
-import { SoundPathList } from './Resources/data';
+import { type SoundPathList } from './Resources/data';
 import { resources } from './Resources/Resources';
 
 export class AudioManager extends EventEmitter {
@@ -93,7 +93,7 @@ export class AudioManager extends EventEmitter {
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
       /** Появление */
-      entity.on(EntityEvent.READY, () => {
+      entity.on(EntityEvent.Ready, () => {
         if (entity.moving) {
           this.playSound('move');
         } else {
@@ -102,43 +102,43 @@ export class AudioManager extends EventEmitter {
       });
 
       /** Стрельба */
-      entity.on(EntityEvent.SHOOT, () => {
+      entity.on(EntityEvent.Shoot, () => {
         this.playSound('shoot');
       });
 
       /** Движение */
-      entity.on(EntityEvent.MOVE, () => {
+      entity.on(EntityEvent.Move, () => {
         this.stopSound('idle');
         this.playSound('move');
       });
 
       /** Остановка */
-      entity.on(EntityEvent.STOP, () => {
+      entity.on(EntityEvent.Stop, () => {
         this.stopSound('move');
         this.playSound('idle');
       });
 
       /** Занос на льду */
-      entity.on(EntityEvent.SLIDE, () => {
-        this.playSound('ice');
+      entity.on(EntityEvent.Slide, () => {
+        this.playSound('Ice');
       });
 
       /** Взрыв игрока */
-      entity.on(EntityEvent.DESTROYED, () => {
+      entity.on(EntityEvent.Destroyed, () => {
         this.stopSound('move');
         this.stopSound('idle');
         this.playSound('playerExplosion');
       });
     } else if (isTerrain) {
       if (entity.type === 'brickWall') {
-        entity.on(EntityEvent.DAMAGED, (damageProps: DamageSettings) => {
+        entity.on(EntityEvent.Damaged, (damageProps: DamageSettings) => {
           if (damageProps.source.role === 'player') {
             this.playSound('hitBrick');
           }
         });
       }
       if (entity.type === 'boundary' || entity.type === 'concreteWall') {
-        entity.on(EntityEvent.DAMAGED, (damageProps: DamageSettings) => {
+        entity.on(EntityEvent.Damaged, (damageProps: DamageSettings) => {
           if (damageProps.source.role === 'player') {
             this.playSound('hitSteel');
           }
@@ -149,7 +149,7 @@ export class AudioManager extends EventEmitter {
     /** Звуки танка врага */
     if (isTank && isEnemy) {
       /**взрыв врага */
-      entity.on(EntityEvent.DESTROYED, () => {
+      entity.on(EntityEvent.Destroyed, () => {
         this.playSound('enemyExplosion');
       });
     }
@@ -163,7 +163,7 @@ export class AudioManager extends EventEmitter {
   playSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource && !this.isStopped) {
-      if (sound === 'idle' || sound === 'move' || sound === 'ice') {
+      if (sound === 'idle' || sound === 'move' || sound === 'Ice') {
         soundResource.volume = 0.5;
       }
       soundResource.currentTime = 0;
