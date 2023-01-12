@@ -2,7 +2,7 @@ import { spriteCoordinates } from '../data/constants';
 import { Loop, View } from '../services';
 import { Direction, EntityEvent } from '../typings';
 import { sleep } from '../utils';
-import { type TankEnemy,Explosion, Projectile } from './';
+import { type TankEnemy, Explosion, Projectile } from './';
 
 describe('game/entities/Explosion', () => {
   it('should have right properties', () => {

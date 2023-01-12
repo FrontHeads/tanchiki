@@ -1,5 +1,5 @@
 import { type Entity, TankPlayer } from '../entities';
-import { type Rect,Direction } from '../typings';
+import { type Rect, Direction } from '../typings';
 import { EventEmitter } from '../utils';
 import { sleep } from '../utils/sleepTimer';
 import { EntityEvent } from './../typings/index';

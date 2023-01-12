@@ -1,6 +1,6 @@
 import { brickCells, concreteCells, spawnPlaces } from '../data/constants';
 import { levels } from '../data/levels';
-import { type EntitySettings, type EntityType, type GameSettings, type MapData, type Pos,Cell } from '../typings';
+import { type EntitySettings, type EntityType, type GameSettings, type MapData, type Pos, Cell } from '../typings';
 
 export class MapManager {
   private mapData = levels;

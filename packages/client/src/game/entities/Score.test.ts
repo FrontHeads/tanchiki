@@ -2,7 +2,7 @@ import { spriteCoordinates } from '../data/constants';
 import { Loop } from '../services';
 import { EntityEvent } from '../typings';
 import { sleep } from '../utils';
-import { type TankEnemy,Score } from './';
+import { type TankEnemy, Score } from './';
 
 describe('game/entities/Score', () => {
   it('should have right properties', () => {

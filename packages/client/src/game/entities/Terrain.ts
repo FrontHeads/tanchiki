@@ -1,6 +1,6 @@
 import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { type EntitySettings, type TerrainVariant,EntityEvent } from '../typings';
+import { type EntitySettings, type TerrainVariant, EntityEvent } from '../typings';
 import { Entity } from './';
 
 export class Terrain extends Entity {

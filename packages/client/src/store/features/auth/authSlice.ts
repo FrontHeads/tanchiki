@@ -1,4 +1,4 @@
-import { type PayloadAction,createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { type UserProfile } from '../../../app.typings';
 import { type RootState } from '../../store';

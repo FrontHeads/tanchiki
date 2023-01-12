@@ -1,4 +1,4 @@
-import { type EntityDynamicSettings, type PosState, type Rect,Direction } from '../typings';
+import { type EntityDynamicSettings, type PosState, type Rect, Direction } from '../typings';
 import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 

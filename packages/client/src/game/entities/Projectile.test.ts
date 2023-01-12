@@ -1,6 +1,6 @@
 import { Zone } from '../services';
 import { Direction } from '../typings';
-import { type Tank,Projectile } from './';
+import { type Tank, Projectile } from './';
 
 describe('game/entities/Projectile', () => {
   it('should have projectile props', () => {

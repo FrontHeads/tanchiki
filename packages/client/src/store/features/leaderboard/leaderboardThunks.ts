@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { type LeaderboardRecord,leaderboardAPI } from '../../../api/leaderboardAPI';
+import { type LeaderboardRecord, leaderboardAPI } from '../../../api/leaderboardAPI';
 import { LEADERBOARD_RECORDS_DISPLAY_LIMIT, LEADERBOARD_SORT_FIELD } from '../../../config/constants';
 import { LEADERBOARD_DEFAULT_PAGE } from './../../../config/constants';
 
