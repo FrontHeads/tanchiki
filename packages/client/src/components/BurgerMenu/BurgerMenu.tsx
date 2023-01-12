@@ -38,7 +38,7 @@ export const BurgerMenu: FC = () => {
       document.addEventListener('mousedown', handler);
     }
     return () => document.removeEventListener('mousedown', handler);
-  });
+  }, [isBurgerMenuVisible]);
 
   return (
     <div data-testid="menu" className="menu" ref={menuRef}>

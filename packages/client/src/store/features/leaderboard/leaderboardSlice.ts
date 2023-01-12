@@ -24,8 +24,11 @@ export const leaderboardSlice = createSlice({
         sortOption: SortOption;
       }>
     ) => {
-      state.sortOption = payload.sortOption;
       state.sortDirection === 'desc' ? (state.sortDirection = 'asc') : (state.sortDirection = 'desc');
+      if (state.sortOption != payload.sortOption) {
+        state.sortDirection = 'desc';
+      }
+      state.sortOption = payload.sortOption;
     },
   },
 
@@ -40,17 +43,6 @@ export const leaderboardSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(leaderboardThunks.getLeaderboard.rejected, state => {
-        state.isLoading = false;
-      })
-
-      //** add score */
-      .addCase(leaderboardThunks.addScore.pending, state => {
-        state.isLoading = true;
-      })
-      .addCase(leaderboardThunks.addScore.fulfilled, state => {
-        state.isLoading = false;
-      })
-      .addCase(leaderboardThunks.addScore.rejected, state => {
         state.isLoading = false;
       });
   },

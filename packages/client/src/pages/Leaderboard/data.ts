@@ -24,6 +24,6 @@ export const leaderboardFields: LeaderboardFieldProps[] = [
   {
     fieldId: 'matches',
     fieldName: 'Уровни',
-    title: 'Сколько уровней пройдено ',
+    title: 'Сколько уровней пройдено',
   },
 ];

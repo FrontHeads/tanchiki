@@ -14,7 +14,7 @@ export const headerText = 'Рейтинг игроков';
 
 export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector(leaderboardSelectors.all);
+  const { isLoading, sortDirection } = useAppSelector(leaderboardSelectors.all);
   const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
 
   useEffect(() => {
@@ -50,8 +50,14 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
           </tr>
         </thead>
         <tbody>
-          {leaderboard.map(row => {
-            return <LeaderboardRow key={row.data.place} data={row.data} />;
+          {leaderboard.map((row, index) => {
+            return (
+              <LeaderboardRow
+                key={row.data.place}
+                data={row.data}
+                place={sortDirection === 'desc' ? index + 1 : leaderboard.length - index}
+              />
+            );
           })}
         </tbody>
       </table>

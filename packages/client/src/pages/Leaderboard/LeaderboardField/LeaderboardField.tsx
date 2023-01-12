@@ -11,8 +11,9 @@ export const LeaderboardField: FC<LeaderboardFieldProps> = ({ fieldName, fieldId
   const { sortOption, sortDirection } = useAppSelector(leaderboardSelectors.all);
   const dispatch = useAppDispatch();
 
-  const handleSort = ({ fieldId }: { fieldId: SortOption }) =>
+  const handleSort = ({ fieldId }: { fieldId: SortOption }) => {
     dispatch(leaderboardActions.setSortParams({ sortOption: fieldId }));
+  };
 
   return (
     <th onClick={() => handleSort({ fieldId })} className="leaderboard__cell-header" title={title}>
