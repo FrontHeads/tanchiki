@@ -1,11 +1,11 @@
 ARG NODE_VERSION=16
 ARG CLIENT_PORT=3001
 
-FROM node:$NODE_VERSION-buster as Base
+FROM node:$NODE_VERSION-buster as base
 
 WORKDIR /app
 
-FROM Base as builder
+FROM base as builder
 
 COPY package.json yarn.lock
 RUN yarn install --frozen-lockfile
