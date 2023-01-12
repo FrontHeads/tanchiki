@@ -6,9 +6,17 @@ export type KeyBinding =
   | [ControllerEvent.SHOOT]
   | [ControllerEvent.PAUSE]
   | [ControllerEvent.MUTE]
-  | [ControllerEvent.FULLSCREEN];
+  | [ControllerEvent.FULLSCREEN]
+  | [ControllerEvent.ESCAPE];
 
 export type BindingConfig = Record<string, KeyBinding>;
+
+const KeyBindingsGeneral: BindingConfig = {
+  KeyP: [ControllerEvent.PAUSE],
+  KeyM: [ControllerEvent.MUTE],
+  KeyF: [ControllerEvent.FULLSCREEN],
+  Escape: [ControllerEvent.ESCAPE],
+};
 
 export const KeyBindingsWasd: BindingConfig = {
   KeyW: [ControllerEvent.MOVE, Direction.UP],
@@ -16,9 +24,7 @@ export const KeyBindingsWasd: BindingConfig = {
   KeyS: [ControllerEvent.MOVE, Direction.DOWN],
   KeyD: [ControllerEvent.MOVE, Direction.RIGHT],
   Space: [ControllerEvent.SHOOT],
-  KeyP: [ControllerEvent.PAUSE],
-  KeyM: [ControllerEvent.MUTE],
-  KeyF: [ControllerEvent.FULLSCREEN],
+  ...KeyBindingsGeneral,
 };
 
 export const KeyBindingsArrows: BindingConfig = {
@@ -27,7 +33,5 @@ export const KeyBindingsArrows: BindingConfig = {
   ArrowDown: [ControllerEvent.MOVE, Direction.DOWN],
   ArrowRight: [ControllerEvent.MOVE, Direction.RIGHT],
   Enter: [ControllerEvent.SHOOT],
-  KeyP: [ControllerEvent.PAUSE],
-  KeyM: [ControllerEvent.MUTE],
-  KeyF: [ControllerEvent.FULLSCREEN],
+  ...KeyBindingsGeneral,
 };

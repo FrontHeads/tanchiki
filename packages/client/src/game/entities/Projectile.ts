@@ -23,6 +23,14 @@ export class Projectile extends EntityDynamic {
     this.flying = true;
     this.moving = true;
     this.nextDirection = this.direction;
+
+    this.registerProjectileEvents();
+  }
+
+  registerProjectileEvents() {
+    this.on(EntityEvent.DAMAGED, () => {
+      this.explode();
+    });
   }
 
   stateCheck() {
