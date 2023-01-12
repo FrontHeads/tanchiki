@@ -1,13 +1,13 @@
 import './Leaderboard.css';
 
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 
 import { Loader } from '../../components/Loader';
 import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { leaderboardFields } from './data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
 import { LeaderboardRow } from './LeaderboardRow';
-import { LeaderboardProps } from './typings';
+import { type LeaderboardProps } from './typings';
 
 export const headerText = 'Рейтинг игроков';
 

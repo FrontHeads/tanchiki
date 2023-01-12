@@ -1,6 +1,6 @@
 import { YANDEX_API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
-import { UserDTO } from './typings';
+import { type UserDTO } from './typings';
 
 export type SigninRequestData = {
   login: string;

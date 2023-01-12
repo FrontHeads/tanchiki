@@ -10,12 +10,12 @@ describe('game/services/Scenario', () => {
     const scenario = new Scenario(game);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const tank = scenario.state.players[Player.PLAYER1].entity!;
+    const tank = scenario.state.players[Player.Player1].entity!;
 
     expect(tank instanceof Tank).toBe(true);
     expect(tank.spawned).toBe(true);
-    expect(tank.posX).toBe(playerInitialSettings[Player.PLAYER1].posX);
-    expect(tank.posY).toBe(playerInitialSettings[Player.PLAYER1].posY);
+    expect(tank.posX).toBe(playerInitialSettings[Player.Player1].posX);
+    expect(tank.posY).toBe(playerInitialSettings[Player.Player1].posY);
     expect(game.loop.loopEntities.has(tank)).toBe(true);
   });
 
@@ -26,7 +26,7 @@ describe('game/services/Scenario', () => {
     const scenario = new Scenario(game);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const tank = scenario.state.players[Player.PLAYER1].entity!;
+    const tank = scenario.state.players[Player.Player1].entity!;
 
     game.loop.loopEntities.delete(tank);
 
@@ -40,8 +40,8 @@ describe('game/services/Scenario', () => {
     const scenario = new Scenario(game);
     const createExplosionMock = jest.spyOn(scenario, 'createExplosion').mockImplementation();
 
-    scenario.emit(ScenarioEvent.PROJECTILE_HIT, {});
-    scenario.emit(ScenarioEvent.TANK_ENEMY_DESTROYED, {});
+    scenario.emit(ScenarioEvent.ProjectileHit, {});
+    scenario.emit(ScenarioEvent.TankEnemyDestroyed, {});
 
     expect(createExplosionMock).toHaveBeenCalledTimes(2);
   });

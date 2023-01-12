@@ -1,10 +1,10 @@
-import { Game } from './';
-import { Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
-import { EnemiesKilledState, EnemyVariant, EntityEvent, GameEvents, GameMode, PlayerVariant } from '../typings';
+import { type Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
+import { type EnemiesKilledState, type EnemyVariant, type GameMode, type PlayerVariant,EntityEvent, GameEvents } from '../typings';
+import { type Game } from './';
 
 export class Statistics {
   game: Game;
-  mode: GameMode = 'SINGLEPLAYER';
+  mode: GameMode = 'Singleplayer';
   active = false;
   /** Очки топ-1 игрока из лидерборда (TODO: реализовать их подгрузку и отображение) */
   highestScore = 20000;
@@ -14,7 +14,7 @@ export class Statistics {
   sessionElapsedTime = 0;
   /** Статистика за конкретный игровой уровень: [игрок-1, игрок-2], общая */
   mapScore = [0, 0];
-  mapEnemiesKilledCount: EnemiesKilledState = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
+  mapEnemiesKilledCount: EnemiesKilledState = { Basic: [0, 0], Fast: [0, 0], Power: [0, 0], Armor: [0, 0] };
   mapElapsedTime = 0;
   mapStartTime = 0;
 
@@ -36,14 +36,14 @@ export class Statistics {
 
   reset() {
     this.mapScore = [0, 0];
-    this.mapEnemiesKilledCount = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
+    this.mapEnemiesKilledCount = { Basic: [0, 0], Fast: [0, 0], Power: [0, 0], Armor: [0, 0] };
     this.mapElapsedTime = 0;
   }
 
   /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
   updateLeaderboard() {
     // Если не синглплеер, то лидерборд не обновляем
-    if (this.mode !== 'SINGLEPLAYER') {
+    if (this.mode !== 'Singleplayer') {
       return;
     }
 
@@ -82,13 +82,13 @@ export class Statistics {
   /** Возвращает множитель с очками за конкретный тип вражеского танка. */
   getScoreByEnemyVariant(enemyVariant: EnemyVariant) {
     switch (enemyVariant) {
-      case 'ARMOR':
+      case 'Armor':
         return 400;
-      case 'POWER':
+      case 'Power':
         return 300;
-      case 'FAST':
+      case 'Fast':
         return 200;
-      case 'BASIC':
+      case 'Basic':
         return 100;
     }
   }
@@ -97,7 +97,7 @@ export class Statistics {
    * Большинство данных записывеются в массивы типа [игрок-1, игрок-2].
    */
   getPlayerIndex(playerVariant: PlayerVariant) {
-    return playerVariant === 'PLAYER1' ? 0 : 1;
+    return playerVariant === 'Player1' ? 0 : 1;
   }
 
   /** Добавляет сущность в сервис для отслеживания. */
@@ -106,7 +106,7 @@ export class Statistics {
     if (entity instanceof Explosion && entity.parent instanceof TankEnemy) {
       const enemyTank = entity.parent;
       // После окончания анимации взрыва подсчитываем очки и показываем надпись с их количеством
-      entity.on(EntityEvent.DESPAWN, () => {
+      entity.on(EntityEvent.Despawn, () => {
         const points = this.countEnemy(enemyTank);
         const score = new Score({ points, parent: enemyTank });
         this.game.addEntity(score);

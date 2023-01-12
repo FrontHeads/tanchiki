@@ -1,7 +1,7 @@
 import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { Direction, EntityEvent, ExplosionVariant } from '../typings';
-import { Entity, Projectile, Tank } from './';
+import { type ExplosionVariant,Direction, EntityEvent } from '../typings';
+import { type Projectile, type Tank,Entity } from './';
 
 type ExplosionSettings = { parent: Tank | Projectile };
 
@@ -34,7 +34,7 @@ export class Explosion extends Entity {
   }
 
   registerExplosionEvents({ animationDelay }: { animationDelay: number }) {
-    this.on(EntityEvent.SPAWN, () => {
+    this.on(EntityEvent.Spawn, () => {
       this.startAnimation({
         delay: animationDelay,
         spriteCoordinates: this.mainSpriteCoordinates,
@@ -42,7 +42,7 @@ export class Explosion extends Entity {
       });
 
       // Деспаун взрыва после завершения анимации или спустя время (последнее - для тестов)
-      this.on(EntityEvent.ANIMATION_ENDED, this.despawn.bind(this));
+      this.on(EntityEvent.AnimationEnded, this.despawn.bind(this));
       this.setLoopDelay(this.despawn.bind(this), this.despawnTime);
     });
   }
@@ -55,15 +55,15 @@ export class Explosion extends Entity {
 
     /** Без коррекции взрыв рисуется не по центру обьекта в который попал снаряд 
     из-за несовпадения координат и разницы в размерах взрыва и обьекта. */
-    const correction = parent.direction === Direction.UP || parent.direction === Direction.LEFT ? -2 : 0;
+    const correction = parent.direction === Direction.Up || parent.direction === Direction.Left ? -2 : 0;
 
-    if (parent.direction === Direction.UP || parent.direction === Direction.DOWN) {
+    if (parent.direction === Direction.Up || parent.direction === Direction.Down) {
       if (parent.type === 'tank') {
-        if (parent.direction === Direction.UP) {
+        if (parent.direction === Direction.Up) {
           posX += correction;
           posY += correction - 2;
         }
-        if (parent.direction === Direction.DOWN) {
+        if (parent.direction === Direction.Down) {
           posX += correction - 2;
           posY += correction - 2;
         }
@@ -73,11 +73,11 @@ export class Explosion extends Entity {
       }
     } else {
       if (parent.type === 'tank') {
-        if (parent.direction === Direction.RIGHT) {
+        if (parent.direction === Direction.Right) {
           posX += correction;
           posY += correction - 2;
         }
-        if (parent.direction === Direction.LEFT) {
+        if (parent.direction === Direction.Left) {
           posX += correction;
           posY += correction;
         }

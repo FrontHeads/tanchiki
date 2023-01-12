@@ -1,12 +1,12 @@
 import { spriteCoordinates } from '../data/constants';
-import { Score, TankEnemy } from './';
+import { Loop } from '../services';
 import { EntityEvent } from '../typings';
 import { sleep } from '../utils';
-import { Loop } from '../services';
+import { type TankEnemy,Score } from './';
 
 describe('game/entities/Score', () => {
   it('should have right properties', () => {
-    const tank = { posX: 1, posY: 1, width: 2, height: 2, variant: 'FAST' } as TankEnemy;
+    const tank = { posX: 1, posY: 1, width: 2, height: 2, variant: 'Fast' } as TankEnemy;
     const score = new Score({ points: 200, parent: tank });
 
     expect(score).toHaveProperty('crossable', true);
@@ -20,14 +20,14 @@ describe('game/entities/Score', () => {
 
   it('should despawn after showing', async () => {
     const loop = new Loop();
-    const tank = { posX: 1, posY: 1, width: 2, height: 2, variant: 'FAST' } as TankEnemy;
+    const tank = { posX: 1, posY: 1, width: 2, height: 2, variant: 'Fast' } as TankEnemy;
     const score = new Score({ points: 200, parent: tank });
     const despawnObserver = jest.fn();
 
     loop.load();
     loop.add(score);
     score.spawn();
-    score.on(EntityEvent.DESPAWN, despawnObserver);
+    score.on(EntityEvent.Despawn, despawnObserver);
 
     await sleep(500);
 

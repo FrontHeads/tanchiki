@@ -1,6 +1,6 @@
 import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { EntityEvent, EntitySettings, TerrainVariant } from '../typings';
+import { type EntitySettings, type TerrainVariant,EntityEvent } from '../typings';
 import { Entity } from './';
 
 export class Terrain extends Entity {
@@ -20,13 +20,13 @@ export class Terrain extends Entity {
         this.crossable = false;
         this.hittable = true;
         this.color = Color.Brown;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.brick'][this.variant];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.Brick'][this.variant];
         break;
       case 'concreteWall':
         this.crossable = false;
         this.hittable = true;
         this.color = Color.LightGrey;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.concrete'][this.variant];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.Concrete'][this.variant];
         break;
       case 'trees':
         this.crossable = true;
@@ -34,17 +34,17 @@ export class Terrain extends Entity {
         this.color = Color.Green;
         this.mainSpriteCoordinates = spriteCoordinates['terrain.trees'];
         break;
-      case 'water':
+      case 'Water':
         this.crossable = false;
         this.hittable = false;
         this.color = Color.Blue;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.water'];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.Water'];
         break;
-      case 'ice':
+      case 'Ice':
         this.crossable = true;
         this.hittable = false;
         this.color = Color.AliceBlue;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.ice'];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.Ice'];
         break;
     }
 
@@ -52,11 +52,11 @@ export class Terrain extends Entity {
   }
 
   registerTerrainEvents() {
-    if (this.type === 'water') {
-      this.on(EntityEvent.SPAWN, () => {
+    if (this.type === 'Water') {
+      this.on(EntityEvent.Spawn, () => {
         this.startAnimation({
           delay: 350,
-          spriteCoordinates: spriteCoordinates['terrain.water'],
+          spriteCoordinates: spriteCoordinates['terrain.Water'],
           looped: true,
         });
       });

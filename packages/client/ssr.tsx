@@ -68,7 +68,7 @@ export function createFetchRequest(req: express.Request): Request {
     signal: controller.signal,
   };
 
-  if (req.method !== 'GET' && req.method !== 'HEAD') {
+  if (req.method !== 'Get' && req.method !== 'HEAD') {
     init.body = req.body;
   }
 

@@ -1,9 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { type PayloadAction,createSlice } from '@reduxjs/toolkit';
 
-import { UserProfile } from '../../../app.typings';
-import { RootState } from '../../store';
+import { type UserProfile } from '../../../app.typings';
+import { type RootState } from '../../store';
 import { authThunks } from './authThunks';
-import { AuthState } from './typings';
+import { type AuthState } from './typings';
 
 /**
  * Slice - это часть общего хранилища, выделенная по логическому принципу.

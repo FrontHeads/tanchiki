@@ -1,3 +1,3 @@
-import { SortOption } from '../typings';
+import { type SortOption } from '../typings';
 
 export type LeaderboardFieldProps = { fieldName: string; fieldId: SortOption; title?: string };

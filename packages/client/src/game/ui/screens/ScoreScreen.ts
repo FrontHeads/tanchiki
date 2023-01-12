@@ -1,6 +1,6 @@
 import { Color } from '../../data/colors';
 import { spriteCoordinates } from '../../data/constants';
-import { EnemiesKilledState, GameMode } from '../../typings';
+import { type EnemiesKilledState, type GameMode } from '../../typings';
 import { Screen } from './Screen';
 
 type ScoreScreenState = {
@@ -188,7 +188,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       text: `${this.sessionScore[0]}`,
     });
 
-    if (this.mode === 'SINGLEPLAYER') {
+    if (this.mode === 'Singleplayer') {
       return;
     }
 
@@ -250,7 +250,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       mainSpriteCoordinates: enemyTankSprite,
     });
 
-    if (this.mode === 'SINGLEPLAYER') {
+    if (this.mode === 'Singleplayer') {
       return;
     }
 
@@ -310,7 +310,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       text: `${count[0]} `,
     });
 
-    if (this.mode === 'SINGLEPLAYER') {
+    if (this.mode === 'Singleplayer') {
       return;
     }
 

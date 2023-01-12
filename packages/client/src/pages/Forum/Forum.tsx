@@ -1,10 +1,10 @@
 import './Forum.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import { DUMMY_FORUM as sectionList } from './DummyData';
 import { ForumSectionList } from './ForumSectionList';
-import { ForumProps } from './typing';
+import { type ForumProps } from './typing';
 
 export const Forum: FC<ForumProps> = () => {
   return (

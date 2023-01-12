@@ -1,10 +1,10 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { type PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 
-import { LeaderboardRowProps } from './../../../pages/Leaderboard/LeaderboardRow/typings';
-import { SortOption } from './../../../pages/Leaderboard/typings';
-import { RootState } from './../../store';
+import { type LeaderboardRowProps } from './../../../pages/Leaderboard/LeaderboardRow/typings';
+import { type SortOption } from './../../../pages/Leaderboard/typings';
+import { type RootState } from './../../store';
 import { leaderboardThunks } from './leaderboardThunks';
-import { LeaderboardState } from './typings';
+import { type LeaderboardState } from './typings';
 
 export const leaderboardSlice = createSlice({
   name: 'leaderboard',

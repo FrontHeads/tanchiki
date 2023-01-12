@@ -4,5 +4,5 @@ export { LevelSelectorScreen } from './LevelSelectorScreen';
 export { LoadingScreen } from './LoadingScreen';
 export { MainMenuScreen } from './MainMenuScreen';
 export { PausePopupScreen } from './PausePopupScreen';
-export { Screen } from './Screen';
 export { ScoreScreen } from './ScoreScreen';
+export { Screen } from './Screen';
