@@ -1,32 +1,56 @@
 import './Leaderboard.css';
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
-import { DUMMY_LEADERBOARD } from './DummyData';
+import { Loader } from '../../components/Loader';
+import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
+import { leaderboardFields } from './data';
+import { LeaderboardField } from './LeaderboardField/LeaderboardField';
 import { LeaderboardRow } from './LeaderboardRow';
 import { LeaderboardProps } from './typings';
 
 export const headerText = 'Рейтинг игроков';
 
 export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
+  const dispatch = useAppDispatch();
+  const { isLoading, sortDirection } = useAppSelector(leaderboardSelectors.all);
+  const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
+
+  useEffect(() => {
+    dispatch(leaderboardThunks.getLeaderboard());
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <section className="leaderboard__wrapper">
-      <h1 className="no-margin-top leaderboard__header">{header}</h1>
+      <h1 data-testid="lb-header" className="no-margin-top leaderboard__header">
+        {header}
+      </h1>
       <table border={1} className="leaderboard">
         <thead className="leaderboard__row-header">
           <tr>
-            <th className="leaderboard__cell-header">#</th>
-            <th className="leaderboard__cell-header">Пользователь</th>
-            <th className="leaderboard__cell-header">
-              Рекорд <div className="leaderboard__sort-marker">▾</div>
-            </th>
-            <th className="leaderboard__cell-header">Время</th>
-            <th className="leaderboard__cell-header">Матчи</th>
+            {leaderboardFields.map(field => (
+              <LeaderboardField
+                key={field.fieldId}
+                fieldName={field.fieldName}
+                fieldId={field.fieldId}
+                title={field.title}
+              />
+            ))}
           </tr>
         </thead>
         <tbody>
-          {DUMMY_LEADERBOARD.map(row => {
-            return <LeaderboardRow key={row.place} row={row} />;
+          {leaderboard.map((row, index) => {
+            return (
+              <LeaderboardRow
+                key={row.data.username}
+                data={row.data}
+                place={sortDirection === 'desc' ? index + 1 : leaderboard.length - index}
+              />
+            );
           })}
         </tbody>
       </table>

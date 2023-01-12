@@ -16,7 +16,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
     const verticalCenteringCorrection = -1;
 
     const tankElem = this.overlay.renderElement({
-      posX: 14,
+      posX: 17,
       posY: this.mainMenuStateYPos[state] + verticalCenteringCorrection,
       width: 4,
       height: 4,
@@ -59,7 +59,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
     });
 
     this.overlay.renderElement({
-      posX: 20,
+      posX: 23,
       posY: this.mainMenuStateYPos[MainMenuState.SINGLEPLAYER],
       width: 20,
       height: 2.2,
@@ -68,7 +68,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
     });
 
     this.overlay.renderElement({
-      posX: 20,
+      posX: 23,
       posY: this.mainMenuStateYPos[MainMenuState.MULTIPLAYER],
       width: 20,
       height: 2.2,

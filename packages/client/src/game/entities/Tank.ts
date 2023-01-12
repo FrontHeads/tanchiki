@@ -29,6 +29,10 @@ export class Tank extends EntityDynamic {
     Object.assign(this, props);
     this.color = props.color || Color.Yellow;
 
+    this.registerTankEvents();
+  }
+
+  registerTankEvents() {
     this.on(EntityEvent.SPAWN, () => {
       this.startAnimation({
         delay: 50,
@@ -49,6 +53,14 @@ export class Tank extends EntityDynamic {
         this.color = color;
         this.emit(EntityEvent.READY);
       }, this.spawnTimeout);
+    });
+
+    this.on(EntityEvent.DAMAGED, ({ source }) => {
+      if (!this.invincible && this.role !== source.role) {
+        this.explode();
+        this.destroyedBy = source;
+        this.emit(EntityEvent.DESTROYED, source);
+      }
     });
   }
 

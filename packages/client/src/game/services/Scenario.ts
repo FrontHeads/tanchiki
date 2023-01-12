@@ -2,6 +2,7 @@ import { Color } from '../data/colors';
 import { playerInitialSettings, spawnPlaces } from '../data/constants';
 import { type Tank, Entity, Explosion, Flag, Projectile, TankEnemy, TankPlayer, Terrain } from '../entities';
 import {
+  ControllerEvent,
   Direction,
   EnemyDestroyedPayload,
   EntityDynamicSettings,
@@ -13,10 +14,8 @@ import {
   ScenarioEvent,
   ScenarioPlayerState,
   ScenarioState,
-  TankEnemyType,
 } from '../typings';
 import { EventEmitter } from '../utils';
-import { ControllerEvent } from './../typings/index';
 import { IndicatorManager } from './';
 import { Controller } from './Controller';
 import { Game } from './Game';
@@ -133,7 +132,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   createEntity(props: EntitySettings) {
     let entity: Entity;
     if (props.type === 'flag') {
-      entity = new Flag(props).on(EntityEvent.DAMAGED, () => {
+      entity = new Flag(props).on(EntityEvent.DESTROYED, () => {
         this.emit(ScenarioEvent.GAME_OVER);
       });
     } else {
@@ -228,12 +227,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   initPlayerState(playerType: Player) {
     this.state.players[playerType] = {
       lives: 2,
-      statistics: {
-        [TankEnemyType.ARMOR]: 0,
-        [TankEnemyType.BASIC]: 0,
-        [TankEnemyType.FAST]: 0,
-        [TankEnemyType.POWER]: 0,
-      },
       controller: this.getGameController(playerType),
     };
 
@@ -261,6 +254,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       })
       .on(EntityEvent.SHOOT, this.onTankShoot.bind(this))
       .spawn(settings);
+
+    this.on(ScenarioEvent.GAME_OVER, () => {
+      if (entity && entity.spawned) {
+        entity.stop();
+      }
+    });
 
     /** Навешиваем события на котроллер, предварительно почистив старые */
     playerState.controller
@@ -302,8 +301,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   }
 
   createExplosion(entity: Tank | Projectile) {
-    const explosion = new Explosion({ explosionParentEntity: entity });
+    const explosion = new Explosion({ parent: entity });
     this.game.addEntity(explosion);
-    explosion.spawn({ posX: explosion.posX, posY: explosion.posY });
+    explosion.spawn();
   }
 }

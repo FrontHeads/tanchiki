@@ -18,3 +18,17 @@ export default function simplifyDate(dateString: string): string {
 
   return result;
 }
+
+const padTo2Digits = (num: number) => {
+  return num.toString().padStart(2, '0');
+};
+
+export const convertMsToTime = (milliseconds: number) => {
+  const seconds = Math.floor(milliseconds / 1000);
+  let minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  minutes = minutes % 60;
+
+  return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}`;
+};

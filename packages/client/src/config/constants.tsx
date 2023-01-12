@@ -39,4 +39,15 @@ export const YANDEX_API_ENDPOINTS = {
     UPDATE_PROFILE_AVATAR: 'user/profile/avatar',
     SEARCH: 'user/search',
   },
+  LEADERBOARD: {
+    ADD_SCORE: '/leaderboard',
+    GET: (teamName: string) => {
+      return `/leaderboard/${teamName}`;
+    },
+  },
 };
+
+export const LEADERBOARD_TEAM_NAME = 'FrontHeadsTest';
+export const LEADERBOARD_SORT_FIELD = 'score';
+export const LEADERBOARD_DEFAULT_PAGE = 0;
+export const LEADERBOARD_RECORDS_DISPLAY_LIMIT = 999;

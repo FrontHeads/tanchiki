@@ -4,7 +4,7 @@ export enum Color {
   Black = 'black',
   Grey = '#636363',
   LightGrey = 'lightgrey',
-  Orange = 'red',
+  Orange = 'orange',
   Red = 'red',
   White = 'white',
   Transparent = 'transparent',
