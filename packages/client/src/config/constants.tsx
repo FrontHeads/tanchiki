@@ -18,6 +18,8 @@ export enum Paths {
 export const PATH = {
   defaultAvatar,
   avatarBase: 'https://ya-praktikum.tech/api/v2/resources',
+  oauthRedirect: `http://localhost:5000`,
+  yandexOauthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
@@ -28,6 +30,8 @@ export const YANDEX_API_ENDPOINTS = {
     SIGNUP: 'auth/signup',
     ME: 'auth/user',
     LOGOUT: 'auth/logout',
+    GETSERVICEID: 'oauth/yandex/service-id',
+    POST: 'oauth/yandex',
   },
   USER: {
     UPDATE_PASSWORD: 'user/password',
