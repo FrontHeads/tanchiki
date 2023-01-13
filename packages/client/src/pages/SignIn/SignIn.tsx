@@ -8,6 +8,7 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
 import { SignInForm } from './typings';
@@ -40,21 +41,24 @@ export const SignIn: FC = () => {
   }, [error]);
 
   return (
-    <Form onSubmitHandler={onFormSubmit} header="Вход">
-      <FieldList<SignInForm>
-        fieldList={signInFieldList}
-        isFormSubmitted={isFormSubmitted}
-        setIsFormSubmitted={setIsFormSubmitted}
-        onFormSubmitCallback={onFormSubmitCallback}
-        formData={formData}
-        setFormData={setFormData}
-        validation={validation}
-        disabled={isLoading}
-      />
-      <div className="form__buttons-wrapper">
-        <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
-        <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
-      </div>
-    </Form>
+    <>
+      {generateMetaTags({ title: 'Вход' })}
+      <Form onSubmitHandler={onFormSubmit} header="Вход">
+        <FieldList<SignInForm>
+          fieldList={signInFieldList}
+          isFormSubmitted={isFormSubmitted}
+          setIsFormSubmitted={setIsFormSubmitted}
+          onFormSubmitCallback={onFormSubmitCallback}
+          formData={formData}
+          setFormData={setFormData}
+          validation={validation}
+          disabled={isLoading}
+        />
+        <div className="form__buttons-wrapper">
+          <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
+          <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
+        </div>
+      </Form>
+    </>
   );
 };

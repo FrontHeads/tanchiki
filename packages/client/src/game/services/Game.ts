@@ -1,11 +1,11 @@
 import { Entity } from '../entities';
 import { ControllerEvent, Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
+import { EventEmitter, sleep } from '../utils';
 import { levels } from './../data/levels';
 import { Controller, Loop, resources, Scenario, Statistics, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
-import { EventEmitter, sleep } from '../utils';
 
 export class Game extends EventEmitter {
   static __instance: Game;
