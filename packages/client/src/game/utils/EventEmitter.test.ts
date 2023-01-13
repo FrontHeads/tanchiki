@@ -24,4 +24,18 @@ describe('utils/EventEmitter', () => {
 
     expect(mockFn).not.toHaveBeenCalled();
   });
+
+  it('should clear all listeners', () => {
+    const eventEmitter = new TestEventEmitter();
+    const mockFn = jest.fn();
+
+    eventEmitter.on('mockEvent', mockFn);
+    eventEmitter.on('mockEvent2', mockFn);
+    eventEmitter.clearAllListeners();
+    eventEmitter.emit('mockEvent', 'mockParam');
+    eventEmitter.emit('mockEvent2', 'mockParam');
+
+    expect(eventEmitter.listeners).toEqual({});
+    expect(mockFn).not.toHaveBeenCalled();
+  });
 });

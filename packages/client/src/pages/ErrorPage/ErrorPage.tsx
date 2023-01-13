@@ -15,6 +15,7 @@ export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Что-то �
     statusCode = status;
     messageText = message;
   } else {
+    // eslint-disable-next-line
     const { status, statusText, message: routerErrorMessage } = useRouteError() as ErrorType;
     statusCode = status?.toString();
     messageText = statusText || routerErrorMessage || message;

@@ -9,10 +9,11 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 11,
   },
-  plugins: ['@typescript-eslint', 'simple-import-sort'],
+  plugins: ['@typescript-eslint', 'simple-import-sort', 'react-hooks'],
   rules: {
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/ban-ts-comment': 1,
+    'react-hooks/rules-of-hooks': 'error',
     'simple-import-sort/exports': 'warn',
     'simple-import-sort/imports': 'warn',
     'no-duplicate-imports': 'error',

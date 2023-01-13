@@ -11,6 +11,12 @@ export type GameSettings = {
   indicatorsSidebarSize: number;
 };
 
+export type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';
+
+export enum GameEvents {
+  UpdateLeaderboard = 'UPDATE_LEADERBOARD',
+}
+
 export enum Direction {
   UP = 'UP',
   DOWN = 'DOWN',
@@ -43,6 +49,7 @@ export enum EntityEvent {
   STOP = 'stop',
   SLIDE = 'slide',
   SPAWN = 'spawn',
+  DESPAWN = 'despawn',
   READY = 'ready',
   DAMAGED = 'damaged',
   DESTROYED = 'destroyed',
@@ -59,6 +66,9 @@ export enum EntityEvent {
   SHOULD_UPDATE = 'entityShouldUpdate',
   DID_UPDATE = 'entityDidUpdate',
   SHOULD_RENDER_TEXT = 'entityShouldRenderText',
+
+  ANIMATION_STARTED = 'animationStarted',
+  ANIMATION_ENDED = 'animationEnded',
 }
 
 export type EntityRole = 'player' | 'enemy' | 'neutral';
@@ -74,8 +84,8 @@ export type EntityType =
   | 'water'
   | 'ice'
   | 'powerup'
-  | 'projectileExplosion'
-  | 'tankExplosion'
+  | 'explosion'
+  | 'score'
   | 'indicator'
   | 'custom';
 
@@ -83,12 +93,19 @@ export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LE
 
 export type PlayerVariant = 'PLAYER1' | 'PLAYER2';
 
+export type EnemyVariant = 'BASIC' | 'FAST' | 'POWER' | 'ARMOR';
+
+export type ExplosionVariant = 'TANK_EXPLOSION' | 'PROJECTILE_EXPLOSION';
+
+export type ScoreVariant = 100 | 200 | 300 | 400 | 500;
+
 export type EntitySettings = Pos &
   Partial<Size> &
   Partial<{
     direction: Direction;
     type: EntityType;
-    variant: TerrainVariant | PlayerVariant; // Здесь нужен рефакторинг в дальнейшем
+    //TODO: отрефакторить, чтобы варианты были для конкретных типов
+    variant: TerrainVariant | PlayerVariant | EnemyVariant | ExplosionVariant;
     role: EntityRole;
     color: Color | string;
     img: HTMLImageElement;
@@ -109,7 +126,7 @@ export type UIElementSettings = Pos &
     text: string;
     align: CanvasTextAlign;
     color: Color | string;
-    backImg: HTMLImageElement;
+    backImg: HTMLImageElement | HTMLCanvasElement;
     mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
     indicatorName?: string;
   }>;
@@ -120,12 +137,13 @@ export enum MainMenuState {
 }
 
 export enum ScreenType {
-  MAIN_MENU,
-  LOADING,
-  LEVEL_SELECTOR,
-  GAME_OVER,
-  GAME,
-  PAUSE,
+  Loading = 'LOADING',
+  MainMenu = 'MAIN_MENU',
+  LevelSelector = 'LEVEL_SELECTOR',
+  GameStart = 'GAME_START',
+  Pause = 'PAUSE',
+  Score = 'SCORE',
+  GameOverPopup = 'GAME_OVER',
 }
 
 // Scenario
@@ -176,12 +194,9 @@ export type ScenarioState = {
 
 export type ScenarioPlayerState = {
   entity?: Tank;
-  statistics: ScenarioStat;
   lives: number;
   controller: Controller;
 };
-
-export type ScenarioStat = Record<TankEnemyType, number>;
 
 export type EnemyDestroyedPayload = {
   source: Tank;
@@ -281,4 +296,7 @@ export enum ControllerEvent {
   PAUSE = 'pause',
   FULLSCREEN = 'fullscreen',
   MUTE = 'mute',
+  ESCAPE = 'escape',
 }
+
+export type EnemiesKilledState = Record<EnemyVariant, number[]>;

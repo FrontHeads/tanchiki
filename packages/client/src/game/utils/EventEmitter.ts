@@ -16,7 +16,6 @@ export abstract class EventEmitter<T extends string = string> {
   /** Оповещение о событии.
    * Принимает название события (+ опционально доп. данные) и оповещает подписчиков.
    * Т.е. запускает функции-обработчики прикрепленные к данному названию события через on() */
-
   emit<K extends Array<unknown>>(eventName: T, ...args: K) {
     this.listeners[eventName]?.forEach((listener: Fn) => {
       listener.apply(this, args);
@@ -34,5 +33,12 @@ export abstract class EventEmitter<T extends string = string> {
   offAll(eventName: T) {
     delete this.listeners[eventName];
     return this;
+  }
+
+  /** Обнуление всех подписок на события. */
+  clearAllListeners() {
+    Object.keys(this.listeners).forEach(eventName => {
+      delete this.listeners[eventName as T];
+    });
   }
 }

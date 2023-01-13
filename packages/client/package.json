@@ -43,6 +43,7 @@
     "commitlint": "17.3.0",
     "eslint": "8.28.0",
     "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "8.0.0",
     "identity-obj-proxy": "3.0.0",
     "jest": "28",

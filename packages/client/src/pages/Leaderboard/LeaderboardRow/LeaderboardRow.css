@@ -1,5 +1,49 @@
+@import url("../../../variables.css");
+
 .leaderboard {
   &__row {
-    height: 40px;
+    &-header {
+      height: 70px;
+    }
+
+    &_desc {
+      height: 40px;
+
+      &:nth-child(odd) {
+        background-color: $background_color;
+      }
+
+      &:nth-child(1) {
+        background-color: $dendy_button_primary;
+      }
+
+      &:nth-child(2) {
+        background-color: $dendy_button_secondary;
+      }
+
+      &:nth-child(3) {
+        background-color: $dendy_button_third;
+      }
+    }
+
+    &_asc {
+      height: 40px;
+
+      &:nth-child(odd) {
+        background-color: $background_color;
+      }
+
+      &:nth-last-child(1) {
+        background-color: $dendy_button_primary;
+      }
+
+      &:nth-last-child(2) {
+        background-color: $dendy_button_secondary;
+      }
+
+      &:nth-last-child(3) {
+        background-color: $dendy_button_third;
+      }
+    }
   }
 }
