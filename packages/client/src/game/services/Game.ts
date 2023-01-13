@@ -2,10 +2,12 @@ import { Entity } from '../entities';
 import {
   ControllerEvent,
   Direction,
+  GameEvents,
   GameSettings,
   MainMenuState,
   ScenarioEvent,
   ScreenType,
+  StatisticsData,
 } from '../typings';
 import { Overlay } from '../ui';
 import { levels } from '../data/levels';
@@ -110,6 +112,11 @@ export class Game extends EventEmitter {
     this.zone.add(entity);
     this.audioManager.add(entity);
     this.statistics.add(entity);
+  }
+
+  /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
+  updateLeaderboard(data: StatisticsData) {
+    this.emit(GameEvents.UpdateLeaderboard, data);
   }
 
   togglePause(newState: boolean | null = null) {
