@@ -1,6 +1,8 @@
+import { Player } from '../../typings';
+
 export const playerLivesData = {
-  Player1: { header: '1 И', posY: 30 },
-  Player2: { header: '2 И', posY: 37 },
+  [Player.Player1]: { header: '1 И', posY: 30 },
+  [Player.Player2]: { header: '2 И', posY: 37 },
 };
 
 export enum IndicatorNames {

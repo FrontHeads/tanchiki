@@ -133,8 +133,8 @@ export type UIElementSettings = Pos &
   }>;
 
 export enum MainMenuState { //screen
-  Singleplayer,
-  Multiplayer,
+  Singleplayer = 'SINGLEPLAYER',
+  Multiplayer = 'MULTIPLAYER',
 }
 
 export enum ScreenType {
@@ -150,8 +150,8 @@ export enum ScreenType {
 // Scenario
 //TODO: REFCACTOR???
 export enum Player {
-  Player1 = 'Player1',
-  Player2 = 'Player2',
+  Player1 = 'PLAYER1',
+  Player2 = 'PLAYER2',
 }
 
 export enum TankEnemyType {

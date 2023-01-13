@@ -3,10 +3,10 @@ import type { PosState, Rect, Size } from '../typings';
 import { EntityEvent } from './../typings/index';
 
 enum ZoneLayers {
-  Main,
-  Secondary,
-  Projectiles,
-  Powerups,
+  Main = 0,
+  Secondary = 1,
+  Projectiles = 2,
+  Powerups = 3,
 }
 
 export class Zone {
