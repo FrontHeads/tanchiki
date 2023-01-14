@@ -1,12 +1,16 @@
 import './Game.css';
 
 import { useEffect, useRef } from 'react';
-
+import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { Tanchiki } from '../../game';
 import { GameEvents, ScreenType } from '../../game/typings';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
 
 export const Game = () => {
+  const dispatch = useAppDispatch();
+  const userProfile = useAppSelector(authSelectors.userProfile);
+  const username = userProfile?.login;
+
   const gameRoot = useRef(null);
   const isTabActive = usePageVisibility();
   const game = Tanchiki.create();
@@ -15,8 +19,10 @@ export const Game = () => {
     game.init(gameRoot.current);
 
     game.on(GameEvents.UpdateLeaderboard, data => {
-      //TODO: сделать отправку данных на сервер
-      console.log('Обновление лидерборда:', data);
+      if (!username) {
+        return;
+      }
+      dispatch(leaderboardThunks.addScore({ username, ...data }));
     });
 
     return () => {

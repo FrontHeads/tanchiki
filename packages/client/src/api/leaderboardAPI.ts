@@ -5,18 +5,18 @@ import { HTTP } from '../utils/HTTP';
 import { ResponseType } from './../utils/HTTP/HTTP';
 
 export type LeaderboardRecord = {
-  place: number;
   username: string;
   score: number;
   time: number;
   matches: number;
+  place?: number;
 };
 
 export type NewLeaderboardRecordRequest = {
   data: LeaderboardRecord;
 
   /** Какое поле используется для сортировки(данные сохраняются, если новое значение больше старого) */
-  ratingFieldName: string;
+  ratingFieldName: SortOption;
 
   /**Название команды. Используется чтобы создоть уникольный лидерборд для каждого проекта (взято из Swagger) */
   teamName: typeof LEADERBOARD_TEAM_NAME;
@@ -33,12 +33,13 @@ export type LeaderboardRequest = {
 };
 
 type GetLeaderboardResponseData = LeaderboardRowProps[];
+
 export const leaderboardAPI = {
-  addScore: (data: LeaderboardRecord) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
+  addScore: (data: NewLeaderboardRecordRequest) =>
+    HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
   getLeaderboard: (data: LeaderboardRequest) =>
-    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data }).then(
-      validateLeaderboard
-    ),
+    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data })
+      .then(validateLeaderboard),
 };
 
 const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>) => {
