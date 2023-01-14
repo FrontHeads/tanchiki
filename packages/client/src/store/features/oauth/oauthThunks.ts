@@ -8,6 +8,7 @@ import { PATH } from '../../../config/constants';
  */
 export const getOauthCode = createAsyncThunk('oauth/getOauthCode', async () => {
   const { data } = await oauthAPI.getServiceId({ redirect_uri: PATH.oauthRedirect });
+
   const url = new URL(PATH.yandexOauthUrl);
 
   url.searchParams.set('client_id', data.service_id);
@@ -15,11 +16,4 @@ export const getOauthCode = createAsyncThunk('oauth/getOauthCode', async () => {
   window.location.href = url.href;
 });
 
-/**
- * Пробуем авторизоваться
- */
-export const tryOAuth = createAsyncThunk('oauth/tryOAuth', async (code: string) => {
-  await oauthAPI.postOauth({ code: code, redirect_uri: PATH.oauthRedirect }).catch(() => null);
-});
-
-export const oauthThunks = { getServiceId: getOauthCode, tryOAuth };
+export const oauthThunks = { getOauthCode };

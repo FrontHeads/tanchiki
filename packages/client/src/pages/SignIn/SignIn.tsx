@@ -33,7 +33,7 @@ export const SignIn: FC = () => {
   };
 
   const oAuthHandler = () => {
-    dispatch(oauthThunks.getServiceId());
+    dispatch(oauthThunks.getOauthCode());
   };
 
   useEffect(() => {

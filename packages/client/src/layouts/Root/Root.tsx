@@ -12,7 +12,7 @@ import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
 import { Paths } from '../../config/constants';
 import { rootLoader } from '../../config/router';
-import { appSelectors, authActions, oauthThunks, useAppDispatch, useAppSelector } from '../../store';
+import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
 import { ResponseType } from '../../utils/HTTP';
 
 export const Root: FC = () => {
@@ -22,14 +22,6 @@ export const Root: FC = () => {
   const dispatch = useAppDispatch();
 
   let data = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
-
-  useEffect(() => {
-    const oauthCode = new URLSearchParams(window.location.search).get('code');
-
-    if (oauthCode) {
-      dispatch(oauthThunks.tryOAuth(oauthCode));
-    }
-  }, [dispatch]);
 
   useEffect(() => {
     /**

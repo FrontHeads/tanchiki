@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { createRoutesFromElements, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
+import { oauthAPI } from '../api/oauthAPI';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
@@ -14,19 +15,37 @@ import { Leaderboard } from '../pages/Leaderboard';
 import { SignIn } from '../pages/SignIn';
 import { SignUp } from '../pages/SignUp';
 import { UserProfile } from '../pages/UserProfile';
-import { Paths } from './constants';
+import { PATH, Paths } from './constants';
 
 /** Делаем "ленивую" подгрузку игры только в момент перехода в соответствующий раздел */
 const Game = lazy(() => import('../pages/Game').then(module => ({ default: module.Game })));
 
-/*
+/**
   Делаем предзагрузку данных пользователя, проверяя - авторизован или нет catch сделан,
   чтобы в случае ошибки (куки не валидны, пользователь не авторизован) пользователю не
   отображалось это сообщение, т.к. при проверке авторизации в этом нет необходимости
 */
 export const rootLoader = () => {
-  const user = authAPI.me().catch(() => null);
-  return { user };
+  let oauthCode: string | null = null;
+
+  // Получаем код только при работе в браузере
+  if (typeof window !== 'undefined') {
+    oauthCode = new URLSearchParams(window.location.search).get('code');
+    window.history.pushState({}, '', PATH.oauthRedirect);
+  }
+
+  if (oauthCode) {
+    const user = oauthAPI
+      .postOauth({ code: oauthCode, redirect_uri: PATH.oauthRedirect })
+      .catch(() => null)
+      .finally(() => {
+        return authAPI.me().catch(() => null);
+      });
+    return { user };
+  } else {
+    const user = authAPI.me().catch(() => null);
+    return { user };
+  }
 };
 
 export const routes = createRoutesFromElements(
