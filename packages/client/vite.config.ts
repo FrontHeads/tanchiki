@@ -15,6 +15,9 @@ export default defineConfig({
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT || 3001,
   },
+  css: {
+    devSourcemap: true,
+  },
   plugins: [react()],
   build: {
     rollupOptions: {
