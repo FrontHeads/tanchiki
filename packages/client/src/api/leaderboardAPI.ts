@@ -35,11 +35,11 @@ export type LeaderboardRequest = {
 type GetLeaderboardResponseData = LeaderboardRowProps[];
 
 export const leaderboardAPI = {
-  addScore: (data: NewLeaderboardRecordRequest) =>
-    HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
+  addScore: (data: NewLeaderboardRecordRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
   getLeaderboard: (data: LeaderboardRequest) =>
-    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data })
-      .then(validateLeaderboard),
+    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data }).then(
+      validateLeaderboard
+    ),
 };
 
 const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>) => {
