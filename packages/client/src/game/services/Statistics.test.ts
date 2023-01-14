@@ -9,6 +9,7 @@ describe('game/services/Statistics', () => {
   it('should start session', () => {
     game = Game.create();
     game.init(document.body);
+    game.username = 'TestUser';
     game.audioManager.playSound = jest.fn();
     game.statistics.startSession('SINGLEPLAYER');
     game.statistics.startMap();
