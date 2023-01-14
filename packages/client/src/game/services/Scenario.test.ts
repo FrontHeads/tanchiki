@@ -6,7 +6,7 @@ import { Game, Scenario } from './';
 describe('game/services/Scenario', () => {
   it('should create tank', () => {
     const game = Game.create();
-    game.view.load(document.body);
+    game.createView(document.body);
     const scenario = new Scenario(game);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -22,7 +22,7 @@ describe('game/services/Scenario', () => {
   // TODO: этот тест особо ничего не проверяет, его нужно отрефакторить
   it('should destroy entity', () => {
     const game = Game.create();
-    game.view.load(document.body);
+    game.createView(document.body);
     const scenario = new Scenario(game);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -36,7 +36,7 @@ describe('game/services/Scenario', () => {
 
   it('should create projectile and tank explosions', () => {
     const game = Game.create();
-    game.view.load(document.body);
+    game.createView(document.body);
     const scenario = new Scenario(game);
     const createExplosionMock = jest.spyOn(scenario, 'createExplosion').mockImplementation();
 
