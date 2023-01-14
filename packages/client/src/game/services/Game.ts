@@ -312,10 +312,11 @@ export class Game extends EventEmitter {
 
   initGameScore() {
     return new Promise<void>(resolve => {
+      const meta = { level: this.level, username: this.username };
       const stats = this.statistics.getCurrentStatistics();
       this.reset();
       this.screen = ScreenType.Score;
-      this.overlay.show(this.screen, { level: this.level, ...stats });
+      this.overlay.show(this.screen, { ...meta, ...stats });
       const redirectDelay = 7000;
 
       this.overlay.on('score', () => {
@@ -323,7 +324,7 @@ export class Game extends EventEmitter {
       });
 
       const skip = () => {
-        this.overlay.show(this.screen, { level: this.level, ...stats, skip: true });
+        this.overlay.show(this.screen, { ...meta, ...stats, skip: true });
         this.controllerAll.offAll(ControllerEvent.ESCAPE);
         this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
         this.controllerAll.offAll(ControllerEvent.SHOOT);
