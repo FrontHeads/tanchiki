@@ -16,9 +16,8 @@ export class Loop {
   }
 
   unload() {
-    this.clearLoopEntities();
-    this.clearLoopDelays();
     this.stop();
+    this.reset();
   }
 
   reset() {
