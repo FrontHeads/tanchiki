@@ -10,7 +10,7 @@ describe('game/services/Statistics', () => {
     game = Game.create();
     game.init(document.body);
     game.audioManager.playSound = jest.fn();
-    game.statistics.startSession('Singleplayer');
+    game.statistics.startSession('SINGLEPLAYER');
     game.statistics.startMap();
 
     expect(game.statistics).toBeTruthy();
@@ -18,9 +18,9 @@ describe('game/services/Statistics', () => {
   });
 
   it('should count destroyed enemies', async () => {
-    const playerTank = new TankPlayer({ variant: 'Player1', posX: 0, posY: 0, width: 2, height: 2 });
+    const playerTank = new TankPlayer({ variant: 'PLAYER1', posX: 0, posY: 0, width: 2, height: 2 });
     const playerProjectile = new Projectile({ parent: playerTank, posX: 0, posY: 0, width: 2, height: 2 });
-    const enemyTank = new TankEnemy({ variant: 'Fast', posX: 2, posY: 2, width: 2, height: 2 });
+    const enemyTank = new TankEnemy({ variant: 'FAST', posX: 2, posY: 2, width: 2, height: 2 });
     enemyTank.spawnTimeout = 1;
     const explosion = new Explosion({ parent: enemyTank });
 

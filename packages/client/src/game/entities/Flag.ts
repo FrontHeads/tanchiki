@@ -14,7 +14,7 @@ export class Flag extends Entity {
     this.color = Color.White;
     this.crossable = false;
     this.hittable = true;
-    this.mainSpriteCoordinates = spriteCoordinates['Base.heart.alive'];
+    this.mainSpriteCoordinates = spriteCoordinates['base.heart.alive'];
 
     this.registerFlagEvents();
   }
@@ -22,7 +22,7 @@ export class Flag extends Entity {
   registerFlagEvents() {
     this.on(EntityEvent.Damaged, ({ source }) => {
       if (!this.destroyed) {
-        this.mainSpriteCoordinates = spriteCoordinates['Base.heart.dead'];
+        this.mainSpriteCoordinates = spriteCoordinates['base.heart.dead'];
         this.refreshSprite();
         this.emit(EntityEvent.Destroyed, source);
         this.destroyed = true;

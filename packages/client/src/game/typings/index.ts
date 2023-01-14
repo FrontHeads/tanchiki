@@ -4,21 +4,21 @@ import { type Controller } from './../services/Controller';
 
 export type Fn = (...args: Array<any>) => void;
 
+//TODO: task103 move to game
 export type GameSettings = {
-  //gaeme
   width: number;
   height: number;
   boundarySize: number;
   indicatorsSidebarSize: number;
 };
 
-export type GameMode = 'Singleplayer' | 'Multiplayer';
+export type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';
 
 export enum GameEvents {
   UpdateLeaderboard = 'UPDATE_LEADERBOARD',
 }
-
-export enum Direction { //zone
+//TODO: task103 move to zone
+export enum Direction {
   Up = 'UP',
   Down = 'DOWN',
   Left = 'LEFT',
@@ -39,13 +39,15 @@ export type Rect = Pos & Size;
 
 export type PosState = { hasCollision: boolean | undefined; nextRect: Rect };
 
-export enum Speed { //entitydynamic
+//TODO: task103 move to entitydynamic
+export enum Speed {
   Low = 'LOW',
   Medium = 'MEDIUM',
   High = 'HIGH',
 }
+//TODO: task103 move to entity
 
-export enum EntityEvent { //entity
+export enum EntityEvent {
   Move = 'MOVE',
   Stop = 'STOP',
   Slide = 'SLIDE',
@@ -82,8 +84,8 @@ export type EntityType =
   | 'brickWall'
   | 'concreteWall'
   | 'trees'
-  | 'Water'
-  | 'Ice'
+  | 'water'
+  | 'ice'
   | 'powerup'
   | 'explosion'
   | 'score'
@@ -92,9 +94,9 @@ export type EntityType =
 
 export type TerrainVariant = 'WHOLE' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'LEFT_BOTTOM' | 'RIGHT_BOTTOM';
 
-export type PlayerVariant = 'Player1' | 'Player2'; //playertank
+export type PlayerVariant = 'PLAYER1' | 'PLAYER2'; //playertank
 
-export type EnemyVariant = 'Basic' | 'Fast' | 'Power' | 'Armor';
+export type EnemyVariant = 'BASIC' | 'FAST' | 'POWER' | 'ARMOR';
 
 export type ExplosionVariant = 'TANK_EXPLOSION' | 'PROJECTILE_EXPLOSION';
 
@@ -131,8 +133,8 @@ export type UIElementSettings = Pos &
     mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
     indicatorName?: string;
   }>;
-
-export enum MainMenuState { //screen
+//TODO: task103 move to screen
+export enum MainMenuState {
   Singleplayer = 'SINGLEPLAYER',
   Multiplayer = 'MULTIPLAYER',
 }
@@ -147,8 +149,7 @@ export enum ScreenType {
   GameOverPopup = 'GAME_OVER_POPUP',
 }
 
-// Scenario
-//TODO: REFCACTOR???
+//TODO: task103 move to // Scenario
 export enum Player {
   Player1 = 'PLAYER1',
   Player2 = 'PLAYER2',
@@ -206,8 +207,8 @@ export type EnemyDestroyedPayload = {
 };
 
 export type MapData = TupleArray<TupleArray<number, 13>, 13>;
-
-export enum Cell { //mapmanager
+//TODO: task103 move to //mapmanager
+export enum Cell {
   Blank = 0,
   Forest = 11,
   Ice = 12,
@@ -272,8 +273,8 @@ export type CancelAnimation =
   | 'eraseEntity';
 
 /** Список canvas-слоев и прикрепленных к ним сущностей. */
+//TODO: task103 move to//view
 export type LayerList = Record<
-  //view
   string,
   {
     context: CanvasRenderingContext2D;
@@ -282,8 +283,8 @@ export type LayerList = Record<
 >;
 
 /** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
+//TODO: task103 move to //view
 export type LayerEntity = {
-  //view
   instance: Entity;
   listeners: Record<string, (...args: Array<any>) => void>;
 };

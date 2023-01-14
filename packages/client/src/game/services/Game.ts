@@ -252,7 +252,7 @@ export class Game extends EventEmitter {
     this.reset();
 
     if (firstInit) {
-      this.statistics.startSession(this.mainMenuState === MainMenuState.Singleplayer ? 'Singleplayer' : 'Multiplayer');
+      this.statistics.startSession(this.mainMenuState === MainMenuState.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER');
     } else {
       if (this.level < this.maxLevels) {
         this.level++;

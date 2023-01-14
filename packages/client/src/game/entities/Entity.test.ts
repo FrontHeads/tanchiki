@@ -74,7 +74,7 @@ describe('game/entities/Entity', () => {
     entity.on(EntityEvent.Spawn, () => {
       entity.startAnimation({
         delay: 25,
-        spriteCoordinates: spriteCoordinates['terrain.Water'],
+        spriteCoordinates: spriteCoordinates['terrain.water'],
         looped: true,
         stopTimer: 50,
       });

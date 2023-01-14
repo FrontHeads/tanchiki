@@ -38,7 +38,7 @@ export class Zone {
   /** Возвращает слой матрицы, на которой должна находиться сущность */
   getLayerByEntityType(entity: Entity) {
     switch (entity.type) {
-      case 'Ice':
+      case 'ice':
       case 'trees':
         return ZoneLayers.Secondary;
       case 'projectile':
@@ -219,7 +219,7 @@ export class Zone {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const secondaryLayerCell = this.matrix[ZoneLayers.Secondary][x]?.[y];
-        if (!secondaryLayerCell || secondaryLayerCell.type !== 'Ice') {
+        if (!secondaryLayerCell || secondaryLayerCell.type !== 'ice') {
           return false;
         }
       }

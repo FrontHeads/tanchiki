@@ -120,7 +120,7 @@ export class AudioManager extends EventEmitter {
 
       /** Занос на льду */
       entity.on(EntityEvent.Slide, () => {
-        this.playSound('Ice');
+        this.playSound('ice');
       });
 
       /** Взрыв игрока */
@@ -163,7 +163,7 @@ export class AudioManager extends EventEmitter {
   playSound(sound: keyof typeof SoundPathList) {
     const soundResource = resources.getSound(sound);
     if (soundResource && !this.isStopped) {
-      if (sound === 'idle' || sound === 'move' || sound === 'Ice') {
+      if (sound === 'idle' || sound === 'move' || sound === 'ice') {
         soundResource.volume = 0.5;
       }
       soundResource.currentTime = 0;

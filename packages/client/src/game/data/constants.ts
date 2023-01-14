@@ -11,8 +11,8 @@ import {
 import { Color } from './colors';
 import { classicDesignSprite } from './spriteCoordinates';
 
+//TODO: task103 move to mapmanager
 export const concreteCells: Cell[] = [
-  //mapmanager
   Cell.Concrete,
   Cell.ConcreteTop,
   Cell.ConcreteRight,
@@ -22,8 +22,8 @@ export const concreteCells: Cell[] = [
   Cell.ConcreteBottomRight,
 ];
 
+//TODO: task103 move tomapmanager
 export const brickCells: Cell[] = [
-  //mapmanager
   Cell.Brick,
   Cell.BrickTop,
   Cell.BrickRight,
@@ -32,9 +32,8 @@ export const brickCells: Cell[] = [
   Cell.BrickBottomLeft,
   Cell.BrickBottomRight,
 ];
-
+//TODO: task103 move to screens
 export const screenClasses = {
-  //screens
   [ScreenType.Loading]: LoadingScreen,
   [ScreenType.MainMenu]: MainMenuScreen,
   [ScreenType.LevelSelector]: LevelSelectorScreen,
@@ -44,10 +43,10 @@ export const screenClasses = {
   [ScreenType.GameOverPopup]: GameOverPopupScreen,
 };
 
+//TODO: task103 move to  scenario
 export const playerInitialSettings: Record<Player, EntityDynamicSettings> = {
-  //scenario
-  [Player.Player1]: { posX: 18, posY: 50, color: Color.Yellow, variant: 'Player1' },
-  [Player.Player2]: { posX: 34, posY: 50, color: Color.Lime, variant: 'Player2' },
+  [Player.Player1]: { posX: 18, posY: 50, color: Color.Yellow, variant: 'PLAYER1' },
+  [Player.Player2]: { posX: 34, posY: 50, color: Color.Lime, variant: 'PLAYER2' },
 };
 
 /**

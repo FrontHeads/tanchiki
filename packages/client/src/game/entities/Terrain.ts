@@ -20,13 +20,13 @@ export class Terrain extends Entity {
         this.crossable = false;
         this.hittable = true;
         this.color = Color.Brown;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.Brick'][this.variant];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.brick'][this.variant];
         break;
       case 'concreteWall':
         this.crossable = false;
         this.hittable = true;
         this.color = Color.LightGrey;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.Concrete'][this.variant];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.concrete'][this.variant];
         break;
       case 'trees':
         this.crossable = true;
@@ -34,17 +34,17 @@ export class Terrain extends Entity {
         this.color = Color.Green;
         this.mainSpriteCoordinates = spriteCoordinates['terrain.trees'];
         break;
-      case 'Water':
+      case 'water':
         this.crossable = false;
         this.hittable = false;
         this.color = Color.Blue;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.Water'];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.water'];
         break;
-      case 'Ice':
+      case 'ice':
         this.crossable = true;
         this.hittable = false;
         this.color = Color.AliceBlue;
-        this.mainSpriteCoordinates = spriteCoordinates['terrain.Ice'];
+        this.mainSpriteCoordinates = spriteCoordinates['terrain.ice'];
         break;
     }
 
@@ -52,11 +52,11 @@ export class Terrain extends Entity {
   }
 
   registerTerrainEvents() {
-    if (this.type === 'Water') {
+    if (this.type === 'water') {
       this.on(EntityEvent.Spawn, () => {
         this.startAnimation({
           delay: 350,
-          spriteCoordinates: spriteCoordinates['terrain.Water'],
+          spriteCoordinates: spriteCoordinates['terrain.water'],
           looped: true,
         });
       });

@@ -11,7 +11,7 @@ import { type Game } from './';
 
 export class Statistics {
   game: Game;
-  mode: GameMode = 'Singleplayer';
+  mode: GameMode = 'SINGLEPLAYER';
   active = false;
   /** Очки топ-1 игрока из лидерборда (TODO: реализовать их подгрузку и отображение) */
   highestScore = 20000;
@@ -21,7 +21,7 @@ export class Statistics {
   sessionElapsedTime = 0;
   /** Статистика за конкретный игровой уровень: [игрок-1, игрок-2], общая */
   mapScore = [0, 0];
-  mapEnemiesKilledCount: EnemiesKilledState = { Basic: [0, 0], Fast: [0, 0], Power: [0, 0], Armor: [0, 0] };
+  mapEnemiesKilledCount: EnemiesKilledState = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
   mapElapsedTime = 0;
   mapStartTime = 0;
 
@@ -43,14 +43,14 @@ export class Statistics {
 
   reset() {
     this.mapScore = [0, 0];
-    this.mapEnemiesKilledCount = { Basic: [0, 0], Fast: [0, 0], Power: [0, 0], Armor: [0, 0] };
+    this.mapEnemiesKilledCount = { BASIC: [0, 0], FAST: [0, 0], POWER: [0, 0], ARMOR: [0, 0] };
     this.mapElapsedTime = 0;
   }
 
   /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
   updateLeaderboard() {
     // Если не синглплеер, то лидерборд не обновляем
-    if (this.mode !== 'Singleplayer') {
+    if (this.mode !== 'SINGLEPLAYER') {
       return;
     }
 
@@ -89,13 +89,13 @@ export class Statistics {
   /** Возвращает множитель с очками за конкретный тип вражеского танка. */
   getScoreByEnemyVariant(enemyVariant: EnemyVariant) {
     switch (enemyVariant) {
-      case 'Armor':
+      case 'ARMOR':
         return 400;
-      case 'Power':
+      case 'POWER':
         return 300;
-      case 'Fast':
+      case 'FAST':
         return 200;
-      case 'Basic':
+      case 'BASIC':
         return 100;
     }
   }
@@ -104,7 +104,7 @@ export class Statistics {
    * Большинство данных записывеются в массивы типа [игрок-1, игрок-2].
    */
   getPlayerIndex(playerVariant: PlayerVariant) {
-    return playerVariant === 'Player1' ? 0 : 1;
+    return playerVariant === 'PLAYER1' ? 0 : 1;
   }
 
   /** Добавляет сущность в сервис для отслеживания. */

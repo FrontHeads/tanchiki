@@ -1,11 +1,11 @@
 /** Координаты сущностей на sprite-изображении с классическим дизайном */
 export const classicDesignSprite = {
   flag: [[1532, 736, 64, 60]],
-  'Base.heart.alive': [[1244, 128, 64, 64]],
-  'Base.heart.dead': [[1308, 128, 64, 64]],
+  'base.heart.alive': [[1244, 128, 64, 64]],
+  'base.heart.dead': [[1308, 128, 64, 64]],
   'terrain.trees': [[1117, 128, 63, 63]],
-  'terrain.Ice': [[1180, 128, 63, 63]],
-  'terrain.Concrete': {
+  'terrain.ice': [[1180, 128, 63, 63]],
+  'terrain.concrete': {
     WHOLE: [[1052, 64, 64, 64]],
     TOP: [[1052, 64, 64, 32]],
     BOTTOM: [[1052, 64, 64, 32]],
@@ -14,7 +14,7 @@ export const classicDesignSprite = {
     LEFT_BOTTOM: [[1052, 64, 32, 32]],
     RIGHT_BOTTOM: [[1052, 64, 32, 32]],
   },
-  'terrain.Brick': {
+  'terrain.brick': {
     WHOLE: [[1052, 0, 64, 64]],
     TOP: [[1052, 0, 64, 32]],
     BOTTOM: [[1052, 0, 64, 32]],
@@ -23,19 +23,19 @@ export const classicDesignSprite = {
     LEFT_BOTTOM: [[1052, 0, 32, 32]],
     RIGHT_BOTTOM: [[1052, 0, 32, 32]],
   },
-  'terrain.Water': [
+  'terrain.water': [
     [1117, 192, 63, 63],
     [1053, 192, 63, 63],
   ],
-  'terrain.menu-Brick': [
+  'terrain.menu-brick': [
     [0, 0, 16, 16],
     [16, 0, 16, 16],
   ],
-  'terrain.inverse-Brick': [
+  'terrain.inverse-brick': [
     [0, 0, 16, 16],
     [16, 0, 16, 16],
   ],
-  'terrain.blue-Brick': [
+  'terrain.blue-brick': [
     [0, 0, 16, 16],
     [16, 0, 16, 16],
   ],

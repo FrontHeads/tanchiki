@@ -124,16 +124,16 @@ describe('game/entities/Tank', () => {
     expect(projectileThree).toBeTruthy();
   });
 
-  it('should slide on Ice', () => {
+  it('should slide on ice', () => {
     const zone = new Zone({ width: 10, height: 10 });
-    const Ice = new Terrain({ type: 'Ice', posX: 0, posY: 1, width: 9, height: 9 });
+    const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 9, height: 9 });
     const tank = mockTank();
     const slideObserver = jest.fn();
     const tankUpdateCycles = 30;
     tank.on(EntityEvent.Slide, slideObserver);
 
-    zone.add(Ice);
-    Ice.spawn();
+    zone.add(ice);
+    ice.spawn();
     zone.add(tank);
     tank.spawn({ posX: 0, posY: 0 });
     tank.frozen = false;
@@ -152,15 +152,15 @@ describe('game/entities/Tank', () => {
     expect(slideObserver).toHaveBeenCalledTimes(1);
   });
 
-  it('should stop on Ice edge after sliding', () => {
+  it('should stop on ice edge after sliding', () => {
     const zone = new Zone({ width: 10, height: 10 });
-    const Ice = new Terrain({ type: 'Ice', posX: 0, posY: 1, width: 4, height: 4 });
+    const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 4, height: 4 });
     const tank = mockTank();
     const slideObserver = jest.fn();
     const tankUpdateCycles = 30;
 
-    zone.add(Ice);
-    Ice.spawn();
+    zone.add(ice);
+    ice.spawn();
     zone.add(tank);
     tank.spawn({ posX: 0, posY: 0 });
     tank.frozen = false;

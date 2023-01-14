@@ -4,7 +4,7 @@ import { Tank } from './Tank';
 
 export class TankPlayer extends Tank {
   spawnShieldTimeout = 3000;
-  variant: PlayerVariant = 'Player1';
+  variant: PlayerVariant = 'PLAYER1';
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -14,7 +14,7 @@ export class TankPlayer extends Tank {
     Object.assign(this, props);
 
     //TODO выбор спрайта танка также должен зависеть от типа танка (большой/маленький)
-    if (!props.variant || props.variant === 'Player1') {
+    if (!props.variant || props.variant === 'PLAYER1') {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
     } else {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.secondary.a'];

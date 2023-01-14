@@ -7,7 +7,7 @@ import { Tank } from './Tank';
 export class TankEnemy extends Tank {
   lastDirection = Direction.Down;
   /** Разновидность вражеского танка */
-  variant: EnemyVariant = 'Basic';
+  variant: EnemyVariant = 'BASIC';
 
   constructor(props: EntityDynamicSettings) {
     super(props);

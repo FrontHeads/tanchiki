@@ -188,7 +188,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       text: `${this.sessionScore[0]}`,
     });
 
-    if (this.mode === 'Singleplayer') {
+    if (this.mode === 'SINGLEPLAYER') {
       return;
     }
 
@@ -250,7 +250,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       mainSpriteCoordinates: enemyTankSprite,
     });
 
-    if (this.mode === 'Singleplayer') {
+    if (this.mode === 'SINGLEPLAYER') {
       return;
     }
 
@@ -310,7 +310,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       text: `${count[0]} `,
     });
 
-    if (this.mode === 'Singleplayer') {
+    if (this.mode === 'SINGLEPLAYER') {
       return;
     }
 

@@ -42,9 +42,9 @@ export class MapManager {
         } else if (cell === Cell.Forest) {
           type = 'trees';
         } else if (cell === Cell.Water) {
-          type = 'Water';
+          type = 'water';
         } else if (cell === Cell.Ice) {
-          type = 'Ice';
+          type = 'ice';
         } else if (cell === Cell.Base) {
           type = 'flag';
         } else {
