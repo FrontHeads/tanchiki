@@ -31,21 +31,24 @@ export const rootLoader = () => {
   // Получаем код только при работе в браузере
   if (typeof window !== 'undefined') {
     oauthCode = new URLSearchParams(window.location.search).get('code');
-    window.history.pushState({}, '', PATH.oauthRedirect);
+
+    if (oauthCode) {
+      // Меняем url страницы на чистый, без code
+      window.history.pushState({}, '', PATH.oauthRedirect);
+
+      // Отправляем запрос на oauth авторизацию
+      const user = oauthAPI
+        .postOauth({ code: oauthCode, redirect_uri: PATH.oauthRedirect })
+        .catch(() => null)
+        .finally(() => {
+          return authAPI.me().catch(() => null);
+        });
+      return { user };
+    }
   }
 
-  if (oauthCode) {
-    const user = oauthAPI
-      .postOauth({ code: oauthCode, redirect_uri: PATH.oauthRedirect })
-      .catch(() => null)
-      .finally(() => {
-        return authAPI.me().catch(() => null);
-      });
-    return { user };
-  } else {
-    const user = authAPI.me().catch(() => null);
-    return { user };
-  }
+  const user = authAPI.me().catch(() => null);
+  return { user };
 };
 
 export const routes = createRoutesFromElements(
