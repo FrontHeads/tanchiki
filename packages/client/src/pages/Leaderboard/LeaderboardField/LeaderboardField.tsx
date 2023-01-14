@@ -3,7 +3,7 @@ import './LeaderboardField.css';
 import { FC } from 'react';
 
 import { leaderboardActions, leaderboardSelectors, useAppDispatch, useAppSelector } from '../../../store';
-import { SortOption } from '../typings';
+import { SortOption } from '../../../store/features/leaderboard/typings';
 import { SortMarker } from './SortMarker/SortMarker';
 import { LeaderboardFieldProps } from './typings';
 

@@ -1,38 +1,12 @@
 import { LEADERBOARD_TEAM_NAME, YANDEX_API_ENDPOINTS } from '../config/constants';
-import { LeaderboardRowProps } from '../pages/Leaderboard/LeaderboardRow/typings';
-import { SortOption } from '../pages/Leaderboard/typings';
 import { HTTP } from '../utils/HTTP';
 import { ResponseType } from './../utils/HTTP/HTTP';
-
-export type LeaderboardRecord = {
-  username: string;
-  score: number;
-  time: number;
-  matches: number;
-  place?: number;
-};
-
-export type NewLeaderboardRecordRequest = {
-  data: LeaderboardRecord;
-
-  /** Какое поле используется для сортировки(данные сохраняются, если новое значение больше старого) */
-  ratingFieldName: SortOption;
-
-  /**Название команды. Используется чтобы создоть уникольный лидерборд для каждого проекта (взято из Swagger) */
-  teamName: typeof LEADERBOARD_TEAM_NAME;
-};
-
-export type LeaderboardRequest = {
-  ratingFieldName: SortOption;
-
-  /**Используется для пагинации. Если limit=10, для 1-ой страницы cursor=0, для 2-ой cursor=10 */
-  cursor: number;
-
-  /**Сколько записей возвращить на одну страницу */
-  limit: number;
-};
-
-type GetLeaderboardResponseData = LeaderboardRowProps[];
+import {
+  GetLeaderboardResponseData,
+  LeaderboardRecord,
+  LeaderboardRequest,
+  NewLeaderboardRecordRequest,
+} from './typings';
 
 export const leaderboardAPI = {
   addScore: (data: NewLeaderboardRecordRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
@@ -44,7 +18,7 @@ export const leaderboardAPI = {
 
 const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>) => {
   /**Валидируем поля */
-  const validatedData = response.data.filter((record: LeaderboardRowProps) => {
+  const validatedData = response.data.filter((record: LeaderboardRecord) => {
     const { data } = record;
     const isValidNumber = (num: number) => {
       return typeof num === 'number' && num >= 0 && num % 1 === 0;
@@ -63,10 +37,5 @@ const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>)
 
     return true;
   });
-  /**Назначаем место в таблице рейтинга */
-  // .map((item: LeaderboardRowProps, index: number) => {
-  //   item.data.place = index + 1;
-  //   return item;
-  // });
   return { ...response, data: validatedData };
 };

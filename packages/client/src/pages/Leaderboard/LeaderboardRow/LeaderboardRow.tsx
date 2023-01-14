@@ -7,7 +7,7 @@ import { convertMsToTime } from '../../../utils/dateUtils';
 import { LeaderboardRowProps } from './typings';
 
 export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { username, score, time, matches }, place }) => {
-  const { sortOption, sortDirection } = useAppSelector(leaderboardSelectors.all);
+  const { sortDirection } = useAppSelector(leaderboardSelectors.all);
   const convertedTime = useMemo(() => convertMsToTime(time), [time]);
 
   const leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_desc' : '_asc'}`;

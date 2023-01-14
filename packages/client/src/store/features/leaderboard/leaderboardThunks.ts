@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { leaderboardAPI, LeaderboardRecord } from '../../../api/leaderboardAPI';
+import { LeaderboardRecordData } from '../../../api/typings';
+import { leaderboardAPI } from '../../../api/leaderboardAPI';
 import {
   LEADERBOARD_RECORDS_DISPLAY_LIMIT,
   LEADERBOARD_DEFAULT_PAGE,
@@ -7,7 +8,7 @@ import {
   LEADERBOARD_TEAM_NAME,
 } from '../../../config/constants';
 
-export const addScore = createAsyncThunk('leaderboard/add', async (payload: LeaderboardRecord) => {
+export const addScore = createAsyncThunk('leaderboard/add', async (payload: LeaderboardRecordData) => {
   const { data } = await leaderboardAPI.addScore({
     data: payload,
     ratingFieldName: LEADERBOARD_SORT_FIELD,

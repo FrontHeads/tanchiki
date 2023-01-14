@@ -1,11 +1,10 @@
 import '@testing-library/jest-dom';
-
 import { screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-
 import { convertMsToTime } from '../../../utils/dateUtils';
 import { renderWithRouter } from '../../../utils/testingUtils';
 import { LeaderboardRow } from './LeaderboardRow';
+
 describe('LeaderboardRow', () => {
   const place = 1;
   const row = { place: place, username: 'John', score: 1234, time: 2000000, matches: 99 };
@@ -40,6 +39,7 @@ describe('LeaderboardRow', () => {
         ),
       });
     });
+
     expect(screen.getByText(place)).toBeInTheDocument();
     expect(screen.getByText(row.username)).toBeInTheDocument();
     expect(screen.getByText(row.score)).toBeInTheDocument();
