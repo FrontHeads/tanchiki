@@ -1,7 +1,7 @@
 import { Entity } from '../entities';
 import { ControllerEvent, Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
 import { Overlay } from '../ui';
-import { levels } from './../data/levels';
+import { levels } from '../data/levels';
 import { Controller, Loop, resources, Scenario, Statistics, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
@@ -56,7 +56,7 @@ export class Game extends EventEmitter {
   }
 
   load(root: HTMLElement | null) {
-    this.createView(root);
+    this.view.load(root);
     this.overlay.load();
     this.loop.load();
     this.audioManager.load();
@@ -95,10 +95,6 @@ export class Game extends EventEmitter {
     this.controllerArrows.reset();
     this.statistics.reset();
     this.paused = false;
-  }
-
-  createView(root: HTMLElement | null) {
-    this.view.load(root);
   }
 
   addEntity(entity: Entity) {
