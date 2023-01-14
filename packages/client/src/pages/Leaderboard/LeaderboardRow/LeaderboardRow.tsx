@@ -10,12 +10,7 @@ export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { username, scor
   const { sortOption, sortDirection } = useAppSelector(leaderboardSelectors.all);
   const convertedTime = useMemo(() => convertMsToTime(time), [time]);
 
-  let leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_desc' : '_asc'}`;
-
-  //Сортировка по месту: 1 место > 2 > 3. Поэтому меняем направление подсветки
-  if (sortOption === 'place') {
-    leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_asc' : '_desc'}`;
-  }
+  const leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_desc' : '_asc'}`;
 
   return (
     <tr className={leaderboardRowClassName}>
