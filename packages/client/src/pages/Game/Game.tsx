@@ -8,21 +8,17 @@ import { usePageVisibility } from '../../hooks/usePageVisibility';
 
 export const Game = () => {
   const dispatch = useAppDispatch();
-  const userProfile = useAppSelector(authSelectors.userProfile);
-  const username = userProfile?.login;
 
   const gameRoot = useRef(null);
   const isTabActive = usePageVisibility();
   const game = Tanchiki.create();
+  game.username = useAppSelector(authSelectors.userProfile)?.login || '';
 
   useEffect(() => {
     game.init(gameRoot.current);
 
     game.on(GameEvents.UpdateLeaderboard, data => {
-      if (!username) {
-        return;
-      }
-      dispatch(leaderboardThunks.addScore({ username, ...data }));
+      dispatch(leaderboardThunks.addScore(data));
     });
 
     return () => {

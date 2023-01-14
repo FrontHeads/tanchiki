@@ -35,6 +35,7 @@ export class Game extends EventEmitter {
   mainMenuState = MainMenuState.SINGLEPLAYER;
   level = 1;
   maxLevels = levels.length;
+  username = '';
 
   private constructor() {
     super();
@@ -120,7 +121,9 @@ export class Game extends EventEmitter {
 
   /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
   updateLeaderboard(data: StatisticsData) {
-    this.emit(GameEvents.UpdateLeaderboard, data);
+    if (this.username) {
+      this.emit(GameEvents.UpdateLeaderboard, { username: this.username, ...data });
+    }
   }
 
   togglePause(newState: boolean | null = null) {
