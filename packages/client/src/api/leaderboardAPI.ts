@@ -41,7 +41,7 @@ const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>)
 };
 
 const calculateScoreRates = (response: ResponseType<GetLeaderboardResponseData>) => {
-  const data = response.data.map((item) => {
+  const data = response.data.map(item => {
     item.data.rate = Math.round(item.data.score / (item.data.time / 60000));
     return item;
   });
