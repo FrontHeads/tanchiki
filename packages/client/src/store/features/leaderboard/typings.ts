@@ -1,6 +1,6 @@
 import { LeaderboardRecord } from '../../../api/typings';
 
-export type SortOption = 'username' | 'score' | 'time' | 'matches';
+export type SortOption = 'username' | 'score' | 'time' | 'matches' | 'rate';
 
 export type SortDirection = 'asc' | 'desc';
 

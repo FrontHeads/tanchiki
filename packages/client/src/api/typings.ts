@@ -22,7 +22,7 @@ export type LeaderboardRecordData = {
   score: number;
   time: number;
   matches: number;
-  rate?: number;
+  rate: number;
 };
 
 export type LeaderboardRecord = { data: LeaderboardRecordData };

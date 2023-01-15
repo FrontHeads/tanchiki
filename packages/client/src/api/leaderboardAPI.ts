@@ -11,9 +11,9 @@ import {
 export const leaderboardAPI = {
   addScore: (data: NewLeaderboardRecordRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
   getLeaderboard: (data: LeaderboardRequest) =>
-    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data }).then(
-      validateLeaderboard
-    ),
+    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data })
+      .then(validateLeaderboard)
+      .then(calculateScoreRates),
 };
 
 const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>) => {
@@ -38,4 +38,13 @@ const validateLeaderboard = (response: ResponseType<GetLeaderboardResponseData>)
     return true;
   });
   return { ...response, data: validatedData };
+};
+
+const calculateScoreRates = (response: ResponseType<GetLeaderboardResponseData>) => {
+  const data = response.data.map((item) => {
+    item.data.rate = Math.round(item.data.score / (item.data.time / 60000));
+    return item;
+  });
+
+  return { ...response, data };
 };
