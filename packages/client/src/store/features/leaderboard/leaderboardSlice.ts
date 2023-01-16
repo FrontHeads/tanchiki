@@ -1,10 +1,8 @@
-import { type PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
-
-import { type LeaderboardRowProps } from './../../../pages/Leaderboard/LeaderboardRow/typings';
-import { type SortOption } from './../../../pages/Leaderboard/typings';
-import { type RootState } from './../../store';
+import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { type LeaderboardRecord } from '../../../api/typings';
+import { type LeaderboardState, type SortOption } from './typings';
+import { type RootState } from '../../store';
 import { leaderboardThunks } from './leaderboardThunks';
-import { type LeaderboardState } from './typings';
 
 export const leaderboardSlice = createSlice({
   name: 'leaderboard',
@@ -56,7 +54,7 @@ export const sortedLeaderboardSelector = createSelector(
   sortParamsSelector,
   ({ sortOption, sortDirection, leaderboardTable }) => {
     if (sortOption === 'username') {
-      return [...leaderboardTable].sort((a: LeaderboardRowProps, b: LeaderboardRowProps) => {
+      return [...leaderboardTable].sort((a: LeaderboardRecord, b: LeaderboardRecord) => {
         const string_1 = String(a.data[sortOption]);
         const string_2 = String(b.data[sortOption]);
 

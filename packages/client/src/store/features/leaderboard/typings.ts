@@ -1,9 +1,12 @@
-import { type LeaderboardRowProps } from '../../../pages/Leaderboard/LeaderboardRow/typings';
-import { type SortDirection, type SortOption } from './../../../pages/Leaderboard/typings';
+import { type LeaderboardRecord } from '../../../api/typings';
+
+export type SortOption = 'username' | 'score' | 'time' | 'matches' | 'rate';
+
+export type SortDirection = 'asc' | 'desc';
 
 export type LeaderboardState = {
   isLoading: boolean;
-  leaderboardTable: LeaderboardRowProps[];
+  leaderboardTable: Array<LeaderboardRecord>;
   sortOption: SortOption;
   sortDirection: SortDirection;
 };

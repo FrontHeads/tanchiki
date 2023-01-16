@@ -1,11 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { type LeaderboardRecordData } from '../../../api/typings';
+import { leaderboardAPI } from '../../../api/leaderboardAPI';
+import {
+  LEADERBOARD_RECORDS_DISPLAY_LIMIT,
+  LEADERBOARD_DEFAULT_PAGE,
+  LEADERBOARD_SORT_FIELD,
+  LEADERBOARD_TEAM_NAME,
+} from '../../../config/constants';
 
-import { type LeaderboardRecord, leaderboardAPI } from '../../../api/leaderboardAPI';
-import { LEADERBOARD_RECORDS_DISPLAY_LIMIT, LEADERBOARD_SORT_FIELD } from '../../../config/constants';
-import { LEADERBOARD_DEFAULT_PAGE } from './../../../config/constants';
-
-export const addScore = createAsyncThunk('leaderboard/add', async (payload: LeaderboardRecord) => {
-  const { data } = await leaderboardAPI.addScore(payload);
+export const addScore = createAsyncThunk('leaderboard/add', async (payload: LeaderboardRecordData) => {
+  const { data } = await leaderboardAPI.addScore({
+    data: payload,
+    ratingFieldName: LEADERBOARD_SORT_FIELD,
+    teamName: LEADERBOARD_TEAM_NAME,
+  });
   return data;
 });
 

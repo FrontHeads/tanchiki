@@ -37,7 +37,7 @@ export const YANDEX_API_ENDPOINTS = {
   },
   LEADERBOARD: {
     ADD_SCORE: '/leaderboard',
-    Get: (teamName: string) => {
+    GET: (teamName: string) => {
       return `/leaderboard/${teamName}`;
     },
   },
