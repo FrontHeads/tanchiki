@@ -1,0 +1,14 @@
+{
+    "name": "Tanchiki",
+    "short_name": "Tanchiki",
+    "icons": [
+        {
+            "src": "/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#030716",
+    "background_color": "#030716",
+    "display": "standalone"
+}
