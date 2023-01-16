@@ -11,13 +11,19 @@
 
 </div>
 
-Реализация веб-версии культовой игры 80-х и 90-х гг. [_Battle City_](https://en.wikipedia.org/wiki/Battle_City) с использованием `Canvas`, `Typescript` и `React`
+Реализация веб-версии культовой игры 80-х и 90-х гг. [**Battle City**](https://en.wikipedia.org/wiki/Battle_City) с использованием `Canvas`, `Typescript` и `React`
 
 Проект создан в учебных целях в рамках курса [Мидл фронтенд разработчик](https://practicum.yandex.ru/middle-frontend/) от Яндекс Практикума
 
-Ссылка на текущую собранную версию: https://frontheads.github.io/
-
 ---
+
+## Демо проекта
+
+- https://frontheads.github.io/
+
+## Документация проекта
+
+- https://github.com/FrontHeads/tanchiki/tree/develop/docs
 
 ## Технологии
 
@@ -81,7 +87,7 @@
 
 Все команды выполняются из корня проекта.
 
-Команды запускают SPA сборку на `3000` порту и серверную (SSR) сборку `3001` порту
+Команды запускают SPA сборку на `3000` порту и серверную (SSR) сборку на `5000` порту.
 
 ### Первичная настройка
 
