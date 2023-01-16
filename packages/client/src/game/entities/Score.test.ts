@@ -1,8 +1,8 @@
 import { spriteCoordinates } from '../data/constants';
-import { Score, TankEnemy } from './';
+import { Loop } from '../services';
 import { EntityEvent } from '../typings';
 import { sleep } from '../utils';
-import { Loop } from '../services';
+import { Score, TankEnemy } from './';
 
 describe('game/entities/Score', () => {
   it('should have right properties', () => {

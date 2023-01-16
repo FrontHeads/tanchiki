@@ -2,6 +2,7 @@
   display: inline-block;
   margin-left: 4px;
 }
+
 .up {
   transform: rotate(180deg);
 }

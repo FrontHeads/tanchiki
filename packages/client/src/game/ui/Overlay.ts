@@ -3,8 +3,8 @@ import { screenClasses } from '../data/constants';
 import { Game, View } from '../services';
 import { ScreenType, UIElementSettings } from '../typings';
 import { UIElement } from '../ui';
-import { Screen } from './screens';
 import { EventEmitter } from '../utils';
+import { Screen } from './screens';
 
 export class Overlay extends EventEmitter {
   currentScreen?: Screen;
