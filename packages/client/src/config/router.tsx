@@ -39,10 +39,8 @@ export const rootLoader = () => {
       // Отправляем запрос на oauth авторизацию
       const user = oauthAPI
         .postOAuth({ code: oauthCode, redirect_uri: PATH.oauthRedirect })
-        .catch(() => null)
-        .finally(() => {
-          return authAPI.me().catch(() => null);
-        });
+        .then(() => authAPI.me().catch(() => null))
+        .catch(() => null);
       return { user };
     }
   }
