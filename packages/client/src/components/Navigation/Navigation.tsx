@@ -19,8 +19,8 @@ export const Navigation: FC = () => {
       dispatch(authThunks.logout())
         .unwrap()
         .then(() => {
-          toast.success('Будем скучать!');
-          return navigate(Paths.Home);
+          navigate(Paths.Home);
+          window.location.reload();
         })
         .catch(e => {
           toast.error(e.message);
