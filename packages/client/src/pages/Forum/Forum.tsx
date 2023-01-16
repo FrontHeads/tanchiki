@@ -8,12 +8,13 @@ import { ForumSectionList } from './ForumSectionList';
 import { ForumProps } from './typing';
 
 export const Forum: FC<ForumProps> = () => {
+  const pageTitle = 'Форум';
   return (
     <>
-      {generateMetaTags({ title: 'Форум' })}
+      {generateMetaTags({ title: pageTitle })}
       <section className="forum__wrapper">
         <h1 className="forum__title" data-testid="forum-title">
-          Форум
+          {pageTitle}
         </h1>
         <ForumSectionList sectionList={sectionList} />
       </section>

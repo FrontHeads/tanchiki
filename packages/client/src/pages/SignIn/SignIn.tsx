@@ -17,6 +17,7 @@ export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const validation = useValidation(signInFieldList);
+  const pageTitle = 'Вход';
 
   const { error, isLoading } = useAppSelector(authSelectors.authState);
 
@@ -42,8 +43,8 @@ export const SignIn: FC = () => {
 
   return (
     <>
-      {generateMetaTags({ title: 'Вход' })}
-      <Form onSubmitHandler={onFormSubmit} header="Вход">
+      {generateMetaTags({ title: pageTitle })}
+      <Form onSubmitHandler={onFormSubmit} header={pageTitle}>
         <FieldList<SignInForm>
           fieldList={signInFieldList}
           isFormSubmitted={isFormSubmitted}

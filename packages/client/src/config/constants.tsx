@@ -1,6 +1,6 @@
 import defaultAvatar from '/assets/img/default-avatar.png';
 
-export const META_TITLE_SUFFIX = '- Тачники';
+export const META_TITLE_SUFFIX = '- Танчики';
 
 export enum Paths {
   Home = '/',
