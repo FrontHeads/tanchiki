@@ -30,11 +30,15 @@ export class Game extends EventEmitter {
   controllerWasd: Controller;
   controllerArrows: Controller;
   statistics: Statistics;
+  /** Настройки игрового экрана. Размеры заданы в игровых клетках.*/
   settings: GameSettings = { width: 62, height: 56, boundarySize: 2, indicatorsSidebarSize: 6 };
   screen: ScreenType = ScreenType.Loading;
   mainMenuState = MainMenuState.SINGLEPLAYER;
+  /** Текущий игровой уровень.*/
   level = 1;
   maxLevels = levels.length;
+  /** Используется при отправке статистики на сервер и отображается на экране с очками.
+   * Пустое значение, если игрок не авторизован.*/
   username = '';
 
   private constructor() {
