@@ -1,6 +1,6 @@
 import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { type EnemyVariant, EntityDynamicSettings, Direction, EntityEvent, Speed } from '../typings';
+import { type EnemyVariant, Direction, EntityDynamicSettings, EntityEvent, Speed } from '../typings';
 import { rand } from '../utils';
 import { Tank } from './Tank';
 

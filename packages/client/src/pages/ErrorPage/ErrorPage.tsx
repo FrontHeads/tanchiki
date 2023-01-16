@@ -6,6 +6,7 @@ import { useRouteError } from 'react-router-dom';
 import { ErrorBody } from '../../components/ErrorBody/ErrorBody';
 import { Footer } from '../../components/Footer';
 import { Logo } from '../../components/Logo';
+import { generateMetaTags } from '../../utils/seoUtils';
 import { ErrorPageProps, ErrorType } from './typings';
 
 export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Что-то пошло не так' }) => {
@@ -26,6 +27,7 @@ export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Что-то �
   }
   return (
     <>
+      {generateMetaTags({ title: `Ошибка ${statusCode}` })}
       <Logo />
       <div className="delimiter" />
       <ErrorBody status={statusCode} message={messageText} />
