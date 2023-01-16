@@ -1,9 +1,9 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { type PayloadAction,createSelector, createSlice } from '@reduxjs/toolkit';
 
-import { LeaderboardRecord } from '../../../api/typings';
-import { LeaderboardState, SortOption } from './typings';
-import { RootState } from '../../store';
+import { type LeaderboardRecord } from '../../../api/typings';
+import { type RootState } from '../../store';
 import { leaderboardThunks } from './leaderboardThunks';
+import { type LeaderboardState, type SortOption } from './typings';
 
 export const leaderboardSlice = createSlice({
   name: 'leaderboard',

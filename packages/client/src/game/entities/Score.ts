@@ -1,6 +1,6 @@
 import { spriteCoordinates } from '../data/constants';
-import { EntityEvent, ScoreVariant } from '../typings';
-import { Entity, TankEnemy } from './';
+import { type ScoreVariant, EntityEvent } from '../typings';
+import { type TankEnemy, Entity } from './';
 
 type ScoreSettings = { points: number; parent: TankEnemy };
 
@@ -21,7 +21,7 @@ export class Score extends Entity {
   }
 
   registerScoreEvents() {
-    this.on(EntityEvent.SPAWN, () => {
+    this.on(EntityEvent.Spawn, () => {
       this.setLoopDelay(() => {
         this.despawn();
       }, this.despawnTime);

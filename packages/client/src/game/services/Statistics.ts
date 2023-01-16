@@ -1,6 +1,13 @@
-import { Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
-import { EnemiesKilledState, EnemyVariant, EntityEvent, GameMode, PlayerVariant } from '../typings';
-import { Game } from './';
+import { type Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
+import {
+  type EnemiesKilledState,
+  type EnemyVariant,
+  type GameMode,
+  type PlayerVariant,
+  EntityEvent,
+  GameEvents,
+} from '../typings';
+import { type Game } from './';
 
 export class Statistics {
   game: Game;
@@ -105,7 +112,7 @@ export class Statistics {
     if (entity instanceof Explosion && entity.parent instanceof TankEnemy) {
       const enemyTank = entity.parent;
       // После окончания анимации взрыва подсчитываем очки и показываем надпись с их количеством
-      entity.on(EntityEvent.DESPAWN, () => {
+      entity.on(EntityEvent.Despawn, () => {
         const points = this.countEnemy(enemyTank);
         const score = new Score({ points, parent: enemyTank });
         this.game.addEntity(score);

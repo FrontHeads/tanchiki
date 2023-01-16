@@ -1,5 +1,5 @@
-import { Entity, TankPlayer } from '../entities';
-import { Direction, Rect } from '../typings';
+import { type Entity, TankPlayer } from '../entities';
+import { type Rect, Direction } from '../typings';
 import { EventEmitter } from '../utils';
 import { sleep } from '../utils/sleepTimer';
 import { EntityEvent } from './../typings/index';
@@ -38,8 +38,8 @@ describe('game/services/View', () => {
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
     view.add(entity);
-    entity.emit(EntityEvent.SHOULD_UPDATE);
-    entity.emit(EntityEvent.DID_UPDATE);
+    entity.emit(EntityEvent.ShouldUpdate);
+    entity.emit(EntityEvent.DidUpdate);
 
     expect(view.eraseFromLayer).toHaveBeenCalledTimes(1);
     expect(view.drawOnLayer).toHaveBeenCalledTimes(1);
@@ -55,8 +55,8 @@ describe('game/services/View', () => {
     view.load(root);
     view.add(entity);
     const layerObjectsCount1 = Array.from(view.layers['tanks'].entities).length;
-    entity.emit(EntityEvent.SHOULD_BE_DESTROYED);
-    entity.emit(EntityEvent.DID_UPDATE);
+    entity.emit(EntityEvent.ShouldBeDestroyed);
+    entity.emit(EntityEvent.DidUpdate);
     const layerObjectsCount2 = Array.from(view.layers['tanks'].entities).length;
 
     expect(layerObjectsCount1).not.toBe(layerObjectsCount2);
@@ -90,7 +90,7 @@ describe('game/services/View', () => {
     const drawMainEntitySpriteSpy = jest.spyOn(game.view, 'drawMainEntitySprite');
     const setNextSpriteFrameSpy = jest.spyOn(game.view, 'setNextSpriteFrame').mockImplementation();
 
-    const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+    const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.Down });
     const startAnimationSpy = jest.spyOn(tank, 'startAnimation');
     game.addEntity(tank);
     tank.spawn({ posX: 1, posY: 1 });

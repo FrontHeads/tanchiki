@@ -1,10 +1,10 @@
 import './UserProfile.css';
 
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { type FC, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
-import { ButtonVariant } from '../../components/Button/typings';
+import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
@@ -12,7 +12,7 @@ import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppS
 import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { userProfileFieldList } from './data';
-import { AvatarFile, UserProfileForm } from './typings';
+import { type AvatarFile, type UserProfileForm } from './typings';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();

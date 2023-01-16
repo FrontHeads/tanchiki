@@ -1,4 +1,4 @@
-import { Entity, Tank, Terrain } from '../entities';
+import { type Entity, Tank, Terrain } from '../entities';
 import type { Rect } from '../typings';
 import { EntityEvent } from './../typings/index';
 import { Zone } from './';
@@ -102,9 +102,9 @@ describe('game/services/Zone', () => {
     zone.add(entity1);
     zone.add(entity2);
 
-    entity1.emit(EntityEvent.DID_UPDATE, entity1.getRect());
-    entity2.emit(EntityEvent.DID_UPDATE, entity2.getRect());
-    entity2.emit(EntityEvent.SHOULD_UPDATE, entity2.getRect());
+    entity1.emit(EntityEvent.DidUpdate, entity1.getRect());
+    entity2.emit(EntityEvent.DidUpdate, entity2.getRect());
+    entity2.emit(EntityEvent.ShouldUpdate, entity2.getRect());
 
     expect(zone.matrix[0][1][1]).toBe(entity1);
     expect(zone.matrix[1][1][1]).toBe(null);
@@ -122,7 +122,7 @@ describe('game/services/Zone', () => {
 
     zone.add(entity);
     entity.spawn();
-    entity.emit(EntityEvent.WILL_HAVE_NEW_POS, posState);
+    entity.emit(EntityEvent.WillHaveNewPos, posState);
 
     expect(posState.hasCollision).toBe(true);
   });
@@ -133,7 +133,7 @@ describe('game/services/Zone', () => {
 
     zone.add(entity);
     entity.spawn();
-    entity.emit(EntityEvent.DAMAGED, { posX: 2, posY: 2, width: 1, height: 1 });
+    entity.emit(EntityEvent.Damaged, { posX: 2, posY: 2, width: 1, height: 1 });
 
     expect(zone.matrix[0][1][1]).toBe(entity);
     expect(zone.matrix[0][1][2]).toBe(entity);
@@ -147,8 +147,8 @@ describe('game/services/Zone', () => {
 
     zone.add(entity);
     entity.spawn();
-    entity.emit(EntityEvent.DID_UPDATE, entity.getRect());
-    entity.emit(EntityEvent.SHOULD_BE_DESTROYED);
+    entity.emit(EntityEvent.DidUpdate, entity.getRect());
+    entity.emit(EntityEvent.ShouldBeDestroyed);
 
     expect(zone.matrix[0][1][1]).toBe(null);
   });

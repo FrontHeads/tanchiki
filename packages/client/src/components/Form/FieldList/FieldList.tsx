@@ -1,10 +1,10 @@
 import cn from 'classnames';
-import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { type PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { ValidationErrorList } from '../../../utils/validation/typings';
+import { type ValidationErrorList } from '../../../utils/validation/typings';
 import { Field } from './Field';
-import { FieldListProps } from './typings';
+import { type FieldListProps } from './typings';
 
 export const FieldList = <T extends Record<string, string>>({
   setFile,

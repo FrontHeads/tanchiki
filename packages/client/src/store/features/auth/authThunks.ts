@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { authAPI, SigninRequestData, SignupRequestData } from '../../../api/authAPI';
+import { type SigninRequestData, type SignupRequestData, authAPI } from '../../../api/authAPI';
 
 /**
  * Thunks - вызывают методы апи и полученные данные автоматически записывают в хранилище.

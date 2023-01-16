@@ -3,7 +3,7 @@ import { Direction, EntityEvent } from '../typings';
 import { Projectile, TankPlayer, Terrain } from './';
 
 function mockTank() {
-  const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+  const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.Down });
   return tank;
 }
 
@@ -17,7 +17,7 @@ describe('game/entities/Tank', () => {
     tank.canShoot = true;
     tank.frozen = false;
 
-    tank.on(EntityEvent.SHOOT, mockFn);
+    tank.on(EntityEvent.Shoot, mockFn);
     tank.shoot();
     tank.update();
 
@@ -31,7 +31,7 @@ describe('game/entities/Tank', () => {
 
     tank.spawn();
     tank.frozen = false;
-    tank.on(EntityEvent.SHOOT, mockFn);
+    tank.on(EntityEvent.Shoot, mockFn);
     tank.shoot();
     tank.update();
 
@@ -53,7 +53,7 @@ describe('game/entities/Tank', () => {
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
     tank.frozen = false;
-    tank.on(EntityEvent.SHOOT, mockFn);
+    tank.on(EntityEvent.Shoot, mockFn);
     tank.shoot();
     tank.update();
 
@@ -72,7 +72,7 @@ describe('game/entities/Tank', () => {
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
     tank.frozen = false;
-    tank.on(EntityEvent.SHOOT, mockFn);
+    tank.on(EntityEvent.Shoot, mockFn);
     tank.shoot();
     tank.update();
     tank.shoot();
@@ -96,7 +96,7 @@ describe('game/entities/Tank', () => {
     // По умолчанию у танка стоит false в течение 1 сек после спауна, пока работает анимация.
     tank.canShoot = true;
     tank.frozen = false;
-    tank.on(EntityEvent.SHOOT, mockFn);
+    tank.on(EntityEvent.Shoot, mockFn);
     tank.shoot();
     tank.update();
     tank.shoot();
@@ -130,14 +130,14 @@ describe('game/entities/Tank', () => {
     const tank = mockTank();
     const slideObserver = jest.fn();
     const tankUpdateCycles = 30;
-    tank.on(EntityEvent.SLIDE, slideObserver);
+    tank.on(EntityEvent.Slide, slideObserver);
 
     zone.add(ice);
     ice.spawn();
     zone.add(tank);
     tank.spawn({ posX: 0, posY: 0 });
     tank.frozen = false;
-    tank.move(Direction.DOWN);
+    tank.move(Direction.Down);
     tank.update();
     tank.stop();
 
@@ -156,7 +156,6 @@ describe('game/entities/Tank', () => {
     const zone = new Zone({ width: 10, height: 10 });
     const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 4, height: 4 });
     const tank = mockTank();
-    const slideObserver = jest.fn();
     const tankUpdateCycles = 30;
 
     zone.add(ice);
@@ -164,7 +163,7 @@ describe('game/entities/Tank', () => {
     zone.add(tank);
     tank.spawn({ posX: 0, posY: 0 });
     tank.frozen = false;
-    tank.move(Direction.DOWN);
+    tank.move(Direction.Down);
     tank.update();
     tank.stop();
 

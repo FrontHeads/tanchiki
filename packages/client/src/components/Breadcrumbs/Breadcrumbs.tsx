@@ -1,10 +1,11 @@
 import './Breadcrumbs.css';
 
 import cn from 'classnames';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { BreadcrumbsProps, BreadcrumbsVariant } from './typings';
+import { BreadcrumbsVariant } from './data';
+import { type BreadcrumbsProps } from './typings';
 
 export const Breadcrumbs: FC<BreadcrumbsProps> = ({ data, variant }) => {
   const breadcrumbsClassNames = cn('breadcrumbs', {

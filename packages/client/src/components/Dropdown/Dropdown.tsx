@@ -1,8 +1,8 @@
 import './Dropdown.css';
 
-import { cloneElement, FC, useEffect, useRef, useState } from 'react';
+import { type FC, cloneElement, useEffect, useRef, useState } from 'react';
 
-import { DropdownProps } from './typings';
+import { type DropdownProps } from './typings';
 
 export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems }) => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
-import { ControllerEvent, Direction, Fn } from '../typings';
+import { type Direction, ControllerEvent } from '../typings';
 import { EventEmitter } from '../utils';
-import { BindingConfig, KeyBinding } from './KeyBindings';
+import { type BindingConfig, type KeyBinding } from './KeyBindings';
 
 export class Controller extends EventEmitter<ControllerEvent> {
   activeDirection: Partial<Record<Direction, boolean>> = {};
@@ -60,12 +60,12 @@ export class Controller extends EventEmitter<ControllerEvent> {
   }
 
   keyPressed([action, direction]: KeyBinding) {
-    if (action === ControllerEvent.MOVE) {
+    if (action === ControllerEvent.Move) {
       this.activeDirection[direction] = true;
     }
     this.emit(action, direction);
 
-    if (action === ControllerEvent.SHOOT) {
+    if (action === ControllerEvent.Shoot) {
       if (this.shootProcess) {
         clearInterval(this.shootProcess);
         this.shootProcess = null;
@@ -77,16 +77,16 @@ export class Controller extends EventEmitter<ControllerEvent> {
   }
 
   keyReleased([action, direction]: KeyBinding) {
-    if (action === ControllerEvent.MOVE) {
+    if (action === ControllerEvent.Move) {
       delete this.activeDirection[direction];
       const activeDirection = Object.keys(this.activeDirection);
       if (!activeDirection.length) {
-        this.emit(ControllerEvent.STOP);
+        this.emit(ControllerEvent.Stop);
       } else {
         this.emit(action, activeDirection[0]);
       }
     }
-    if (action === ControllerEvent.SHOOT && this.shootProcess) {
+    if (action === ControllerEvent.Shoot && this.shootProcess) {
       clearInterval(this.shootProcess);
       this.shootProcess = null;
     }

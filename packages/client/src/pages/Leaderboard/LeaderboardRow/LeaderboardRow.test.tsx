@@ -1,6 +1,8 @@
 import '@testing-library/jest-dom';
+
 import { screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+
 import { renderWithRouter } from '../../../utils/testingUtils';
 import { LeaderboardRow } from './LeaderboardRow';
 

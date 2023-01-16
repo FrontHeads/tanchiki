@@ -12,8 +12,8 @@ describe('game/entities/Entity', () => {
     const mockFn = jest.fn();
     const state = { posX: 111, posY: 222 };
 
-    entity.on(EntityEvent.SHOULD_UPDATE, mockFn);
-    entity.on(EntityEvent.DID_UPDATE, mockFn);
+    entity.on(EntityEvent.ShouldUpdate, mockFn);
+    entity.on(EntityEvent.DidUpdate, mockFn);
     entity.setState(state);
 
     expect(entity).toHaveProperty('posX', 111);
@@ -43,7 +43,7 @@ describe('game/entities/Entity', () => {
     const entity = new TestEntity({ posX: 0, posY: 0, width: 4, height: 4 });
     const mockFn = jest.fn();
 
-    entity.on(EntityEvent.SHOULD_BE_DESTROYED, mockFn);
+    entity.on(EntityEvent.ShouldBeDestroyed, mockFn);
     entity.spawn({ posX: 1, posY: 2 });
     entity.despawn();
 
@@ -56,7 +56,7 @@ describe('game/entities/Entity', () => {
     const source = new TestEntity({ posX: 4, posY: 4, width: 4, height: 4 });
     const mockFn = jest.fn();
 
-    entity.on(EntityEvent.DAMAGED, mockFn);
+    entity.on(EntityEvent.Damaged, mockFn);
     entity.spawn({ posX: 1, posY: 2 });
     entity.takeDamage(source, { posX: 3, posY: 3, width: 1, height: 1 });
 
@@ -71,7 +71,7 @@ describe('game/entities/Entity', () => {
 
     const cancelAnimationSpy = jest.spyOn(entity, 'cancelAnimation');
 
-    entity.on(EntityEvent.SPAWN, () => {
+    entity.on(EntityEvent.Spawn, () => {
       entity.startAnimation({
         delay: 25,
         spriteCoordinates: spriteCoordinates['terrain.water'],

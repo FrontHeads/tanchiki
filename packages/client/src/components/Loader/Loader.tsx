@@ -1,8 +1,8 @@
 import './Loader.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
-import { LoaderProps } from './typings';
+import { type LoaderProps } from './typings';
 
 export const Loader: FC<LoaderProps> = props => {
   const testId = props['data-testid'] || 'loader';

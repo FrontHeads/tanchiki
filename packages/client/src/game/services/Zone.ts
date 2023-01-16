@@ -1,12 +1,12 @@
-import { Entity, EntityDynamic, Projectile, Tank } from '../entities';
+import { type Entity, EntityDynamic, Projectile, Tank } from '../entities';
 import type { PosState, Rect, Size } from '../typings';
 import { EntityEvent } from './../typings/index';
 
 enum ZoneLayers {
-  Main,
-  Secondary,
-  Projectiles,
-  Powerups,
+  Main = 0,
+  Secondary = 1,
+  Projectiles = 2,
+  Powerups = 3,
 }
 
 export class Zone {
@@ -110,7 +110,7 @@ export class Zone {
       return;
     }
 
-    entity.on(EntityEvent.WILL_HAVE_NEW_POS, (posState: PosState) => {
+    entity.on(EntityEvent.WillHaveNewPos, (posState: PosState) => {
       const rect = posState.nextRect;
       if (this.hasCollision(rect, entity)) {
         posState.hasCollision = true;
@@ -124,7 +124,7 @@ export class Zone {
       }
     });
 
-    entity.on(EntityEvent.SHOULD_UPDATE, (newState: Partial<Entity>) => {
+    entity.on(EntityEvent.ShouldUpdate, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
@@ -134,29 +134,29 @@ export class Zone {
       this.deleteEntityFromMatrix(entity);
     });
 
-    entity.on(EntityEvent.DID_UPDATE, (newState: Partial<Entity>) => {
+    entity.on(EntityEvent.DidUpdate, (newState: Partial<Entity>) => {
       if (!newState || !('posX' in newState) || !('posY' in newState)) {
         return;
       }
       this.writeEntityToMatrix(entity);
     });
 
-    entity.on(EntityEvent.SHOULD_BE_DESTROYED, () => {
+    entity.on(EntityEvent.ShouldBeDestroyed, () => {
       this.deleteEntityFromMatrix(entity);
     });
 
-    entity.on(EntityEvent.WILL_DO_DAMAGE, (rect: Rect) => {
+    entity.on(EntityEvent.WillDoDamage, (rect: Rect) => {
       this.doDamage(rect, entity);
     });
 
     if (entity instanceof Tank) {
-      entity.on(EntityEvent.STOP, () => {
+      entity.on(EntityEvent.Stop, () => {
         entity.slide(this.shouldSlide(entity.nextRect || entity.lastRect || entity.getRect()));
       });
     }
 
     if (entity.type === 'brickWall') {
-      entity.on(EntityEvent.DAMAGED, (rect: Rect) => {
+      entity.on(EntityEvent.Damaged, (rect: Rect) => {
         const layer = this.getLayerByEntityType(entity);
         this.updateMatrix(layer, rect, null);
       });

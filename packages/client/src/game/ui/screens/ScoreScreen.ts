@@ -1,6 +1,6 @@
 import { Color } from '../../data/colors';
 import { spriteCoordinates } from '../../data/constants';
-import { EnemiesKilledState, GameMode } from '../../typings';
+import { type EnemiesKilledState, type GameMode } from '../../typings';
 import { Screen } from './Screen';
 
 type ScoreScreenState = {

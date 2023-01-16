@@ -1,4 +1,4 @@
-import { LeaderboardFieldProps } from './LeaderboardField/typings';
+import { type LeaderboardFieldProps } from './LeaderboardField/typings';
 
 export const leaderboardFields: LeaderboardFieldProps[] = [
   {

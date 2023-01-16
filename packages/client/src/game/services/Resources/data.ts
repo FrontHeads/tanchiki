@@ -1,4 +1,4 @@
-import { AssetPathList } from './typings';
+import { type AssetPathList } from './typings';
 
 export const timeoutMsg =
   'Не удалось загрузить данные для игры в течение минуты. Загрузка отменена. Попробуйте обновить страницу.';

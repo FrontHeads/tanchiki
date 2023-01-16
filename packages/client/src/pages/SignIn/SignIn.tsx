@@ -1,9 +1,9 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { type FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
-import { ButtonVariant } from '../../components/Button/typings';
+import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
@@ -11,7 +11,7 @@ import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector 
 import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
-import { SignInForm } from './typings';
+import { type SignInForm } from './typings';
 
 export const SignIn: FC = () => {
   const dispatch = useAppDispatch();

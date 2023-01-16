@@ -1,11 +1,11 @@
 import './Forum.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import { generateMetaTags } from '../../utils/seoUtils';
 import { DUMMY_FORUM as sectionList } from './DummyData';
 import { ForumSectionList } from './ForumSectionList';
-import { ForumProps } from './typing';
+import { type ForumProps } from './typing';
 
 export const Forum: FC<ForumProps> = () => {
   const pageTitle = 'Форум';

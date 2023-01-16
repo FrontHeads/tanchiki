@@ -2,7 +2,7 @@ import { spriteCoordinates } from '../data/constants';
 import { Loop } from '../services';
 import { EntityEvent } from '../typings';
 import { sleep } from '../utils';
-import { Score, TankEnemy } from './';
+import { type TankEnemy, Score } from './';
 
 describe('game/entities/Score', () => {
   it('should have right properties', () => {
@@ -27,7 +27,7 @@ describe('game/entities/Score', () => {
     loop.load();
     loop.add(score);
     score.spawn();
-    score.on(EntityEvent.DESPAWN, despawnObserver);
+    score.on(EntityEvent.Despawn, despawnObserver);
 
     await sleep(500);
 
