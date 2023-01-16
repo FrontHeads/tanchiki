@@ -1,6 +1,6 @@
-import { Game } from './';
 import { Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
 import { EnemiesKilledState, EnemyVariant, EntityEvent, GameMode, PlayerVariant } from '../typings';
+import { Game } from './';
 
 export class Statistics {
   game: Game;

@@ -5,6 +5,7 @@ import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from
 import { Tanchiki } from '../../game';
 import { GameEvents, ScreenType } from '../../game/typings';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
+import { generateMetaTags } from '../../utils/seoUtils';
 
 export const Game = () => {
   const dispatch = useAppDispatch();
@@ -33,5 +34,10 @@ export const Game = () => {
     }
   }, [isTabActive]);
 
-  return <div ref={gameRoot} className="game__root"></div>;
+  return (
+    <>
+      {generateMetaTags({ title: 'Игра' })}
+      <div ref={gameRoot} className="game__root"></div>
+    </>
+  );
 };
