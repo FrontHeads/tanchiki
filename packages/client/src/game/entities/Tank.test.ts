@@ -156,7 +156,6 @@ describe('game/entities/Tank', () => {
     const zone = new Zone({ width: 10, height: 10 });
     const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 4, height: 4 });
     const tank = mockTank();
-    const slideObserver = jest.fn();
     const tankUpdateCycles = 30;
 
     zone.add(ice);
