@@ -1,5 +1,5 @@
-import { type SortOption } from '../store/features/leaderboard/typings';
 import { type LEADERBOARD_TEAM_NAME } from '../config/constants';
+import { type SortOption } from '../store/features/leaderboard/typings';
 
 export type APIError = {
   reason: string;

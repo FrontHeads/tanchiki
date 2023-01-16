@@ -9,6 +9,7 @@ import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { PATH } from '../../config/constants';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
+import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { userProfileFieldList } from './data';
 import { type AvatarFile, type UserProfileForm } from './typings';
@@ -60,25 +61,28 @@ export const UserProfile: FC = () => {
   const header = userProfile?.first_name;
 
   return (
-    <div className="user-profile">
-      <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
+    <>
+      {generateMetaTags({ title: 'Редактирование профиля' })}
+      <div className="user-profile">
+        <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
-      <Form onSubmitHandler={onFormSubmit} header={header}>
-        <FieldList<UserProfileForm>
-          setFile={setAvatarFile}
-          fieldList={userProfileFieldList}
-          isFormSubmitted={isFormSubmitted}
-          setIsFormSubmitted={setIsFormSubmitted}
-          onFormSubmitCallback={onFormSubmitCallback}
-          formData={formData}
-          setFormData={setFormData}
-          validation={validation}
-          disabled={isProfileLoading}
-        />
-        <div className="form__buttons-wrapper">
-          <Button text="Сохранить изменения" type="submit" variant={ButtonVariant.Primary} />
-        </div>
-      </Form>
-    </div>
+        <Form onSubmitHandler={onFormSubmit} header={header}>
+          <FieldList<UserProfileForm>
+            setFile={setAvatarFile}
+            fieldList={userProfileFieldList}
+            isFormSubmitted={isFormSubmitted}
+            setIsFormSubmitted={setIsFormSubmitted}
+            onFormSubmitCallback={onFormSubmitCallback}
+            formData={formData}
+            setFormData={setFormData}
+            validation={validation}
+            disabled={isProfileLoading}
+          />
+          <div className="form__buttons-wrapper">
+            <Button text="Сохранить изменения" type="submit" variant={ButtonVariant.Primary} />
+          </div>
+        </Form>
+      </div>
+    </>
   );
 };
