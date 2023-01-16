@@ -30,5 +30,9 @@ export const convertMsToTime = (milliseconds: number) => {
 
   minutes = minutes % 60;
 
+  if (hours === 0 && minutes === 0) {
+    minutes = 1;
+  }
+
   return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}`;
 };
