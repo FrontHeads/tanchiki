@@ -300,3 +300,9 @@ export enum ControllerEvent {
 }
 
 export type EnemiesKilledState = Record<EnemyVariant, number[]>;
+
+export type StatisticsData = {
+  score: number;
+  matches: number;
+  time: number;
+};

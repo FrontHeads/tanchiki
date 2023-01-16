@@ -1,5 +1,14 @@
 import { Entity } from '../entities';
-import { ControllerEvent, Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
+import {
+  ControllerEvent,
+  Direction,
+  GameEvents,
+  GameSettings,
+  MainMenuState,
+  ScenarioEvent,
+  ScreenType,
+  StatisticsData,
+} from '../typings';
 import { Overlay } from '../ui';
 import { EventEmitter, sleep } from '../utils';
 import { levels } from './../data/levels';
@@ -21,11 +30,16 @@ export class Game extends EventEmitter {
   controllerWasd: Controller;
   controllerArrows: Controller;
   statistics: Statistics;
+  /** Настройки игрового экрана. Размеры заданы в игровых клетках.*/
   settings: GameSettings = { width: 62, height: 56, boundarySize: 2, indicatorsSidebarSize: 6 };
   screen: ScreenType = ScreenType.Loading;
   mainMenuState = MainMenuState.SINGLEPLAYER;
+  /** Текущий игровой уровень.*/
   level = 1;
   maxLevels = levels.length;
+  /** Используется при отправке статистики на сервер и отображается на экране с очками.
+   * Пустое значение, если игрок не авторизован.*/
+  username = '';
 
   private constructor() {
     super();
@@ -107,6 +121,13 @@ export class Game extends EventEmitter {
     this.zone.add(entity);
     this.audioManager.add(entity);
     this.statistics.add(entity);
+  }
+
+  /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
+  updateLeaderboard(data: StatisticsData) {
+    if (this.username) {
+      this.emit(GameEvents.UpdateLeaderboard, { username: this.username, ...data });
+    }
   }
 
   togglePause(newState: boolean | null = null) {
@@ -295,10 +316,11 @@ export class Game extends EventEmitter {
 
   initGameScore() {
     return new Promise<void>(resolve => {
+      const meta = { level: this.level, username: this.username };
       const stats = this.statistics.getCurrentStatistics();
       this.reset();
       this.screen = ScreenType.Score;
-      this.overlay.show(this.screen, { level: this.level, ...stats });
+      this.overlay.show(this.screen, { ...meta, ...stats });
       const redirectDelay = 7000;
 
       this.overlay.on('score', () => {
@@ -306,7 +328,7 @@ export class Game extends EventEmitter {
       });
 
       const skip = () => {
-        this.overlay.show(this.screen, { level: this.level, ...stats, skip: true });
+        this.overlay.show(this.screen, { ...meta, ...stats, skip: true });
         this.controllerAll.offAll(ControllerEvent.ESCAPE);
         this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
         this.controllerAll.offAll(ControllerEvent.SHOOT);

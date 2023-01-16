@@ -1,5 +1,5 @@
 import { Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
-import { EnemiesKilledState, EnemyVariant, EntityEvent, GameEvents, GameMode, PlayerVariant } from '../typings';
+import { EnemiesKilledState, EnemyVariant, EntityEvent, GameMode, PlayerVariant } from '../typings';
 import { Game } from './';
 
 export class Statistics {
@@ -40,15 +40,14 @@ export class Statistics {
     this.mapElapsedTime = 0;
   }
 
-  /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
-  updateLeaderboard() {
+  /** Отправляет данные для обновления лидерборда. */
+  sendRecord() {
     // Если не синглплеер, то лидерборд не обновляем
     if (this.mode !== 'SINGLEPLAYER') {
       return;
     }
 
-    // TODO: нужно переделать, т.к. странно, что кто-то снаружи может заставить другой объект сгенерировать событие
-    this.game.emit(GameEvents.UpdateLeaderboard, {
+    this.game.updateLeaderboard({
       score: this.sessionScore[0],
       matches: this.sessionCompletedMaps,
       time: this.sessionElapsedTime,
@@ -168,6 +167,6 @@ export class Statistics {
     if (!gameover) {
       ++this.sessionCompletedMaps;
     }
-    this.updateLeaderboard();
+    this.sendRecord();
   }
 }

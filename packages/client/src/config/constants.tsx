@@ -51,7 +51,7 @@ export const YANDEX_API_ENDPOINTS = {
   },
 };
 
-export const LEADERBOARD_TEAM_NAME = 'FrontHeadsTest';
+export const LEADERBOARD_TEAM_NAME = 'FrontHeadsMain1';
 export const LEADERBOARD_SORT_FIELD = 'score';
 export const LEADERBOARD_DEFAULT_PAGE = 0;
 export const LEADERBOARD_RECORDS_DISPLAY_LIMIT = 999;
