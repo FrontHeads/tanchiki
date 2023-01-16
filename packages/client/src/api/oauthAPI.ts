@@ -1,21 +1,22 @@
 import { YANDEX_API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
 
-export type OauthPostRequestData = {
+export type OAuthPostRequestData = {
   code: string | null;
   redirect_uri: string;
 };
-export type OauthGetServiceRequestData = {
+export type OAuthGetServiceRequestData = {
   redirect_uri: string;
 };
 
-type OauthGetServiceResponseData = { service_id: string };
+type OAuthGetServiceResponseData = { service_id: string };
 
-type OauthPostResponseData = { reason: string } | 'OK';
+type OAuthPostResponseData = { reason: string } | 'OK';
 
 export const oauthAPI = {
-  getServiceId: (params: OauthGetServiceRequestData) =>
-    HTTP.get<OauthGetServiceResponseData>(YANDEX_API_ENDPOINTS.AUTH.GETSERVICEID, { params }),
+  getServiceId: (params: OAuthGetServiceRequestData) =>
+    HTTP.get<OAuthGetServiceResponseData>(YANDEX_API_ENDPOINTS.OAUTH.GET_SERVICE_ID, { params }),
 
-  postOauth: (data: OauthPostRequestData) => HTTP.post<OauthPostResponseData>(YANDEX_API_ENDPOINTS.AUTH.POST, { data }),
+  postOAuth: (data: OAuthPostRequestData) =>
+    HTTP.post<OAuthPostResponseData>(YANDEX_API_ENDPOINTS.OAUTH.POST, { data }),
 };

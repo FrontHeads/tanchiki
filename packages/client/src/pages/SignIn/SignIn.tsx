@@ -35,7 +35,7 @@ export const SignIn: FC = () => {
   };
 
   const oAuthHandler = () => {
-    dispatch(oauthThunks.getOauthCode());
+    dispatch(oauthThunks.getOAuthCode());
   };
 
   useEffect(() => {
