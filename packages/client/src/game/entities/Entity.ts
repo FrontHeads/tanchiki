@@ -17,22 +17,38 @@ import {
 import { EventEmitter } from '../utils';
 
 export abstract class Entity extends EventEmitter<EntityEvent> {
+  /** Расположение объекта по оси X в игровых клетках. */
   posX = 0;
+  /** Расположение объекта по оси Y в игровых клетках. */
   posY = 0;
+  /** Ширина объекта в игровых клетках. */
   width = 0;
+  /** Высота объекта в игровых клетках. */
   height = 0;
+  /** Направление, куда смотрит или движется объект. */
   direction = Direction.Up;
+  /** Принадлежность объекта (игрок, враг, нейтральная сущность). */
   role: EntityRole = 'neutral';
+  /** Тип объекта (например: танк, снаряд, дерево). */
   type: EntityType = 'custom';
-  alignedToGrid = true;
+  /** Находится ли объект в игре. При уничтожении - false. */
   spawned = false;
+  /** Стоит ли объект ровно по сетке в соответствии с матрицей Zone
+   * (для отрисовки плавных движений объект может иметь дробные координаты). */
+  alignedToGrid = true;
+  /** Может ли объект двигаться (к примеру, танки - могут). */
   movable = false;
+  /** Может ли объект летать (к примеру, снаряды - могут). */
   flying = false;
+  /** Можно ли переезжать через сущность (к примеру, через деревья - можно). */
   crossable = false;
+  /** Можно ли подбить объект снарядом (к примеру, лёд - нельзя). */
   hittable = true;
-
+  /** Цвет объекта, если вдруг спрайты не подгрузятся или сбросятся. */
   color: Color | string = Color.Grey;
+  /** Должен ли объект быть убран из игры. */
   shouldBeDestroyed = false;
+  /** Кем уничтожен объект. */
   destroyedBy: Entity | null = null;
   /** Значение true делает танк неуязвимым для снарядов. */
   invincible = false;
@@ -48,16 +64,19 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     Object.assign(this, props);
   }
 
+  /** Изменяет состояние объекта и вызывает события, которые отлавливаются в сервисах. */
   setState(newState: Partial<Entity>) {
     this.emit(EntityEvent.ShouldUpdate, newState);
     Object.assign(this, newState);
     this.emit(EntityEvent.DidUpdate, newState);
   }
 
+  /** Возвращает прямоугольник, на котором находится объект. */
   getRect() {
     return { posX: this.posX, posY: this.posY, width: this.width, height: this.height };
   }
 
+  /** Вводит объект в игру, размещая его по заданным координатам. */
   spawn(coords?: Pos) {
     const { posX, posY } = coords || { posX: this.posX, posY: this.posY };
 
@@ -77,6 +96,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     return this.spawned;
   }
 
+  /** Убирает объект из игры. */
   despawn() {
     if (!this.spawned) {
       return;
@@ -87,11 +107,13 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     this.spawned = false;
   }
 
+  /** Взрывает объект. */
   explode() {
     this.emit(EntityEvent.Exploding);
     this.despawn();
   }
 
+  /** Наносит урон по объекту. */
   takeDamage(source: Entity, rect: Rect) {
     this.emit(EntityEvent.Damaged, { ...rect, source });
   }
