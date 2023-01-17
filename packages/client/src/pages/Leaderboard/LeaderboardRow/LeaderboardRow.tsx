@@ -1,9 +1,9 @@
 import './LeaderboardRow.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import { leaderboardSelectors, useAppSelector } from '../../../store';
-import { LeaderboardRowProps } from './typings';
+import { type LeaderboardRowProps } from './typings';
 
 export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { username, score, matches, rate }, place }) => {
   const { sortDirection } = useAppSelector(leaderboardSelectors.all);

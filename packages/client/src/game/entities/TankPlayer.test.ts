@@ -4,7 +4,7 @@ import { sleep } from '../utils';
 import { TankPlayer } from './';
 
 function mockTank() {
-  const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.DOWN });
+  const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.Down });
   return tank;
 }
 
@@ -18,7 +18,7 @@ describe('game/entities/TankPlayer', () => {
     loop.load();
     loop.add(tank);
     tank.spawn();
-    tank.on(EntityEvent.READY, readyObserver);
+    tank.on(EntityEvent.Ready, readyObserver);
 
     await sleep(1000);
 

@@ -15,7 +15,7 @@ describe('game/services/IndicatorManager', () => {
   indicatorManager.renderTankEnemiesLeft(tankEnemiesLeft);
 
   const livesNumber = 2;
-  indicatorManager.renderPlayerLives(Player.PLAYER1, livesNumber);
+  indicatorManager.renderPlayerLives(Player.Player1, livesNumber);
 
   it('should render current level', () => {
     const layerItem = [...game.view.layers[layerName].entities].find(item => {
@@ -55,7 +55,7 @@ describe('game/services/IndicatorManager', () => {
 
   it('should render player lives number', () => {
     const layerItem = [...game.view.layers[layerName].entities].find(item => {
-      if (item.instance instanceof UIElement && item.instance.indicatorName === Player.PLAYER1 + IndicatorNames.Lives) {
+      if (item.instance instanceof UIElement && item.instance.indicatorName === Player.Player1 + IndicatorNames.Lives) {
         return true;
       }
     });
@@ -66,17 +66,17 @@ describe('game/services/IndicatorManager', () => {
   });
 
   it('should rerender and reduce the number of lives', () => {
-    indicatorManager.renderPlayerLives(Player.PLAYER1, livesNumber - 1);
+    indicatorManager.renderPlayerLives(Player.Player1, livesNumber - 1);
 
     let counterLivesIndicator = 0;
     [...game.view.layers[layerName].entities].forEach(item => {
-      if (item.instance instanceof UIElement && item.instance.indicatorName === Player.PLAYER1 + IndicatorNames.Lives) {
+      if (item.instance instanceof UIElement && item.instance.indicatorName === Player.Player1 + IndicatorNames.Lives) {
         counterLivesIndicator++;
       }
     });
 
     const layerItem = [...game.view.layers[layerName].entities].find(item => {
-      if (item.instance instanceof UIElement && item.instance.indicatorName === Player.PLAYER1 + IndicatorNames.Lives) {
+      if (item.instance instanceof UIElement && item.instance.indicatorName === Player.Player1 + IndicatorNames.Lives) {
         return true;
       }
     });

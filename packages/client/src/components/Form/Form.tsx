@@ -1,8 +1,8 @@
 import './Form.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
-import { FormProps } from './typings';
+import { type FormProps } from './typings';
 
 export const Form: FC<FormProps> = ({ onSubmitHandler, header = '', children, ...rest }) => {
   return (

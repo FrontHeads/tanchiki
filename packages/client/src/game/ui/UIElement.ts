@@ -1,5 +1,5 @@
 import { Entity } from '../entities';
-import { UIElementSettings } from '../typings';
+import { type UIElementSettings } from '../typings';
 import { EntityEvent } from './../typings/index';
 
 export class UIElement extends Entity {
@@ -18,10 +18,10 @@ export class UIElement extends Entity {
   render() {
     const newState = { posX: this.posX, posY: this.posY };
     if (this.text) {
-      this.emit(EntityEvent.SHOULD_RENDER_TEXT, newState);
+      this.emit(EntityEvent.ShouldRenderText, newState);
     } else {
-      this.emit(EntityEvent.SHOULD_UPDATE, newState);
-      this.emit(EntityEvent.DID_UPDATE, newState);
+      this.emit(EntityEvent.ShouldUpdate, newState);
+      this.emit(EntityEvent.DidUpdate, newState);
     }
   }
 }

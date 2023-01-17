@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import { FormInputAndHeadingList } from '../../../app.typings';
+import { type FormInputAndHeadingList } from '../../../app.typings';
 import { FieldList } from './FieldList';
 
 describe('FieldList', () => {

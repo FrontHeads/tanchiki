@@ -1,10 +1,11 @@
 import './Game.css';
 
 import { useEffect, useRef } from 'react';
-import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
+
 import { Tanchiki } from '../../game';
 import { GameEvents, ScreenType } from '../../game/typings';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
+import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
 
 export const Game = () => {

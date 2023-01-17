@@ -1,10 +1,10 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Paths } from '../../config/constants';
 import { Button } from '../Button';
-import { ButtonVariant } from '../Button/typings';
-import { ErrorBodyProps } from './typings';
+import { ButtonVariant } from '../Button/data';
+import { type ErrorBodyProps } from './typings';
 
 export const ErrorBody: FC<ErrorBodyProps> = ({ status, message, isRefresh = false }) => {
   const navigate = useNavigate();

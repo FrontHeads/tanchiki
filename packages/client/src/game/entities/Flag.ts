@@ -20,11 +20,11 @@ export class Flag extends Entity {
   }
 
   registerFlagEvents() {
-    this.on(EntityEvent.DAMAGED, ({ source }) => {
+    this.on(EntityEvent.Damaged, ({ source }) => {
       if (!this.destroyed) {
         this.mainSpriteCoordinates = spriteCoordinates['base.heart.dead'];
         this.refreshSprite();
-        this.emit(EntityEvent.DESTROYED, source);
+        this.emit(EntityEvent.Destroyed, source);
         this.destroyed = true;
       }
     });

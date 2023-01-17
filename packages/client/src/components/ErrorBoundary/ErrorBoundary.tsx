@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 import { ErrorBody } from '../ErrorBody/ErrorBody';
-import { Props, State } from './typings';
+import { type Props, type State } from './typings';
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {

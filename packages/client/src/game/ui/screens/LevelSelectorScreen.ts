@@ -1,5 +1,5 @@
 import { Color } from '../../data/colors';
-import { LevelSelectorScreenProps } from './LevelSelectorScreen.typings';
+import { type LevelSelectorScreenProps } from './LevelSelectorScreen.typings';
 import { Screen } from './Screen';
 
 export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {

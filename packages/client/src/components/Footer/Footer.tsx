@@ -1,6 +1,6 @@
 import './Footer.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import fhLogo from '/assets/img/fh_logo.png';
 

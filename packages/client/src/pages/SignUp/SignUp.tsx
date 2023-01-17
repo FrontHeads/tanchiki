@@ -1,9 +1,9 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { type FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
-import { ButtonVariant } from '../../components/Button/typings';
+import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
@@ -11,7 +11,7 @@ import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector 
 import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { signUpFieldList, signUpFormInitialState } from './data';
-import { SignUpForm } from './typings';
+import { type SignUpForm } from './typings';
 
 export const SignUp: FC = () => {
   // Оборачиваем в константу из-за каррирования в useAppDispatch() и useNavigate()

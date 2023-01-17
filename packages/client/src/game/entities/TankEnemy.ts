@@ -1,11 +1,11 @@
 import { Color } from '../data/colors';
 import { spriteCoordinates } from '../data/constants';
-import { type EnemyVariant, Direction, EntityDynamicSettings, EntityEvent, Speed } from '../typings';
+import { type EnemyVariant, type EntityDynamicSettings, Direction, EntityEvent, Speed } from '../typings';
 import { rand } from '../utils';
 import { Tank } from './Tank';
 
 export class TankEnemy extends Tank {
-  lastDirection = Direction.DOWN;
+  lastDirection = Direction.Down;
   /** Разновидность вражеского танка */
   variant: EnemyVariant = 'BASIC';
 
@@ -23,8 +23,8 @@ export class TankEnemy extends Tank {
   }
 
   registerTankEnemyEvents() {
-    this.on(EntityEvent.READY, () => {
-      this.move(Direction.DOWN);
+    this.on(EntityEvent.Ready, () => {
+      this.move(Direction.Down);
       this.autoMove();
       this.autoShoot();
     });
@@ -50,10 +50,10 @@ export class TankEnemy extends Tank {
 
   getRandomDirection() {
     const directions = [
-      ...new Array(1).fill(Direction.UP),
-      ...new Array(6).fill(Direction.DOWN),
-      ...new Array(3).fill(Direction.LEFT),
-      ...new Array(3).fill(Direction.RIGHT),
+      ...new Array(1).fill(Direction.Up),
+      ...new Array(6).fill(Direction.Down),
+      ...new Array(3).fill(Direction.Left),
+      ...new Array(3).fill(Direction.Right),
     ];
 
     return directions[Math.floor(Math.random() * directions.length)];
@@ -75,10 +75,10 @@ export class TankEnemy extends Tank {
       newDirection = this.getRandomDirection();
     } while (
       this.lastDirection === newDirection ||
-      (newDirection === Direction.UP && this.posY === 2) ||
-      (newDirection === Direction.DOWN && this.posY === 50) ||
-      (newDirection === Direction.LEFT && this.posX === 2) ||
-      (newDirection === Direction.RIGHT && this.posX === 50)
+      (newDirection === Direction.Up && this.posY === 2) ||
+      (newDirection === Direction.Down && this.posY === 50) ||
+      (newDirection === Direction.Left && this.posX === 2) ||
+      (newDirection === Direction.Right && this.posX === 50)
     );
 
     this.lastDirection = newDirection;

@@ -2,36 +2,36 @@ import { Direction } from '../typings';
 import { ControllerEvent } from './../typings/index';
 
 export type KeyBinding =
-  | [ControllerEvent.MOVE, Direction]
-  | [ControllerEvent.SHOOT]
-  | [ControllerEvent.PAUSE]
-  | [ControllerEvent.MUTE]
-  | [ControllerEvent.FULLSCREEN]
-  | [ControllerEvent.ESCAPE];
+  | [ControllerEvent.Move, Direction]
+  | [ControllerEvent.Shoot]
+  | [ControllerEvent.Pause]
+  | [ControllerEvent.Mute]
+  | [ControllerEvent.Fullscreen]
+  | [ControllerEvent.Escape];
 
 export type BindingConfig = Record<string, KeyBinding>;
 
 const KeyBindingsGeneral: BindingConfig = {
-  KeyP: [ControllerEvent.PAUSE],
-  KeyM: [ControllerEvent.MUTE],
-  KeyF: [ControllerEvent.FULLSCREEN],
-  Escape: [ControllerEvent.ESCAPE],
+  KeyP: [ControllerEvent.Pause],
+  KeyM: [ControllerEvent.Mute],
+  KeyF: [ControllerEvent.Fullscreen],
+  Escape: [ControllerEvent.Escape],
 };
 
 export const KeyBindingsWasd: BindingConfig = {
-  KeyW: [ControllerEvent.MOVE, Direction.UP],
-  KeyA: [ControllerEvent.MOVE, Direction.LEFT],
-  KeyS: [ControllerEvent.MOVE, Direction.DOWN],
-  KeyD: [ControllerEvent.MOVE, Direction.RIGHT],
-  Space: [ControllerEvent.SHOOT],
+  KeyW: [ControllerEvent.Move, Direction.Up],
+  KeyA: [ControllerEvent.Move, Direction.Left],
+  KeyS: [ControllerEvent.Move, Direction.Down],
+  KeyD: [ControllerEvent.Move, Direction.Right],
+  Space: [ControllerEvent.Shoot],
   ...KeyBindingsGeneral,
 };
 
 export const KeyBindingsArrows: BindingConfig = {
-  ArrowUp: [ControllerEvent.MOVE, Direction.UP],
-  ArrowLeft: [ControllerEvent.MOVE, Direction.LEFT],
-  ArrowDown: [ControllerEvent.MOVE, Direction.DOWN],
-  ArrowRight: [ControllerEvent.MOVE, Direction.RIGHT],
-  Enter: [ControllerEvent.SHOOT],
+  ArrowUp: [ControllerEvent.Move, Direction.Up],
+  ArrowLeft: [ControllerEvent.Move, Direction.Left],
+  ArrowDown: [ControllerEvent.Move, Direction.Down],
+  ArrowRight: [ControllerEvent.Move, Direction.Right],
+  Enter: [ControllerEvent.Shoot],
   ...KeyBindingsGeneral,
 };

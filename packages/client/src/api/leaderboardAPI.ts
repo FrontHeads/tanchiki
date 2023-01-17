@@ -1,11 +1,11 @@
 import { LEADERBOARD_TEAM_NAME, YANDEX_API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
-import { ResponseType } from './../utils/HTTP/HTTP';
+import { type ResponseType } from './../utils/HTTP/HTTP';
 import {
-  GetLeaderboardResponseData,
-  LeaderboardRecord,
-  LeaderboardRequest,
-  NewLeaderboardRecordRequest,
+  type GetLeaderboardResponseData,
+  type LeaderboardRecord,
+  type LeaderboardRequest,
+  type NewLeaderboardRecordRequest,
 } from './typings';
 
 export const leaderboardAPI = {

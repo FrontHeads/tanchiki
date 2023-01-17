@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../store';
-import { UIState } from './typings';
+import { type RootState } from '../../store';
+import { type UIState } from './typings';
 
 export const UISlice = createSlice({
   name: 'UI',

@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, MouseEventHandler, ReactElement } from 'react';
+import { type ButtonHTMLAttributes, type MouseEventHandler, type ReactElement } from 'react';
 
 export type DropdownMenuItems = {
   title: string;
