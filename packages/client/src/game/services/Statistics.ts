@@ -1,11 +1,5 @@
 import { type Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
-import {
-  type EnemiesKilledState,
-  type EnemyVariant,
-  type GameMode,
-  type PlayerVariant,
-  EntityEvent,
-} from '../typings';
+import { type EnemiesKilledState, type EnemyVariant, type GameMode, type PlayerVariant, EntityEvent } from '../typings';
 import { type Game } from './';
 
 export class Statistics {

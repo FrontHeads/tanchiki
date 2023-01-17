@@ -69,7 +69,7 @@ describe('game/services/Statistics', () => {
     game.statistics.startMap();
     game.statistics.stopTimer();
 
-    await sleep(100); 
+    await sleep(100);
 
     expect(game.statistics.mapElapsedTime < 10).toBe(true);
 
