@@ -1,5 +1,4 @@
-import { type PayloadAction,createSelector, createSlice } from '@reduxjs/toolkit';
-
+import { type PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import { type LeaderboardRecord } from '../../../api/typings';
 import { type RootState } from '../../store';
 import { leaderboardThunks } from './leaderboardThunks';
