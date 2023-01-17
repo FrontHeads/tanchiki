@@ -38,10 +38,8 @@ export const Root: FC = () => {
     }
 
     data.user.then(response => {
-      if (response) {
-        return dispatch(authActions.setUserProfile(response.data));
-      }
-      return null;
+      const profileData = response ? response.data : null;
+      return dispatch(authActions.setUserProfile(profileData));
     });
   }, [data]);
 
