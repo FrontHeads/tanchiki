@@ -135,11 +135,13 @@ export class Game extends EventEmitter {
       this.loop.start();
       this.controllerWasd.load();
       this.controllerArrows.load();
+      this.statistics.startTimer();
     } else if (newState === true || !this.paused) {
       this.overlay.show(ScreenType.Pause);
       this.loop.stop();
       this.controllerWasd.unload();
       this.controllerArrows.unload();
+      this.statistics.stopTimer();
     }
     this.paused = !this.paused;
     this.audioManager.emit('pause', this.paused);
