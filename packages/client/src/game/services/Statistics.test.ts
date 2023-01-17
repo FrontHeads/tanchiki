@@ -1,7 +1,7 @@
 import { Explosion, Projectile, TankEnemy, TankPlayer } from '../entities';
+import { GameEvents } from '../typings';
 import { sleep } from '../utils';
 import { Game } from './';
-import { GameEvents } from '../typings';
 
 let game: Game;
 
@@ -9,6 +9,7 @@ describe('game/services/Statistics', () => {
   it('should start session', () => {
     game = Game.create();
     game.init(document.body);
+    game.username = 'TestUser';
     game.audioManager.playSound = jest.fn();
     game.statistics.startSession('SINGLEPLAYER');
     game.statistics.startMap();

@@ -1,6 +1,6 @@
 import { Color } from '../../data/colors';
 import { spriteCoordinates } from '../../data/constants';
-import { EnemiesKilledState, GameMode } from '../../typings';
+import { type EnemiesKilledState, type GameMode } from '../../typings';
 import { Screen } from './Screen';
 
 type ScoreScreenState = {
@@ -10,6 +10,7 @@ type ScoreScreenState = {
   mapEnemiesKilledCount: EnemiesKilledState;
   mapEnemiesKilledScore: EnemiesKilledState;
   level: number;
+  username: string;
   skip?: boolean;
 };
 
@@ -31,6 +32,8 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     spriteCoordinates['tank.enemy.default.d'].UP,
   ];
   level!: number;
+  playerOneName = 'ИГРОК 1';
+  playerTwoName = 'ИГРОК 2';
   sessionScore!: number[];
   mapEnemiesKilledTotal!: number[];
   mapEnemiesKilledCount!: number[][];
@@ -48,6 +51,9 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     };
 
     this.mode = state.mode;
+    if (state.username && this.mode === 'SINGLEPLAYER') {
+      this.playerOneName = state.username;
+    }
     this.level = state.level;
     this.sessionScore = state.sessionScore;
     this.mapEnemiesKilledTotal = state.mapEnemiesKilledTotal;
@@ -174,7 +180,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       height: 2,
       align: 'right',
       color: Color.Red,
-      text: 'ИГРОК 1',
+      text: this.playerOneName,
     });
 
     /** Игрок 1: очки */
@@ -200,7 +206,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       height: 2,
       align: 'left',
       color: Color.Red,
-      text: 'ИГРОК 2',
+      text: this.playerTwoName,
     });
 
     /** Игрок 2: очки */

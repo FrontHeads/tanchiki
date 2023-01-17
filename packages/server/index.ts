@@ -1,6 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
+import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
 import { createClientAndConnect } from './db';
@@ -21,7 +22,7 @@ async function startServer() {
   const app = express();
 
   const clientPort = Number(process.env.CLIENT_PORT) || 3000;
-  const serverPort = Number(process.env.SERVER_PORT) || 3001;
+  const serverPort = Number(process.env.SERVER_PORT) || 5000;
 
   /** Настройка CORS для корректной отдчаи проекта на клиентском порту при локальной разработке */
   const corsOptions = {
@@ -143,14 +144,24 @@ async function startServer() {
        */
       const writable = new HtmlWritable();
       writable.on('finish', () => {
+        const helmet = Helmet.renderStatic();
         const appHtml = writable.getHtml();
-        const responseHtml = template.replace(
-          `<div id="root" class="root"><!--ssr-outlet--></div>`,
-          `<div id="root" class="root">${appHtml}</div>
+        const responseHtml = template
+          .replace(
+            `<div id="root" class="root"><!--ssr-outlet--></div>`,
+            `<div id="root" class="root">${appHtml}</div>
             <script>
                 window.__PRELOADED_STATE__=${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
             </script>`
-        );
+          )
+          .replace(
+            `<!--helmet-outlet-->`,
+            `
+              ${helmet.title.toString()}
+              ${helmet.meta.toString()}
+              ${helmet.link.toString()}
+            `
+          );
 
         res.send(responseHtml);
       });

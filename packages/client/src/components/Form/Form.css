@@ -81,4 +81,8 @@
   &_has-errors .validation-errors {
     color: $font_color_danger;
   }
+
+  &__oauth {
+    text-align: center;
+  }
 }

@@ -1,9 +1,10 @@
 import './Button.css';
 
 import cn from 'classnames';
-import { FC } from 'react';
+import { type FC } from 'react';
 
-import { ButtonProps, ButtonVariant } from './typings';
+import { ButtonVariant } from './data';
+import { type ButtonProps } from './typings';
 
 export const Button: FC<ButtonProps> = ({ text, variant, type = 'button', ...props }) => {
   const buttonClassNames = cn('button', {

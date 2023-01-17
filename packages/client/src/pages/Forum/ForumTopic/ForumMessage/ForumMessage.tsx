@@ -1,13 +1,13 @@
 import './ForumMessage.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import defaultAvatarPath from '/assets/img/default-avatar.png';
 
 import { Dropdown } from '../../../../components/Dropdown';
-import { DropdownMenuItems } from '../../../../components/Dropdown/typings';
+import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import simplifyDate from '../../../../utils/dateUtils';
-import { ForumMessageProps } from './typings';
+import { type ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = ({ message }) => {
   const { id, username, content, date } = message;

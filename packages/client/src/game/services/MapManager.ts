@@ -1,6 +1,6 @@
 import { brickCells, concreteCells, spawnPlaces } from '../data/constants';
 import { levels } from '../data/levels';
-import { Cell, EntitySettings, EntityType, GameSettings, MapData, Pos } from '../typings';
+import { type EntitySettings, type EntityType, type GameSettings, type MapData, type Pos, Cell } from '../typings';
 
 export class MapManager {
   private mapData = levels;
@@ -39,13 +39,13 @@ export class MapManager {
           type = 'concreteWall';
         } else if (brickCells.includes(cell)) {
           type = 'brickWall';
-        } else if (cell === Cell.FOREST) {
+        } else if (cell === Cell.Forest) {
           type = 'trees';
-        } else if (cell === Cell.WATER) {
+        } else if (cell === Cell.Water) {
           type = 'water';
-        } else if (cell === Cell.ICE) {
+        } else if (cell === Cell.Ice) {
           type = 'ice';
-        } else if (cell === Cell.BASE) {
+        } else if (cell === Cell.Base) {
           type = 'flag';
         } else {
           return;
@@ -77,37 +77,37 @@ export class MapManager {
     const halfCellSize = 2;
 
     switch (cell) {
-      case Cell.BRICK_TOP:
-      case Cell.CONCRETE_TOP:
+      case Cell.BrickTop:
+      case Cell.ConcreteTop:
         entity.variant = 'TOP';
         entity.height -= halfCellSize;
         break;
-      case Cell.BRICK_BOTTOM:
-      case Cell.CONCRETE_BOTTOM:
+      case Cell.BrickBottom:
+      case Cell.ConcreteBottom:
         entity.variant = 'BOTTOM';
         entity.posY += halfCellSize;
         entity.height -= halfCellSize;
         break;
-      case Cell.BRICK_LEFT:
-      case Cell.CONCRETE_LEFT:
+      case Cell.BrickLeft:
+      case Cell.ConcreteLeft:
         entity.variant = 'LEFT';
         entity.width -= halfCellSize;
         break;
-      case Cell.BRICK_RIGHT:
-      case Cell.CONCRETE_RIGHT:
+      case Cell.BrickRight:
+      case Cell.ConcreteRight:
         entity.variant = 'RIGHT';
         entity.posX += halfCellSize;
         entity.width -= halfCellSize;
         break;
-      case Cell.BRICK_LEFT_BOTTOM:
-      case Cell.CONCRETE_LEFT_BOTTOM:
+      case Cell.BrickBottomLeft:
+      case Cell.ConcreteBottomLeft:
         entity.variant = 'LEFT_BOTTOM';
         entity.posY += halfCellSize;
         entity.width -= halfCellSize;
         entity.height -= halfCellSize;
         break;
-      case Cell.BRICK_RIGHT_BOTTOM:
-      case Cell.CONCRETE_RIGHT_BOTTOM:
+      case Cell.BrickBottomRight:
+      case Cell.ConcreteBottomRight:
         entity.variant = 'RIGHT_BOTTOM';
         entity.posX += halfCellSize;
         entity.posY += halfCellSize;
@@ -123,7 +123,7 @@ export class MapManager {
   private clearSpawnPlaces(map: MapData): void {
     for (const row in spawnPlaces) {
       for (const cow of spawnPlaces[row]) {
-        map[row][cow] = Cell.BLANK;
+        map[row][cow] = Cell.Blank;
       }
     }
   }

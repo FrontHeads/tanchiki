@@ -9,7 +9,7 @@ export default {
     '\\.(css|less|scss|sass|png|svg|jpg)$': 'identity-obj-proxy',
   },
   globals: {
-    __SERVER_PORT__: process.env.SERVER_PORT || 3001,
+    __SERVER_PORT__: process.env.SERVER_PORT || 5000,
   },
   setupFiles: ['<rootDir>/src/tests/setup.ts', 'jest-canvas-mock'],
 };

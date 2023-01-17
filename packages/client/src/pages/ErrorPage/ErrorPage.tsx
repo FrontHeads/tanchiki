@@ -1,12 +1,13 @@
 import './ErrorPage.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useRouteError } from 'react-router-dom';
 
 import { ErrorBody } from '../../components/ErrorBody/ErrorBody';
 import { Footer } from '../../components/Footer';
 import { Logo } from '../../components/Logo';
-import { ErrorPageProps, ErrorType } from './typings';
+import { generateMetaTags } from '../../utils/seoUtils';
+import { type ErrorPageProps, type ErrorType } from './typings';
 
 export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Что-то пошло не так' }) => {
   let statusCode, messageText;
@@ -26,6 +27,7 @@ export const ErrorPage: FC<ErrorPageProps> = ({ status, message = 'Что-то �
   }
   return (
     <>
+      {generateMetaTags({ title: `Ошибка ${statusCode}` })}
       <Logo />
       <div className="delimiter" />
       <ErrorBody status={statusCode} message={messageText} />

@@ -1,13 +1,13 @@
 import { spriteCoordinates } from '../data/constants';
-import { Direction, EntityEvent } from '../typings';
-import { Explosion, Projectile, TankEnemy } from './';
-import { sleep } from '../utils';
 import { Loop, View } from '../services';
+import { Direction, EntityEvent } from '../typings';
+import { sleep } from '../utils';
+import { type TankEnemy, Explosion, Projectile } from './';
 
 describe('game/entities/Explosion', () => {
   it('should have right properties', () => {
     const tank = {} as TankEnemy;
-    const projectile = new Projectile({ parent: tank, posX: 0, posY: 0, moveSpeed: 2, direction: Direction.LEFT });
+    const projectile = new Projectile({ parent: tank, posX: 0, posY: 0, moveSpeed: 2, direction: Direction.Left });
     const explosion = new Explosion({ parent: projectile });
 
     expect(explosion).toHaveProperty('crossable', true);
@@ -27,7 +27,7 @@ describe('game/entities/Explosion', () => {
     loop.add(explosion);
     view.load(root);
     view.add(explosion);
-    explosion.on(EntityEvent.DESPAWN, despawnObserver);
+    explosion.on(EntityEvent.Despawn, despawnObserver);
     explosion.spawn();
 
     await sleep(500);

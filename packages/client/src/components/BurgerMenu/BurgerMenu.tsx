@@ -1,7 +1,7 @@
 import './BurgerMenu.css';
 
 import cn from 'classnames';
-import { FC, useEffect, useRef } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store';
 import { uiActions, uiSelectors } from '../../store/features/ui/uiSlice';

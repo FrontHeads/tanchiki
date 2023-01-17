@@ -1,4 +1,4 @@
-import { UserDTO } from '../api/typings';
+import { type UserDTO } from '../api/typings';
 
 export const fakeUserProfile: UserDTO = {
   id: 1,

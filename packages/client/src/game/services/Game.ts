@@ -1,11 +1,20 @@
-import { Entity } from '../entities';
-import { ControllerEvent, Direction, GameSettings, MainMenuState, ScenarioEvent, ScreenType } from '../typings';
+import { type Entity } from '../entities';
+import {
+  type GameSettings,
+  type StatisticsData,
+  ControllerEvent,
+  Direction,
+  GameEvents,
+  MainMenuState,
+  ScenarioEvent,
+  ScreenType,
+} from '../typings';
 import { Overlay } from '../ui';
+import { EventEmitter, sleep } from '../utils';
 import { levels } from '../data/levels';
 import { Controller, Loop, resources, Scenario, Statistics, View, Zone } from './';
 import { AudioManager } from './AudioManager';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
-import { EventEmitter, sleep } from '../utils';
 
 export class Game extends EventEmitter {
   static __instance: Game;
@@ -21,11 +30,15 @@ export class Game extends EventEmitter {
   controllerWasd: Controller;
   controllerArrows: Controller;
   statistics: Statistics;
+  /** Настройки игрового экрана. Размеры заданы в игровых клетках.*/
   settings: GameSettings = { width: 62, height: 56, boundarySize: 2, indicatorsSidebarSize: 6 };
   screen: ScreenType = ScreenType.Loading;
-  mainMenuState = MainMenuState.SINGLEPLAYER;
+  mainMenuState = MainMenuState.Singleplayer;
   level = 1;
   maxLevels = levels.length;
+  /** Используется при отправке статистики на сервер и отображается на экране с очками.
+   * Пустое значение, если игрок не авторизован.*/
+  username = '';
 
   private constructor() {
     super();
@@ -105,6 +118,13 @@ export class Game extends EventEmitter {
     this.statistics.add(entity);
   }
 
+  /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
+  updateLeaderboard(data: StatisticsData) {
+    if (this.username) {
+      this.emit(GameEvents.UpdateLeaderboard, { username: this.username, ...data });
+    }
+  }
+
   togglePause(newState: boolean | null = null) {
     if (!this.inited) {
       return;
@@ -142,23 +162,23 @@ export class Game extends EventEmitter {
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
-      .on(ControllerEvent.FULLSCREEN, () => {
+      .on(ControllerEvent.Fullscreen, () => {
         this.view.toggleFullScreen();
       })
-      .on(ControllerEvent.MOVE, (direction: Direction) => {
+      .on(ControllerEvent.Move, (direction: Direction) => {
         if (this.screen !== ScreenType.MainMenu) {
           return;
         }
-        if (direction === Direction.UP) {
-          this.mainMenuState = MainMenuState.SINGLEPLAYER;
-        } else if (direction === Direction.DOWN) {
-          this.mainMenuState = MainMenuState.MULTIPLAYER;
+        if (direction === Direction.Up) {
+          this.mainMenuState = MainMenuState.Singleplayer;
+        } else if (direction === Direction.Down) {
+          this.mainMenuState = MainMenuState.Multiplayer;
         }
 
         this.overlay.show(this.screen, this.mainMenuState);
       })
       // Обрабатываем нажатие на указанном пункте меню
-      .on(ControllerEvent.SHOOT, async () => {
+      .on(ControllerEvent.Shoot, async () => {
         if (this.screen !== ScreenType.MainMenu) {
           return;
         }
@@ -184,10 +204,10 @@ export class Game extends EventEmitter {
       const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
       const handleMove = (direction: Direction) => {
         let shouldTrigger = false;
-        if ((direction === Direction.UP || direction === Direction.RIGHT) && this.level < this.maxLevels) {
+        if ((direction === Direction.Up || direction === Direction.Right) && this.level < this.maxLevels) {
           this.level++;
           shouldTrigger = true;
-        } else if ((direction === Direction.DOWN || direction === Direction.LEFT) && this.level > 1) {
+        } else if ((direction === Direction.Down || direction === Direction.Left) && this.level > 1) {
           this.level--;
           shouldTrigger = true;
         } else {
@@ -200,12 +220,12 @@ export class Game extends EventEmitter {
       };
 
       this.controllerAll
-        .on(ControllerEvent.STOP, () => {
+        .on(ControllerEvent.Stop, () => {
           if (this.screen === ScreenType.LevelSelector) {
             resetLevelInterval();
           }
         })
-        .on(ControllerEvent.MOVE, (direction: Direction) => {
+        .on(ControllerEvent.Move, (direction: Direction) => {
           if (this.screen !== ScreenType.LevelSelector) {
             return;
           }
@@ -215,13 +235,13 @@ export class Game extends EventEmitter {
 
           changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
         })
-        .on(ControllerEvent.SHOOT, () => {
+        .on(ControllerEvent.Shoot, () => {
           if (this.screen !== ScreenType.LevelSelector) {
             return;
           }
           resolve();
         })
-        .on(ControllerEvent.ESCAPE, () => {
+        .on(ControllerEvent.Escape, () => {
           this.initMenu();
         });
     });
@@ -235,10 +255,10 @@ export class Game extends EventEmitter {
       this.overlay.show(ScreenType.LevelSelector, { level: this.level, showHints: false });
       this.audioManager.emit('levelIntro');
 
-      this.controllerAll.on(ControllerEvent.SHOOT, resolve);
+      this.controllerAll.on(ControllerEvent.Shoot, resolve);
       setTimeout(resolve, startAnimationDelay);
     }).then(() => {
-      this.controllerAll.offAll(ControllerEvent.SHOOT);
+      this.controllerAll.offAll(ControllerEvent.Shoot);
       this.screen = ScreenType.GameStart;
       this.overlay.show(this.screen);
     });
@@ -248,7 +268,7 @@ export class Game extends EventEmitter {
     this.reset();
 
     if (firstInit) {
-      this.statistics.startSession(this.mainMenuState === MainMenuState.SINGLEPLAYER ? 'SINGLEPLAYER' : 'MULTIPLAYER');
+      this.statistics.startSession(this.mainMenuState === MainMenuState.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER');
     } else {
       if (this.level < this.maxLevels) {
         this.level++;
@@ -263,13 +283,13 @@ export class Game extends EventEmitter {
 
     /** Инициализируем инстанс сценария */
     this.scenario = new Scenario(this)
-      .on(ScenarioEvent.GAME_OVER, async () => {
+      .on(ScenarioEvent.GameOver, async () => {
         this.statistics.finishSession();
         await this.initGameOverPopup();
         await this.initGameScore();
         this.initMenu();
       })
-      .on(ScenarioEvent.MISSION_ACCOMPLISHED, async () => {
+      .on(ScenarioEvent.MissionAccomplished, async () => {
         const missionAccomplishedDelay = 1000;
         await sleep(missionAccomplishedDelay);
         this.statistics.finishMap();
@@ -278,23 +298,24 @@ export class Game extends EventEmitter {
       });
 
     this.controllerAll
-      .on(ControllerEvent.PAUSE, () => {
+      .on(ControllerEvent.Pause, () => {
         this.togglePause();
       })
-      .on(ControllerEvent.MUTE, () => {
+      .on(ControllerEvent.Mute, () => {
         this.audioManager.emit('pause', { isMuteKey: true });
       })
-      .on(ControllerEvent.FULLSCREEN, () => {
+      .on(ControllerEvent.Fullscreen, () => {
         this.view.toggleFullScreen();
       });
   }
 
   initGameScore() {
     return new Promise<void>(resolve => {
+      const meta = { level: this.level, username: this.username };
       const stats = this.statistics.getCurrentStatistics();
       this.reset();
       this.screen = ScreenType.Score;
-      this.overlay.show(this.screen, { level: this.level, ...stats });
+      this.overlay.show(this.screen, { ...meta, ...stats });
       const redirectDelay = 7000;
 
       this.overlay.on('score', () => {
@@ -302,15 +323,15 @@ export class Game extends EventEmitter {
       });
 
       const skip = () => {
-        this.overlay.show(this.screen, { level: this.level, ...stats, skip: true });
-        this.controllerAll.offAll(ControllerEvent.ESCAPE);
-        this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
-        this.controllerAll.offAll(ControllerEvent.SHOOT);
-        this.controllerAll.on(ControllerEvent.SHOOT, resolve);
+        this.overlay.show(this.screen, { ...meta, ...stats, skip: true });
+        this.controllerAll.offAll(ControllerEvent.Escape);
+        this.controllerAll.on(ControllerEvent.Escape, resolve);
+        this.controllerAll.offAll(ControllerEvent.Shoot);
+        this.controllerAll.on(ControllerEvent.Shoot, resolve);
       };
 
-      this.controllerAll.on(ControllerEvent.ESCAPE, skip);
-      this.controllerAll.on(ControllerEvent.SHOOT, skip);
+      this.controllerAll.on(ControllerEvent.Escape, skip);
+      this.controllerAll.on(ControllerEvent.Shoot, skip);
       setTimeout(resolve, redirectDelay);
     });
   }
@@ -330,7 +351,7 @@ export class Game extends EventEmitter {
       this.controllerWasd.reset();
       this.controllerArrows.reset();
 
-      this.controllerAll.on(ControllerEvent.ESCAPE, resolve);
+      this.controllerAll.on(ControllerEvent.Escape, resolve);
       setTimeout(resolve, redirectDelay);
     });
   }

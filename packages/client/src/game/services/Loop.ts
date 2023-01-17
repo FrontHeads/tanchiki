@@ -1,5 +1,5 @@
-import { Entity, Projectile, Tank } from '../entities';
-import { LoopDelays, LoopIntervals } from '../typings';
+import { type Entity, Projectile, Tank } from '../entities';
+import { type LoopDelays, type LoopIntervals } from '../typings';
 import { EntityEvent } from './../typings';
 
 export class Loop {
@@ -119,9 +119,9 @@ export class Loop {
   }
 
   registerTimerHandlers(entity: Entity) {
-    entity.on(EntityEvent.SET_LOOP_DELAY, this.setLoopDelay.bind(this));
-    entity.on(EntityEvent.SET_LOOP_INTERVAL, this.setLoopInterval.bind(this));
-    entity.on(EntityEvent.CLEAR_LOOP_INTERVAL, this.clearLoopInterval.bind(this));
+    entity.on(EntityEvent.SetLoopDelay, this.setLoopDelay.bind(this));
+    entity.on(EntityEvent.SetLoopInterval, this.setLoopInterval.bind(this));
+    entity.on(EntityEvent.ClearLoopInterval, this.clearLoopInterval.bind(this));
   }
 
   checkLoopDelays() {

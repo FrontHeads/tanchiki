@@ -1,4 +1,4 @@
-import { FormEvent, FormHTMLAttributes } from 'react';
+import { type FormEvent, type FormHTMLAttributes } from 'react';
 
 export type FormProps = {
   header?: string;

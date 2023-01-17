@@ -1,19 +1,19 @@
 import './LeaderboardField.css';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import { leaderboardActions, leaderboardSelectors, useAppDispatch, useAppSelector } from '../../../store';
-import { SortOption } from '../typings';
+import { type SortOption } from '../../../store/features/leaderboard/typings';
 import { SortMarker } from './SortMarker/SortMarker';
-import { LeaderboardFieldProps } from './typings';
+import { type LeaderboardFieldProps } from './typings';
 
 export const LeaderboardField: FC<LeaderboardFieldProps> = ({ fieldName, fieldId, title }) => {
   const { sortOption, sortDirection } = useAppSelector(leaderboardSelectors.all);
   const dispatch = useAppDispatch();
 
-  const handleSort = ({ fieldId }: { fieldId: SortOption }) => {
+  const handleSort = ({ fieldId }: { fieldId: string }) => {
     if (fieldId !== 'place') {
-      dispatch(leaderboardActions.setSortParams({ sortOption: fieldId }));
+      dispatch(leaderboardActions.setSortParams({ sortOption: fieldId as SortOption }));
     }
   };
 

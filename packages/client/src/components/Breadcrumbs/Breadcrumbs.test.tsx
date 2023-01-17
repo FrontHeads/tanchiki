@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
 import { Breadcrumbs } from './Breadcrumbs';
-import { BreadcrumbsVariant } from './typings';
+import { BreadcrumbsVariant } from './data';
 
 describe('Breadcrumbs', () => {
   test('it render', () => {

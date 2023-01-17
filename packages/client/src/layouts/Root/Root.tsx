@@ -1,10 +1,10 @@
 import './Root.css';
 
-import { FC, Suspense, useEffect } from 'react';
+import { type FC, Suspense, useEffect } from 'react';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
-import { UserDTO } from '../../api/typings';
+import { type UserDTO } from '../../api/typings';
 import { BurgerMenu } from '../../components/BurgerMenu';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { Footer } from '../../components/Footer';
@@ -13,7 +13,7 @@ import { Logo } from '../../components/Logo';
 import { Paths } from '../../config/constants';
 import { rootLoader } from '../../config/router';
 import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
-import { ResponseType } from '../../utils/HTTP';
+import { type ResponseType } from '../../utils/HTTP';
 
 export const Root: FC = () => {
   const isAppLoading = useAppSelector(appSelectors.isAppLoading);
@@ -38,10 +38,8 @@ export const Root: FC = () => {
     }
 
     data.user.then(response => {
-      if (response) {
-        return dispatch(authActions.setUserProfile(response.data));
-      }
-      return null;
+      const profileData = response ? response.data : null;
+      return dispatch(authActions.setUserProfile(profileData));
     });
   }, [data]);
 

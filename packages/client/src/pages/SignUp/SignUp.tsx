@@ -1,16 +1,17 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { type FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
-import { ButtonVariant } from '../../components/Button/typings';
+import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { signUpFieldList, signUpFormInitialState } from './data';
-import { SignUpForm } from './typings';
+import { type SignUpForm } from './typings';
 
 export const SignUp: FC = () => {
   // Оборачиваем в константу из-за каррирования в useAppDispatch() и useNavigate()
@@ -18,6 +19,7 @@ export const SignUp: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const validation = useValidation(signUpFieldList);
+  const pageTitle = 'Регистрация';
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
 
@@ -50,21 +52,24 @@ export const SignUp: FC = () => {
   }, [error]);
 
   return (
-    <Form onSubmitHandler={onFormSubmit} header="Регистрация">
-      <FieldList<SignUpForm>
-        fieldList={signUpFieldList}
-        isFormSubmitted={isFormSubmitted}
-        setIsFormSubmitted={setIsFormSubmitted}
-        onFormSubmitCallback={onFormSubmitCallback}
-        formData={formData}
-        setFormData={setFormData}
-        validation={validation}
-        disabled={isLoading}
-      />
-      <div className="form__buttons-wrapper">
-        <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
-        <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />
-      </div>
-    </Form>
+    <>
+      {generateMetaTags({ title: pageTitle })}
+      <Form onSubmitHandler={onFormSubmit} header={pageTitle}>
+        <FieldList<SignUpForm>
+          fieldList={signUpFieldList}
+          isFormSubmitted={isFormSubmitted}
+          setIsFormSubmitted={setIsFormSubmitted}
+          onFormSubmitCallback={onFormSubmitCallback}
+          formData={formData}
+          setFormData={setFormData}
+          validation={validation}
+          disabled={isLoading}
+        />
+        <div className="form__buttons-wrapper">
+          <Button text="Зарегистрироваться" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
+          <Button text="Вход" onClick={() => navigate(Paths.SignIn)} variant={ButtonVariant.Secondary} />
+        </div>
+      </Form>
+    </>
   );
 };

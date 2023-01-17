@@ -1,5 +1,7 @@
 import defaultAvatar from '/assets/img/default-avatar.png';
 
+export const META_TITLE_SUFFIX = '- Танчики';
+
 export enum Paths {
   Home = '/',
   SignIn = '/sign-in',
@@ -18,6 +20,8 @@ export enum Paths {
 export const PATH = {
   defaultAvatar,
   avatarBase: 'https://ya-praktikum.tech/api/v2/resources',
+  oauthRedirect: `http://localhost:5000`,
+  yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
@@ -28,6 +32,10 @@ export const YANDEX_API_ENDPOINTS = {
     SIGNUP: 'auth/signup',
     ME: 'auth/user',
     LOGOUT: 'auth/logout',
+  },
+  OAUTH: {
+    GET_SERVICE_ID: 'oauth/yandex/service-id',
+    POST: 'oauth/yandex',
   },
   USER: {
     UPDATE_PASSWORD: 'user/password',
@@ -43,7 +51,7 @@ export const YANDEX_API_ENDPOINTS = {
   },
 };
 
-export const LEADERBOARD_TEAM_NAME = 'FrontHeadsTest';
+export const LEADERBOARD_TEAM_NAME = 'FrontHeadsMain1';
 export const LEADERBOARD_SORT_FIELD = 'score';
 export const LEADERBOARD_DEFAULT_PAGE = 0;
 export const LEADERBOARD_RECORDS_DISPLAY_LIMIT = 999;

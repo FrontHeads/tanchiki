@@ -1,4 +1,4 @@
-import { LeaderboardFieldProps } from './LeaderboardField/typings';
+import { type LeaderboardFieldProps } from './LeaderboardField/typings';
 
 export const leaderboardFields: LeaderboardFieldProps[] = [
   {
@@ -17,9 +17,9 @@ export const leaderboardFields: LeaderboardFieldProps[] = [
     title: 'Рекорд по очкам',
   },
   {
-    fieldId: 'time',
-    fieldName: 'Время',
-    title: 'часы:минуты',
+    fieldId: 'rate',
+    fieldName: 'Очки/минута',
+    title: 'Среднее количество очков за минуту игры',
   },
   {
     fieldId: 'matches',

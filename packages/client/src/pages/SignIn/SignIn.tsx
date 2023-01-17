@@ -1,21 +1,23 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { type FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
-import { ButtonVariant } from '../../components/Button/typings';
+import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
-import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { authActions, authSelectors, authThunks, oauthThunks, useAppDispatch, useAppSelector } from '../../store';
+import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
-import { SignInForm } from './typings';
+import { type SignInForm } from './typings';
 
 export const SignIn: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const validation = useValidation(signInFieldList);
+  const pageTitle = 'Вход';
 
   const { error, isLoading } = useAppSelector(authSelectors.authState);
 
@@ -32,6 +34,10 @@ export const SignIn: FC = () => {
     dispatch(authThunks.signIn(formData));
   };
 
+  const oAuthHandler = () => {
+    dispatch(oauthThunks.getOAuthCode());
+  };
+
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -40,21 +46,28 @@ export const SignIn: FC = () => {
   }, [error]);
 
   return (
-    <Form onSubmitHandler={onFormSubmit} header="Вход">
-      <FieldList<SignInForm>
-        fieldList={signInFieldList}
-        isFormSubmitted={isFormSubmitted}
-        setIsFormSubmitted={setIsFormSubmitted}
-        onFormSubmitCallback={onFormSubmitCallback}
-        formData={formData}
-        setFormData={setFormData}
-        validation={validation}
-        disabled={isLoading}
-      />
-      <div className="form__buttons-wrapper">
-        <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
-        <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
-      </div>
-    </Form>
+    <>
+      {generateMetaTags({ title: pageTitle })}
+      <Form onSubmitHandler={onFormSubmit} header={pageTitle}>
+        <FieldList<SignInForm>
+          fieldList={signInFieldList}
+          isFormSubmitted={isFormSubmitted}
+          setIsFormSubmitted={setIsFormSubmitted}
+          onFormSubmitCallback={onFormSubmitCallback}
+          formData={formData}
+          setFormData={setFormData}
+          validation={validation}
+          disabled={isLoading}
+        />
+        <div className="form__buttons-wrapper">
+          <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
+          <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
+          <div className="form__oauth">
+            <div>или войти с помощью</div>
+            <Button text="Яндекс ID" onClick={oAuthHandler} variant={ButtonVariant.Secondary} />
+          </div>
+        </div>
+      </Form>
+    </>
   );
 };

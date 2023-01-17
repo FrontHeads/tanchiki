@@ -1,5 +1,5 @@
 import { spriteCoordinates } from '../data/constants';
-import { type EntityDynamicSettings, EntityEvent, PlayerVariant, Speed } from '../typings';
+import { type EntityDynamicSettings, type PlayerVariant, EntityEvent, Speed } from '../typings';
 import { Tank } from './Tank';
 
 export class TankPlayer extends Tank {
@@ -24,7 +24,7 @@ export class TankPlayer extends Tank {
   }
 
   registerTankPlayerEvents() {
-    this.on(EntityEvent.READY, () => {
+    this.on(EntityEvent.Ready, () => {
       this.useShield(this.spawnShieldTimeout);
     });
   }

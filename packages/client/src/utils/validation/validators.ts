@@ -1,20 +1,20 @@
 import { ValidationErrorMessage, ValidationRegex } from './config';
-import { Validators } from './typings';
+import { type Validators } from './typings';
 
 export const validators: Validators = {
   login(value: string): string[] {
     const errors: string[] = [];
 
     if (value.length < 3 || value.length > 20) {
-      errors.push(ValidationErrorMessage.loginLength);
+      errors.push(ValidationErrorMessage.LoginLength);
     }
 
-    if (!ValidationRegex.loginCompound.test(value)) {
-      errors.push(ValidationErrorMessage.loginCompound);
+    if (!ValidationRegex.LoginCompound.test(value)) {
+      errors.push(ValidationErrorMessage.LoginCompound);
     }
 
     if (ValidationRegex.onlyNumbers.test(value)) {
-      errors.push(ValidationErrorMessage.loginFormat);
+      errors.push(ValidationErrorMessage.LoginFormat);
     }
 
     return errors;
@@ -24,15 +24,15 @@ export const validators: Validators = {
     const errors: string[] = [];
 
     if (value.length < 8 || value.length > 40) {
-      errors.push(ValidationErrorMessage.passwordLength);
+      errors.push(ValidationErrorMessage.PasswordLength);
     }
 
     if (!ValidationRegex.atLeastOneDigit.test(value)) {
-      errors.push(ValidationErrorMessage.passwordNum);
+      errors.push(ValidationErrorMessage.PasswordNum);
     }
 
     if (!ValidationRegex.atLeastOneCapitalChar.test(value)) {
-      errors.push(ValidationErrorMessage.passwordCapitalChar);
+      errors.push(ValidationErrorMessage.PasswordCapitalChar);
     }
 
     return errors;
@@ -42,11 +42,11 @@ export const validators: Validators = {
     const errors: string[] = [];
 
     if (!ValidationRegex.nameCompound.test(value)) {
-      errors.push(ValidationErrorMessage.firstNameCompound);
+      errors.push(ValidationErrorMessage.FirstNameCompound);
     }
 
     if (!ValidationRegex.firstLetterIsCapital.test(value)) {
-      errors.push(ValidationErrorMessage.nameBegin);
+      errors.push(ValidationErrorMessage.NameBegin);
     }
 
     return errors;
@@ -56,11 +56,11 @@ export const validators: Validators = {
     const errors: string[] = [];
 
     if (!ValidationRegex.nameCompound.test(value)) {
-      errors.push(ValidationErrorMessage.secondNameCompound);
+      errors.push(ValidationErrorMessage.SecondNameCompound);
     }
 
     if (!ValidationRegex.firstLetterIsCapital.test(value)) {
-      errors.push(ValidationErrorMessage.nameBegin);
+      errors.push(ValidationErrorMessage.NameBegin);
     }
 
     return errors;
@@ -69,13 +69,13 @@ export const validators: Validators = {
   email(value: string): string[] {
     const errors: string[] = [];
 
-    if (!ValidationRegex.emailCompound.test(value)) {
-      errors.push(ValidationErrorMessage.emailCompound);
+    if (!ValidationRegex.EmailCompound.test(value)) {
+      errors.push(ValidationErrorMessage.EmailCompound);
     }
 
     // После собаки обязательно точка, а перед точкой обязательно буквы
-    if (!ValidationRegex.emailFormat.test(value)) {
-      errors.push(ValidationErrorMessage.emailFormat);
+    if (!ValidationRegex.EmailFormat.test(value)) {
+      errors.push(ValidationErrorMessage.EmailFormat);
     }
 
     return errors;
@@ -85,21 +85,21 @@ export const validators: Validators = {
     const errors: string[] = [];
 
     if (value.length < 8 || value.length > 15) {
-      errors.push(ValidationErrorMessage.phoneLength);
+      errors.push(ValidationErrorMessage.PhoneLength);
     }
 
-    if (!ValidationRegex.phoneFormat.test(value)) {
-      errors.push(ValidationErrorMessage.phoneFormat);
+    if (!ValidationRegex.PhoneFormat.test(value)) {
+      errors.push(ValidationErrorMessage.PhoneFormat);
     }
 
     return errors;
   },
 
-  notEmpty(value: string): string[] {
+  NotEmpty(value: string): string[] {
     const errors: string[] = [];
 
     if (!value.length) {
-      errors.push(ValidationErrorMessage.notEmpty);
+      errors.push(ValidationErrorMessage.NotEmpty);
     }
 
     return errors;

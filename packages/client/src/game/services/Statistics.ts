@@ -1,6 +1,13 @@
-import { Game } from './';
-import { Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
-import { EnemiesKilledState, EnemyVariant, EntityEvent, GameEvents, GameMode, PlayerVariant } from '../typings';
+import { type Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../entities';
+import {
+  type EnemiesKilledState,
+  type EnemyVariant,
+  type GameMode,
+  type PlayerVariant,
+  EntityEvent,
+  GameEvents,
+} from '../typings';
+import { type Game } from './';
 
 export class Statistics {
   game: Game;
@@ -40,15 +47,14 @@ export class Statistics {
     this.mapElapsedTime = 0;
   }
 
-  /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
-  updateLeaderboard() {
+  /** Отправляет данные для обновления лидерборда. */
+  sendRecord() {
     // Если не синглплеер, то лидерборд не обновляем
     if (this.mode !== 'SINGLEPLAYER') {
       return;
     }
 
-    // TODO: нужно переделать, т.к. странно, что кто-то снаружи может заставить другой объект сгенерировать событие
-    this.game.emit(GameEvents.UpdateLeaderboard, {
+    this.game.updateLeaderboard({
       score: this.sessionScore[0],
       matches: this.sessionCompletedMaps,
       time: this.sessionElapsedTime,
@@ -106,7 +112,7 @@ export class Statistics {
     if (entity instanceof Explosion && entity.parent instanceof TankEnemy) {
       const enemyTank = entity.parent;
       // После окончания анимации взрыва подсчитываем очки и показываем надпись с их количеством
-      entity.on(EntityEvent.DESPAWN, () => {
+      entity.on(EntityEvent.Despawn, () => {
         const points = this.countEnemy(enemyTank);
         const score = new Score({ points, parent: enemyTank });
         this.game.addEntity(score);
@@ -168,6 +174,6 @@ export class Statistics {
     if (!gameover) {
       ++this.sessionCompletedMaps;
     }
-    this.updateLeaderboard();
+    this.sendRecord();
   }
 }
