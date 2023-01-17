@@ -3,25 +3,25 @@ import { EntityEvent } from './../typings/index';
 import { Entity } from './';
 
 export abstract class EntityDynamic extends Entity {
-  /** Должен ли объект двигаться*/
+  /** Должен ли объект двигаться. */
   moving = false;
-  /** Прекращает ли объект движение (он должен стать по целочисленным координатам)*/
+  /** Прекращает ли объект движение (он должен стать по целочисленным координатам). */
   stopping = false;
-  /** Может ли объект двигаться дальше*/
+  /** Может ли объект двигаться дальше. */
   canMove = true;
-  /** Клетка, где объект находился до начала движения*/
+  /** Клетка, где объект находился до начала движения. */
   lastRect: Rect | null = null;
   /** Клетка, куда объект движется*/
   nextRect: Rect | null = null;
-  /** На сколько клеток за раз перемещается объект*/
+  /** На сколько клеток за раз перемещается объект. */
   movePace = 2;
-  /** Скорость движения объекта*/
+  /** Скорость движения объекта. */
   moveSpeed = 3;
-  /** Сколько игровых циклов хода пройдено*/
+  /** Сколько игровых циклов хода пройдено. */
   moveStepsProgress = 0;
-  /** За сколько игровых циклов объект совершает один ход*/
+  /** За сколько игровых циклов объект совершает один ход. */
   moveStepsTotal = 12;
-  /** Новое направление, по которому объект начнёт движение после завершения полного хода*/
+  /** Новое направление, по которому объект начнёт движение после завершения полного хода. */
   nextDirection = Direction.Up;
   /** В этом свойстве подсчитываются циклы движения после последнего поворота.
    * Если танк едет, то он поворачивает сразу. А если стоит на месте - то при коротком нажатии клавиши
@@ -45,6 +45,7 @@ export abstract class EntityDynamic extends Entity {
     return this.movePace / this.getMoveSteps();
   }
 
+  /** Начинает движение объекта в заданном направлении. */
   move(direction: Direction) {
     this.moving = true;
     this.nextDirection = direction;
@@ -54,6 +55,7 @@ export abstract class EntityDynamic extends Entity {
     }
   }
 
+  /** Останавливает движение объекта. */
   stop() {
     this.moving = false;
     if (this.moveStepsProgress) {
@@ -63,6 +65,7 @@ export abstract class EntityDynamic extends Entity {
     this.emit(EntityEvent.Stop);
   }
 
+  /** Поворачивает объект на месте. */
   turn(newDirection: Direction = this.nextDirection) {
     if (this.direction !== newDirection) {
       this.emit(EntityEvent.Stop);
@@ -74,7 +77,7 @@ export abstract class EntityDynamic extends Entity {
     }
   }
 
-  /** Вызывается в каждом игровом цикле для определения необходимости двигаться */
+  /** Вызывается в каждом игровом цикле для определения необходимости двигаться. */
   update() {
     if (!this.spawned || this.frozen) {
       return;
@@ -99,7 +102,7 @@ export abstract class EntityDynamic extends Entity {
     const hasNewDirection = this.stopping ? false : this.direction !== this.nextDirection;
     const canTurnWithoutInterrupt = this.moveLoops > this.getMoveSteps();
     if (hasNewDirection) {
-      /** Проверка для того, чтобы объект мог поворачивать на месте без последующего движения в сторону */
+      /** Проверка для того, чтобы объект мог поворачивать на месте без последующего движения в сторону. */
       canTurnWithoutInterrupt ? this.turn() : this.turnWithInterrupt();
     } else {
       this.prepareToMove();
@@ -107,17 +110,18 @@ export abstract class EntityDynamic extends Entity {
     }
   }
 
-  /** Выполняет проверку в каждом игровом цикле (нужна для определения столкновения у снарядов) */
+  /** Выполняет проверку в каждом игровом цикле
+   * (нужна для определения столкновения у снарядов, а также стрельбы и скольжения у танков). */
   abstract stateCheck(): void;
 
-  /** Чтобы объект не начал двигаться сразу после поворота; */
+  /** Чтобы объект не начал двигаться сразу после поворота. */
   turnWithInterrupt() {
     this.turn();
     ++this.moveStepsProgress;
     this.canMove = false;
   }
 
-  /** Выполняет проверку на то, может ли объект двигаться дальше; */
+  /** Выполняет проверку на то, может ли объект двигаться дальше. */
   prepareToMove() {
     this.lastRect = this.getRect();
     const nextRect = { ...this.lastRect, ...this.getNextMove(true) };
@@ -135,7 +139,7 @@ export abstract class EntityDynamic extends Entity {
     }
   }
 
-  /** Рассчитывает координаты следующего хода */
+  /** Рассчитывает координаты следующего хода. */
   getNextMove(fullMove = false) {
     let movePace = 0;
     if (fullMove) {
@@ -156,7 +160,7 @@ export abstract class EntityDynamic extends Entity {
     }
   }
 
-  /** Выполняет микродвижение за игровой цикл */
+  /** Выполняет микродвижение за игровой цикл. */
   moveStep() {
     const fullCycle = ++this.moveStepsProgress >= this.getMoveSteps();
     if (fullCycle) {

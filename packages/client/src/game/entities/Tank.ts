@@ -7,21 +7,26 @@ export class Tank extends EntityDynamic {
   width = 4;
   height = 4;
   movePace = 2;
+  /** Скорость движения танка. Задаётся через метод setMoveSpeed(). */
   moveSpeed = 3;
   moveStepsTotal = 12;
+  /** Скорость стрельбы танка. Задаётся через метод setShootSpeed(). */
   shootSpeed = 2;
+  /** Количество миллисекунд, в течение которого происходит появление танка на карте. */
   spawnTimeout = 1000;
+  /** Может ли танк стрелять (свойство необходимо для ограничения количества выпускаемых снарядов). */
   canShoot = false;
+  /** Должен ли танк выстрелить в данный момент. */
   shooting = false;
   /** Временно блокирует возможность перемещения (например на время анимации спауна). */
   frozen = true;
-  /** Дает танку неуязвимость (снаряды не причиняют вреда) */
+  /** Дает танку неуязвимость (снаряды не причиняют вреда). */
   invincible = false;
-  /** Заносит ли объект на льду */
+  /** Заносит ли объект на льду. */
   sliding = false;
-  /** Сколько циклов объект пробыл в заносе */
+  /** Сколько циклов объект пробыл в заносе. */
   slidingStepsProgress = 0;
-  /** На сколько циклов объект должно заносить */
+  /** На сколько циклов объект должно заносить. */
   slidingStepsTotal = 20;
 
   constructor(props: EntityDynamicSettings) {
@@ -64,6 +69,7 @@ export class Tank extends EntityDynamic {
     });
   }
 
+  /** Задаёт скорость движения танка. */
   setMoveSpeed(speed: Speed) {
     switch (speed) {
       case Speed.Low:
@@ -78,6 +84,7 @@ export class Tank extends EntityDynamic {
     }
   }
 
+  /** Задаёт скорость движения снарядов, выпускаемых из конкретного танка. */
   setShootSpeed(speed: Speed) {
     switch (speed) {
       case Speed.Low:
@@ -92,6 +99,7 @@ export class Tank extends EntityDynamic {
     }
   }
 
+  /** Определяет, что танк должен выстрелить. */
   shoot() {
     if (!this.spawned || !this.canShoot) {
       return;
@@ -101,6 +109,7 @@ export class Tank extends EntityDynamic {
     this.canShoot = false;
   }
 
+  /** Реализует скольжение и стрельбу танка через игровой цикл. */
   stateCheck() {
     if (this.sliding) {
       if (!this.canMove || ++this.slidingStepsProgress > this.slidingStepsTotal) {
@@ -131,6 +140,7 @@ export class Tank extends EntityDynamic {
     this.shooting = false;
   }
 
+  /** Высчитывает начальную позицию снаряда, вылетающего из танка. */
   calculateProjectileInitPos() {
     const defaultSize = { width: 2, height: 2 };
     const rect = this.nextRect || this.lastRect || this.getRect();
@@ -149,6 +159,7 @@ export class Tank extends EntityDynamic {
     }
   }
 
+  /** Определяет, должен ли танк скользить. */
   slide(shouldSlide = true) {
     if (shouldSlide) {
       if (!this.sliding) {
