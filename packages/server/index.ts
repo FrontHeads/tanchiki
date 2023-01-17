@@ -22,7 +22,7 @@ async function startServer() {
   const app = express();
 
   const clientPort = Number(process.env.CLIENT_PORT) || 3000;
-  const serverPort = Number(process.env.SERVER_PORT) || 3001;
+  const serverPort = Number(process.env.SERVER_PORT) || 5000;
 
   /** Настройка CORS для корректной отдчаи проекта на клиентском порту при локальной разработке */
   const corsOptions = {

@@ -7,7 +7,7 @@ import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
-import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
+import { authActions, authSelectors, authThunks, oauthThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { signInFieldList, signInFormInitialState } from './data';
@@ -34,6 +34,10 @@ export const SignIn: FC = () => {
     dispatch(authThunks.signIn(formData));
   };
 
+  const oAuthHandler = () => {
+    dispatch(oauthThunks.getOAuthCode());
+  };
+
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -58,6 +62,10 @@ export const SignIn: FC = () => {
         <div className="form__buttons-wrapper">
           <Button text="Войти" type="submit" variant={ButtonVariant.Primary} disabled={isLoading} />
           <Button text="Регистрация" onClick={() => navigate(Paths.SignUp)} variant={ButtonVariant.Secondary} />
+          <div className="form__oauth">
+            <div>или войти с помощью</div>
+            <Button text="Яндекс ID" onClick={oAuthHandler} variant={ButtonVariant.Secondary} />
+          </div>
         </div>
       </Form>
     </>
