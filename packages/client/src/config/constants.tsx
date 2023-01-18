@@ -1,4 +1,6 @@
-import defaultAvatarPath from '/assets/img/default-avatar.png';
+import DEFAULT_AVATAR from '/assets/img/default-avatar.png';
+
+export { DEFAULT_AVATAR };
 
 export const META_TITLE_SUFFIX = '- Танчики';
 
@@ -52,12 +54,11 @@ export const API_ENDPOINTS = {
     UPDATE_PROFILE: 'user/profile',
     UPDATE_PROFILE_AVATAR: 'user/profile/avatar',
     SEARCH: 'user/search',
+    GET_AVATAR: (avatarPath: string) => `resources${avatarPath}`,
   },
   LEADERBOARD: {
-    ADD_SCORE: '/leaderboard',
-    GET: (teamName: string) => {
-      return `/leaderboard/${teamName}`;
-    },
+    ADD_SCORE: 'leaderboard',
+    GET: (teamName: string) => `leaderboard/${teamName}`,
   },
 };
 
@@ -65,8 +66,3 @@ export const LEADERBOARD_TEAM_NAME = 'FrontHeadsMain1';
 export const LEADERBOARD_SORT_FIELD = 'score';
 export const LEADERBOARD_DEFAULT_PAGE = 0;
 export const LEADERBOARD_RECORDS_DISPLAY_LIMIT = 999;
-
-export const AVATAR = {
-  defaultPath: defaultAvatarPath,
-  apiPath: '/resources',
-};
