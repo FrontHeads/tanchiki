@@ -1,7 +1,7 @@
 import { CLIENT_ONLY_HOSTS, LOCAL_API_HOST, YANDEX_API_HOST } from '../../config/constants';
 
 /** Определяет, как клиенту нужно ходить к API Яндекса - через наш сервер или напрямую */
-export function determineBaseUrl() {
+export function determineAPIHost() {
   if (typeof document !== 'undefined') {
     const { host, hostname } = document.location;
 

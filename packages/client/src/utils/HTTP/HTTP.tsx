@@ -1,4 +1,4 @@
-import { axios, buildPath, determineBaseUrl } from './';
+import { axios, buildPath, determineAPIHost } from './';
 
 enum Method {
   GET = 'GET',
@@ -48,7 +48,7 @@ export class HTTP {
   }
 
   private static _send<T>(path: string, options: Options = { method: Method.GET }): Promise<ResponseType<T>> {
-    const { method, headers = { 'Content-Type': 'application/json' }, baseUrl = determineBaseUrl(), ...rest } = options;
+    const { method, headers = { 'Content-Type': 'application/json' }, baseUrl = determineAPIHost(), ...rest } = options;
 
     const url = buildPath(baseUrl, path);
 

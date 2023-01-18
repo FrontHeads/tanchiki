@@ -8,7 +8,7 @@ import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
 import { AVATAR } from '../../config/constants';
-import { buildPath, determineBaseUrl } from '../../utils/HTTP';
+import { buildPath, determineAPIHost } from '../../utils/HTTP';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
@@ -60,7 +60,7 @@ export const UserProfile: FC = () => {
 
   let avatarPath = AVATAR.defaultPath;
   if (userProfile?.avatar) {
-    avatarPath = buildPath(determineBaseUrl(), AVATAR.apiPath, userProfile.avatar);
+    avatarPath = buildPath(determineAPIHost(), AVATAR.apiPath, userProfile.avatar);
   }
 
   const header = userProfile?.first_name;
