@@ -1,4 +1,4 @@
-import defaultAvatar from '/assets/img/default-avatar.png';
+import defaultAvatarPath from '/assets/img/default-avatar.png';
 
 export const META_TITLE_SUFFIX = '- Танчики';
 
@@ -17,16 +17,21 @@ export enum Paths {
   Error500 = '500',
 }
 
+export const AVATAR = {
+  defaultPath: defaultAvatarPath,
+  apiPath: '/resources',
+};
+
 export const PATH = {
-  defaultAvatar,
-  avatarBase: 'https://ya-praktikum.tech/api/v2/resources',
   oauthRedirect: `http://localhost:5000`,
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
+export const LOCAL_API_HOST = 'http://localhost:5000/api';
+
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
-export const YANDEX_API_ENDPOINTS = {
+export const API_ENDPOINTS = {
   AUTH: {
     SIGNIN: 'auth/signin',
     SIGNUP: 'auth/signup',
