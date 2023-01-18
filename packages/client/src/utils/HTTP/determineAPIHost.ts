@@ -5,7 +5,7 @@ export function determineAPIHost() {
   if (typeof document !== 'undefined') {
     const { host, hostname } = document.location;
 
-    // На локальной клиентской сборке и на Github Pages обращаемся к API Яндекса напрямую
+    // На локальной клиентской сборке обращаемся к API Яндекса напрямую
     if (host && CLIENT_ONLY_HOSTS.includes(host)) {
       return YANDEX_API_HOST;
     }
