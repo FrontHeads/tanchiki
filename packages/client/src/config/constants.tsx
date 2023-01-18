@@ -26,7 +26,7 @@ export const PATH = {
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
-export const LOCAL_API_HOST = 'http://localhost:${LOCAL_SERVER_PORT}/api';
+export const LOCAL_API_HOST = `http://localhost:${LOCAL_SERVER_PORT}/api`;
 
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
