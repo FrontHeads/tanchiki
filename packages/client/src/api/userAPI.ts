@@ -1,4 +1,4 @@
-import { YANDEX_API_ENDPOINTS } from '../config/constants';
+import { API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
 import { type UserDTO } from './typings';
 
@@ -24,13 +24,13 @@ type UpdateProfileAvatarResponseData = UserDTO;
 
 export const userAPI = {
   updatePassword: (data: UpdatePasswordRequestData) =>
-    HTTP.put<UpdatePasswordResponseData>(YANDEX_API_ENDPOINTS.USER.UPDATE_PASSWORD, { data }),
+    HTTP.put<UpdatePasswordResponseData>(API_ENDPOINTS.USER.UPDATE_PASSWORD, { data }),
 
   updateProfile: (data: UpdateProfileRequestData) =>
-    HTTP.put<UpdateProfileResponseData>(YANDEX_API_ENDPOINTS.USER.UPDATE_PROFILE, { data }),
+    HTTP.put<UpdateProfileResponseData>(API_ENDPOINTS.USER.UPDATE_PROFILE, { data }),
 
   updateProfileAvatar: (data: UpdateProfileAvatarRequestData) => {
-    return HTTP.put<UpdateProfileAvatarResponseData>(YANDEX_API_ENDPOINTS.USER.UPDATE_PROFILE_AVATAR, {
+    return HTTP.put<UpdateProfileAvatarResponseData>(API_ENDPOINTS.USER.UPDATE_PROFILE_AVATAR, {
       data,
       headers: {},
     });
