@@ -3,7 +3,7 @@ import { ScreenType } from '../../../typings';
 import { Overlay } from '../..';
 
 const mockShow = jest.fn();
-jest.mock('./MainMenuScreen', () => {
+jest.mock('../UIScreens/MainMenuScreen', () => {
   return {
     MainMenuScreen: jest.fn().mockImplementation(() => {
       return {
