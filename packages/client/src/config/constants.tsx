@@ -17,17 +17,16 @@ export enum Paths {
   Error500 = '500',
 }
 
-export const AVATAR = {
-  defaultPath: defaultAvatarPath,
-  apiPath: '/resources',
-};
+export const LOCAL_CLIENT_PORT = 3000;
+
+export const LOCAL_SERVER_PORT = 5000;
 
 export const PATH = {
-  oauthRedirect: `http://localhost:5000`,
+  oauthRedirect: `http://localhost:${LOCAL_SERVER_PORT}`,
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
-export const LOCAL_API_HOST = 'http://localhost:5000/api';
+export const LOCAL_API_HOST = 'http://localhost:${LOCAL_SERVER_PORT}/api';
 
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
@@ -60,3 +59,8 @@ export const LEADERBOARD_TEAM_NAME = 'FrontHeadsMain1';
 export const LEADERBOARD_SORT_FIELD = 'score';
 export const LEADERBOARD_DEFAULT_PAGE = 0;
 export const LEADERBOARD_RECORDS_DISPLAY_LIMIT = 999;
+
+export const AVATAR = {
+  defaultPath: defaultAvatarPath,
+  apiPath: '/resources',
+};
