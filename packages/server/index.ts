@@ -14,6 +14,8 @@ import * as path from 'path';
 
 import { HtmlWritable } from './utils/HtmlWritable';
 
+import { createProxyMiddleware } from 'http-proxy-middleware';
+
 createClientAndConnect();
 
 const isDev = () => process.env.NODE_ENV === 'development';
@@ -40,9 +42,13 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)');
-  });
+  /** Проксирует запросы к API на сервер Яндекса */
+  app.use('/api', createProxyMiddleware({
+    target: 'https://ya-praktikum.tech/api/v2',
+    pathRewrite: { '^/api' : '' }, // чтобы в конец пути target не добавлялось лишнее /api 
+    changeOrigin: true,
+    cookieDomainRewrite: { 'ya-praktikum.tech': 'localhost' },
+  }));
 
   /**
    * В случае dev режима работы сервера подключаем vite middleware
