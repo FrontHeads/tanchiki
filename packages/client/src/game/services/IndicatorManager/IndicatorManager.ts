@@ -3,7 +3,7 @@ import { spriteCoordinates } from '../../data/constants';
 import { type UIElementSettings } from '../../typings';
 import { UIElement } from '../../ui';
 import { isOdd } from '../../utils';
-import { type Game } from '../Game';
+import { type Game } from '..';
 import { IndicatorNames, playerLivesData } from './data';
 
 export class IndicatorManager {

@@ -1,6 +1,6 @@
 import { type Color } from '../data/colors';
 import { type Entity, type Projectile, type Tank, type TankEnemy } from '../entities';
-import { type Controller } from './../services/Controller';
+import { type Controller } from './../services';
 
 export type Fn = (...args: Array<any>) => void;
 

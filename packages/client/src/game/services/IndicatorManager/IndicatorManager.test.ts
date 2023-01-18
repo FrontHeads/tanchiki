@@ -1,6 +1,6 @@
 import { Player } from '../../typings';
-import { UIElement } from '../../ui/UIElement';
-import { Game } from '../Game';
+import { UIElement } from '../../ui';
+import { Game } from '..';
 import { IndicatorNames } from './data';
 import { IndicatorManager } from './IndicatorManager';
 
