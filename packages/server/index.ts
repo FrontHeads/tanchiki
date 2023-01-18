@@ -46,23 +46,20 @@ async function startServer() {
   const srcPath = path.dirname(require.resolve('client'));
 
   /** Проксирует запросы к API на сервер Яндекса */
-  app.use(
-    '/api',
-    (req, res, next) => {
-      // Если обращение к API идёт из незнакомого места - заворачиваем
-      if (!allowedHosts.includes(req.hostname)) {
-        res.statusCode = 502;
-        res.send('<!doctype html><p>Bad gateway</p>');
-        return;
-      }
-      return createProxyMiddleware({
-        target: 'https://ya-praktikum.tech/api/v2',
-        pathRewrite: { '^/api': '' }, // чтобы в конец пути target не добавлялось лишнее /api
-        changeOrigin: true,
-        cookieDomainRewrite: { 'ya-praktikum.tech': req.hostname },
-      })(req, res, next);
+  app.use('/api', (req, res, next) => {
+    // Если обращение к API идёт из незнакомого места - заворачиваем
+    if (!allowedHosts.includes(req.hostname)) {
+      res.statusCode = 502;
+      res.send('<!doctype html><p>Bad gateway</p>');
+      return;
     }
-  );
+    return createProxyMiddleware({
+      target: 'https://ya-praktikum.tech/api/v2',
+      pathRewrite: { '^/api': '' }, // чтобы в конец пути target не добавлялось лишнее /api
+      changeOrigin: true,
+      cookieDomainRewrite: { 'ya-praktikum.tech': req.hostname },
+    })(req, res, next);
+  });
 
   /**
    * В случае dev режима работы сервера подключаем vite middleware
