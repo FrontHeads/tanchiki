@@ -1,5 +1,6 @@
 import { type Entity, Projectile, Tank } from '../../entities';
-import { type LoopDelays, type LoopIntervals, EntityEvent } from '../../typings';
+import { EntityEvent } from '../../typings';
+import { type LoopDelays, type LoopIntervals } from './typings';
 
 export class Loop {
   loopTimeMs = 16;

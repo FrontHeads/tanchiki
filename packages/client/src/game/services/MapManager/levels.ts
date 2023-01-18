@@ -1,4 +1,4 @@
-import { type MapData } from '../typings';
+import { type MapData } from './typings';
 
 export const levels: MapData[] = [
   // 1

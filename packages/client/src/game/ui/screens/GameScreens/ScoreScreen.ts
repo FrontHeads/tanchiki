@@ -1,7 +1,7 @@
-import { Color } from '../../data/colors';
-import { spriteCoordinates } from '../../data/constants';
-import { type EnemiesKilledState, type GameMode } from '../../typings';
-import { Screen } from './Screen';
+import { Color } from '../../../data/colors';
+import { spriteCoordinates } from '../../../data/spriteCoordinates';
+import { type EnemiesKilledState, type GameMode } from '../../../typings';
+import { Screen } from '../Screen/Screen';
 
 type ScoreScreenState = {
   mode: GameMode;

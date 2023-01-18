@@ -1,5 +1,5 @@
 import { Color } from '../../data/colors';
-import { spriteCoordinates } from '../../data/constants';
+import { spriteCoordinates } from '../../data/spriteCoordinates';
 import type { EntitySettings } from '../../typings';
 import { Entity } from '../';
 import { EntityEvent } from './../../typings/index';

@@ -1,6 +1,6 @@
-import { ControllerEvent } from '../../typings/index';
 import { sleep } from '../../utils/sleepTimer';
 import { Controller } from '..';
+import { ControllerEvent } from './data';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 
 function mockKeyDown(...codes: Array<string>) {

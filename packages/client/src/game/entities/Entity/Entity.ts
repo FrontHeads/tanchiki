@@ -3,9 +3,7 @@ import {
   type Animations,
   type AnimationSettings,
   type CancelAnimation,
-  type EntityRole,
   type EntitySettings,
-  type EntityType,
   type Pos,
   type PosState,
   type Rect,
@@ -15,6 +13,7 @@ import {
   EntityEvent,
 } from '../../typings';
 import { EventEmitter } from '../../utils';
+import { type EntityRole, type EntityType } from './typings';
 
 export abstract class Entity extends EventEmitter<EntityEvent> {
   /** Расположение объекта по оси X в игровых клетках. */

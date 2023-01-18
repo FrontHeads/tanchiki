@@ -1,8 +1,10 @@
 import { Color } from '../../data/colors';
-import { spriteCoordinates } from '../../data/constants';
-import { type EnemyVariant, type EntityDynamicSettings, Direction, EntityEvent, Speed } from '../../typings';
+import { spriteCoordinates } from '../../data/spriteCoordinates';
+import { type EntityDynamicSettings, Direction, EntityEvent } from '../../typings';
 import { rand } from '../../utils';
+import { Speed } from './data';
 import { Tank } from './Tank';
+import { type EnemyVariant } from './typings';
 
 export class TankEnemy extends Tank {
   lastDirection = Direction.Down;

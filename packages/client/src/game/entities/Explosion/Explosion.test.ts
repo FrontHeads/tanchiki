@@ -1,4 +1,4 @@
-import { spriteCoordinates } from '../../data/constants';
+import { spriteCoordinates } from '../../data/spriteCoordinates';
 import { Loop, View } from '../../services';
 import { Direction, EntityEvent } from '../../typings';
 import { sleep } from '../../utils';

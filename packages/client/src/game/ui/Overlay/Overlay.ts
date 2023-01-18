@@ -1,10 +1,10 @@
 import { Color } from '../../data/colors';
-import { screenClasses } from '../../data/constants';
 import { type Game, type View } from '../../services';
 import { type ScreenType, type UIElementSettings } from '../../typings';
 import { EventEmitter } from '../../utils';
 import { UIElement } from '..';
 import { type Screen } from '../screens';
+import { screenClasses } from './typings';
 
 export class Overlay extends EventEmitter {
   currentScreen?: Screen;

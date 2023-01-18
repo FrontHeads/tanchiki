@@ -1,8 +1,8 @@
-import { Color } from '../../data/colors';
-import { spriteCoordinates } from '../../data/constants';
-import { resources } from '../../services';
-import { MainMenuState } from '../../typings';
-import { Screen } from './Screen';
+import { Color } from '../../../data/colors';
+import { spriteCoordinates } from '../../../data/spriteCoordinates';
+import { resources } from '../../../services';
+import { Screen } from '../Screen/Screen';
+import { MainMenuState } from './data';
 
 export class MainMenuScreen extends Screen<MainMenuState> {
   tankElemInterval: string | null = null;

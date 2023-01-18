@@ -2,9 +2,6 @@ import { Color } from '../../data/colors';
 import { type Entity, Tank } from '../../entities';
 import {
   type AnimationSettings,
-  type GetSpriteCoordinates,
-  type LayerEntity,
-  type LayerList,
   type Rect,
   type Size,
   type SpriteCoordinatesNoAnimations,
@@ -12,6 +9,7 @@ import {
 } from '../../typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
+import { type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
 
 export class View extends EventEmitter {
   width = 0;

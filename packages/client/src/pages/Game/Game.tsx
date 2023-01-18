@@ -3,7 +3,8 @@ import './Game.css';
 import { useEffect, useRef } from 'react';
 
 import { Tanchiki } from '../../game';
-import { GameEvents, ScreenType } from '../../game/typings';
+import { GameEvents } from '../../game/services/Game/data';
+import { ScreenType } from '../../game/typings';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
 import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';

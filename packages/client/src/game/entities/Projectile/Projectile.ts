@@ -1,7 +1,8 @@
 import { Color } from '../../data/colors';
-import { spriteCoordinates } from '../../data/constants';
-import { type ProjectileSettings, Direction, EntityEvent } from '../../typings';
+import { spriteCoordinates } from '../../data/spriteCoordinates';
+import { Direction, EntityEvent } from '../../typings';
 import { type Tank, EntityDynamic } from '../';
+import { type ProjectileSettings } from './typings';
 
 export class Projectile extends EntityDynamic {
   width = 2;

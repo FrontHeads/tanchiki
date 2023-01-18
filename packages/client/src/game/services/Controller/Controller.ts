@@ -1,5 +1,6 @@
-import { type Direction, ControllerEvent } from '../../typings';
+import { type Direction } from '../../typings';
 import { EventEmitter } from '../../utils';
+import { ControllerEvent } from './data';
 import { type BindingConfig, type KeyBinding } from './KeyBindings';
 
 export class Controller extends EventEmitter<ControllerEvent> {

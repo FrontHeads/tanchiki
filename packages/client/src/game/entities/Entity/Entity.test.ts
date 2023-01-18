@@ -1,4 +1,4 @@
-import { spriteCoordinates } from '../../data/constants';
+import { spriteCoordinates } from '../../data/spriteCoordinates';
 import { Game } from '../../services';
 import { EntityEvent } from '../../typings';
 import { sleep } from '../../utils/sleepTimer';

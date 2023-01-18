@@ -420,3 +420,10 @@ export const classicDesignSprite = {
   'ui.pause': [[1184, 704, 156, 28]],
   'ui.gameOver': [[1184, 736, 124, 60]],
 };
+
+//TODO тут будут координаты для спрайта с современным дизайном.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const modernDesignSprite = {}; //view
+
+/** Координаты сущностей на sprite-изображении */
+export const spriteCoordinates = classicDesignSprite; //view

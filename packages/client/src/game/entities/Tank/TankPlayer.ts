@@ -1,6 +1,8 @@
-import { spriteCoordinates } from '../../data/constants';
-import { type EntityDynamicSettings, type PlayerVariant, EntityEvent,Speed } from '../../typings';
+import { spriteCoordinates } from '../../data/spriteCoordinates';
+import { type EntityDynamicSettings, EntityEvent } from '../../typings';
+import { Speed } from './data';
 import { Tank } from './Tank';
+import { type PlayerVariant } from './typings';
 
 export class TankPlayer extends Tank {
   spawnShieldTimeout = 3000;

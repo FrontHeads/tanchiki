@@ -1,5 +1,4 @@
 import { Color } from '../../data/colors';
-import { playerInitialSettings, spawnPlaces } from '../../data/constants';
 import {
   type Entity,
   type Projectile,
@@ -10,25 +9,18 @@ import {
   TankPlayer,
   Terrain,
 } from '../../entities';
-import {
-  type Direction,
-  type EnemyDestroyedPayload,
-  type EntityDynamicSettings,
-  type EntitySettings,
-  type MapData,
-  type ScenarioPlayerState,
-  type ScenarioState,
-  ControllerEvent,
-  EntityEvent,
-  MainMenuState,
-  Player,
-  ScenarioEvent,
-} from '../../typings';
+import { type Direction, type EntityDynamicSettings, type EntitySettings, EntityEvent, Player } from '../../typings';
+import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter } from '../../utils';
 import { type Controller } from '../Controller/Controller';
+import { ControllerEvent } from '../Controller/data';
 import { type Game } from '../Game/Game';
 import { IndicatorManager } from '../IndicatorManager/IndicatorManager';
+import { spawnPlaces } from '../MapManager/data';
 import { MapManager } from '../MapManager/MapManager';
+import { type MapData } from '../MapManager/typings';
+import { playerInitialSettings } from './data';
+import { type EnemyDestroyedPayload, type ScenarioPlayerState, type ScenarioState, ScenarioEvent } from './typings';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {

@@ -1,7 +1,8 @@
-import { playerInitialSettings } from '../../data/constants';
 import { Tank } from '../../entities';
-import { Player, ScenarioEvent } from '../../typings';
+import { Player } from '../../typings';
 import { Game, Scenario } from '..';
+import { playerInitialSettings } from './data';
+import { ScenarioEvent } from './typings';
 
 describe('game/services/Scenario', () => {
   it('should create tank', () => {

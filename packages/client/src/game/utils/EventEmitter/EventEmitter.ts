@@ -1,4 +1,4 @@
-import { type Fn } from '../typings';
+import { type Fn } from './typings';
 
 export abstract class EventEmitter<T extends string = string> {
   listeners = {} as Record<T, Array<Fn>>;

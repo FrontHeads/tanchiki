@@ -1,5 +1,5 @@
 import { Direction } from '../../typings';
-import { ControllerEvent } from '../../typings/index';
+import { ControllerEvent } from './data';
 
 export type KeyBinding =
   | [ControllerEvent.Move, Direction]

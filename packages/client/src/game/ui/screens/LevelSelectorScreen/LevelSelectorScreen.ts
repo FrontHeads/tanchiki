@@ -1,6 +1,6 @@
-import { Color } from '../../data/colors';
-import { type LevelSelectorScreenProps } from './LevelSelectorScreen.typings';
-import { Screen } from './Screen';
+import { Color } from '../../../data/colors';
+import { Screen } from '../Screen/Screen';
+import { type LevelSelectorScreenProps } from './typings';
 
 export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
   show({ level, showHints = true }: LevelSelectorScreenProps) {
