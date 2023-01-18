@@ -43,12 +43,15 @@ async function startServer() {
   const srcPath = path.dirname(require.resolve('client'));
 
   /** Проксирует запросы к API на сервер Яндекса */
-  app.use('/api', createProxyMiddleware({
-    target: 'https://ya-praktikum.tech/api/v2',
-    pathRewrite: { '^/api' : '' }, // чтобы в конец пути target не добавлялось лишнее /api 
-    changeOrigin: true,
-    cookieDomainRewrite: { 'ya-praktikum.tech': 'localhost' },
-  }));
+  app.use(
+    '/api',
+    createProxyMiddleware({
+      target: 'https://ya-praktikum.tech/api/v2',
+      pathRewrite: { '^/api': '' }, // чтобы в конец пути target не добавлялось лишнее /api
+      changeOrigin: true,
+      cookieDomainRewrite: { 'ya-praktikum.tech': 'localhost' },
+    })
+  );
 
   /**
    * В случае dev режима работы сервера подключаем vite middleware
