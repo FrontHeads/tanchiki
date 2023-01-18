@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
 import { createClientAndConnect } from './db';
+import { apiRoute } from './routes/Api';
 
 dotenv.config();
 
@@ -40,9 +41,7 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)');
-  });
+  app.use('/api', apiRoute);
 
   /**
    * В случае dev режима работы сервера подключаем vite middleware
