@@ -26,6 +26,12 @@ export const PATH = {
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
+export const CLIENT_ONLY_HOSTS = [
+  `localhost:${LOCAL_CLIENT_PORT}`,
+  `127.0.0.1:${LOCAL_CLIENT_PORT}`,
+  `frontheads.github.io`,
+];
+
 export const LOCAL_API_HOST = `http://localhost:${LOCAL_SERVER_PORT}/api`;
 
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
