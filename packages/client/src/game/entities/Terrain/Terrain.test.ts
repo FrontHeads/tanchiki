@@ -1,4 +1,4 @@
-import { Terrain } from '..';
+import { Terrain } from '../';
 
 describe('game/entities/Terrain', () => {
   it('should have properties based on type', () => {

@@ -1,7 +1,7 @@
-import { Color } from '../../data/colors';
-import { spriteCoordinates } from '../../data/spriteCoordinates';
-import { Direction, EntityEvent } from '../../typings';
+import { Color } from '../../services/View/data/colors';
+import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
 import { type Projectile, type Tank, Entity } from '../';
+import { Direction, EntityEvent } from '../Entity/typings';
 import { type ExplosionVariant } from './typings';
 
 type ExplosionSettings = { parent: Tank | Projectile };

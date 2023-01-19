@@ -1,4 +1,4 @@
-import { type Direction } from '../../typings';
+import { type Direction } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { ControllerEvent } from './data';
 import { type BindingConfig, type KeyBinding } from './KeyBindings';

@@ -1,5 +1,5 @@
-import { Color } from '../../../data/colors';
-import { Screen } from '../Screen/Screen';
+import { Color } from '../../../services/View/data/colors';
+import { Screen } from '../Screen';
 
 export class GameStartScreen extends Screen<number> {
   show() {

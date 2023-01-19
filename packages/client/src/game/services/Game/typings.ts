@@ -5,8 +5,4 @@ export type GameSettings = {
   indicatorsSidebarSize: number;
 };
 
-export type StatisticsData = {
-  score: number;
-  matches: number;
-  time: number;
-};
+export type GameMode = 'SINGLEPLAYER' | 'MULTIPLAYER';

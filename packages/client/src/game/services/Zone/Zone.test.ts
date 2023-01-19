@@ -1,7 +1,6 @@
 import { type Entity, Tank, Terrain } from '../../entities';
-import type { Rect } from '../../typings';
-import { EntityEvent } from '../../typings/index';
-import { Zone } from '..';
+import { type Rect, EntityEvent } from '../../entities/Entity/typings';
+import { Zone } from '../';
 
 function mockEntity(rect: Rect) {
   const entity = new Tank(rect);

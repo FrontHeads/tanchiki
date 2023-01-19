@@ -1,4 +1,4 @@
-import { Player } from '../../typings';
+import { Player } from '../Scenario/data';
 
 export const playerLivesData = {
   [Player.Player1]: { header: '1 И', posY: 30 },

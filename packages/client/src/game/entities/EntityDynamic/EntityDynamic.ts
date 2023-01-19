@@ -1,6 +1,6 @@
-import { type EntityDynamicSettings, type PosState, type Rect, Direction } from '../../typings';
 import { Entity } from '../';
-import { EntityEvent } from './../../typings/index';
+import { type PosState, type Rect, Direction, EntityEvent } from '../Entity/typings';
+import { type EntityDynamicSettings } from './typings';
 
 export abstract class EntityDynamic extends Entity {
   /** Должен ли объект двигаться. */

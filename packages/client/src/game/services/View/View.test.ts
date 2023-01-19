@@ -1,9 +1,8 @@
 import { type Entity, TankPlayer } from '../../entities';
-import { type Rect, Direction } from '../../typings';
-import { EntityEvent } from '../../typings/index';
+import { type Rect, Direction, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { sleep } from '../../utils/sleepTimer';
-import { Game, View } from '..';
+import { Game, View } from '../';
 
 class TestEntity extends EventEmitter {}
 

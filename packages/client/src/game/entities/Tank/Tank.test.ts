@@ -1,6 +1,6 @@
 import { Zone } from '../../services';
-import { Direction, EntityEvent } from '../../typings';
-import { Projectile, TankPlayer, Terrain } from '..';
+import { Projectile, TankPlayer, Terrain } from '../';
+import { Direction, EntityEvent } from '../Entity/typings';
 
 function mockTank() {
   const tank = new TankPlayer({ posX: 2, posY: 2, width: 2, height: 2, direction: Direction.Down });

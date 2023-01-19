@@ -1,5 +1,4 @@
-import { type EntityType } from '../../entities/Entity/typings';
-import { type EntitySettings, type Pos } from '../../typings';
+import { type EntitySettings, type EntityType, type Pos } from '../../entities/Entity/typings';
 import { type GameSettings } from '../Game/typings';
 import { brickCells, Cell, concreteCells, spawnPlaces } from './data';
 import { levels } from './levels';

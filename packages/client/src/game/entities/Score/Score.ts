@@ -1,6 +1,6 @@
-import { spriteCoordinates } from '../../data/spriteCoordinates';
-import { EntityEvent } from '../../typings';
+import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
 import { type TankEnemy, Entity } from '../';
+import { EntityEvent } from '../Entity/typings';
 import { type ScoreVariant } from './typings';
 
 type ScoreSettings = { points: number; parent: TankEnemy };

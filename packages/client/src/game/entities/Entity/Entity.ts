@@ -1,19 +1,22 @@
-import { Color } from '../../data/colors';
+import { Color } from '../../services/View/data/colors';
 import {
   type Animations,
   type AnimationSettings,
   type CancelAnimation,
+  type SpriteCoordinatesNoAnimations,
+  type SpriteCoordinatesWithAnimations,
+} from '../../services/View/typings';
+import { EventEmitter } from '../../utils';
+import {
+  type EntityRole,
   type EntitySettings,
+  type EntityType,
   type Pos,
   type PosState,
   type Rect,
-  type SpriteCoordinatesNoAnimations,
-  type SpriteCoordinatesWithAnimations,
   Direction,
   EntityEvent,
-} from '../../typings';
-import { EventEmitter } from '../../utils';
-import { type EntityRole, type EntityType } from './typings';
+} from './typings';
 
 export abstract class Entity extends EventEmitter<EntityEvent> {
   /** Расположение объекта по оси X в игровых клетках. */

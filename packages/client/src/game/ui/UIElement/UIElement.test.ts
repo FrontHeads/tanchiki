@@ -1,5 +1,5 @@
-import { EntityEvent } from '../../typings/index';
-import { UIElement } from '..';
+import { EntityEvent } from '../../entities/Entity/typings';
+import { UIElement } from '../';
 
 describe('game/ui/UIElement', () => {
   it('should render', () => {

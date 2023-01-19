@@ -1,4 +1,4 @@
-import { Flag } from '..';
+import { Flag } from '../';
 
 describe('game/entities/Flag', () => {
   it('should have properties based on type', () => {

@@ -1,5 +1,6 @@
 import { Entity } from '../../entities';
-import { type UIElementSettings, EntityEvent } from '../../typings';
+import { EntityEvent } from '../../entities/Entity/typings';
+import { type UIElementSettings } from './typings';
 
 export class UIElement extends Entity {
   text = '';

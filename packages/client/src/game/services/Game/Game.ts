@@ -1,22 +1,17 @@
 import { type Entity } from '../../entities';
-import { Direction, ScreenType } from '../../typings';
+import { Direction } from '../../entities/Entity/typings';
+import { ScreenType } from '../../typings';
 import { Overlay } from '../../ui';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
-import { AudioManager } from '../AudioManager/AudioManager';
-import { Controller } from '../Controller/Controller';
+import { AudioManager, Controller, Loop, resources, Scenario, Statistics, View, Zone } from '../';
 import { ControllerEvent } from '../Controller/data';
 import { KeyBindingsArrows, KeyBindingsWasd } from '../Controller/KeyBindings';
-import { Loop } from '../Loop/Loop';
 import { levels } from '../MapManager/levels';
-import { resources } from '../Resources/Resources';
-import { Scenario } from '../Scenario/Scenario';
 import { ScenarioEvent } from '../Scenario/typings';
-import { Statistics } from '../Statistics/Statistics';
-import { View } from '../View/View';
-import { Zone } from '../Zone/Zone';
+import { type StatisticsData } from '../Statistics/typings';
 import { GameEvents } from './data';
-import { type GameSettings, type StatisticsData } from './typings';
+import { type GameSettings } from './typings';
 
 export class Game extends EventEmitter {
   static __instance: Game;

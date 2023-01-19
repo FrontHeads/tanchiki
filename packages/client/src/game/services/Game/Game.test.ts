@@ -1,4 +1,4 @@
-import { Game } from '..';
+import { Game } from '../';
 
 describe('game/services/Game', () => {
   it('should be singleton', () => {

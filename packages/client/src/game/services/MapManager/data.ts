@@ -49,7 +49,6 @@ export const brickCells: Cell[] = [
  * был установлен какой-то предмет
  */
 export const spawnPlaces: Record<number, number[]> = {
-  //mapmanager
   0: [0, 6, 12],
   12: [4, 8],
 };

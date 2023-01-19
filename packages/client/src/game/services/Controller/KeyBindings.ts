@@ -1,4 +1,4 @@
-import { Direction } from '../../typings';
+import { Direction } from '../../entities/Entity/typings';
 import { ControllerEvent } from './data';
 
 export type KeyBinding =

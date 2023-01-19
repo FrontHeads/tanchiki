@@ -1,4 +1,4 @@
-import { type Overlay } from '../..';
+import { type Overlay } from '..';
 
 export abstract class Screen<T = unknown> {
   constructor(protected overlay: Overlay) {}

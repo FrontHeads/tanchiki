@@ -1,7 +1,6 @@
 import { Tank } from '../../entities';
-import { Player } from '../../typings';
-import { Game, Scenario } from '..';
-import { playerInitialSettings } from './data';
+import { Game, Scenario } from '../';
+import { Player, playerInitialSettings } from './data';
 import { ScenarioEvent } from './typings';
 
 describe('game/services/Scenario', () => {

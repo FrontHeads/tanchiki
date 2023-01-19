@@ -1,8 +1,7 @@
-import { Color } from '../../data/colors';
-import { spriteCoordinates } from '../../data/spriteCoordinates';
-import type { EntitySettings } from '../../typings';
+import { Color } from '../../services/View/data/colors';
+import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
 import { Entity } from '../';
-import { EntityEvent } from './../../typings/index';
+import { type EntitySettings, EntityEvent } from '../Entity/typings';
 
 export class Flag extends Entity {
   destroyed = false;

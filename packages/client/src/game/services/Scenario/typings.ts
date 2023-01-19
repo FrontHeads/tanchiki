@@ -1,6 +1,6 @@
 import { type Tank, type TankEnemy } from '../../entities';
-import { type Player } from '../../typings';
-import { type Controller } from '../Controller/Controller';
+import { type Controller } from '../';
+import { type Player } from './data';
 
 export enum ScenarioEvent {
   GameOver = 'GAME_OVER',

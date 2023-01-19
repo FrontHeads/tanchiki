@@ -1,6 +1,6 @@
 import { Tank } from '../../entities';
 import { sleep } from '../../utils';
-import { Loop } from '..';
+import { Loop } from '../';
 
 function mockEntity() {
   const entity = new Tank({ posX: 0, posY: 0 });

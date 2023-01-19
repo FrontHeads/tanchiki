@@ -1,3 +1,4 @@
+export { AudioManager } from './AudioManager/AudioManager';
 export { Controller } from './Controller/Controller';
 export { Game } from './Game/Game';
 export { IndicatorManager } from './IndicatorManager/IndicatorManager';

@@ -1,5 +1,5 @@
 import { isOdd } from '../../../utils';
-import { Screen } from '../Screen/Screen';
+import { Screen } from '../Screen';
 
 export class PausePopupScreen extends Screen {
   show() {

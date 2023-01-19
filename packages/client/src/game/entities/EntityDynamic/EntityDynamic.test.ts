@@ -1,5 +1,5 @@
-import { Direction } from '../../typings';
-import { EntityDynamic } from '..';
+import { EntityDynamic } from '../';
+import { Direction } from '../Entity/typings';
 
 class TestEntityDynamic extends EntityDynamic {
   stateCheck() {

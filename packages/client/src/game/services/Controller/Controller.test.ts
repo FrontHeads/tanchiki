@@ -1,5 +1,5 @@
 import { sleep } from '../../utils/sleepTimer';
-import { Controller } from '..';
+import { Controller } from '../';
 import { ControllerEvent } from './data';
 import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
 

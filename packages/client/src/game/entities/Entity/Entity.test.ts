@@ -1,8 +1,8 @@
-import { spriteCoordinates } from '../../data/spriteCoordinates';
 import { Game } from '../../services';
-import { EntityEvent } from '../../typings';
+import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
 import { sleep } from '../../utils/sleepTimer';
-import { Entity } from '..';
+import { Entity } from '../';
+import { EntityEvent } from './typings';
 
 class TestEntity extends Entity {}
 

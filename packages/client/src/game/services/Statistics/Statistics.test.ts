@@ -1,6 +1,6 @@
 import { Explosion, Projectile, TankEnemy, TankPlayer } from '../../entities';
 import { sleep } from '../../utils';
-import { Game } from '..';
+import { Game } from '../';
 import { GameEvents } from '../Game/data';
 
 let game: Game;

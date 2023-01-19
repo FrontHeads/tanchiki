@@ -1,7 +1,7 @@
-import { Color } from '../../../data/colors';
-import { spriteCoordinates } from '../../../data/spriteCoordinates';
 import { resources } from '../../../services';
-import { Screen } from '../Screen/Screen';
+import { Color } from '../../../services/View/data/colors';
+import { spriteCoordinates } from '../../../services/View/data/spriteCoordinates';
+import { Screen } from '../Screen';
 import { MainMenuState } from './data';
 
 export class MainMenuScreen extends Screen<MainMenuState> {

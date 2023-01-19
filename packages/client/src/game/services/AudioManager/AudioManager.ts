@@ -1,8 +1,8 @@
 import { type Entity, Tank, Terrain } from '../../entities';
-import { type DamageSettings, EntityEvent } from '../../typings';
+import { type DamageSettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
+import { resources } from '../';
 import { type SoundPathList } from '../Resources/data';
-import { resources } from '../Resources/Resources';
 
 export class AudioManager extends EventEmitter {
   private isStopped = false;

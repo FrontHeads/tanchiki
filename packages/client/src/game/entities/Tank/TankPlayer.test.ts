@@ -1,6 +1,6 @@
 import { Loop } from '../../services';
-import { Direction, EntityEvent } from '../../typings';
 import { sleep } from '../../utils';
+import { Direction, EntityEvent } from '../Entity/typings';
 import { TankPlayer } from './TankPlayer';
 
 function mockTank() {

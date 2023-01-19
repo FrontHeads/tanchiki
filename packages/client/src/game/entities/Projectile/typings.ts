@@ -1,4 +1,4 @@
-import { type EntityDynamicSettings } from '../../typings';
-import { type Tank } from '../Tank/Tank';
+import { type Tank } from '../';
+import { type EntityDynamicSettings } from '../EntityDynamic/typings';
 
 export type ProjectileSettings = EntityDynamicSettings & { parent: Tank };
