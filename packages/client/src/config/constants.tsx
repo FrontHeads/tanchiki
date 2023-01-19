@@ -1,4 +1,6 @@
-import defaultAvatar from '/assets/img/default-avatar.png';
+import DEFAULT_AVATAR from '/assets/img/default-avatar.png';
+
+export { DEFAULT_AVATAR };
 
 export const META_TITLE_SUFFIX = '- Танчики';
 
@@ -17,16 +19,26 @@ export enum Paths {
   Error500 = '500',
 }
 
+export const LOCAL_CLIENT_PORT = 3000;
+
+export const LOCAL_SERVER_PORT = 5000;
+
 export const PATH = {
-  defaultAvatar,
-  avatarBase: 'https://ya-praktikum.tech/api/v2/resources',
-  oauthRedirect: `http://localhost:5000`,
+  oauthRedirect: `http://localhost:${LOCAL_SERVER_PORT}`,
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
+export const CLIENT_ONLY_HOSTS = [
+  `localhost:${LOCAL_CLIENT_PORT}`,
+  `127.0.0.1:${LOCAL_CLIENT_PORT}`,
+  `frontheads.github.io`,
+];
+
+export const LOCAL_API_HOST = `http://localhost:${LOCAL_SERVER_PORT}/api`;
+
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
-export const YANDEX_API_ENDPOINTS = {
+export const API_ENDPOINTS = {
   AUTH: {
     SIGNIN: 'auth/signin',
     SIGNUP: 'auth/signup',
@@ -42,12 +54,11 @@ export const YANDEX_API_ENDPOINTS = {
     UPDATE_PROFILE: 'user/profile',
     UPDATE_PROFILE_AVATAR: 'user/profile/avatar',
     SEARCH: 'user/search',
+    GET_AVATAR: (avatarPath: string) => `resources${avatarPath}`,
   },
   LEADERBOARD: {
-    ADD_SCORE: '/leaderboard',
-    GET: (teamName: string) => {
-      return `/leaderboard/${teamName}`;
-    },
+    ADD_SCORE: 'leaderboard',
+    GET: (teamName: string) => `leaderboard/${teamName}`,
   },
 };
 
