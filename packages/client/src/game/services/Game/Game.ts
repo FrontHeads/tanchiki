@@ -1,7 +1,7 @@
 import { type Entity } from '../../entities';
 import { Direction } from '../../entities/Entity/typings';
-import { ScreenType } from '../../typings';
 import { Overlay } from '../../ui';
+import { ScreenType } from '../../ui/screens/data';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
 import { AudioManager, Controller, Loop, resources, Scenario, Statistics, View, Zone } from '../';

@@ -1,9 +1,9 @@
 import { type Game, type View } from '../../services';
 import { Color } from '../../services/View/data/colors';
-import { type ScreenType } from '../../typings';
 import { EventEmitter } from '../../utils';
 import { UIElement } from '../';
 import { type Screen } from '../screens';
+import { type ScreenType } from '../screens/data';
 import { type UIElementSettings } from '../UIElement/typings';
 import { screenClasses } from './typings';
 

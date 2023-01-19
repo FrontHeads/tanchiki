@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 import { Tanchiki } from '../../game';
 import { GameEvents } from '../../game/services/Game/data';
-import { ScreenType } from '../../game/typings';
+import { ScreenType } from '../../game/ui/screens/data';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
 import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';

@@ -1,4 +1,4 @@
-import { LEADERBOARD_TEAM_NAME, API_ENDPOINTS } from '../config/constants';
+import { API_ENDPOINTS,LEADERBOARD_TEAM_NAME } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
 import { type ResponseType } from '../utils/HTTP/HTTP';
 import {

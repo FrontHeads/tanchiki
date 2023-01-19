@@ -1,4 +1,3 @@
-import { ScreenType } from '../../typings';
 import {
   GameOverPopupScreen,
   GameStartScreen,
@@ -8,6 +7,7 @@ import {
   PausePopupScreen,
   ScoreScreen,
 } from '../screens';
+import { ScreenType } from '../screens/data';
 
 export const screenClasses = {
   [ScreenType.Loading]: LoadingScreen,
