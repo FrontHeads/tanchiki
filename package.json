@@ -14,7 +14,8 @@
     "docker": "docker-compose up",
     "docker:preview": "docker-compose up --build",
     "docker:db": "docker-compose up postgres -d",
-    "docker:dev": "yarn docker:db && yarn dev"
+    "docker:pgadmin": "docker-compose up pgadmin -d",
+    "docker:dev": "yarn docker:pgadmin && yarn dev"
   },
   "license": "MIT",
   "workspaces": [
