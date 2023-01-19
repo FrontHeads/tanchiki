@@ -41,4 +41,4 @@ jobs:
             ✏️ Описание: ${{ github.event.pull_request.body }}
 
 
-            👀 Посмотреть: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            👀 Посмотреть: ${{ github.event.pull_request.html_url}}
