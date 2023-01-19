@@ -1,9 +1,9 @@
-import { Color } from '../../services/View/data/colors';
-import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
+import { Color } from '../../services/View/colors';
+import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { rand } from '../../utils';
 import { Direction, EntityEvent } from '../Entity/typings';
+import { Speed } from '../EntityDynamic/data';
 import { type EntityDynamicSettings } from '../EntityDynamic/typings';
-import { Speed } from './data';
 import { Tank } from './Tank';
 import { type EnemyVariant } from './typings';
 

@@ -1,5 +1,5 @@
 import { type Pos, type Size } from '../../entities/Entity/typings';
-import { type Color } from '../../services/View/data/colors';
+import { type Color } from '../../services/View/colors';
 import { type SpriteCoordinatesNoAnimations } from '../../services/View/typings';
 
 export type UIElementSettings = Pos &

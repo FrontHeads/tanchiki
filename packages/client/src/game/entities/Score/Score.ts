@@ -1,4 +1,4 @@
-import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
+import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { type TankEnemy, Entity } from '../';
 import { EntityEvent } from '../Entity/typings';
 import { type ScoreVariant } from './typings';

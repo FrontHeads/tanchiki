@@ -1,7 +1,7 @@
 import { type GameMode } from '../../../services/Game/typings';
 import { type EnemiesKilledState } from '../../../services/Statistics/typings';
-import { Color } from '../../../services/View/data/colors';
-import { spriteCoordinates } from '../../../services/View/data/spriteCoordinates';
+import { Color } from '../../../services/View/colors';
+import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
 import { Screen } from '../Screen';
 
 type ScoreScreenState = {

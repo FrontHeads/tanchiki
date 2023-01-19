@@ -1,5 +1,5 @@
 import { Game } from '../../services';
-import { Overlay } from '..';
+import { Overlay } from '../';
 import { ScreenType } from './data';
 
 const mockShow = jest.fn();

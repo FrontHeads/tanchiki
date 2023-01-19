@@ -1,5 +1,5 @@
 import { type Game, type View } from '../../services';
-import { Color } from '../../services/View/data/colors';
+import { Color } from '../../services/View/colors';
 import { EventEmitter } from '../../utils';
 import { UIElement } from '../';
 import { type Screen } from '../screens';

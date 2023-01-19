@@ -1,4 +1,4 @@
-import { type Color } from '../../services/View/data/colors';
+import { type Color } from '../../services/View/colors';
 import { type ExplosionVariant } from '../Explosion/typings';
 import { type Projectile } from '../Projectile/Projectile';
 import { type EnemyVariant, type PlayerVariant } from '../Tank/typings';

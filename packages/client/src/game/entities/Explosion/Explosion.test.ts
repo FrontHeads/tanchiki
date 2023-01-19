@@ -1,5 +1,5 @@
 import { Loop, View } from '../../services';
-import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
+import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { sleep } from '../../utils';
 import { type TankEnemy, Explosion, Projectile } from '../';
 import { Direction, EntityEvent } from '../Entity/typings';

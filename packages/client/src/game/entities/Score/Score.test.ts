@@ -1,5 +1,5 @@
 import { Loop } from '../../services';
-import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
+import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { sleep } from '../../utils';
 import { type TankEnemy, Score } from '../';
 import { EntityEvent } from '../Entity/typings';

@@ -16,7 +16,7 @@ import { type Controller, type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
 import { spawnPlaces } from '../MapManager/data';
 import { type MapData } from '../MapManager/typings';
-import { Color } from '../View/data/colors';
+import { Color } from '../View/colors';
 import { Player, playerInitialSettings } from './data';
 import { type EnemyDestroyedPayload, type ScenarioPlayerState, type ScenarioState, ScenarioEvent } from './typings';
 

@@ -1,4 +1,4 @@
-import { Color } from '../../services/View/data/colors';
+import { Color } from '../../services/View/colors';
 import {
   type Animations,
   type AnimationSettings,

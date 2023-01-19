@@ -1,5 +1,5 @@
 import { type EntityDynamicSettings } from '../../entities/EntityDynamic/typings';
-import { Color } from '../View/data/colors';
+import { Color } from '../View/colors';
 
 export enum Player {
   Player1 = 'PLAYER1',

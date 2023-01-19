@@ -1,7 +1,7 @@
-import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
+import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { EntityEvent } from '../Entity/typings';
+import { Speed } from '../EntityDynamic/data';
 import { type EntityDynamicSettings } from '../EntityDynamic/typings';
-import { Speed } from './data';
 import { Tank } from './Tank';
 import { type PlayerVariant } from './typings';
 

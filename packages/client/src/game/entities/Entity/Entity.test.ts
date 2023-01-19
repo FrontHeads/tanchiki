@@ -1,5 +1,5 @@
 import { Game } from '../../services';
-import { spriteCoordinates } from '../../services/View/data/spriteCoordinates';
+import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { sleep } from '../../utils/sleepTimer';
 import { Entity } from '../';
 import { EntityEvent } from './typings';

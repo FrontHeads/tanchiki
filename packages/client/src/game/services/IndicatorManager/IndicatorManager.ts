@@ -2,8 +2,8 @@ import { UIElement } from '../../ui';
 import { type UIElementSettings } from '../../ui/UIElement/typings';
 import { isOdd } from '../../utils';
 import { type Game } from '../';
-import { Color } from '../View/data/colors';
-import { spriteCoordinates } from '../View/data/spriteCoordinates';
+import { Color } from '../View/colors';
+import { spriteCoordinates } from '../View/spriteCoordinates';
 import { IndicatorNames, playerLivesData } from './data';
 
 export class IndicatorManager {

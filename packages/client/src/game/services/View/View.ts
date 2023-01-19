@@ -2,7 +2,7 @@ import { type Entity, Tank } from '../../entities';
 import { type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
-import { Color } from './data/colors';
+import { Color } from './colors';
 import {
   type AnimationSettings,
   type GetSpriteCoordinates,

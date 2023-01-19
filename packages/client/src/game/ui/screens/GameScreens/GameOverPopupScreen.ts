@@ -1,4 +1,4 @@
-import { Color } from '../../../services/View/data/colors';
+import { Color } from '../../../services/View/colors';
 import { Screen } from '../Screen';
 
 export class GameOverPopupScreen extends Screen {
