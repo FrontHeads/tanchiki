@@ -14,8 +14,8 @@ apiRoute
   .use('/', (req, res, next) => {
     // Если обращение к API идёт из незнакомого места - отклоняем
     if (!allowedHosts.includes(req.hostname)) {
-      res.statusCode = 502;
-      res.send('<!doctype html><p>Bad gateway</p>');
+      res.statusCode = 404;
+      res.send('<!doctype html><p>Not Found</p>');
       return;
     }
 

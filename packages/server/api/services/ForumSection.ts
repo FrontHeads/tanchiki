@@ -4,8 +4,8 @@ import { ForumSection } from '../../models/ForumSection';
 
 export const forumSectionRoute = Router()
   .get('', async (_: Request, res: Response): Promise<Response> => {
-    const allDogs: ForumSection[] = await ForumSection.findAll();
-    return res.status(200).json(allDogs);
+    const allData: ForumSection[] = await ForumSection.findAll();
+    return res.status(200).json(allData);
   })
   .get(':id', async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
@@ -13,7 +13,7 @@ export const forumSectionRoute = Router()
     return res.status(200).json(model);
   })
   .post('', async (req: Request, res: Response): Promise<Response> => {
-    const model: ForumSection = await ForumSection.create({ ...req.body });
+    const model: ForumSection = await ForumSection.create(req.body);
     return res.status(201).json(model);
   })
   .put(':id', async (req: Request, res: Response): Promise<Response> => {
