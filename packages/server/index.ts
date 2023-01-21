@@ -44,6 +44,9 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
   /** Проксирует запросы к API на сервер Яндекса */
   app.use('/api', apiRoute);
 

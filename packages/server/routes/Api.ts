@@ -3,14 +3,17 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { allowedHosts } from '../';
 import { forumSectionRoute } from '../api/services/ForumSection';
+import { forumTopicRoute } from '../api/services/ForumTopic';
 
 export const apiRoute = Router();
 
 apiRoute
   .use('/forum/section', forumSectionRoute)
-  .get('/test', (_, res) => {
+  .use('/forum/topic', forumTopicRoute)
+  .get('/test', (_, res, _next) => {
     res.send('test');
   })
+
   .use('/', (req, res, next) => {
     // Если обращение к API идёт из незнакомого места - отклоняем
     if (!allowedHosts.includes(req.hostname)) {
