@@ -3,14 +3,19 @@
   "private": true,
   "scripts": {
     "bootstrap": "yarn && node init.js && lerna clean && yarn && lerna bootstrap && git config --local commit.template .gitcommittemplate",
-    "build": "yarn build:client && yarn build:server",
     "build:client": "lerna run build --scope=client",
     "build:server": "lerna run build --scope=server",
+    "build": "yarn build:client && yarn build:server",
     "dev": "lerna run dev --parallel",
     "test": "lerna run test",
     "lint": "lerna run lint",
     "format": "lerna run format",
-    "preview": "yarn build && lerna run preview --parallel"
+    "preview": "yarn build && lerna run preview --parallel",
+    "docker": "docker-compose up",
+    "docker:preview": "docker-compose up --build",
+    "docker:db": "docker-compose up postgres -d",
+    "docker:pgadmin": "docker-compose up pgadmin -d",
+    "docker:dev": "yarn docker:pgadmin && yarn dev"
   },
   "license": "MIT",
   "workspaces": [
