@@ -1,9 +1,9 @@
 import { Game } from '../../services';
-import { ScreenType } from '../../typings';
-import { Overlay } from '../Overlay';
+import { Overlay } from '../';
+import { ScreenType } from './data';
 
 const mockShow = jest.fn();
-jest.mock('./MainMenuScreen', () => {
+jest.mock('./UIScreens/MainMenuScreen', () => {
   return {
     MainMenuScreen: jest.fn().mockImplementation(() => {
       return {

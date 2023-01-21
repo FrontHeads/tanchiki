@@ -11,6 +11,7 @@ dotenv.config();
 
 import express from 'express';
 import * as fs from 'fs';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as path from 'path';
 
 import { HtmlWritable } from './utils/HtmlWritable';

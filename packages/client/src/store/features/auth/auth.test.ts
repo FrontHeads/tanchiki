@@ -1,5 +1,5 @@
+import { fakeUserProfile } from '../../../tests/data';
 import { store } from '../../store';
-import { fakeUserProfile } from './../../../tests/data';
 import { authThunks } from './authThunks';
 
 describe('Redux auth state', () => {
