@@ -11,6 +11,7 @@ dotenv.config();
 
 import express from 'express';
 import * as fs from 'fs';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as path from 'path';
 
 import { HtmlWritable } from './utils/HtmlWritable';
@@ -43,9 +44,6 @@ async function startServer() {
   const distPath = path.dirname(require.resolve('client/dist/index.html'));
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
-
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
 
   /** Проксирует запросы к API на сервер Яндекса */
   app.use('/api', apiRoute);

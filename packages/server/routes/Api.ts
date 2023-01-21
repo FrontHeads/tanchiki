@@ -3,22 +3,19 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { allowedHosts } from '../';
 import { forumSectionRoute } from '../api/services/ForumSection';
-import { forumTopicRoute } from '../api/services/ForumTopic';
 
 export const apiRoute = Router();
 
 apiRoute
   .use('/forum/section', forumSectionRoute)
-  .use('/forum/topic', forumTopicRoute)
-  .get('/test', (_, res, _next) => {
+  .get('/test', (_, res) => {
     res.send('test');
   })
-
   .use('/', (req, res, next) => {
     // Если обращение к API идёт из незнакомого места - отклоняем
     if (!allowedHosts.includes(req.hostname)) {
-      res.statusCode = 502;
-      res.send('<!doctype html><p>Bad gateway</p>');
+      res.statusCode = 403;
+      res.send('<!doctype html><p>Forbidden</p>');
       return;
     }
 
