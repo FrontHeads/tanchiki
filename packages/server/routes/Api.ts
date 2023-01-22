@@ -3,11 +3,13 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { allowedHosts } from '../';
 import { forumSectionRoute } from '../api/services/ForumSection';
+import { forumTopicRoute } from '../api/services/ForumTopic';
 
 export const apiRoute = Router();
 
 apiRoute
   .use('/forum/section', forumSectionRoute)
+  .use('/forum/topic', forumTopicRoute)
   .get('/test', (_, res) => {
     res.send('test');
   })
