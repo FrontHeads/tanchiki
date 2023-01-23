@@ -50,7 +50,7 @@
     position: fixed;
     left: 0;
     top: 0;
-    padding: 130px 30px 30px 85px;
+    padding: 10px 30px 30px 85px;
     z-index: 998;
     border-bottom-right-radius: 10px;
     background-color: var(--section-background-color);

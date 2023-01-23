@@ -1,7 +1,5 @@
 /* :root — это псевдо-класс CSS, который соответствует корневому элементу документа — элементу html. */
-
-/* Значения по умолчанию - темная тема */
-:root {
+:root[theme="DARK"] {
   --background-color: #020717;
   --section-background-color: #151928;
   --section-light-shadow: #727476;
@@ -23,10 +21,13 @@
   --dendy-button-secondary: #745f2c;
   --dendy-button-third: #2d2719;
   --vertical-margin: 30px;
+  --theme-toggle-background: var(--background-color);
+  --theme-toggle-icon-color: var(--font-color-primary);
+  --theme-toggle-selected-icon-color: #313647;
 }
 
 /* Cветлая тема */
-:root[theme="light"] {
+:root[theme="LIGHT"] {
   --background-color: gainsboro;
   --section-background-color: #f1f1f1;
   --section-light-shadow: #727476;
@@ -48,4 +49,7 @@
   --dendy-button-secondary: #cb9208;
   --dendy-button-third: #7c6f30cc;
   --vertical-margin: 30px;
+  --theme-toggle-background: var(--background-color);
+  --theme-toggle-icon-color: var(--font-color-primary);
+  --theme-toggle-selected-icon-color: var(--section-background-color);
 }
