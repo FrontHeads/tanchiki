@@ -276,6 +276,17 @@ export class Game extends EventEmitter {
       }
     }
 
+    this.controllerAll
+      .on(ControllerEvent.Pause, () => {
+        this.togglePause();
+      })
+      .on(ControllerEvent.Mute, () => {
+        this.audioManager.emit('pause', { isMuteKey: true });
+      })
+      .on(ControllerEvent.Fullscreen, () => {
+        this.view.toggleFullScreen();
+      });
+
     await this.initGameIntro();
 
     this.statistics.startMap();
@@ -294,17 +305,6 @@ export class Game extends EventEmitter {
         this.statistics.finishMap();
         await this.initGameScore();
         this.initGameLevel();
-      });
-
-    this.controllerAll
-      .on(ControllerEvent.Pause, () => {
-        this.togglePause();
-      })
-      .on(ControllerEvent.Mute, () => {
-        this.audioManager.emit('pause', { isMuteKey: true });
-      })
-      .on(ControllerEvent.Fullscreen, () => {
-        this.view.toggleFullScreen();
       });
   }
 
