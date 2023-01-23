@@ -257,12 +257,16 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     // Если позиция для спауна танка игрока заблокирована, пробуем ещё раз через некоторое время
     if (!entity.spawned) {
       const respawnRetryInterval = 500;
-      entity.setLoopInterval(() => {
-        entity.spawn(settings);
-        if (entity.spawned) {
-          entity.clearLoopInterval('RESPAWN_INTERVAL');
-        }
-      }, respawnRetryInterval, 'RESPAWN_INTERVAL');
+      entity.setLoopInterval(
+        () => {
+          entity.spawn(settings);
+          if (entity.spawned) {
+            entity.clearLoopInterval('RESPAWN_INTERVAL');
+          }
+        },
+        respawnRetryInterval,
+        'RESPAWN_INTERVAL'
+      );
     }
 
     this.on(ScenarioEvent.GameOver, () => {
