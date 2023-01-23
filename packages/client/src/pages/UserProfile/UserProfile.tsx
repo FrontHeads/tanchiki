@@ -7,8 +7,9 @@ import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
-import { PATH } from '../../config/constants';
+import { API_ENDPOINTS, DEFAULT_AVATAR } from '../../config/constants';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
+import { buildPath, determineAPIHost } from '../../utils/HTTP';
 import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { userProfileFieldList } from './data';
@@ -57,7 +58,11 @@ export const UserProfile: FC = () => {
     setAvatarFile(null);
   };
 
-  const avatarPath = userProfile?.avatar ? PATH.avatarBase + userProfile?.avatar : PATH.defaultAvatar;
+  let avatarPath = DEFAULT_AVATAR;
+  if (userProfile?.avatar) {
+    avatarPath = buildPath(determineAPIHost(), API_ENDPOINTS.USER.GET_AVATAR(userProfile.avatar));
+  }
+
   const header = userProfile?.first_name;
 
   return (

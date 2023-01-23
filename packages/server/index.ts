@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
 import { createClientAndConnect } from './db';
+import { apiRoute } from './routes/Api';
 
 dotenv.config();
 
@@ -17,6 +18,9 @@ import { HtmlWritable } from './utils/HtmlWritable';
 createClientAndConnect();
 
 const isDev = () => process.env.NODE_ENV === 'development';
+
+/** Хосты, с которых можно ходить на API Яндекса */
+export const allowedHosts = ['localhost', '127.0.0.1'];
 
 async function startServer() {
   const app = express();
@@ -40,9 +44,8 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)');
-  });
+  /** Проксирует запросы к API на сервер Яндекса */
+  app.use('/api', apiRoute);
 
   /**
    * В случае dev режима работы сервера подключаем vite middleware

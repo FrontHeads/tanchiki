@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getBrowserVisibilityEventName, getIsDocumentVisible } from './../utils/webApiUtils';
+import { getBrowserVisibilityEventName, getIsDocumentVisible } from '../utils/webApiUtils';
 
 export function usePageVisibility() {
   const [isVisible, setIsVisible] = useState(getIsDocumentVisible(document));

@@ -1,4 +1,4 @@
-export { EventEmitter } from './EventEmitter';
+export { EventEmitter } from './EventEmitter/EventEmitter';
 export { isKeyOfObject } from './isKeyOfObject';
 export { isOdd } from './isOdd';
 export { rand } from './rand';

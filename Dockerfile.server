@@ -1,7 +1,7 @@
-ARG NODE_VERSION=16
-ARG SERVER_PORT=3001
+ARG NODE_VERSION=19
+ARG SERVER_PORT=5000
 
-FROM node:$NODE_VERSION-buster as base
+FROM node:$NODE_VERSION-bullseye as base
 
 WORKDIR /app
 
@@ -12,16 +12,21 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn lerna bootstrap
-RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
+RUN yarn lerna bootstrap \
+  && rm -rf /app/packages/server/dist/ \
+  && yarn build
 
-
-FROM node:$NODE_VERSION-buster-slim as production
+FROM node:$NODE_VERSION-bullseye-slim as production
 WORKDIR /app
 
+COPY --from=builder /app/packages/client/ /client/
 COPY --from=builder /app/packages/server/dist/ /app/
 COPY --from=builder /app/packages/server/package.json /app/package.json
-RUN yarn install --production=true
+
+# Подменяем пакет клиента на физический путь к пакету, т.к. в Docker
+#  нельзя подключить соседний пакет из monorepo
+RUN sed -i 's/"client": "0.0.0"/"client": "file:..\/client"/g' /app/package.json \
+    && yarn install --production=true
 
 EXPOSE $SERVER_PORT
 CMD [ "node", "/app/index.js" ]

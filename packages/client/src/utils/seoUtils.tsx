@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet';
 
-import { META_TITLE_SUFFIX } from './../config/constants';
+import { META_TITLE_SUFFIX } from '../config/constants';
 type GenerateMetaTagsOptions = {
   title: string;
   description?: string;

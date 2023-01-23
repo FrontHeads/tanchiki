@@ -1,6 +1,6 @@
-import { LEADERBOARD_TEAM_NAME, YANDEX_API_ENDPOINTS } from '../config/constants';
+import { API_ENDPOINTS,LEADERBOARD_TEAM_NAME } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
-import { type ResponseType } from './../utils/HTTP/HTTP';
+import { type ResponseType } from '../utils/HTTP/HTTP';
 import {
   type GetLeaderboardResponseData,
   type LeaderboardRecord,
@@ -9,9 +9,9 @@ import {
 } from './typings';
 
 export const leaderboardAPI = {
-  addScore: (data: NewLeaderboardRecordRequest) => HTTP.post(YANDEX_API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
+  addScore: (data: NewLeaderboardRecordRequest) => HTTP.post(API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
   getLeaderboard: (data: LeaderboardRequest) =>
-    HTTP.post<GetLeaderboardResponseData>(YANDEX_API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data })
+    HTTP.post<GetLeaderboardResponseData>(API_ENDPOINTS.LEADERBOARD.GET(LEADERBOARD_TEAM_NAME), { data })
       .then(validateLeaderboard)
       .then(calculateScoreRates),
 };
