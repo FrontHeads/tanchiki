@@ -14,3 +14,8 @@ export type UserProfile = {
   second_name?: string;
   id?: number | null;
 };
+
+export type ExpressError = {
+  status?: number;
+  code?: number;
+} & Error;

@@ -14,10 +14,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { HtmlWritable } from './utils/HtmlWritable';
+import { isDev } from './utils/isDev';
 
 createClientAndConnect();
-
-const isDev = () => process.env.NODE_ENV === 'development';
 
 /** Хосты, с которых можно ходить на API Яндекса */
 export const allowedHosts = ['localhost', '127.0.0.1'];
@@ -62,7 +61,7 @@ async function startServer() {
     app.use(vite.middlewares);
   }
 
-  /** Для production сборки необходимо "пробросить" статичные файлы  из директории assets */
+  /** Для production сборки необходимо "пробросить" статичные файлы из директории assets */
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')));
   }
@@ -100,8 +99,8 @@ async function startServer() {
       }
 
       /**
-       * В ssr.tsx используется renderToPipeableStream вместо renderToString.
-       * Нам нужно перехватить события заверешния стрима и уже в нем подставить
+       * В ssr.tsx используется renderToPipableStream вместо renderToString.
+       * Нам нужно перехватить события завершения стрима и уже в нем подставить
        * HTML код приложения в index.html
        */
       let didError = false;
