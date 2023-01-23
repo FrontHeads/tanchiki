@@ -1,16 +1,17 @@
-@import url("../../variables.css");
-
 .footer {
   text-align: center;
   font-family: "Press Start 2P", cursive;
   font-size: 13px;
+  line-height: 25px;
+  color: var(--font-color-footer);
 
   &__inner {
     opacity: 0.5;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 20px;
+    background-color: var(--footer-background);
   }
 
   &__logo {

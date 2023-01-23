@@ -1,12 +1,10 @@
-@import url("../../variables.css");
-
 .leaderboard__wrapper {
   display: flex;
   flex-direction: column;
 }
 
 .leaderboard {
-  background-color: $section_background_color;
+  background-color: var(--section-background-color);
   border-radius: 10px;
   text-align: center;
   margin: 0 60px 60px;

@@ -1,5 +1,3 @@
-@import url("../../../variables.css");
-
 .leaderboard {
   &__row {
     &-header {
@@ -10,19 +8,25 @@
       height: 40px;
 
       &:nth-child(odd) {
-        background-color: $background_color;
+        background-color: var(--background-color);
       }
 
       &:nth-child(1) {
-        background-color: $dendy_button_primary;
+        background-color: var(--dendy-button-primary);
+        font-weight: bold;
+        color: var(--font-color-third);
       }
 
       &:nth-child(2) {
-        background-color: $dendy_button_secondary;
+        background-color: var(--dendy-button-secondary);
+        font-weight: bold;
+        color: var(--font-color-third);
       }
 
       &:nth-child(3) {
-        background-color: $dendy_button_third;
+        background-color: var(--dendy-button-third);
+        font-weight: bold;
+        color: var(--font-color-third);
       }
     }
 
@@ -30,19 +34,20 @@
       height: 40px;
 
       &:nth-child(odd) {
-        background-color: $background_color;
+        background-color: var(--background-color);
       }
 
       &:nth-last-child(1) {
-        background-color: $dendy_button_primary;
+        background-color: var(--dendy-button-primary);
+        font-weight: 900;
       }
 
       &:nth-last-child(2) {
-        background-color: $dendy_button_secondary;
+        background-color: var(--dendy-button-secondary);
       }
 
       &:nth-last-child(3) {
-        background-color: $dendy_button_third;
+        background-color: var(--dendy-button-third);
       }
     }
   }

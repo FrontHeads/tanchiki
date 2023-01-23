@@ -1,28 +1,51 @@
-$background_color: #020717;
-$section_background_color: #151928;
-$section_light_shadow: #727476;
+/* :root — это псевдо-класс CSS, который соответствует корневому элементу документа — элементу html. */
 
-$white_color: #fff;
-$accent_color: #ffa825;
-$border_color: #737477;
-$border_dropdown_color: #363943;
-$info_color: #00aaf3;
-$danger_color: #ff4e4ec4;
+/* Значения по умолчанию - темная тема */
+:root {
+  --background-color: #020717;
+  --section-background-color: #151928;
+  --section-light-shadow: #727476;
+  --logo-background: var(--background-color);
+  --footer-background: var(--background-color);
+  --burger-menu-lines: #fff;
+  --burger-menu-lines-border: var(--background-color);
+  --accent-color: #ffa825;
+  --border-color: #737477;
+  --border-dropdown-color: #363943;
+  --info-color: #00aaf3;
+  --danger-color: #ff4e4ec4;
+  --font-color-primary: #e3e4e6;
+  --font-color-secondary: #afb2b6;
+  --font-color-third: #e3e4e6;
+  --font-color-danger: var(--danger-color);
+  --font-color-footer: var(--font-color-primary);
+  --dendy-button-primary: #d84000;
+  --dendy-button-secondary: #745f2c;
+  --dendy-button-third: #2d2719;
+  --vertical-margin: 30px;
+}
 
-$notice_error_background_color: #d66c6c;
-$notice_success_background_color: #9de6a3;
-$notice_font_color: #000;
-
-$font_color_bright: #e3e4e6;
-$font_color_soft: #afb2b6;
-$font_color_dark: #2d1c09;
-$font_color_danger: $danger_color;
-
-$left_shift_wide: 377px;
-$left_shift_slim: 327px;
-
-$dendy_button_primary: #d84000;
-$dendy_button_secondary: #745f2c;
-$dendy_button_third: #2d2719;
-
-$vertical_margin: 30px;
+/* Cветлая тема */
+:root[theme="light"] {
+  --background-color: gainsboro;
+  --section-background-color: #f1f1f1;
+  --section-light-shadow: #727476;
+  --logo-background: #0d0d0dde;
+  --footer-background: #000;
+  --burger-menu-lines: #000;
+  --burger-menu-lines-border: #fff;
+  --accent-color: #ffa825;
+  --border-color: #737477;
+  --border-dropdown-color: #363943;
+  --info-color: #00aaf3;
+  --danger-color: #d40000;
+  --font-color-primary: #000;
+  --font-color-secondary: #6a6a6a;
+  --font-color-third: #e3e4e6;
+  --font-color-danger: var(--danger-color);
+  --font-color-footer: #fff;
+  --dendy-button-primary: #d84000;
+  --dendy-button-secondary: #cb9208;
+  --dendy-button-third: #7c6f30cc;
+  --vertical-margin: 30px;
+}

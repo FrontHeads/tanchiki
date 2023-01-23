@@ -1,5 +1,3 @@
-@import url("../../variables.css");
-
 .web-error {
   display: flex;
   flex-direction: column;
@@ -13,7 +11,7 @@
     font-size: 50px;
     margin: 0;
     font-family: "Press Start 2P", cursive;
-    text-shadow: 2px 1px $dendy_button_primary;
+    text-shadow: 2px 1px var(--dendy-button-primary);
   }
 
   &__msg {
@@ -23,6 +21,6 @@
   &__link {
     margin: 70px auto;
     width: 200px;
-    color: $font_color_bright;
+    color: var(--font-color-primary);
   }
 }

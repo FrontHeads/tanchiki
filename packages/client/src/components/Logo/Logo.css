@@ -1,15 +1,14 @@
-@import url("../../variables.css");
-
 .logo {
   font-size: 5.5rem;
   font-family: "Press Start 2P", cursive;
   text-align: center;
-  margin: 45px 0 $vertical_margin;
-  color: $accent_color;
+  margin: 50px 0 var(--vertical-margin);
+  color: var(--accent-color);
   -webkit-text-fill-color: transparent;
   background: url("/assets/img/bricks.png");
   font-weight: bold;
   background-clip: text;
+  padding: 13px 0 5px;
 
   @media (max-width: 650px) {
     background-size: 3%;
@@ -24,6 +23,10 @@
 
   &__link {
     text-decoration: none;
-    color: $font_color_bright;
+    color: var(--font-color-primary);
+  }
+
+  &__wrapper {
+    background-color: var(--logo-background);
   }
 }
