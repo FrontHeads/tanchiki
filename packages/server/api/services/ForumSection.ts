@@ -1,30 +1,34 @@
-import { type Request, type Response, Router } from 'express';
+import express, { type Request, type Response, Router } from 'express';
 
 import { ForumSection } from '../../models/ForumSection';
+import { throwIf } from '../../utils/throwIf';
 
 export const forumSectionRoute = Router()
-  .get('', async (_: Request, res: Response): Promise<Response> => {
-    const allData: ForumSection[] = await ForumSection.findAll();
-    return res.status(200).json(allData);
+  .use(express.json())
+  .use(express.urlencoded({ extended: true }))
+  .get('/', (_: Request, res: Response, next) => {
+    ForumSection.findAll()
+      .then((sections: ForumSection[]) => res.status(200).json(sections))
+      .catch(next);
   })
-  .get(':id', async (req: Request, res: Response): Promise<Response> => {
-    const { id } = req.params;
-    const model: ForumSection | null = await ForumSection.findByPk(id);
-    return res.status(200).json(model);
+  .get('/:id', (req: Request, res: Response, next) => {
+    ForumSection.findByPk(req.params.id)
+      .then(throwIf(r => !r, res, 400, 'Категория не найдена'))
+      .then(section => res.status(200).json(section))
+      .catch(next);
   })
-  .post('', async (req: Request, res: Response): Promise<Response> => {
-    const model: ForumSection = await ForumSection.create(req.body);
-    return res.status(201).json(model);
+  .post('/', (req: Request, res: Response, next) => {
+    ForumSection.create(req.body)
+      .then(() => res.status(201).send({ message: 'Категория создана' }))
+      .catch(next);
   })
-  .put(':id', async (req: Request, res: Response): Promise<Response> => {
-    const { id } = req.params;
-    await ForumSection.update({ ...req.body }, { where: { id } });
-    const updatedModel: ForumSection | null = await ForumSection.findByPk(id);
-    return res.status(200).json(updatedModel);
+  .put('/:id', (req: Request, res: Response, next) => {
+    ForumSection.update(req.body, { where: { id: req.params.id } })
+      .then(() => res.status(201).send({ message: 'Категория отредактирована' }))
+      .catch(next);
   })
-  .delete(':id', async (req: Request, res: Response): Promise<Response> => {
-    const { id } = req.params;
-    const deletedModel: ForumSection | null = await ForumSection.findByPk(id);
-    await ForumSection.destroy({ where: { id } });
-    return res.status(200).json(deletedModel);
+  .delete('/:id', (req: Request, res: Response, next) => {
+    ForumSection.destroy({ where: { id: req.params.id } })
+      .then(() => res.status(201).send({ message: 'Категория удалена' }))
+      .catch(next);
   });
