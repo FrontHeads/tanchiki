@@ -30,6 +30,8 @@ export class Tank extends EntityDynamic {
   slidingStepsProgress = 0;
   /** На сколько циклов объект должно заносить. */
   slidingStepsTotal = 20;
+  /** Сколько попаданий выдерживает танк. */
+  durability = 1;
 
   constructor(props: EntityDynamicSettings) {
     super({ ...props, type: 'tank' });
@@ -63,7 +65,7 @@ export class Tank extends EntityDynamic {
     });
 
     this.on(EntityEvent.Damaged, ({ source }) => {
-      if (!this.invincible && this.role !== source.role) {
+      if (!this.invincible && this.role !== source.role && --this.durability <= 0) {
         this.explode();
         this.destroyedBy = source;
         this.emit(EntityEvent.Destroyed, source);
