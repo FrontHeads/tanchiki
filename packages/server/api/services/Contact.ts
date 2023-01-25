@@ -7,7 +7,7 @@ export const contactRoute = Router().post('/send', async (req: Request, response
   try {
     const contact = new Contact(req.body);
     await contact.save();
-    return response.status(200);
+    return response.status(204).send();
   } catch (error) {
     response.status(400);
     if (error instanceof Error.ValidationError) {

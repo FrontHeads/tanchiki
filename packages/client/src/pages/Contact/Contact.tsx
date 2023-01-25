@@ -49,7 +49,7 @@ export const Contact: FC = () => {
           validation={validation}
         />
         <div className="form__buttons-wrapper">
-          <Button text="Отправить" type="submit" variant={ButtonVariant.Primary} />
+          <Button data-testid="contact-submit-button" text="Отправить" type="submit" variant={ButtonVariant.Primary} />
         </div>
       </Form>
     </>
