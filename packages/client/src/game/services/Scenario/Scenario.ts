@@ -9,7 +9,7 @@ import {
   Terrain,
 } from '../../entities';
 import { type Direction, type EntitySettings, EntityEvent } from '../../entities/Entity/typings';
-import { type EntityDynamicSettings } from '../../entities/EntityDynamic/typings';
+import { type EnemyVariant } from '../../entities/Tank/typings';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter } from '../../utils';
 import { type Controller, type Game, IndicatorManager, MapManager } from '../';
@@ -200,22 +200,20 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.game.loop.setLoopDelay(this.trySpawnTankEnemy.bind(this, entity), 200);
     }
   }
-  getTankVariant(sprite: string) {
-    switch (sprite) {
-      case 'a' : {
-        return 'BASIC';
-      }
-      case 'b' : {
-        return 'FAST';
-      }
-      case 'c' : {
-        return 'ARMOR';
-      }
-      case 'd' : {
-        return 'POWER';
-      }
-    }
 
+  getTankEnemyVariant(counter: number): EnemyVariant {
+    const enemyVariantLetter = this.enemyForces[counter];
+
+    switch (enemyVariantLetter) {
+      case 'b':
+        return 'FAST';
+      case 'c':
+        return 'POWER';
+      case 'd':
+        return 'ARMOR';
+      default:
+        return 'BASIC';
+    }
   }
 
   /** Создаем вражеский танк */
@@ -224,11 +222,10 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const tankEnemiesLeft = this.state.maxEnemies - this.state.enemiesCounter;
     this.indicatorManager.renderTankEnemiesLeft(tankEnemiesLeft);
 
+    const tankEnemySettings = { variant: this.getTankEnemyVariant(this.state.enemiesCounter) };
 
-    const tankVariant = {variant: this.getTankVariant(this.enemyForces[this.state.enemiesCounter])};
+    const entity = new TankEnemy(tankEnemySettings);
 
-    //TODO Свойства role и color здесь лишние. Желательно их убрать.
-    const entity = new TankEnemy(tankVariant as EntityDynamicSettings);
     entity.on(EntityEvent.Spawn, () => {
       entity.on(EntityEvent.Shoot, this.onTankShoot.bind(this)).on(EntityEvent.Destroyed, sourceProjectile => {
         this.emit<[EnemyDestroyedPayload]>(ScenarioEvent.TankEnemyDestroyed, {
