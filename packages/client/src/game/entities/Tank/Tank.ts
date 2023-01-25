@@ -11,7 +11,7 @@ export class Tank extends EntityDynamic {
   movePace = 2;
   /** Скорость движения танка. Задаётся через метод setMoveSpeed(). */
   moveSpeed = 3;
-  moveStepsTotal = 12;
+  moveStepsTotal = 13;
   /** Скорость стрельбы танка. Задаётся через метод setShootSpeed(). */
   shootSpeed = 2;
   /** Количество миллисекунд, в течение которого происходит появление танка на карте. */
