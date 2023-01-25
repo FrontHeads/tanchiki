@@ -17,11 +17,9 @@ export const Forum: FC<ForumProps> = () => {
     if (sectionList.length) {
       return;
     }
-
     const fetchSections = async () => {
       const response = await forumAPI.getAllSections();
       setSectionList(response.data);
-      console.log(response.data);
     };
     fetchSections();
   }, [sectionList]);

@@ -1,24 +1,47 @@
 import './ForumSection.css';
 
-import { type FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { forumAPI } from '../../../api/forumAPI';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
-import { forumActions, useAppDispatch } from '../../../store';
 import { generateMetaTags } from '../../../utils/seoUtils';
-import { DUMMY_SECTION as topicList, DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../DummyData';
+import { DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumTopicList } from './ForumTopicList';
 import { type ForumSectionProps } from './typings';
 
 export const ForumSection: FC<ForumSectionProps> = () => {
   const { sectionId } = useParams();
-  const dispatch = useAppDispatch();
+  const [topicList, setTopicList] = useState([]);
+
+  useEffect(() => {
+    if (topicList.length) {
+      return;
+    }
+    const fetchTopics = async () => {
+      const response = await forumAPI.getTopicsFromSection(sectionId);
+      setTopicList(response.data);
+      console.log(response.data);
+    };
+    fetchTopics();
+  }, []);
 
   const handleClick = () => {
-    dispatch(forumActions.addTopic());
+    // dispatch(
+    //   forumThunks.createTopic({
+    //     id: 2,
+    //     user_id: 1,
+    //     section_id: 1,
+    //     name: 'Вторая тема в первом разделе',
+    //     content: 'Описание второй темы',
+    //     username: 'yatx',
+    //     messages: 3,
+    //   })
+    // );
+    console.log('тема создана');
   };
   return (
     <>
