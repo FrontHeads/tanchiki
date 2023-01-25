@@ -1,14 +1,31 @@
 import './Forum.css';
 
-import { type FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
+import { forumAPI } from '../../api/forumAPI';
 import { generateMetaTags } from '../../utils/seoUtils';
-import { DUMMY_FORUM as sectionList } from './DummyData';
 import { ForumSectionList } from './ForumSectionList';
+import { type ForumSectionItem } from './ForumSectionList/typings';
 import { type ForumProps } from './typing';
 
 export const Forum: FC<ForumProps> = () => {
+  const [sectionList, setSectionList] = useState<ForumSectionItem[]>([]);
+
   const pageTitle = 'Форум';
+
+  useEffect(() => {
+    if (sectionList.length) {
+      return;
+    }
+
+    const fetchSections = async () => {
+      const response = await forumAPI.getAllSections();
+      setSectionList(response.data);
+      console.log(response.data);
+    };
+    fetchSections();
+  }, [sectionList]);
+
   return (
     <>
       {generateMetaTags({ title: pageTitle })}

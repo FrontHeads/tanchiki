@@ -1,0 +1,9 @@
+.actions-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .add-topic-wrapper {
+    width: fit-content;
+    margin-right: 60px;
+  }
+}

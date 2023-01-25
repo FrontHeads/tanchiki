@@ -60,6 +60,9 @@ export const API_ENDPOINTS = {
     ADD_SCORE: 'leaderboard',
     GET: (teamName: string) => `leaderboard/${teamName}`,
   },
+  FORUM: {
+    GET_ALL_SECTIONS: 'forum/section',
+  },
 };
 
 export const LEADERBOARD_TEAM_NAME = 'FrontHeadsMain1';
