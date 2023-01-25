@@ -1,10 +1,10 @@
-import cors from 'cors';
 import dotenv from 'dotenv';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
 import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
 import { createClientAndConnect } from './db';
+import { corsMiddleware, jsonBodyParserMiddleware } from './middlewares';
 import { apiRoute } from './routes/Api';
 
 dotenv.config();
@@ -25,17 +25,11 @@ export const allowedHosts = ['localhost', '127.0.0.1'];
 async function startServer() {
   const app = express();
 
-  const clientPort = Number(process.env.CLIENT_PORT) || 3000;
   const serverPort = Number(process.env.SERVER_PORT) || 5000;
 
-  /** Настройка CORS для корректной отдчаи проекта на клиентском порту при локальной разработке */
-  const corsOptions = {
-    credentials: true,
-    origin: [`http://127.0.0.1:${clientPort}`, `http://localhost:${clientPort}`],
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-  };
-
-  app.use(cors(corsOptions));
+  // Инициализация middleware
+  app.use(corsMiddleware());
+  app.use(jsonBodyParserMiddleware());
 
   let vite: ViteDevServer | undefined;
 

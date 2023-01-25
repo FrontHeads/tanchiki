@@ -1,19 +1,17 @@
 import React, { type FC, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { contactAPI } from '../../api/contactAPI';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';
 import { FieldList } from '../../components/Form/FieldList';
-import { useAppDispatch } from '../../store';
-import { contactThunks } from '../../store/features/contact/contactThunks';
 import { generateMetaTags } from '../../utils/seoUtils';
 import { useValidation } from '../../utils/validation';
 import { contactUsFieldList, contactUsFormInitialState } from './data';
 import { type ContactUsForm } from './typings';
 
 export const Contact: FC = () => {
-  const dispatch = useAppDispatch();
   const validation = useValidation(contactUsFieldList);
   const pageTitle = 'Обратная связь';
 
@@ -26,10 +24,11 @@ export const Contact: FC = () => {
   }, []);
 
   const onFormSubmitCallback = () => {
-    dispatch(contactThunks.send(formData))
-      .unwrap()
+    contactAPI
+      .send(formData)
       .then(() => {
         toast.success('Сообщение успешно отправлено!');
+        setFormData(contactUsFormInitialState);
       })
       .catch(e => {
         toast.error(e.message);
