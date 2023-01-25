@@ -7457,7 +7457,7 @@ mongodb@4.12.1:
     "@aws-sdk/credential-providers" "^3.186.0"
     saslprep "^1.0.3"
 
-mongoose@^6.8.4:
+mongoose@6.8.4:
   version "6.8.4"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.8.4.tgz#f27ec3eca6df3ebb2df1f43623f4cd88744ca9a8"
   integrity sha512-19Jk2hbSAPcM4u6ErW0UPwaSO2YfP/cXfBS9YEiNgNzZfXd+jkyemqJ+t2aflaicXeU4VdTP33pZYxqjk2hUYw==
@@ -8778,7 +8778,7 @@ redux@^4.2.0:
   dependencies:
     "@babel/runtime" "^7.9.2"
 
-reflect-metadata@^0.1.13:
+reflect-metadata@0.1.13:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
   integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
@@ -9014,14 +9014,14 @@ sequelize-pool@^7.1.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-7.1.0.tgz#210b391af4002762f823188fd6ecfc7413020768"
   integrity sha512-G9c0qlIWQSK29pR/5U2JF5dDQeqqHRragoyahj/Nx4KOOQ3CPPfzxnfqFPCSB7x5UgjOgnZ61nSxz+fjDpRlJg==
 
-sequelize-typescript@^2.1.5:
+sequelize-typescript@2.1.5:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/sequelize-typescript/-/sequelize-typescript-2.1.5.tgz#f12d14607cc8abfd6172cd99f7d3255ec5c4d78e"
   integrity sha512-x1CNODct8gJyfZPwEZBU5uVGNwgJI2Fda913ZxD5ZtCSRyTDPBTS/0uXciF+MlCpyqjpmoCAPtudQWzw579bzA==
   dependencies:
     glob "7.2.0"
 
-sequelize@^6.28.0:
+sequelize@6.28.0:
   version "6.28.0"
   resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.28.0.tgz#d6bc4e36647e8501635467c0777c45a33f5d5ba8"
   integrity sha512-+WHqvUQgTp19GLkt+gyQ+F6qg+FIEO2O5F9C0TOYV/PjZ2a/XwWvVkL1NCkS4VSIjVVvAUutiW6Wv9ofveGaVw==

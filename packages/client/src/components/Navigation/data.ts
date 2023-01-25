@@ -11,5 +11,6 @@ export const NAVIGATION_LIST: Array<MenuLinkProps> = [
   { name: 'profile', title: 'Профиль игрока', to: Paths.UserProfile },
   { name: 'error-404', title: 'Ошибка 404', to: Paths.Error404 },
   { name: 'error-500', title: 'Ошибка 500', to: Paths.Error500 },
+  { name: 'contact-us', title: 'Обратная связь', to: Paths.ContactUs },
   { name: 'logout', title: 'Выход', to: Paths.Home },
 ];

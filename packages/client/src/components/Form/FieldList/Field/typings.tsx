@@ -10,4 +10,4 @@ export type FieldProps = {
   inputHeader?: string;
   errorList?: string[] | null;
   pattern?: string;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+} & React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
