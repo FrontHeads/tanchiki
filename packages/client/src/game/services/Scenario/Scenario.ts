@@ -16,13 +16,13 @@ import { type Controller, type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
 import { spawnPlaces } from '../MapManager/data';
 import { type MapData } from '../MapManager/typings';
-import { Color } from '../View/colors';
 import { Player, playerInitialSettings } from './data';
 import { type EnemyDestroyedPayload, type ScenarioPlayerState, type ScenarioState, ScenarioEvent } from './typings';
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
-    enemiesLeft: 20,
+    enemiesCounter: 0,
+    maxEnemies: 20,
     maxActiveEnemies: 4,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
@@ -30,6 +30,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   mapManager!: MapManager;
   map!: MapData;
+  enemyForces: string;
   indicatorManager: IndicatorManager;
 
   constructor(private game: Game) {
@@ -42,6 +43,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     this.mapManager = new MapManager(game.settings);
     this.map = this.mapManager.getMap(game.level);
+    this.enemyForces = this.mapManager.getEnemyForces(game.level);
     /** Индикаторы в боковой панели (сколько осталось танков врагов, сколько жизней, текущий уровень) */
     this.indicatorManager = new IndicatorManager(game);
 
@@ -124,7 +126,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   /** Проверяем можно ли еще размещать на поле вражеские танки */
   canCreateTankEnemy() {
-    return this.state.enemies.length < this.state.maxActiveEnemies && this.state.enemiesLeft !== 0;
+    return this.state.enemies.length < this.state.maxActiveEnemies && this.state.enemiesCounter < this.state.maxEnemies;
   }
 
   /** Создаем элемент карты */
@@ -198,14 +200,35 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.game.loop.setLoopDelay(this.trySpawnTankEnemy.bind(this, entity), 200);
     }
   }
+  getTankVariant(sprite: string) {
+    switch (sprite) {
+      case 'a' : {
+        return 'BASIC';
+      }
+      case 'b' : {
+        return 'FAST';
+      }
+      case 'c' : {
+        return 'ARMOR';
+      }
+      case 'd' : {
+        return 'POWER';
+      }
+    }
+
+  }
 
   /** Создаем вражеский танк */
   createTankEnemy() {
-    --this.state.enemiesLeft;
-    this.indicatorManager.renderTankEnemiesLeft(this.state.enemiesLeft);
+    ++this.state.enemiesCounter;
+    const tankEnemiesLeft = this.state.maxEnemies - this.state.enemiesCounter;
+    this.indicatorManager.renderTankEnemiesLeft(tankEnemiesLeft);
+
+
+    const tankVariant = {variant: this.getTankVariant(this.enemyForces[this.state.enemiesCounter])};
 
     //TODO Свойства role и color здесь лишние. Желательно их убрать.
-    const entity = new TankEnemy({ role: 'enemy', color: Color.Pink } as EntityDynamicSettings);
+    const entity = new TankEnemy(tankVariant as EntityDynamicSettings);
     entity.on(EntityEvent.Spawn, () => {
       entity.on(EntityEvent.Shoot, this.onTankShoot.bind(this)).on(EntityEvent.Destroyed, sourceProjectile => {
         this.emit<[EnemyDestroyedPayload]>(ScenarioEvent.TankEnemyDestroyed, {
