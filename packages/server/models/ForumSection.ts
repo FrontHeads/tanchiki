@@ -2,7 +2,7 @@ import { AllowNull, Column, HasMany, Model, Table } from 'sequelize-typescript';
 
 import { ForumTopic } from './ForumTopic';
 
-@Table({ tableName: 'forum_sections', createdAt: 'created_date', updatedAt: 'updated_date' })
+@Table({ tableName: 'forum_sections', createdAt: 'created_at', updatedAt: 'updated_at' })
 export class ForumSection extends Model {
   @AllowNull(false)
   @Column
