@@ -3,7 +3,7 @@
  * b - fast tank
  * c - power tank
  * d - armor tank
-*/
+ */
 export const enemyForces = [
   // 1~5 уровни
   'aaaaaaaaaaaaaaaaaabb',
