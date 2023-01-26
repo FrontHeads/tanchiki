@@ -14,6 +14,6 @@ export const contactRoute = Router().post('/send', async (req: Request, response
       return response.json({ reason: error.message, details: error.errors });
     }
 
-    return response.json({ reason: 'Error' });
+    return response.json({ reason: error instanceof Error ? error.message : 'error' });
   }
 });
