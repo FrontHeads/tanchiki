@@ -1,16 +1,19 @@
 import { type EntitySettings, type EntityType, type Pos } from '../../entities/Entity/typings';
+import { type EnemyVariant } from '../../entities/Tank/typings';
 import { type GameSettings } from '../Game/typings';
-import { enemyForces } from '../Scenario/enemyForces';
+import { enemyForces } from './enemyForces';
 import { brickCells, Cell, concreteCells, spawnPlaces } from './data';
 import { levels } from './levels';
-import { type MapData } from './typings';
+import { type MapTerrainData } from './typings';
 
 export class MapManager {
-  private mapData = levels;
+  private mapLevelIndex = 0;
+  private mapTerrainData = levels;
+  private mapEnemyForces = enemyForces;
 
   constructor(private gameSettings: GameSettings) {}
 
-  fixMapData(map: MapData): MapData {
+  fixMapData(map: MapTerrainData): MapTerrainData {
     this.clearSpawnPlaces(map);
     return map;
   }
@@ -26,17 +29,30 @@ export class MapManager {
     };
   }
 
-  getMap(level: number): MapData {
-    const map = this.mapData[level - 1];
+  getMap(level: number): MapTerrainData {
+    this.mapLevelIndex = level - 1;
+    const map = this.mapTerrainData[this.mapLevelIndex];
 
     return this.fixMapData(map);
   }
 
-  getEnemyForces(level: number): string {
-    return enemyForces[level - 1];
+  getMapTankEnemyVariant(counter: number): EnemyVariant {
+    const mapEnemyForces = enemyForces[this.mapLevelIndex];
+    const enemyVariantLetter = mapEnemyForces[counter];
+
+    switch (enemyVariantLetter) {
+      case 'b':
+        return 'FAST';
+      case 'c':
+        return 'POWER';
+      case 'd':
+        return 'ARMOR';
+      default:
+        return 'BASIC';
+    }
   }
 
-  mapDataToEntitySettings(map: MapData): EntitySettings[] {
+  mapDataToEntitySettings(map: MapTerrainData): EntitySettings[] {
     const result: EntitySettings[] = [];
 
     map.forEach((row, y) => {
@@ -127,7 +143,7 @@ export class MapManager {
     }
   }
 
-  private clearSpawnPlaces(map: MapData): void {
+  private clearSpawnPlaces(map: MapTerrainData): void {
     for (const row in spawnPlaces) {
       for (const cow of spawnPlaces[row]) {
         map[row][cow] = Cell.Blank;

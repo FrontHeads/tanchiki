@@ -1,5 +1,11 @@
+/** Порядок появления вражеских танков.
+ * a - basic tank
+ * b - fast tank
+ * c - power tank
+ * d - armor tank
+*/
 export const enemyForces = [
-  // 1~5
+  // 1~5 уровни
   'aaaaaaaaaaaaaaaaaabb',
   'aaaaabaaabaaabaabdad',
   'aaaaabaaabaaabaabdad',

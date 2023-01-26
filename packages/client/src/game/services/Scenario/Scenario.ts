@@ -9,13 +9,12 @@ import {
   Terrain,
 } from '../../entities';
 import { type Direction, type EntitySettings, EntityEvent } from '../../entities/Entity/typings';
-import { type EnemyVariant } from '../../entities/Tank/typings';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter } from '../../utils';
 import { type Controller, type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
 import { spawnPlaces } from '../MapManager/data';
-import { type MapData } from '../MapManager/typings';
+import { type MapTerrainData } from '../MapManager/typings';
 import { Player, playerInitialSettings } from './data';
 import { type EnemyDestroyedPayload, type ScenarioPlayerState, type ScenarioState, ScenarioEvent } from './typings';
 
@@ -29,8 +28,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   } as ScenarioState;
 
   mapManager!: MapManager;
-  map!: MapData;
-  enemyForces: string;
+  map!: MapTerrainData;
   indicatorManager: IndicatorManager;
 
   constructor(private game: Game) {
@@ -43,7 +41,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
     this.mapManager = new MapManager(game.settings);
     this.map = this.mapManager.getMap(game.level);
-    this.enemyForces = this.mapManager.getEnemyForces(game.level);
+
     /** Индикаторы в боковой панели (сколько осталось танков врагов, сколько жизней, текущий уровень) */
     this.indicatorManager = new IndicatorManager(game);
 
@@ -201,28 +199,13 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
   }
 
-  getTankEnemyVariant(counter: number): EnemyVariant {
-    const enemyVariantLetter = this.enemyForces[counter];
-
-    switch (enemyVariantLetter) {
-      case 'b':
-        return 'FAST';
-      case 'c':
-        return 'POWER';
-      case 'd':
-        return 'ARMOR';
-      default:
-        return 'BASIC';
-    }
-  }
-
   /** Создаем вражеский танк */
   createTankEnemy() {
     ++this.state.enemiesCounter;
     const tankEnemiesLeft = this.state.maxEnemies - this.state.enemiesCounter;
     this.indicatorManager.renderTankEnemiesLeft(tankEnemiesLeft);
 
-    const tankEnemySettings = { variant: this.getTankEnemyVariant(this.state.enemiesCounter) };
+    const tankEnemySettings = { variant: this.mapManager.getMapTankEnemyVariant(this.state.enemiesCounter) };
 
     const entity = new TankEnemy(tankEnemySettings);
 
