@@ -1,8 +1,9 @@
-import { AllowNull, BelongsTo, Column, Model, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, Column, HasMany, Model, Table } from 'sequelize-typescript';
 
+import { ForumMessage } from './ForumMessage';
 import { ForumSection } from './ForumSection';
 
-@Table({ tableName: 'forum_topics', createdAt: 'created_date', updatedAt: 'updated_date' })
+@Table({ tableName: 'forum_topics', createdAt: 'created_at', updatedAt: 'updated_at' })
 export class ForumTopic extends Model {
   @AllowNull(false)
   @Column
@@ -26,4 +27,7 @@ export class ForumTopic extends Model {
 
   @BelongsTo(() => ForumSection, 'section_id')
   section!: ForumSection;
+
+  @HasMany(() => ForumMessage, 'topic_id')
+  messages!: ForumMessage[];
 }

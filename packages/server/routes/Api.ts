@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { allowedHosts } from '../';
+import { forumMessageRoute } from '../api/services/ForumMessage';
 import { forumSectionRoute } from '../api/services/ForumSection';
 import { forumTopicRoute } from '../api/services/ForumTopic';
 import { errorHandler } from '../middlewares/errorHandler';
@@ -11,6 +12,7 @@ export const apiRoute = Router();
 apiRoute
   .use('/forum/section', forumSectionRoute)
   .use('/forum/topic', forumTopicRoute)
+  .use('/forum/message', forumMessageRoute)
   .use(errorHandler)
 
   .get('/test', (_, res) => {
