@@ -24,14 +24,24 @@ export const Contact: FC = () => {
   }, []);
 
   const onFormSubmitCallback = () => {
-    contactAPI
-      .send(formData)
-      .then(() => {
-        toast.success('Сообщение успешно отправлено!');
-        setFormData(contactUsFormInitialState);
+    let message = `Email: ${formData.email}\nСообщение: \n${formData.message}`;
+    if (formData.name) {
+      message = `От: ${formData.name}\n${message}`;
+    }
+
+    Promise.allSettled([contactAPI.sentToSlack({ text: message }), contactAPI.send(formData)])
+      .then(response => {
+        const isSuccess = response.some(v => v.status === 'fulfilled');
+
+        if (isSuccess) {
+          toast.success('Сообщение успешно отправлено!');
+          setFormData(contactUsFormInitialState);
+        } else {
+          toast.error('Ошибка отправки сообщения. Попробуйте снова');
+        }
       })
-      .catch(e => {
-        toast.error(e.message);
+      .finally(() => {
+        setIsFormSubmitted(false);
       });
   };
 
