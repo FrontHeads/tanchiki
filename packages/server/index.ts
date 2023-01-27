@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
 import { createClientAndConnect } from './db';
-import { corsMiddleware, jsonBodyParserMiddleware } from './middlewares';
+import { corsMiddleware } from './middlewares';
 import { apiRoute } from './routes/Api';
 
 dotenv.config();
@@ -29,7 +29,6 @@ async function startServer() {
 
   // Инициализация middleware
   app.use(corsMiddleware());
-  app.use(jsonBodyParserMiddleware());
 
   let vite: ViteDevServer | undefined;
 
