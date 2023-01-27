@@ -50,6 +50,8 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   color: Color | string = Color.Grey;
   /** Должен ли объект быть убран из игры. */
   shouldBeDestroyed = false;
+  /** Кем атакован объект. */
+  damagedBy: Entity | null = null;
   /** Кем уничтожен объект. */
   destroyedBy: Entity | null = null;
   /** Значение true делает танк неуязвимым для снарядов. */
@@ -117,6 +119,10 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
 
   /** Наносит урон по объекту. */
   takeDamage(source: Entity, rect: Rect) {
+    if (this.type === 'tank' && this.damagedBy === source) {
+      return; // Чтобы танк не взрывался несколько раз от одного попадания
+    }
+    this.damagedBy = source;
     this.emit(EntityEvent.Damaged, { ...rect, source });
   }
 
