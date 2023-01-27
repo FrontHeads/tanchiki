@@ -21,7 +21,7 @@ export const forumTopicRoute = Router()
   })
   .post('/', (req: Request, res: Response, next) => {
     ForumTopic.create(req.body)
-      .then((topic) => res.status(201).send({ id: topic.id }))
+      .then(topic => res.status(201).send({ id: topic.id }))
       .catch(next);
   })
   .put('/:id', (req: Request, res: Response, next) => {
