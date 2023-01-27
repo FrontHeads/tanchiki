@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { allowedHosts } from './../';
+import { allowedHosts } from '../';
 
 export const proxyMiddleware: RequestHandler = (req, res, next) => {
   // Если обращение к API идёт из незнакомого места - отклоняем
