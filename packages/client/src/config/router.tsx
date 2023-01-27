@@ -9,6 +9,7 @@ import { Root as RootLayout } from '../layouts/Root';
 import { ErrorPage } from '../pages/ErrorPage';
 import { Forum } from '../pages/Forum';
 import { ForumSection } from '../pages/Forum/ForumSection';
+import { ForumNewTopic } from '../pages/Forum/ForumSection/ForumNewTopic';
 import { ForumTopic } from '../pages/Forum/ForumTopic';
 import { Home } from '../pages/Home';
 import { Leaderboard } from '../pages/Leaderboard';
@@ -74,6 +75,7 @@ export const routes = createRoutesFromElements(
           <Route path={`${Paths.Section}/:sectionId`}>
             <Route index={true} element={<ForumSection />}></Route>
             <Route path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`} element={<ForumTopic />}></Route>
+            <Route path={`${Paths.Section}/:sectionId/${Paths.NewTopic}`} element={<ForumNewTopic />}></Route>
           </Route>
         </Route>
       </Route>

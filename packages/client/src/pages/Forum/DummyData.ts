@@ -1,11 +1,11 @@
 import { Paths } from '../../config/constants';
 
 export const DUMMY_FORUM = [
-  { id: 1, name: 'Ivan1990', topicCount: 2400, messages: 100 },
-  { id: 2, name: 'Marussia', topicCount: 1900, messages: 81 },
-  { id: 3, name: 'Разное', topicCount: 500, messages: 95 },
-  { id: 4, name: 'SomeBoy', topicCount: 2400, messages: 81 },
-  { id: 5, name: 'PVH', topicCount: 1900, messages: 95 },
+  { id: 1, name: 'Раздел 1', topicCount: 2400, messages: 100 },
+  { id: 2, name: 'Раздел 2', topicCount: 1900, messages: 81 },
+  { id: 3, name: 'Раздел 3', topicCount: 500, messages: 95 },
+  { id: 4, name: 'Раздел 4', topicCount: 2400, messages: 81 },
+  { id: 5, name: 'Раздел 5', topicCount: 1900, messages: 95 },
 ];
 export const DUMMY_SECTION = [
   { id: 1, name: 'Как побеждать?', messages: 100 },
@@ -50,10 +50,10 @@ export const DUMMY_TOPIC = [
   },
 ];
 
-export const DUMMY_SECTION_BREADCRUMBS = [{ href: Paths.Forum, title: 'Forum' }, { title: 'Section' }];
+export const DUMMY_SECTION_BREADCRUMBS = [{ href: Paths.Forum, title: 'Форум' }, { title: 'Раздел' }];
 
 export const DUMMY_TOPIC_BREADCRUMBS = [
-  { href: Paths.Forum, title: 'Forum' },
-  { href: '#', title: 'Section' },
+  { href: Paths.Forum, title: 'Форум' },
+  { href: '#', title: 'Раздел' },
   { title: 'Как побеждать?' },
 ];

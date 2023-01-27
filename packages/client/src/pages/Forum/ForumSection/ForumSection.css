@@ -1,0 +1,10 @@
+.actions-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  .add-topic-wrapper {
+    width: fit-content;
+    margin-right: 60px;
+  }
+}

@@ -1,4 +1,4 @@
-type ForumSectionItem = {
+export type ForumSectionItem = {
   id: number;
   name: string;
   topicCount: number;

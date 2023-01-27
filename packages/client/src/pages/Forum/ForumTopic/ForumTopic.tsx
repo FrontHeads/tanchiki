@@ -61,13 +61,14 @@ export const ForumTopic: FC = () => {
     },
     [formMessage]
   );
+
   const forumTopicClassNames = cn('forum-topic', {
     'forum-topic_has-errors': messageHasErrors,
   });
 
   return (
     <>
-      {generateMetaTags({ title: `Топик {topicId}` })}
+      {generateMetaTags({ title: `Топик ${topicId}` })}
 
       <section className={forumTopicClassNames} data-testid="forum-topic">
         <h1 className="forum-topic__title">Топик {topicId}</h1>

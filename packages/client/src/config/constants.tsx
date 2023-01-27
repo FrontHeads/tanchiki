@@ -12,6 +12,7 @@ export enum Paths {
   Forum = '/forum',
   Section = '/forum/section',
   Topic = '/topic',
+  NewTopic = '/new-topic',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
   Leaderboard = '/leaderboard',
@@ -59,6 +60,12 @@ export const API_ENDPOINTS = {
   LEADERBOARD: {
     ADD_SCORE: 'leaderboard',
     GET: (teamName: string) => `leaderboard/${teamName}`,
+  },
+  FORUM: {
+    GET_SECTION_BY_ID: (sectionId: number) => `forum/section/${sectionId}`,
+    GET_ALL_SECTIONS: 'forum/section',
+    GET_TOPICS_FROM_SECTION: (sectionId?: number) => `forum/topic/?section_id=${sectionId}`,
+    CREATE_TOPIC: 'forum/topic',
   },
 };
 
