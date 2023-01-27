@@ -33,10 +33,6 @@ export const Navigation: FC<NavigationProps> = ({ exclude }) => {
     dispatch(uiActions.closeBurgerMenu());
   };
 
-  /**
-   * Фильтруем пункты меню в зависимости от того - достуен ли
-   * раздел авторизованному пользователю/гостю
-   */
   const menuLinksList = getFilteredNavigationList(isAuthenticated, exclude).map(link => (
     <MenuLink onClick={() => onClick(link.name)} key={link.name} {...link} />
   ));

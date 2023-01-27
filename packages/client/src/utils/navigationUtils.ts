@@ -1,5 +1,9 @@
 import { NAVIGATION_LIST } from './../components/Navigation/data';
 
+/**
+ * Фильтруем пункты меню в зависимости от того - достуен ли
+ * раздел авторизованному пользователю/гостю или нет
+ */
 export const getFilteredNavigationList = (
   isAuthenticated = false,
   exclude?: Array<typeof NAVIGATION_LIST[number]['name']>
@@ -9,11 +13,11 @@ export const getFilteredNavigationList = (
       return false;
     }
 
-    if ('public' in link && link.public && isAuthenticated) {
+    if ('accessLevel' in link && link.accessLevel === 'guest' && isAuthenticated) {
       return false;
     }
 
-    if ('protected' in link && link.protected && !isAuthenticated) {
+    if ('accessLevel' in link && link.accessLevel === 'protected' && !isAuthenticated) {
       return false;
     }
 
