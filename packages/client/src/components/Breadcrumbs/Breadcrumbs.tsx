@@ -7,7 +7,8 @@ import { type BreadcrumbsProps } from './typings';
 
 export const Breadcrumbs: FC<BreadcrumbsProps> = () => {
   const matches = useMatches();
-  const crumbs = matches.filter(match => Boolean(match.handle?.crumb));
+  //@ts-ignore 
+  const crumbs = matches.filter(match => Boolean(match.handle?.crumb)).map(match => match.handle.crumb(match.data));
 
   return (
     <div className="breadcrumbs">
