@@ -10,11 +10,12 @@ enum Method {
 
 type Options = {
   method: Method;
-  data?: Record<string, unknown> | FormData;
+  data?: Record<string, unknown> | FormData | string;
   params?: Record<string, unknown>;
   timeout?: number;
   headers?: Record<string, string>;
   baseUrl?: string;
+  withCredentials?: boolean;
 };
 
 type OptionsWithoutMethod = Omit<Options, 'method' | 'params'>;
@@ -48,11 +49,17 @@ export class HTTP {
   }
 
   private static _send<T>(path: string, options: Options = { method: Method.GET }): Promise<ResponseType<T>> {
-    const { method, headers = { 'Content-Type': 'application/json' }, baseUrl = determineAPIHost(), ...rest } = options;
+    const {
+      method,
+      headers = { 'Content-Type': 'application/json' },
+      baseUrl = determineAPIHost(),
+      withCredentials = true,
+      ...rest
+    } = options;
 
     const url = buildPath(baseUrl, path);
 
-    return axios({ headers, method, url, withCredentials: true, ...rest }).then(({ data, status, headers }) => {
+    return axios({ headers, method, url, withCredentials, ...rest }).then(({ data, status, headers }) => {
       return { data, status, headers: { ...headers } };
     });
   }

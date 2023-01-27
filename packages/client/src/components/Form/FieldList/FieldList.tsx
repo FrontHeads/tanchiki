@@ -39,19 +39,22 @@ export const FieldList = <T extends Record<string, string>>({
     }
   }, [isFormSubmitted]);
 
-  const inputChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, files } = event.target;
-    if (setFile && type === 'file' && files?.length) {
-      setFile(files[0]);
-    }
-    setFormData(oldState => ({ ...oldState, [name]: value }));
+  const inputChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+      const { name, value, type } = event.target;
+      if (setFile && type === 'file' && 'files' in event.target && event.target.files?.length) {
+        setFile(event.target.files[0]);
+      }
+      setFormData(oldState => ({ ...oldState, [name]: value }));
 
-    const validationResponse = validation({ [name]: value });
+      const validationResponse = validation({ [name]: value });
 
-    setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
-  }, []);
+      setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
+    },
+    []
+  );
 
-  const inputBlurHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const inputBlurHandler = useCallback((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
 
     const validationResponse = validation({ [name]: value });

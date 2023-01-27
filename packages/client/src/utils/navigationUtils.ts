@@ -1,4 +1,4 @@
-import { NAVIGATION_LIST } from './../components/Navigation/data';
+import { NAVIGATION_LIST } from '../components/Navigation/data';
 
 /**
  * Фильтруем пункты меню в зависимости от того - достуен ли
