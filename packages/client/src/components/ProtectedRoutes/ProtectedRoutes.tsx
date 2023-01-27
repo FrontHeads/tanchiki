@@ -6,10 +6,10 @@ import { Paths } from '../../config/constants';
 import { authSelectors, useAppSelector } from '../../store';
 
 export const ProtectedRoutes: FC = () => {
-  const auth = useAppSelector(authSelectors.isAuthenticated);
+  const isAuthenticated = useAppSelector(authSelectors.isAuthenticated);
   const location = useLocation();
 
-  if (!auth) {
+  if (!isAuthenticated) {
     toast.success('Вам необходимо авторизоваться');
     return <Navigate to={Paths.SignIn} state={{ from: location }} replace />;
   }

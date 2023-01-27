@@ -16,7 +16,7 @@ export const Home: FC = () => {
         <div className="delimiter" />
         <nav data-testid="menu-nav-home" className="menu-nav">
           <ul className="navigation-list">
-            <Navigation />
+            <Navigation exclude={['home']} />
           </ul>
         </nav>
       </div>
