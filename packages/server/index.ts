@@ -1,11 +1,11 @@
-import cors from 'cors';
 import dotenv from 'dotenv';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
 import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
-import { createClientAndConnect } from './db';
+import { corsMiddleware } from './middlewares';
 import { apiRoute } from './routes/Api';
+import { initMongoDBConnection, initPostgreDBConnection } from './utils/databaseUtils';
 
 dotenv.config();
 
@@ -15,7 +15,8 @@ import * as path from 'path';
 
 import { HtmlWritable } from './utils/HtmlWritable';
 
-createClientAndConnect();
+initPostgreDBConnection();
+initMongoDBConnection();
 
 const isDev = () => process.env.NODE_ENV === 'development';
 
@@ -25,17 +26,10 @@ export const allowedHosts = ['localhost', '127.0.0.1'];
 async function startServer() {
   const app = express();
 
-  const clientPort = Number(process.env.CLIENT_PORT) || 3000;
   const serverPort = Number(process.env.SERVER_PORT) || 5000;
 
-  /** Настройка CORS для корректной отдчаи проекта на клиентском порту при локальной разработке */
-  const corsOptions = {
-    credentials: true,
-    origin: [`http://127.0.0.1:${clientPort}`, `http://localhost:${clientPort}`],
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-  };
-
-  app.use(cors(corsOptions));
+  // Инициализация middleware
+  app.use(corsMiddleware());
 
   let vite: ViteDevServer | undefined;
 
@@ -44,7 +38,7 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
-  /** Проксирует запросы к API на сервер Яндекса */
+  /** Обрабатываем запросы к /api */
   app.use('/api', apiRoute);
 
   /**

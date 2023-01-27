@@ -24,18 +24,33 @@ export const Field: FC<FieldProps> = ({
         {title}
         {required ? <em>*</em> : null}
       </label>
-      <input
-        id={id}
-        className="input form__field-input"
-        type={type || 'text'}
-        name={id}
-        placeholder={placeholder}
-        onBlur={onBlur}
-        onChange={onChange}
-        onFocus={onFocus}
-        value={value}
-        disabled={disabled}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          id={id}
+          className="input form__field-input"
+          name={id}
+          placeholder={placeholder}
+          onBlur={onBlur}
+          onChange={onChange}
+          onFocus={onFocus}
+          rows={5}
+          disabled={disabled}
+          value={value}></textarea>
+      ) : (
+        <input
+          id={id}
+          className="input form__field-input"
+          type={type || 'text'}
+          name={id}
+          placeholder={placeholder}
+          onBlur={onBlur}
+          onChange={onChange}
+          onFocus={onFocus}
+          value={value}
+          disabled={disabled}
+        />
+      )}
+
       {errorList ? <ValidationErrors errorList={errorList} /> : null}
     </div>
   );
