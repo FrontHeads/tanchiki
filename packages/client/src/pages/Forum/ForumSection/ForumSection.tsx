@@ -12,21 +12,21 @@ import { Paths } from '../../../config/constants';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumTopicList } from './ForumTopicList';
-import { type ForumSectionProps, type ForumSectionT } from './typings';
+import { type ForumSectionT } from './typings';
 
-export const ForumSection: FC<ForumSectionProps> = () => {
+export const ForumSection: FC = () => {
   const navigate = useNavigate();
   const { sectionId } = useParams();
   const [section, setSection] = useState<ForumSectionT>(null);
 
   useEffect(() => {
-    forumAPI.getSectionById(Number(sectionId)).then((response) => {
+    forumAPI.getSectionById(Number(sectionId)).then(response => {
       setSection(response.data);
     });
   }, []);
 
-  return (
-    section ? <>
+  return section ? (
+    <>
       {generateMetaTags({ title: `${section.name}` })}
       <section className="forum__wrapper">
         <h1 className="forum__title" data-testid="forum-section-title">
@@ -42,8 +42,8 @@ export const ForumSection: FC<ForumSectionProps> = () => {
             />
           </div>
         </div>
-        <ForumTopicList topicList={section!.topics} sectionId={sectionId} />
+        <ForumTopicList topicList={section.topics} sectionId={sectionId} />
       </section>
-    </>: null
-  );
+    </>
+  ) : null;
 };

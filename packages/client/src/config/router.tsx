@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { createRoutesFromElements, Route } from 'react-router-dom';
+import { createRoutesFromElements, Link, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
 import { oauthAPI } from '../api/oauthAPI';
@@ -72,7 +72,17 @@ export const routes = createRoutesFromElements(
         <Route path={Paths.Leaderboard} element={<Leaderboard />}></Route>
         <Route path={Paths.Forum}>
           <Route index={true} element={<Forum />}></Route>
-          <Route path={`${Paths.Section}/:sectionId`}>
+          <Route
+            path={`${Paths.Section}/:sectionId`}
+            loader={({ params }) => params}
+            handle={{
+              crumb: data => (
+                <>
+                  <Link to={Paths.Forum}>Форум</Link>
+                  <span>{data.title}</span>
+                </>
+              ),
+            }}>
             <Route index={true} element={<ForumSection />}></Route>
             <Route path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`} element={<ForumTopic />}></Route>
             <Route path={`${Paths.Section}/:sectionId/${Paths.NewTopic}`} element={<ForumNewTopic />}></Route>

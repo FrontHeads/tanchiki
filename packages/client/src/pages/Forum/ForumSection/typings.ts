@@ -6,6 +6,6 @@ export type ForumSectionT = {
   topics: ForumTopicItem[];
 } | null;
 
-export type ForumSectionProps = {
-  section: ForumSectionT;
-};
+// export type ForumSectionProps = {
+//   section: ForumSectionT;
+// };
