@@ -6,6 +6,7 @@ import { oauthAPI } from '../api/oauthAPI';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
+import { Contact } from '../pages/Contact';
 import { ErrorPage } from '../pages/ErrorPage';
 import { Forum } from '../pages/Forum';
 import { ForumSection } from '../pages/Forum/ForumSection';
@@ -53,6 +54,7 @@ export const routes = createRoutesFromElements(
   <>
     <Route element={<RootLayout />} errorElement={<ErrorPage />} loader={rootLoader}>
       <Route path={Paths.Home} element={<Home />}></Route>
+      <Route path={Paths.ContactUs} element={<Contact />}></Route>
       <Route
         path={Paths.Game}
         element={

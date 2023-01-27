@@ -81,13 +81,14 @@
 
 ## Production окружение в докере
 
-Перед первым запуском выполните `node init.js`
+Перед первым запуском выполните `node init.d/app-init.js`
 
-`docker compose up` - запустит три сервиса
+`docker-compose up` - запустит следующие сервисы:
 
 1. nginx, раздающий клиентскую статику (client)
 2. node, ваш сервер (server)
-3. postgres, вашу базу данных (postgres)
+3. postgres, основная БД (postgres)
+3. mongodb, NoSQL база (mongodb)
 
 Если вам понадобится только один сервис, просто уточните какой в команде
 `docker compose up {sevice_name}`, например `docker compose up server`
