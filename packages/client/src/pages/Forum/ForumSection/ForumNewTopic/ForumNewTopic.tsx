@@ -1,57 +1,36 @@
 import './ForumNewTopic.css';
 
-import { useCallback, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import { forumAPI } from '../../../../api/forumAPI';
 import { Breadcrumbs } from '../../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../../components/Breadcrumbs/data';
-// import { type BreadcrumbsItem } from '../../../../components/Breadcrumbs/typings';
+import { type BreadcrumbsItem } from '../../../../components/Breadcrumbs/typings';
 import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
-// import { Paths } from '../../../../config/constants';
-import { useAppDispatch } from '../../../../store';
-import { forumThunks } from '../../../../store/features/forum/forumThunks';
+import { Paths } from '../../../../config/constants';
 import { generateMetaTags } from '../../../../utils/seoUtils';
-import { DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../../DummyData';
 
 export const ForumNewTopic = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsItem[]>([{ href: Paths.Forum, title: 'Форум' }]);
+  const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsItem[]>([{ href: Paths.Forum, title: 'Форум' }]);
 
   const { sectionId } = useParams();
 
-  // const topicId = async () => {
-  //   const response = await forumAPI.getTopicsFromSection(Number(sectionId));
-
-  //   console.log(sectionId);
-
-  //   console.log(response.data);
-
-  //   return response.data.at(-1);
-  // };
-  // topicId();
-
-  const dispatch = useAppDispatch();
   const [form, setForm] = useState({
     heading: 'Новая тема',
     body: '',
   });
   // console.log(breadcrumbs);
 
-  // setBreadcrumbs(oldState => [...oldState, { href: `${Paths.Section}/${sectionId}`, title: 'Разделы' }]);
 
-  // dispatch(
-  //   forumThunks.createTopic({
-  //     id: 2,
-  //     user_id: 1,
-  //     section_id: 1,
-  //     name: 'Вторая тема в первом разделе',
-  //     content: 'Описание второй темы',
-  //     username: 'yatx',
-  //     messages: 3,
-  //   })
-  // );
+   useEffect(() => {
+    // Should not ever set state during rendering, so do this in useEffect instead.
+     setBreadcrumbs([...breadcrumbs, {href: `${Paths.Section}/${sectionId}`, title: 'Разделы' }]);
+  }, [sectionId]);
+
 
   const headingChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,20 +50,22 @@ export const ForumNewTopic = () => {
   );
 
   const submitHandler = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      dispatch(
-        forumThunks.createTopic({
+        forumAPI.createTopic({
           name: form.heading,
           content: form.body,
           //@ts-ignore
           section_id: sectionId,
           username: 'yatx',
           user_id: 1,
-        })
-      );
+        }
+      ).then((res) => {
+        console.log(res);
+        navigate(`${Paths.Section}/${sectionId}${Paths.Topic}/${res.data.id}`);
 
-      // navigate(`${Paths.Section}/${sectionId}/${Paths.Topic}/${topicId}`);
+      });
+
     },
 
     [form]

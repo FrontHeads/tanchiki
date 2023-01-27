@@ -12,36 +12,25 @@ import { Paths } from '../../../config/constants';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumTopicList } from './ForumTopicList';
-import { type ForumSectionProps } from './typings';
+import { type ForumSectionProps, type ForumSectionT } from './typings';
 
 export const ForumSection: FC<ForumSectionProps> = () => {
   const navigate = useNavigate();
   const { sectionId } = useParams();
-  const [topicList, setTopicList] = useState([]);
+  const [section, setSection] = useState<ForumSectionT>(null);
 
   useEffect(() => {
-    if (topicList.length) {
-      return;
-    }
-    const fetchTopics = async () => {
-      const response = await forumAPI.getTopicsFromSection(Number(sectionId));
-      //@ts-ignore
-      setTopicList(response.data);
-    };
-    //  const fetchSections = async () => {
-    //    const response = await forumAPI.getTopicsFromSection(Number(sectionId));
-    //    setTopicList(response.data);
-    //  };
-
-    fetchTopics();
+    forumAPI.getSectionById(Number(sectionId)).then((response) => {
+      setSection(response.data);
+    });
   }, []);
 
   return (
-    <>
-      {generateMetaTags({ title: `Раздел ${sectionId}` })}
+    section ? <>
+      {generateMetaTags({ title: `${section.name}` })}
       <section className="forum__wrapper">
         <h1 className="forum__title" data-testid="forum-section-title">
-          Раздел {sectionId}
+          {section.name}
         </h1>
         <div className="actions-wrapper">
           <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Wide} />
@@ -53,8 +42,8 @@ export const ForumSection: FC<ForumSectionProps> = () => {
             />
           </div>
         </div>
-        <ForumTopicList topicList={topicList} sectionId={sectionId} />
+        <ForumTopicList topicList={section!.topics} sectionId={sectionId} />
       </section>
-    </>
+    </>: null
   );
 };
