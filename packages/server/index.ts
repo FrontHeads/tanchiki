@@ -3,9 +3,9 @@ import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'reac
 import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
-import { createClientAndConnect } from './db';
 import { corsMiddleware } from './middlewares';
 import { apiRoute } from './routes/Api';
+import { initMongoDBConnection, initPostgreDBConnection } from './utils/databaseUtils';
 
 dotenv.config();
 
@@ -15,7 +15,8 @@ import * as path from 'path';
 
 import { HtmlWritable } from './utils/HtmlWritable';
 
-createClientAndConnect();
+initPostgreDBConnection();
+initMongoDBConnection();
 
 const isDev = () => process.env.NODE_ENV === 'development';
 

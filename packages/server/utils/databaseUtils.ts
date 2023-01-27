@@ -12,7 +12,7 @@ const {
   MONGO_DB,
 } = process.env;
 
-export const createClientAndConnect = async (): Promise<Sequelize | undefined> => {
+export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> => {
   let client;
 
   try {
@@ -40,7 +40,10 @@ export const createClientAndConnect = async (): Promise<Sequelize | undefined> =
     console.error(e);
   }
 
-  // Подключаемся к MongoDB
+  return client;
+};
+
+export const initMongoDBConnection = async (): Promise<void> => {
   try {
     mongoose.set('strictQuery', false);
     await mongoose.connect(`mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:27017/${MONGO_DB}`);
@@ -53,6 +56,4 @@ export const createClientAndConnect = async (): Promise<Sequelize | undefined> =
       console.error(e);
     }
   }
-
-  return client;
 };
