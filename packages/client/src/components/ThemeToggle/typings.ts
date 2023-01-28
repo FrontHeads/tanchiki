@@ -7,3 +7,8 @@ export type ThemeList = {
   gatClassName?: () => string;
   onClick?: () => void;
 };
+
+export type toggleThemeArgs = {
+  currentThemeName: string;
+  skipServerRequest?: boolean;
+};

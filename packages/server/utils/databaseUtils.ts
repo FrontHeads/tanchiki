@@ -1,6 +1,8 @@
-import { Themes } from 'models/Themes';
 import mongoose from 'mongoose';
+import * as path from 'path';
 import { type SequelizeOptions, Sequelize } from 'sequelize-typescript';
+
+import { Themes } from '../models/Themes';
 
 const {
   POSTGRES_USER,
@@ -31,7 +33,8 @@ export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> 
     client = new Sequelize(sequelizeOptions);
 
     /** Регистрируем модели */
-    client.addModels([__dirname + '/models']);
+    const modelPath = path.join(__dirname, '../models');
+    client.addModels([modelPath]);
 
     //TODO убрать alter на продакшене (при деплое)
     const synced = await client.sync({ alter: true });

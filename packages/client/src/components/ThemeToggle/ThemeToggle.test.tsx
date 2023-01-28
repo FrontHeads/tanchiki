@@ -1,17 +1,13 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 
+import { renderWithRouter } from '../../utils/testingUtils';
 import { ThemeToggle } from './ThemeToggle';
 
 describe('ThemeToggle', () => {
   test('it renders', () => {
-    render(
-      <BrowserRouter>
-        <ThemeToggle />
-      </BrowserRouter>
-    );
+    renderWithRouter({ component: <ThemeToggle /> });
 
     const renderedThemeToggle = screen.getByTestId('theme-toggle');
 

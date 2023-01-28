@@ -6,6 +6,7 @@ import { type FC, useEffect, useState } from 'react';
 import { themizationAPI } from '../../api/themizationAPI';
 import { authSelectors, useAppSelector } from '../../store';
 import { THEME_LIST, ThemeNames } from './data';
+import { type toggleThemeArgs } from './typings';
 
 /**
  * Чтобы добавить новую тему нужно:
@@ -28,14 +29,14 @@ export const ThemeToggle: FC = () => {
   };
 
   /** Переключатель темы. */
-  const toggleTheme = (currentThemeName: string) => {
+  const toggleTheme = ({ currentThemeName, skipServerRequest }: toggleThemeArgs) => {
     const themeNameIsValid = currentThemeName && Object.values(ThemeNames).includes(currentThemeName as ThemeNames);
 
     if (!themeNameIsValid) {
       return;
     }
 
-    if (userId && currentThemeName !== themeName) {
+    if (userId && currentThemeName !== themeName && !skipServerRequest) {
       themizationAPI.setUserTheme({ themeName: currentThemeName, userId });
     }
 
@@ -69,7 +70,7 @@ export const ThemeToggle: FC = () => {
 
         const themeNameFromDBIsValid = typeof themeNameFromDB === 'string' && themeNameFromDB !== themeName;
         if (themeNameFromDBIsValid) {
-          toggleTheme(themeNameFromDB);
+          toggleTheme({ currentThemeName: themeNameFromDB, skipServerRequest: true });
         }
       }
     })();
@@ -78,7 +79,7 @@ export const ThemeToggle: FC = () => {
   const themeList = THEME_LIST.map(theme => (
     <svg
       onClick={() => {
-        toggleTheme(theme.name);
+        toggleTheme({ currentThemeName: theme.name });
       }}
       key={theme.name}
       className={getClassName(theme.name)}
