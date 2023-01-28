@@ -145,7 +145,9 @@ export class Zone {
     });
 
     entity.on(EntityEvent.WillDoDamage, (rect: Rect) => {
-      this.doDamage(rect, entity);
+      if (entity instanceof Projectile) {
+        this.doDamage(rect, entity);
+      }
     });
 
     if (entity instanceof Tank) {
@@ -195,7 +197,7 @@ export class Zone {
   }
 
   /** Наносит урон по заданному прямоугольнику */
-  doDamage(rect: Rect, source: Entity) {
+  doDamage(rect: Rect, source: Projectile) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
@@ -203,8 +205,10 @@ export class Zone {
         // Урон наносится по каждой клетке, координаты которой передаются дальше
         // (это нужно для частичного разрушения стен и уничтожения сразу нескольких объектов)
         const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
-        if (mainLayerCell && mainLayerCell.hittable) {
-          mainLayerCell.takeDamage(source, damagedRect);
+        if (mainLayerCell && mainLayerCell.hittable && mainLayerCell !== source.parent) {
+          if (mainLayerCell.type !== 'tank' || this.currentRectsOverlap(source, mainLayerCell)) {
+            mainLayerCell.takeDamage(source, damagedRect);
+          }
         }
         if (projectileLayerCell) {
           projectileLayerCell.takeDamage(source, damagedRect);
@@ -250,6 +254,10 @@ export class Zone {
             if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
               continue;
             }
+            // Для более точной проверки на попадание снаряда в танк
+            if (mainLayerCell.type === 'tank' && !this.currentRectsOverlap(entity, mainLayerCell)) {
+              continue;
+            }
             return true;
           }
           if (projectileLayerCell !== null && projectileLayerCell !== entity) {
@@ -263,6 +271,29 @@ export class Zone {
       }
     }
     return false;
+  }
+
+  /** Проверка на пересечение прямоугольников, на которых расположены игровые сущности в данный момент.
+   * Нужна для более точного расчёта попадания снарядов в танки.
+   * Погрешность (margin) задаётся, чтобы снизить чувствительность сопоставления для движущихся объектов.
+   */
+  currentRectsOverlap(rectOne: Entity | Rect, rectTwo: Entity | Rect, margin = 0.25) {
+    const rectOneStartX = rectOne.posX + margin;
+    const rectOneEndX = rectOne.posX + rectOne.width - margin;
+    const rectOneStartY = rectOne.posY + margin;
+    const rectOneEndY = rectOne.posY + rectOne.height - margin;
+
+    const rectTwoStartX = rectTwo.posX + margin;
+    const rectTwoEndX = rectTwo.posX + rectTwo.width - margin;
+    const rectTwoStartY = rectTwo.posY + margin;
+    const rectTwoEndY = rectTwo.posY + rectTwo.height - margin;
+
+    const rectOneRightOfRectTwo = rectOneStartX >= rectTwoEndX;
+    const rectOneLeftOfRectTwo = rectOneEndX <= rectTwoStartX;
+    const rectOneBottomOfRectTwo = rectOneStartY >= rectTwoEndY;
+    const rectOneTopOfRectTwo = rectOneEndY <= rectTwoStartY;
+
+    return !(rectOneRightOfRectTwo || rectOneLeftOfRectTwo || rectOneBottomOfRectTwo || rectOneTopOfRectTwo);
   }
 
   /** Проверка на предмет столкновений сущностей и координат, которые выходят за пределы матрицы */
