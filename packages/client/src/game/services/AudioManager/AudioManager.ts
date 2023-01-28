@@ -148,7 +148,13 @@ export class AudioManager extends EventEmitter {
 
     /** Звуки танка врага */
     if (isTank && isEnemy) {
-      /**взрыв врага */
+      /** Попадание во врага */
+      entity.on(EntityEvent.Damaged, (damageProps: DamageSettings) => {
+        if (!entity.shouldBeDestroyed && damageProps.source.role === 'player') {
+          this.playSound('hitEnemy');
+        }
+      });
+      /** Уничтожение врага */
       entity.on(EntityEvent.Destroyed, () => {
         this.playSound('enemyExplosion');
       });

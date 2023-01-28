@@ -3,24 +3,42 @@ import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { rand } from '../../utils';
 import { Direction, EntityEvent } from '../Entity/typings';
 import { Speed } from '../EntityDynamic/data';
-import { type EntityDynamicSettings } from '../EntityDynamic/typings';
 import { Tank } from './Tank';
-import { type EnemyVariant } from './typings';
+import { type EnemyVariant, type TankEnemySettings } from './typings';
 
 export class TankEnemy extends Tank {
   lastDirection = Direction.Down;
   /** Разновидность вражеского танка */
   variant: EnemyVariant = 'BASIC';
 
-  constructor(props: EntityDynamicSettings) {
-    super(props);
+  constructor(props: TankEnemySettings) {
+    super({ posX: 0, posY: 0 });
     this.color = Color.Aqua;
     this.role = 'enemy';
-    this.setMoveSpeed(Speed.Low);
-    this.setShootSpeed(Speed.Low);
     Object.assign(this, props);
-    //TODO выбор спрайта танка должен зависеть от роли (игрок1/игрок2/противник) и типа танка (большой/маленький)
-    this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.a'];
+
+    switch (this.variant) {
+      case 'FAST':
+        this.setMoveSpeed(Speed.High);
+        this.setShootSpeed(Speed.Medium);
+        this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.b'];
+        break;
+      case 'POWER':
+        this.setMoveSpeed(Speed.Medium);
+        this.setShootSpeed(Speed.High);
+        this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.c'];
+        break;
+      case 'ARMOR':
+        this.setMoveSpeed(Speed.Low);
+        this.setShootSpeed(Speed.Medium);
+        this.durability = 4;
+        this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.secondary.d'];
+        break;
+      default:
+        this.setMoveSpeed(Speed.Low);
+        this.setShootSpeed(Speed.Low);
+        this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.a'];
+    }
 
     this.registerTankEnemyEvents();
   }
@@ -30,6 +48,22 @@ export class TankEnemy extends Tank {
       this.move(Direction.Down);
       this.autoMove();
       this.autoShoot();
+    });
+
+    this.on(EntityEvent.Damaged, () => {
+      // Для смены скинов у бронированного танка при попадании
+      if (this.variant !== 'ARMOR') {
+        return;
+      }
+      if (this.durability === 3) {
+        this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.primary.d'];
+      }
+      if (this.durability === 2) {
+        this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.secondary.d'];
+      }
+      if (this.durability === 1) {
+        this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.d'];
+      }
     });
   }
 

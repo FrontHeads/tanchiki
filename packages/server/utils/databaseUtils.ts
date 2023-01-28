@@ -1,11 +1,23 @@
+import { Themes } from 'models/Themes';
+import mongoose from 'mongoose';
 import { type SequelizeOptions, Sequelize } from 'sequelize-typescript';
 
-import { Themes } from './models/Themes';
+const {
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  POSTGRES_DB,
+  POSTGRES_HOST,
+  MONGO_HOST,
+  MONGO_USERNAME,
+  MONGO_PASSWORD,
+  MONGO_DB,
+} = process.env;
 
-const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_HOST } = process.env;
+export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> => {
+  let client;
 
-export const createClientAndConnect = async (): Promise<Sequelize | null> => {
   try {
+    // Подключаемся к Postgre
     const sequelizeOptions: SequelizeOptions = {
       host: POSTGRES_HOST || 'localhost',
       port: 5432,
@@ -16,7 +28,7 @@ export const createClientAndConnect = async (): Promise<Sequelize | null> => {
       logging: false,
     };
 
-    const client = new Sequelize(sequelizeOptions);
+    client = new Sequelize(sequelizeOptions);
 
     /** Регистрируем модели */
     client.addModels([__dirname + '/models']);
@@ -32,11 +44,24 @@ export const createClientAndConnect = async (): Promise<Sequelize | null> => {
     }
 
     console.log('  ➜ 🎸 Connected to the Postgres database');
-
-    return client;
   } catch (e) {
     console.error(e);
   }
 
-  return null;
+  return client;
+};
+
+export const initMongoDBConnection = async (): Promise<void> => {
+  try {
+    mongoose.set('strictQuery', false);
+    await mongoose.connect(`mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:27017/${MONGO_DB}`);
+
+    console.log('  ➜ 🎸 Connected to the Mongo database');
+  } catch (e) {
+    if (e instanceof Error) {
+      console.error(`Mongo DB connect error: ${e.message}`);
+    } else {
+      console.error(e);
+    }
+  }
 };

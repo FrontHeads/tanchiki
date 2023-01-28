@@ -1,6 +1,6 @@
-import { type MapData } from './typings';
+import { type MapTerrainData } from './typings';
 
-export const levels: MapData[] = [
+export const levels: MapTerrainData[] = [
   // 1
   [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
