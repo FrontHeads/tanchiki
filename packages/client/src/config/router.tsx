@@ -4,6 +4,7 @@ import { createRoutesFromElements, Link, Route } from 'react-router-dom';
 import { authAPI } from '../api/authAPI';
 import { forumAPI } from '../api/forumAPI';
 import { oauthAPI } from '../api/oauthAPI';
+import { type TopicBreadcrumb } from '../components/Breadcrumbs/typings';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
@@ -86,26 +87,44 @@ export const routes = createRoutesFromElements(
                 return forumAPI.getSectionById(Number(params.sectionId));
               }}
               handle={{
-                crumb: ({ data }: { data: ForumSectionT }) => (
-                  <Link to={`${Paths.Section}/${data?.id}`}>Секция {data?.name}</Link>
-                ),
+                crumb: ({ data }: { data: ForumSectionT }) => <span>{data?.name}</span>,
               }}></Route>
             <Route
               path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`}
               element={<ForumTopic />}
-              loader={({ params }) => {
-                console.log(params);
+              loader={async ({ params }) => {
+                const section = await forumAPI.getSectionById(Number(params.sectionId));
 
-                return params;
+                return { params, section };
               }}
               handle={{
-                crumb: (data: { sectionId: string; topicId: string }) => (
+                crumb: ({ params, section }: TopicBreadcrumb) => {
+                  const { sectionId, topicId } = params;
+                  const { data } = section;
+                  const [{ name: topicName }] = data.topics.filter(topic => topic.id === Number(topicId));
+
+                  return (
+                    <>
+                      <Link to={`${Paths.Section}/${sectionId}`}>{data?.name}</Link>
+                      <span>{topicName}</span>
+                    </>
+                  );
+                },
+              }}></Route>
+            <Route
+              path={`${Paths.Section}/:sectionId/${Paths.NewTopic}`}
+              element={<ForumNewTopic />}
+              loader={async ({ params }) => {
+                return forumAPI.getSectionById(Number(params.sectionId));
+              }}
+              handle={{
+                crumb: ({ data }: { data: ForumSectionT }) => (
                   <>
-                    <span>Топик {data.sectionId}</span>
+                    <Link to={`${Paths.Section}/${data.id}`}>{data?.name}</Link>
+                    <span>Новая тема</span>
                   </>
                 ),
               }}></Route>
-            <Route path={`${Paths.Section}/:sectionId/${Paths.NewTopic}`} element={<ForumNewTopic />}></Route>
           </Route>
         </Route>
       </Route>

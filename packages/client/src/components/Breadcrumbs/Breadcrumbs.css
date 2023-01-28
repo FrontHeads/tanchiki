@@ -4,13 +4,11 @@
   &__item {
     display: inline-block;
 
-    &:after {
-      content: "/";
-      padding: 0 5px;
-    }
-
-    &:last-child:after {
-      content: none;
+    :is(a) {
+      &:after {
+        content: "/";
+        padding: 0 5px;
+      }
     }
   }
 
