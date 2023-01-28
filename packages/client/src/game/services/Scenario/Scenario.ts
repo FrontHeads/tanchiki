@@ -60,9 +60,13 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
 
     /** Размещаем танки противника */
-    while (this.canCreateTankEnemy()) {
-      this.createTankEnemy();
-    }
+    const enemiesSpawnDelay = 3000;
+    this.createTankEnemy();
+    this.game.loop.setLoopInterval(() => {
+      if (this.canCreateTankEnemy()) {
+        this.createTankEnemy();
+      }
+    }, enemiesSpawnDelay, 'SCENARIO_ENEMY_TANK_CREATION');
 
     /** Инициализируем обработчики событий уровня */
     this.initEventListeners();
@@ -84,14 +88,9 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
           // playerState.statistics[]++;
         }
 
-        /** Спауним новый вражеский танк если необходимо */
-        if (this.canCreateTankEnemy()) {
-          this.createTankEnemy();
-        } else {
-          /** Триггерим победу в случае если врагов не осталось */
-          if (this.state.enemies.length === 0) {
-            this.emit(ScenarioEvent.MissionAccomplished);
-          }
+        /** Триггерим победу в случае если врагов не осталось */
+        if (!this.canCreateTankEnemy() && this.state.enemies.length === 0) {
+          this.emit(ScenarioEvent.MissionAccomplished);
         }
       })
 
