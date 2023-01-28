@@ -254,6 +254,7 @@ export class Game extends EventEmitter {
       this.overlay.show(ScreenType.LevelSelector, { level: this.level, showHints: false });
       this.audioManager.emit('levelIntro');
 
+      this.controllerAll.on(ControllerEvent.Pause, resolve);
       this.controllerAll.on(ControllerEvent.Shoot, resolve);
       setTimeout(resolve, startAnimationDelay);
     }).then(() => {
