@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { allowedHosts } from '../';
 import { forumSectionRoute } from '../api/services/ForumSection';
 import { themizationRoute } from '../api/services/Themization';
+import { allowedHosts } from '../config/constants';
 
 export const apiRoute = Router();
 

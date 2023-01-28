@@ -1,11 +1,13 @@
 import express, { type Request, type Response, Router } from 'express';
 
+import { checkAuthMiddleware } from '../../middlewares';
 import { Themes } from '../../models/Themes';
 import { UserThemes } from '../../models/UserThemes';
 
 export const themizationRoute = Router()
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
+  .use('/', checkAuthMiddleware)
   .get('/:userId', async (req: Request, res: Response): Promise<Response> => {
     const { userId } = req.params;
 
