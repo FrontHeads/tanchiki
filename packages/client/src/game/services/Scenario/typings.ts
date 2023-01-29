@@ -31,6 +31,8 @@ export type ScenarioState = {
   enemiesCounter: number;
   /** Максимальное количество танков противника на уровне */
   maxEnemies: number;
+  /** Задержка (мс) перед появлением новых врагов на карте */
+  enemiesSpawnDelay: number;
   /** Массив с танами протвников на карте */
   enemies: Tank[];
   /** Объект со state игроков */

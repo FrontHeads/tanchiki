@@ -23,6 +23,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     enemiesCounter: 0,
     maxEnemies: 20,
     maxActiveEnemies: 4,
+    enemiesSpawnDelay: 2000,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;
@@ -60,13 +61,16 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
 
     /** Размещаем танки противника */
-    const enemiesSpawnDelay = 3000;
     this.createTankEnemy();
-    this.game.loop.setLoopInterval(() => {
-      if (this.canCreateTankEnemy()) {
-        this.createTankEnemy();
-      }
-    }, enemiesSpawnDelay, 'SCENARIO_ENEMY_TANK_CREATION');
+    this.game.loop.setLoopInterval(
+      () => {
+        if (this.canCreateTankEnemy()) {
+          this.createTankEnemy();
+        }
+      },
+      this.state.enemiesSpawnDelay,
+      'SCENARIO_ENEMY_TANK_CREATION'
+    );
 
     /** Инициализируем обработчики событий уровня */
     this.initEventListeners();
