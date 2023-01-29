@@ -146,7 +146,7 @@ export class Zone {
 
     entity.on(EntityEvent.WillDoDamage, (rect: Rect) => {
       if (entity instanceof Projectile) {
-        this.doDamage(rect, entity);
+        this.doAreaDamage(rect, entity);
       }
     });
 
@@ -197,7 +197,7 @@ export class Zone {
   }
 
   /** Наносит урон по заданному прямоугольнику */
-  doDamage(rect: Rect, source: Projectile) {
+  doAreaDamage(rect: Rect, source: Projectile) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
@@ -254,9 +254,16 @@ export class Zone {
             if (entity.role === 'enemy' && entity.role === mainLayerCell.role) {
               continue;
             }
-            // Для более точной проверки на попадание снаряда в танк
-            if (mainLayerCell.type === 'tank' && !this.currentRectsOverlap(entity, mainLayerCell)) {
-              continue;
+            // Если снаряд попал прямо в танк - взрываемся
+            if (mainLayerCell.type === 'tank') {
+              if (this.currentRectsOverlap(entity, mainLayerCell)) {
+                const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
+                entity.explode();
+                mainLayerCell.takeDamage(entity, damagedRect);
+                return true;
+              } else {
+                continue;
+              }
             }
             return true;
           }
