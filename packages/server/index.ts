@@ -74,8 +74,15 @@ async function startServer() {
       let render: (
         streamOptions: RenderToPipeableStreamOptions,
         request: express.Request
-      ) => Promise<ReturnType<typeof renderToPipeableStream>>;
-
+      ) => Promise<{
+        /**
+         * Не подключаю сюда полноценную типизацию, чтобы не подключать пакет
+         * Redux toolkit в пакет server ради типизации одного объекта. Нам нужен
+         * только один метод getState
+         */
+        store: { getState: () => Record<string, unknown> };
+        stream: ReturnType<typeof renderToPipeableStream>;
+      }>;
       /**
        * Считываем index.html и render функцию из клиентского пакета
        */
@@ -100,7 +107,7 @@ async function startServer() {
        */
       let didError = false;
 
-      const stream = await render(
+      const { stream, store } = await render(
         {
           /**
            * В случае завершения работы stream указываем статус ответа в зависимости
@@ -113,7 +120,7 @@ async function startServer() {
           },
           onShellError() {
             res.statusCode = 500;
-            res.send('<!doctype html><p>Loading...</p><script src="clientrender.js"></script>');
+            res.send('<!doctype html><p>Error loading app...</p>');
           },
           onError(err) {
             didError = true;
@@ -122,16 +129,6 @@ async function startServer() {
         },
         req
       );
-
-      /**
-       * Пример установки начального state для Redux хранилища.
-       * После реализации oAuth здесь можно подгрузить данные
-       * авторизованного пользователя для корректно работы разделов
-       * приложения, в которых необходима авторизацияы
-       **/
-      const preloadedState = {
-        app: { isAppLoading: false },
-      };
 
       /**
        * Данное решение используется для обработки stream.
@@ -143,12 +140,13 @@ async function startServer() {
       writable.on('finish', () => {
         const helmet = Helmet.renderStatic();
         const appHtml = writable.getHtml();
+
         const responseHtml = template
           .replace(
             `<div id="root" class="root"><!--ssr-outlet--></div>`,
             `<div id="root" class="root">${appHtml}</div>
             <script>
-                window.__PRELOADED_STATE__=${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
+                window.__PRELOADED_STATE__=${JSON.stringify(store.getState()).replace(/</g, '\\u003c')}
             </script>`
           )
           .replace(

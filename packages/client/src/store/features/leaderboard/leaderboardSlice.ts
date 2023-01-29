@@ -1,4 +1,4 @@
-import { type PayloadAction,createSelector, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 
 import { type LeaderboardRecord } from '../../../api/typings';
 import { type RootState } from '../../store';
@@ -15,6 +15,9 @@ export const leaderboardSlice = createSlice({
   } as LeaderboardState,
 
   reducers: {
+    setLeaderboardTable: (state, { payload }) => {
+      state.leaderboardTable = payload;
+    },
     setSortParams: (
       state,
       {
@@ -82,6 +85,7 @@ export const sortedLeaderboardSelector = createSelector(
 );
 
 export const leaderboardSelectors = {
+  sortDirection: (state: RootState) => state.leaderboard.sortDirection,
   all: (state: RootState) => state.leaderboard,
   sortedData: sortedLeaderboardSelector,
 };

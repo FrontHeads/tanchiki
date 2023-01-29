@@ -1,4 +1,5 @@
 import { createStaticHandler } from '@remix-run/router';
+import axios from 'axios';
 import type * as express from 'express';
 import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
 import { Provider } from 'react-redux';
@@ -8,6 +9,11 @@ import { routes } from './src/config/router';
 import { store } from './src/store';
 
 export async function render(streamOptions: RenderToPipeableStreamOptions, request: express.Request) {
+  /** Пробрасываем Cookie в серверный Axios для получения данных из Яндекс API, закрытых авторизацией */
+  if (request.headers.cookie) {
+    axios.defaults.headers.common['Cookie'] = request.headers.cookie;
+  }
+
   const { query } = createStaticHandler(routes);
   const remixRequest = createFetchRequest(request);
   const context = await query(remixRequest);
@@ -24,13 +30,18 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
    * При этом возвращается stream, а не строка, который нужно
    * обрабатывать на стороне сервера
    * https://github.com/reactwg/react-18/discussions/22
+   * Так же возвращаем store, который был сформирован на сервере, чтобы
+   * на клиенте отрендерить preloadedState
    */
-  return renderToPipeableStream(
-    <Provider store={store}>
-      <StaticRouterProvider router={router} context={context} nonce="the-nonce" />
-    </Provider>,
-    streamOptions
-  );
+  return {
+    stream: renderToPipeableStream(
+      <Provider store={store}>
+        <StaticRouterProvider router={router} context={context} nonce="the-nonce" />
+      </Provider>,
+      streamOptions
+    ),
+    store,
+  };
 }
 
 export function createFetchHeaders(requestHeaders: express.Request['headers']): Headers {
