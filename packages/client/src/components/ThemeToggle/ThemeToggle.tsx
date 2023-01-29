@@ -83,6 +83,7 @@ export const ThemeToggle: FC = () => {
       }}
       key={theme.name}
       className={getClassName(theme.name)}
+      data-testid={theme.name}
       viewBox={theme.viewBox}
       width="25px">
       <path d={theme.svgPath}></path>
