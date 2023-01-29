@@ -33,15 +33,15 @@ export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> 
     client = new Sequelize(sequelizeOptions);
 
     /** Регистрируем модели */
-    const modelPath = path.join(__dirname, '../models');
-    client.addModels([modelPath]);
+    const modelsPath = path.join(__dirname, '../models');
+    client.addModels([modelsPath]);
 
     //TODO убрать alter на продакшене (при деплое)
     const synced = await client.sync({ alter: true });
 
     if (synced) {
       console.log('  ➜ 🎸 Synchronized the Postgres database');
-      // Добавляем темы по умолчанию, без них не будет работать темизация
+      // Добавляем темы по умолчанию в БД при старте сервера, без этого не будет корректно работать темизация.
       await Themes.upsert({ theme_name: 'DARK' });
       await Themes.upsert({ theme_name: 'LIGHT' });
     }
