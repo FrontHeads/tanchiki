@@ -1,12 +1,12 @@
 /* :root — это псевдо-класс CSS, который соответствует корневому элементу документа — элементу html. */
-:root[theme="DARK"] {
+:root[data-theme="DARK"] {
   --background-color: #020717;
   --section-background-color: #151928;
   --section-light-shadow: #727476;
-  --logo-background: var(--background-color);
-  --footer-background: var(--background-color);
-  --burger-menu-lines: #fff;
-  --burger-menu-lines-border: var(--background-color);
+  --logo-background-color: var(--background-color);
+  --footer-background-color: var(--background-color);
+  --burger-menu-lines-color: #fff;
+  --burger-menu-lines-border-color: var(--background-color);
   --accent-color: #ffa825;
   --border-color: #737477;
   --border-dropdown-color: #363943;
@@ -17,24 +17,24 @@
   --font-color-third: #e3e4e6;
   --font-color-danger: var(--danger-color);
   --font-color-footer: var(--font-color-primary);
-  --dendy-button-primary: #d84000;
-  --dendy-button-secondary: #745f2c;
-  --dendy-button-third: #2d2719;
+  --dendy-button-primary-color: #d84000;
+  --dendy-button-secondary-color: #745f2c;
+  --dendy-button-third-color: #2d2719;
   --vertical-margin: 30px;
-  --theme-toggle-background: var(--background-color);
+  --theme-toggle-background-color: var(--background-color);
   --theme-toggle-icon-color: var(--font-color-primary);
   --theme-toggle-selected-icon-color: #313647;
 }
 
 /* Cветлая тема */
-:root[theme="LIGHT"] {
+:root[data-theme="LIGHT"] {
   --background-color: gainsboro;
   --section-background-color: #f1f1f1;
   --section-light-shadow: #727476;
-  --logo-background: #0d0d0dde;
-  --footer-background: #000;
-  --burger-menu-lines: #000;
-  --burger-menu-lines-border: #fff;
+  --logo-background-color: #0d0d0dde;
+  --footer-background-color: #000;
+  --burger-menu-lines-color: #000;
+  --burger-menu-lines-border-color: #fff;
   --accent-color: #ffa825;
   --border-color: #737477;
   --border-dropdown-color: #363943;
@@ -45,11 +45,11 @@
   --font-color-third: #e3e4e6;
   --font-color-danger: var(--danger-color);
   --font-color-footer: #fff;
-  --dendy-button-primary: #d84000;
-  --dendy-button-secondary: #cb9208;
-  --dendy-button-third: #7c6f30cc;
+  --dendy-button-primary-color: #d84000;
+  --dendy-button-secondary-color: #cb9208;
+  --dendy-button-third-color: #7c6f30cc;
   --vertical-margin: 30px;
-  --theme-toggle-background: var(--background-color);
+  --theme-toggle-background-color: var(--background-color);
   --theme-toggle-icon-color: var(--font-color-primary);
   --theme-toggle-selected-icon-color: var(--section-background-color);
 }

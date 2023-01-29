@@ -23,7 +23,7 @@ h1 {
   font-weight: 400;
   font-family: "Press Start 2P", cursive;
   margin: 30px auto;
-  text-shadow: 2px 1px var(--dendy-button-primary);
+  text-shadow: 2px 1px var(--dendy-button-primary-color);
   line-height: 1.5;
 }
 

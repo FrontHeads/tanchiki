@@ -27,6 +27,6 @@
   }
 
   &__wrapper {
-    background-color: var(--logo-background);
+    background-color: var(--logo-background-color);
   }
 }

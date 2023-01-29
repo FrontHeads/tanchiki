@@ -21,11 +21,11 @@
 
     &-line {
       transition: 0.2s ease;
-      background-color: var(--burger-menu-lines);
+      background-color: var(--burger-menu-lines-color);
       margin: 4px 0;
       width: 40px;
       height: 5px;
-      border: 1px solid var(--burger-menu-lines-border);
+      border: 1px solid var(--burger-menu-lines-border-color);
 
       &_open {
         &:nth-child(1) {

@@ -9,7 +9,7 @@ import { fakeUserProfile } from './data';
 const mock = new MockAdapter(axios);
 mock.onGet(buildPath(`http://localhost:${__SERVER_PORT__}`, '/')).reply(200);
 mock.onGet(buildPath(LOCAL_API_HOST, API_ENDPOINTS.AUTH.ME)).reply(200, fakeUserProfile);
-mock.onGet(buildPath(LOCAL_API_HOST, API_ENDPOINTS.THEMIZATION.GET_USER_THEME(1))).reply(200);
+mock.onGet(buildPath(LOCAL_API_HOST, API_ENDPOINTS.THEMIZATION)).reply(200);
 
 mock.onPost(buildPath(LOCAL_API_HOST, API_ENDPOINTS.AUTH.SIGNIN)).reply(200);
 mock.onPost(buildPath(LOCAL_API_HOST, API_ENDPOINTS.AUTH.SIGNUP)).reply(200);

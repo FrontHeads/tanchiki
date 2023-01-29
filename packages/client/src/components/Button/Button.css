@@ -14,7 +14,7 @@
 
   &:hover {
     transition: 0.2s;
-    box-shadow: 0 0 10px var(--dendy-button-primary);
+    box-shadow: 0 0 10px var(--dendy-button-primary-color);
   }
 
   &:last-child {
@@ -22,13 +22,13 @@
   }
 
   &_primary {
-    background-color: var(--dendy-button-primary);
+    background-color: var(--dendy-button-primary-color);
     color: var(--font-color-third);
     text-shadow: 2px 1px black;
   }
 
   &_secondary {
-    background-color: var(--dendy-button-secondary);
+    background-color: var(--dendy-button-secondary-color);
     color: var(--font-color-third);
     text-shadow: 2px 1px black;
   }

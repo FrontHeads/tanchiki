@@ -2,7 +2,7 @@
   --border-radius: 8px;
 
   padding: 5px 13px;
-  background-color: var(--theme-toggle-background);
+  background-color: var(--theme-toggle-background-color);
   border-radius: var(--border-radius);
   display: flex;
   align-items: center;

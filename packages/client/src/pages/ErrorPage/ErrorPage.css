@@ -11,7 +11,7 @@
     font-size: 50px;
     margin: 0;
     font-family: "Press Start 2P", cursive;
-    text-shadow: 2px 1px var(--dendy-button-primary);
+    text-shadow: 2px 1px var(--dendy-button-primary-color);
   }
 
   &__msg {

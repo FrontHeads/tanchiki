@@ -64,10 +64,7 @@ export const API_ENDPOINTS = {
     ADD_SCORE: 'leaderboard',
     GET: (teamName: string) => `leaderboard/${teamName}`,
   },
-  THEMIZATION: {
-    GET_USER_THEME: (userId: number) => `themization/${userId}`,
-    SET_USER_THEME: 'themization',
-  },
+  THEMIZATION: 'themization',
 };
 
 export const LEADERBOARD_TEAM_NAME = 'FrontHeadsMain1';

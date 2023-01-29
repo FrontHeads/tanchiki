@@ -12,7 +12,7 @@ import { type toggleThemeArgs } from './typings';
  * Чтобы добавить новую тему нужно:
  * 1. Описать ее стили в файле variables.css
  * 2. Описать свойства в THEME_LIST.
- * 3. Реализовать добавление записи о новой теме в БД в файле db.ts
+ * 3. Реализовать добавление записи о новой теме в БД в файле databaseUtils.ts
  * Имя темы в variables.css, THEME_LIST и db.ts должно совпадать.
  * Дефолтная тема устанавливается в index.html в теге <html>.
  */
@@ -37,24 +37,24 @@ export const ThemeToggle: FC = () => {
     }
 
     if (userId && currentThemeName !== themeName && !skipServerRequest) {
-      themizationAPI.setUserTheme({ themeName: currentThemeName, userId });
+      themizationAPI.setUserTheme({ themeName: currentThemeName });
     }
 
     setThemeName(currentThemeName);
     localStorage.setItem('theme', currentThemeName);
-    document.documentElement.setAttribute('theme', currentThemeName);
+    document.documentElement.dataset.theme = currentThemeName;
   };
 
-  /** Начальная установка темы при открытии сайта из вне. Берется значение из localStorage или дефолтное. */
+  /** Начальная установка темы при открытии сайта извне. Берется значение из localStorage или дефолтное. */
   useEffect(() => {
-    const defaultTheme = document.documentElement.getAttribute('theme');
+    const defaultTheme = document.documentElement.dataset.theme;
 
     if (!themeName) {
       const initialThemeName = localStorage.getItem('theme') ?? defaultTheme;
 
       if (initialThemeName) {
         setThemeName(initialThemeName);
-        document.documentElement.setAttribute('theme', initialThemeName);
+        document.documentElement.dataset.theme = initialThemeName;
       }
     }
   }, []);
@@ -65,8 +65,7 @@ export const ThemeToggle: FC = () => {
   useEffect(() => {
     (async function getThemeFromAPI() {
       if (userId && !localStorage.getItem('theme')) {
-        const response = await themizationAPI.getUserTheme(userId);
-        const themeNameFromDB = response.data;
+        const themeNameFromDB = await themizationAPI.getUserTheme();
 
         const themeNameFromDBIsValid = typeof themeNameFromDB === 'string' && themeNameFromDB !== themeName;
         if (themeNameFromDBIsValid) {
@@ -92,7 +91,7 @@ export const ThemeToggle: FC = () => {
 
   return (
     <div className="theme-toggle__wrapper">
-      <div data-testid="theme-toggle" className="theme-toggle">
+      <div data-testid="theme-toggle" className="theme-toggle" title="Переключатель темы визуального оформления сайта.">
         {themeList}
       </div>
     </div>

@@ -12,19 +12,19 @@
       }
 
       &:nth-child(1) {
-        background-color: var(--dendy-button-primary);
+        background-color: var(--dendy-button-primary-color);
         font-weight: bold;
         color: var(--font-color-third);
       }
 
       &:nth-child(2) {
-        background-color: var(--dendy-button-secondary);
+        background-color: var(--dendy-button-secondary-color);
         font-weight: bold;
         color: var(--font-color-third);
       }
 
       &:nth-child(3) {
-        background-color: var(--dendy-button-third);
+        background-color: var(--dendy-button-third-color);
         font-weight: bold;
         color: var(--font-color-third);
       }
@@ -38,16 +38,16 @@
       }
 
       &:nth-last-child(1) {
-        background-color: var(--dendy-button-primary);
+        background-color: var(--dendy-button-primary-color);
         font-weight: 900;
       }
 
       &:nth-last-child(2) {
-        background-color: var(--dendy-button-secondary);
+        background-color: var(--dendy-button-secondary-color);
       }
 
       &:nth-last-child(3) {
-        background-color: var(--dendy-button-third);
+        background-color: var(--dendy-button-third-color);
       }
     }
   }
