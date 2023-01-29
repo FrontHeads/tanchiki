@@ -5,11 +5,17 @@ import { Themes } from '../../models/Themes';
 import { UserThemes } from '../../models/UserThemes';
 
 export const themizationRoute = Router()
-  .use(express.json())
   .use(express.urlencoded({ extended: true }))
+  .use(express.json())
   .use('/', checkAuthMiddleware)
   .get('/:userId', async (req: Request, res: Response): Promise<Response> => {
     const { userId } = req.params;
+    /** Данные юзера из checkAuthMiddleware*/
+    const authUserId = res.locals.user.id;
+
+    if (authUserId !== userId) {
+      return res.status(403).json('passed wrong user id');
+    }
 
     const userTheme: UserThemes | null = await UserThemes.findOne({
       where: { user_id: userId },
@@ -24,6 +30,12 @@ export const themizationRoute = Router()
   })
   .post('/', async (req: Request, res: Response): Promise<Response> => {
     const { themeName, userId } = req.body;
+    /** Данные юзера из checkAuthMiddleware*/
+    const authUserId = res.locals.user.id;
+
+    if (authUserId !== userId) {
+      return res.status(403).json('passed wrong user id');
+    }
 
     const theme: Themes | null = await Themes.findOne({ where: { theme_name: themeName } });
 

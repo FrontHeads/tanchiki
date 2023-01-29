@@ -14,8 +14,9 @@ export const checkAuthMiddleware: RequestHandler = async (req, res, next) => {
     });
 
     if (isAuth.ok) {
-      next();
-      return;
+      // Передаем данные авторизованного юзера в следующий middleware
+      res.locals.user = await isAuth.json();
+      return next();
     }
   }
 
