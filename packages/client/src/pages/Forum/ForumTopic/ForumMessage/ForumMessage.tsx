@@ -10,7 +10,8 @@ import simplifyDate from '../../../../utils/dateUtils';
 import { type ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = ({ message }) => {
-  const { id, username, content, date } = message;
+  //@ts-ignore
+  const { id, username, content, created_at } = message;
   const editMessage = () => {
     console.log('Редактировать');
   };
@@ -23,8 +24,13 @@ export const ForumMessage: FC<ForumMessageProps> = ({ message }) => {
     { onClick: editMessage, title: 'Редактировать' },
     { onClick: deleteMessage, title: 'Удалить' },
   ];
+  console.log(created_at);
 
-  const formattedDate = simplifyDate(date);
+  const formattedDate = simplifyDate(created_at);
+
+  // const formattedDate = simplifyDate(new Date());
+
+  console.log('formatted date ', formattedDate);
 
   return (
     <div id={`forum-message-${id}`} className="forum-message" data-testid="forum-message">

@@ -9,7 +9,6 @@ import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { Paths } from '../../../config/constants';
 import { generateMetaTags } from '../../../utils/seoUtils';
-import { DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumTopicList } from './ForumTopicList';
 import { type ForumSectionT } from './typings';
 
@@ -17,13 +16,6 @@ export const ForumSection: FC = () => {
   const navigate = useNavigate();
   const { sectionId } = useParams();
   const { data: section } = useLoaderData() as { data: ForumSectionT };
-
-  // const [section, setSection] = useState<ForumSectionT>(null);
-  // useEffect(() => {
-  //   forumAPI.getSectionById(Number(sectionId)).then(response => {
-  //     setSection(response.data);
-  //   });
-  // }, []);
 
   return section ? (
     <>
@@ -33,7 +25,7 @@ export const ForumSection: FC = () => {
           {section.name}
         </h1>
         <div className="actions-wrapper">
-          <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Wide} />
+          <Breadcrumbs variant={BreadcrumbsVariant.Wide} />
           <div className="add-topic-wrapper">
             <Button
               text="Создать тему"

@@ -65,7 +65,9 @@ export const API_ENDPOINTS = {
     GET_SECTION_BY_ID: (sectionId: number) => `forum/section/${sectionId}`,
     GET_ALL_SECTIONS: 'forum/section',
     GET_TOPICS_FROM_SECTION: (sectionId?: number) => `forum/topic/?section_id=${sectionId}`,
+    GET_TOPIC_BY_ID: (topicId: number) => `forum/topic/${topicId}`,
     CREATE_TOPIC: 'forum/topic',
+    CREATE_MESSAGE: 'forum/message',
   },
 };
 

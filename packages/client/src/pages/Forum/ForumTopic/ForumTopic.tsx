@@ -2,21 +2,30 @@ import './ForumTopic.css';
 
 import cn from 'classnames';
 import { type FC, useCallback, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLoaderData, useParams } from 'react-router-dom';
 
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { ValidationErrors } from '../../../components/ValidationErrors';
+import { authSelectors, useAppDispatch, useAppSelector } from '../../../store';
+import { forumThunks } from '../../../store/features/forum/forumThunks';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
 import { type ValidationErrorList } from '../../../utils/validation/typings';
-import { DUMMY_TOPIC as topicList, DUMMY_TOPIC_BREADCRUMBS as breadcrumbs } from '../DummyData';
+import { type ForumTopicItem } from '../ForumSection/ForumTopicList/typings';
 import { ForumMessage } from './ForumMessage';
 
 export const ForumTopic: FC = () => {
+  const dispatch = useAppDispatch();
+  const { id: userId } = useAppSelector(authSelectors.userProfile);
+  const { topicData: currentTopic } = useLoaderData() as { topicData: ForumTopicItem };
+  console.log(currentTopic);
+
   const { topicId } = useParams();
+  // const [currentTopic, setCurrentTopic] = useState<ForumTopicItem | undefined>(undefined);
+  const topicMessages = currentTopic?.messages;
   const [formMessage, setFormMessage] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [messageHasErrors, setFormHasErrors] = useState(false);
@@ -29,6 +38,18 @@ export const ForumTopic: FC = () => {
       required: true,
     },
   ]);
+
+  // useEffect(() => {
+  //   const fetchCurrentTopic = async () => {
+  //     const { data } = await forumAPI.getTopicById(Number(topicId));
+  //     console.log(data);
+
+  //     setCurrentTopic(data);
+  //   };
+  //   if (!currentTopic) {
+  //     fetchCurrentTopic();
+  //   }
+  // }, [topicId]);
 
   const textareaChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -55,7 +76,13 @@ export const ForumTopic: FC = () => {
         return;
       }
 
-      console.log(formMessage);
+      dispatch(
+        forumThunks.createMessage({
+          user_id: userId,
+          topic_id: Number(topicId),
+          content: formMessage,
+        })
+      );
 
       setFormMessage('');
     },
@@ -68,16 +95,14 @@ export const ForumTopic: FC = () => {
 
   return (
     <>
-      {generateMetaTags({ title: `Топик ${topicId}` })}
+      {generateMetaTags({ title: `${currentTopic?.name}` })}
 
       <section className={forumTopicClassNames} data-testid="forum-topic">
-        <h1 className="forum-topic__title">Топик {topicId}</h1>
-        <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Normal} />
+        <h1 className="forum-topic__title">{currentTopic?.name}</h1>
+        <Breadcrumbs variant={BreadcrumbsVariant.Normal} />
         <div className="forum-topic__container">
           <div className="forum-topic__messages">
-            {topicList.map(row => (
-              <ForumMessage key={row.id} message={row} />
-            ))}
+            {topicMessages ? topicMessages.map(row => <ForumMessage key={row.id} message={row} />) : null}
           </div>
           <form onSubmit={submitHandler} className="forum-topic__new-message">
             <textarea

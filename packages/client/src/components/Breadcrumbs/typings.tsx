@@ -6,7 +6,6 @@ export type BreadcrumbsItem = {
   title: string;
 };
 export type BreadcrumbsProps = {
-  data: BreadcrumbsItem[];
   variant: BreadcrumbsVariant;
 };
 

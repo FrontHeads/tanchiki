@@ -1,4 +1,4 @@
-type ForumMessage = {
+export type ForumMessage = {
   id: number;
   content: string;
   date: string;
