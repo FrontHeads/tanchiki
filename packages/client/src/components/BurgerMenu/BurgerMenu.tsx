@@ -6,6 +6,7 @@ import { type FC, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { uiActions, uiSelectors } from '../../store/features/ui/uiSlice';
 import { Navigation } from '../Navigation';
+import { ThemeToggle } from '../ThemeToggle';
 
 export const BurgerMenu: FC = () => {
   const dispatch = useAppDispatch();
@@ -51,6 +52,7 @@ export const BurgerMenu: FC = () => {
         data-testid="menu__list"
         data-test={isBurgerMenuVisible ? 'menu-list-on' : 'menu-list-off'}
         className={menuListClassName}>
+        <ThemeToggle />
         <Navigation />
       </div>
     </div>

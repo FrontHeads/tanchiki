@@ -1,15 +1,20 @@
-@import url("../../variables.css");
-
 .forum__wrapper {
   display: flex;
   flex-direction: column;
 }
 
 .forum {
-  background-color: $section_background_color;
+  background-color: var(--section-background-color);
   border-radius: 10px;
   text-align: center;
-  margin: 0 60px 60px;
+  margin: 0 auto 60px;
+  width: 95%;
+  max-width: 950px;
+
+  @media (max-width: 420px) {
+    width: 100%;
+    margin: 0 0 var(--vertical-margin);
+  }
 
   td {
     padding: 0 20px;
@@ -48,16 +53,12 @@
     height: 70px;
 
     &:nth-child(odd) {
-      background-color: $background_color;
+      background-color: var(--background-color);
     }
   }
 
   &__first-column {
     font-weight: bold;
     text-align: left;
-  }
-
-  @media (max-width: 420px) {
-    margin: 0 0 $vertical_margin;
   }
 }
