@@ -1,8 +1,8 @@
 import { type EntitySettings, type EntityType, type Pos } from '../../entities/Entity/typings';
 import { type EnemyVariant } from '../../entities/Tank/typings';
 import { type GameSettings } from '../Game/typings';
-import { enemyForces } from './enemyForces';
 import { brickCells, Cell, concreteCells, spawnPlaces } from './data';
+import { enemyForces } from './enemyForces';
 import { levels } from './levels';
 import { type MapTerrainData } from './typings';
 

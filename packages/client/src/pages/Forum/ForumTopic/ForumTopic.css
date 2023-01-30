@@ -1,12 +1,10 @@
-@import url("../../../variables.css");
-
 .forum-topic {
   width: 100%;
   max-width: 940px;
   margin: 0 auto;
 
   &__container {
-    margin: 0 0 $vertical_margin;
+    margin: 0 0 var(--vertical-margin);
     padding: 0 15px;
     box-sizing: border-box;
 
@@ -26,11 +24,11 @@
   }
 
   @media (max-width: 420px) {
-    margin: 0 0 $vertical_margin;
+    margin: 0 0 var(--vertical-margin);
   }
 
   &__messages {
-    border: 1px double $border_color;
+    border: 1px double var(--border-color);
     border-radius: 10px;
     margin-bottom: 20px;
     padding-top: 20px;
@@ -38,9 +36,9 @@
 
   &__new-message {
     padding: 12px;
-    background: $section_background_color;
+    background: var(--section-background-color);
     overflow: hidden;
-    border: 1px double $border_color;
+    border: 1px double var(--border-color);
     border-radius: 10px;
   }
 
@@ -65,13 +63,13 @@
     max-height: 500px;
     padding: 8px;
     resize: vertical;
-    background-color: $notice_font_color;
+    background-color: var(--section-background-color);
     box-sizing: border-box;
     border-radius: 6px;
-    color: $font_color_bright;
+    color: var(--font-color-primary);
   }
 
   &_has-errors .validation-errors {
-    color: $font_color_danger;
+    color: var(--font-color-danger);
   }
 }

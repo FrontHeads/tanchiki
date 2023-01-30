@@ -1,21 +1,23 @@
-@import url("../../variables.css");
-
 .leaderboard__wrapper {
   display: flex;
   flex-direction: column;
 }
 
 .leaderboard {
-  background-color: $section_background_color;
+  background-color: var(--section-background-color);
   border-radius: 10px;
   text-align: center;
-  margin: 0 60px 60px;
+  margin: 0 auto 60px;
+  width: 95%;
+  max-width: 950px;
+
+  @media (max-width: 420px) {
+    width: 100%;
+    margin: 0 0 60px;
+  }
 
   &__header {
     text-align: center;
-  }
-  @media (max-width: 420px) {
-    margin: 0 0 60px;
   }
 }
 

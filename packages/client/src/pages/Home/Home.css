@@ -1,9 +1,7 @@
-@import url("../../variables.css");
-
 .promo-img {
   width: 40%;
   align-self: center;
-  margin-bottom: $vertical_margin;
+  margin-bottom: var(--vertical-margin);
 
   @media (max-width: 730px) {
     width: 60%;

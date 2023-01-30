@@ -1,8 +1,8 @@
 @import url("variables.css");
 
 body {
-  background-color: $background_color;
-  color: $font_color_bright;
+  background: var(--background-color);
+  color: var(--font-color-primary);
   font-family: Roboto, sans-serif;
   font-size: 16px;
   overflow-x: hidden;
@@ -23,12 +23,12 @@ h1 {
   font-weight: 400;
   font-family: "Press Start 2P", cursive;
   margin: 30px auto;
-  text-shadow: 2px 1px $dendy_button_primary;
+  text-shadow: 2px 1px var(--dendy-button-primary-color);
   line-height: 1.5;
 }
 
 a {
-  color: $font_color_bright;
+  color: var(--font-color-primary);
 }
 
 ul {
@@ -40,7 +40,7 @@ ul {
   width: 15%;
   margin: 0 auto 60px;
   height: 5px;
-  background-color: $border_color;
+  background-color: var(--border-color);
   opacity: 0.7;
 }
 
@@ -52,7 +52,7 @@ ul {
   &__big {
     width: 150px;
     height: 150px;
-    margin: 50px auto;
+    margin: 0 auto 50px;
   }
 }
 
