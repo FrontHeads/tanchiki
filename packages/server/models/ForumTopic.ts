@@ -26,7 +26,7 @@ export class ForumTopic extends Model {
   section!: ForumSection;
 
   @BelongsTo(() => User, 'user_id')
-  user!: ForumSection;
+  user!: User;
 
   @HasMany(() => ForumMessage, 'topic_id')
   messages!: ForumMessage[];
