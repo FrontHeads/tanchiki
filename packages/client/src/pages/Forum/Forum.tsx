@@ -22,7 +22,7 @@ export const Forum: FC<ForumProps> = () => {
       setSectionList(response.data);
     };
     fetchSections();
-  }, [sectionList]);
+  }, []);
 
   return (
     <>
