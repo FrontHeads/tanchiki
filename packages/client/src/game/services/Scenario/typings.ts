@@ -28,7 +28,9 @@ export type ScenarioState = {
    */
   maxActiveEnemies: number;
   /** Всего танков противника на уровне */
-  enemiesLeft: number;
+  enemiesCounter: number;
+  /** Максимальное количество танков противника на уровне */
+  maxEnemies: number;
   /** Массив с танами протвников на карте */
   enemies: Tank[];
   /** Объект со state игроков */

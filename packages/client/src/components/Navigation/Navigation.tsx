@@ -5,14 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Paths } from '../../config/constants';
-import { authActions, authThunks, useAppDispatch } from '../../store';
+import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { uiActions } from '../../store/features/ui/uiSlice';
+import { getFilteredNavigationList } from '../../utils/navigationUtils';
 import { MenuLink } from '../MenuLink';
-import { NAVIGATION_LIST } from './data';
+import { type NavigationProps } from './typings';
 
-export const Navigation: FC = () => {
+export const Navigation: FC<NavigationProps> = ({ exclude }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useAppSelector(authSelectors.isAuthenticated);
 
   const onClick = (linkName: string) => {
     if (linkName === 'logout') {
@@ -31,7 +33,7 @@ export const Navigation: FC = () => {
     dispatch(uiActions.closeBurgerMenu());
   };
 
-  const menuLinksList = NAVIGATION_LIST.map(link => (
+  const menuLinksList = getFilteredNavigationList(isAuthenticated, exclude).map(link => (
     <MenuLink onClick={() => onClick(link.name)} key={link.name} {...link} />
   ));
 

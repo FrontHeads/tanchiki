@@ -1,1 +1,1 @@
-export type MapData = TupleArray<TupleArray<number, 13>, 13>;
+export type MapTerrainData = TupleArray<TupleArray<number, 13>, 13>;

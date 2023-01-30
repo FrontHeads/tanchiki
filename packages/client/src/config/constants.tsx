@@ -6,6 +6,7 @@ export const META_TITLE_SUFFIX = '- Танчики';
 
 export enum Paths {
   Home = '/',
+  ContactUs = '/contact-us',
   SignIn = '/sign-in',
   SignUp = '/sign-up',
   Game = '/game',
@@ -40,6 +41,9 @@ export const LOCAL_API_HOST = `http://localhost:${LOCAL_SERVER_PORT}/api`;
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
 export const API_ENDPOINTS = {
+  CONTACT: {
+    SEND: 'contact/send',
+  },
   AUTH: {
     SIGNIN: 'auth/signin',
     SIGNUP: 'auth/signup',
@@ -61,6 +65,7 @@ export const API_ENDPOINTS = {
     ADD_SCORE: 'leaderboard',
     GET: (teamName: string) => `leaderboard/${teamName}`,
   },
+  THEMIZATION: 'themization',
   FORUM: {
     GET_SECTION_BY_ID: (sectionId: number) => `forum/section/${sectionId}`,
     GET_ALL_SECTIONS: 'forum/section',

@@ -1,11 +1,11 @@
-import cors from 'cors';
 import dotenv from 'dotenv';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
 import { Helmet } from 'react-helmet';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
-import { createClientAndConnect } from './db';
+import { corsMiddleware } from './middlewares';
 import { apiRoute } from './routes/Api';
+import { initMongoDBConnection, initPostgreDBConnection } from './utils/databaseUtils';
 
 dotenv.config();
 
@@ -16,25 +16,17 @@ import * as path from 'path';
 import { HtmlWritable } from './utils/HtmlWritable';
 import { isDev } from './utils/isDev';
 
-createClientAndConnect();
+initPostgreDBConnection();
+initMongoDBConnection();
 
-/** Хосты, с которых можно ходить на API Яндекса */
-export const allowedHosts = ['localhost', '127.0.0.1'];
 
 async function startServer() {
   const app = express();
 
-  const clientPort = Number(process.env.CLIENT_PORT) || 3000;
   const serverPort = Number(process.env.SERVER_PORT) || 5000;
 
-  /** Настройка CORS для корректной отдчаи проекта на клиентском порту при локальной разработке */
-  const corsOptions = {
-    credentials: true,
-    origin: [`http://127.0.0.1:${clientPort}`, `http://localhost:${clientPort}`],
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-  };
-
-  app.use(cors(corsOptions));
+  // Инициализация middleware
+  app.use(corsMiddleware());
 
   let vite: ViteDevServer | undefined;
 
@@ -43,7 +35,7 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
   const srcPath = path.dirname(require.resolve('client'));
 
-  /** Проксирует запросы к API на сервер Яндекса */
+  /** Запросы к API на собственном сервере и на сервере Яндекса (проксируется через наш сервер) */
   app.use('/api', apiRoute);
 
   /**
@@ -61,7 +53,7 @@ async function startServer() {
     app.use(vite.middlewares);
   }
 
-  /** Для production сборки необходимо "пробросить" статичные файлы из директории assets */
+  /** Для production сборки необходимо "пробросить" статичные файлы  из директории assets */
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')));
   }
@@ -99,8 +91,8 @@ async function startServer() {
       }
 
       /**
-       * В ssr.tsx используется renderToPipableStream вместо renderToString.
-       * Нам нужно перехватить события завершения стрима и уже в нем подставить
+       * В ssr.tsx используется renderToPipeableStream вместо renderToString.
+       * Нам нужно перехватить события заверешния стрима и уже в нем подставить
        * HTML код приложения в index.html
        */
       let didError = false;

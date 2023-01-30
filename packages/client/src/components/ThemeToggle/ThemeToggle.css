@@ -1,0 +1,35 @@
+.theme-toggle {
+  --border-radius: 8px;
+
+  padding: 5px 13px;
+  background-color: var(--theme-toggle-background-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  width: fit-content;
+
+  &__wrapper {
+    display: flex;
+    margin-bottom: 70px;
+    justify-content: flex-end;
+  }
+
+  &__icon {
+    stroke: var(--theme-toggle-icon-color);
+    fill: transparent;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    margin-left: 15px;
+
+    &:nth-child(1) {
+      margin-left: 0;
+    }
+
+    &_selected {
+      background-color: var(--theme-toggle-selected-icon-color);
+      border-radius: var(--border-radius);
+      padding: 5px;
+    }
+  }
+}

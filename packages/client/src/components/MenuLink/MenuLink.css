@@ -1,5 +1,3 @@
-@import url("../../variables.css");
-
 .menu-link {
   &__tank-wrapper {
     display: flex;
@@ -19,7 +17,7 @@
     text-decoration: none;
 
     &:hover {
-      color: $accent_color;
+      color: var(--accent-color);
     }
 
     &:hover + .menu-link__tank-wrapper {
