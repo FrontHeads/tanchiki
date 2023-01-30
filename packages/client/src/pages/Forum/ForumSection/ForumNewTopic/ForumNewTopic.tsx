@@ -10,12 +10,15 @@ import { type BreadcrumbsItem } from '../../../../components/Breadcrumbs/typings
 import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Paths } from '../../../../config/constants';
+import { authSelectors, useAppSelector } from '../../../../store';
 import { generateMetaTags } from '../../../../utils/seoUtils';
 
 export const ForumNewTopic = () => {
   const navigate = useNavigate();
 
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsItem[]>([{ href: Paths.Forum, title: 'Форум' }]);
+
+  const { id: userId } = useAppSelector(authSelectors.userProfile);
 
   const { sectionId } = useParams();
 
@@ -57,8 +60,7 @@ export const ForumNewTopic = () => {
           content: form.body,
           //@ts-ignore
           section_id: sectionId,
-          username: 'yatx',
-          user_id: 1,
+          user_id: userId,
         }
       ).then((res) => {
         console.log(res);

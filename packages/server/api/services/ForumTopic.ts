@@ -3,6 +3,7 @@ import express, { type Request, type Response, Router } from 'express';
 import { ForumMessage } from '../../models/ForumMessage';
 import { ForumSection } from '../../models/ForumSection';
 import { ForumTopic } from '../../models/ForumTopic';
+import { User } from '../../models/User';
 import { throwIf } from '../../utils/throwIf';
 
 export const forumTopicRoute = Router()
@@ -14,7 +15,7 @@ export const forumTopicRoute = Router()
       .catch(next);
   })
   .get('/:id', (req: Request, res: Response, next) => {
-    ForumTopic.findByPk(req.params.id, { include: [{ model: ForumSection }, { model: ForumMessage }] })
+    ForumTopic.findByPk(req.params.id, { include: [{ model: ForumSection }, { model: ForumMessage }, {model: User}] })
       .then(throwIf(r => !r, res, 400, 'Тема не найдена'))
       .then(topic => res.status(200).json(topic))
       .catch(next);
