@@ -1,6 +1,7 @@
 import { AllowNull, BelongsTo, Column, Model, Table } from 'sequelize-typescript';
 
 import { ForumTopic } from './ForumTopic';
+import { User } from './User';
 
 @Table({ tableName: 'forum_messages', createdAt: 'created_at', updatedAt: 'updated_at' })
 export class ForumMessage extends Model {
@@ -18,4 +19,7 @@ export class ForumMessage extends Model {
 
   @BelongsTo(() => ForumTopic, 'topic_id')
   topic!: ForumTopic;
+
+  @BelongsTo(() => User, 'user_id')
+  user!: User;
 }

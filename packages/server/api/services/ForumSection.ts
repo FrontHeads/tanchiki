@@ -24,7 +24,8 @@ export const forumSectionRoute = Router()
             'messages',
           ],
         ],
-      }})
+      },
+    })
       .then((sections: ForumSection[]) => res.status(200).json(sections))
       .catch(next);
   })
