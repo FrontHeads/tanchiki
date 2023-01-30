@@ -1,5 +1,3 @@
-@import url("../../variables.css");
-
 .dropdown {
   position: relative;
 
@@ -10,20 +8,20 @@
     list-style-type: none;
     margin: 5px;
     padding: 0;
-    box-shadow: 0 0 2px $border_color;
+    box-shadow: 0 0 2px var(--border-color);
     z-index: 1000;
 
     &-item {
       margin: 0;
-      background-color: $background_color;
-      border-bottom: 1px solid $border_dropdown_color;
+      background-color: var(--background-color);
+      border-bottom: 1px solid var(--border-dropdown-color);
 
       &:last-child {
         border-bottom: none;
       }
 
       &:hover {
-        background-color: $border_color;
+        background-color: var(--border-color);
       }
     }
 
