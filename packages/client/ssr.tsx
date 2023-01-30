@@ -1,5 +1,4 @@
 import { createStaticHandler } from '@remix-run/router';
-import axios from 'axios';
 import type * as express from 'express';
 import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
 import { Provider } from 'react-redux';
@@ -7,11 +6,12 @@ import { createStaticRouter, StaticRouterProvider } from 'react-router-dom/serve
 
 import { routes } from './src/config/router';
 import { store } from './src/store';
+import { httpClient } from './src/utils/HTTP';
 
 export async function render(streamOptions: RenderToPipeableStreamOptions, request: express.Request) {
-  /** Пробрасываем Cookie в серверный Axios для получения данных из Яндекс API, закрытых авторизацией */
+  /** Пробрасываем Cookie в instanse серверный Axios для получения данных из Яндекс API, закрытых авторизацией */
   if (request.headers.cookie) {
-    axios.defaults.headers.common['Cookie'] = request.headers.cookie;
+    httpClient.defaults.headers.common['Cookie'] = request.headers.cookie;
   }
 
   const { query } = createStaticHandler(routes);

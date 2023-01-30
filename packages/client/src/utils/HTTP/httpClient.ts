@@ -3,8 +3,10 @@ import axios, { AxiosError } from 'axios';
 import { type APIError } from '../../api/typings';
 import { apiHasError } from '../apiUtils';
 
+const httpClient = axios.create();
+
 // Check if error response body contains reason of error
-axios.interceptors.response.use(
+httpClient.interceptors.response.use(
   response => response,
   (error: AxiosError<Record<string, unknown> | APIError>): Promise<AxiosError> => {
     if (error instanceof AxiosError && error.response && apiHasError(error.response.data)) {
@@ -15,4 +17,4 @@ axios.interceptors.response.use(
   }
 );
 
-export { axios };
+export { httpClient };

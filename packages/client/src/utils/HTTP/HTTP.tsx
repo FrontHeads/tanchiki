@@ -1,4 +1,4 @@
-import { axios, buildPath, determineAPIHost } from './';
+import { buildPath, determineAPIHost, httpClient } from './';
 
 enum Method {
   GET = 'GET',
@@ -59,7 +59,7 @@ export class HTTP {
 
     const url = buildPath(baseUrl, path);
 
-    return axios({ headers, method, url, withCredentials, ...rest }).then(({ data, status, headers }) => {
+    return httpClient({ headers, method, url, withCredentials, ...rest }).then(({ data, status, headers }) => {
       return { data, status, headers: { ...headers } };
     });
   }

@@ -3,10 +3,10 @@ import 'jest-fix-undefined';
 import MockAdapter from 'axios-mock-adapter';
 
 import { API_ENDPOINTS, LEADERBOARD_TEAM_NAME, LOCAL_API_HOST } from '../config/constants';
-import { axios, buildPath } from '../utils/HTTP';
+import { buildPath, httpClient } from '../utils/HTTP';
 import { fakeLeaderboardData, fakeUserProfile } from './data';
 
-const mock = new MockAdapter(axios);
+const mock = new MockAdapter(httpClient);
 mock.onGet(buildPath(`http://localhost:${__SERVER_PORT__}`, '/')).reply(200);
 
 mock
