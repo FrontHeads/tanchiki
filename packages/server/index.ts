@@ -19,7 +19,6 @@ import { isDev } from './utils/isDev';
 initPostgreDBConnection();
 initMongoDBConnection();
 
-
 async function startServer() {
   const app = express();
 
