@@ -1,5 +1,3 @@
-@import url("../../variables.css");
-
 .breadcrumbs {
   &__item {
     display: inline-block;
