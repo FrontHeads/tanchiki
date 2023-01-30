@@ -1,5 +1,3 @@
-@import url("../../variables.css");
-
 .loader {
   &__circle {
     margin-top: -100px;
@@ -26,7 +24,7 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    background-color: $section_light_shadow;
+    background-color: var(--section-light-shadow);
     opacity: 0.3;
     left: 0;
     top: 0;

@@ -1,9 +1,7 @@
-@import url("../../variables.css");
-
 .validation-errors {
   white-space: pre-wrap;
   margin-top: 12px;
-  color: $font_color_soft;
+  color: var(--font-color-secondary);
   display: flex;
   padding-left: 15px;
   list-style: circle;

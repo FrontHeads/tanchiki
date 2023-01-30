@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
+import * as path from 'path';
 import { type SequelizeOptions, Sequelize } from 'sequelize-typescript';
+
+import { Themes } from '../models/Themes';
 
 const {
   POSTGRES_USER,
@@ -30,10 +33,18 @@ export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> 
     client = new Sequelize(sequelizeOptions);
 
     /** Регистрируем модели */
-    client.addModels([__dirname + '/models']);
+    const modelsPath = path.join(__dirname, '../models');
+    client.addModels([modelsPath]);
 
-    /** Для production лучше использовать миграции вместо синхронизации **/
-    await client.sync({ alter: true });
+    //TODO убрать alter на продакшене (при деплое)
+    const synced = await client.sync({ alter: true });
+
+    if (synced) {
+      console.log('  ➜ 🎸 Synchronized the Postgres database');
+      // Добавляем темы по умолчанию в БД при старте сервера, без этого не будет корректно работать темизация.
+      await Themes.upsert({ theme_name: 'DARK' });
+      await Themes.upsert({ theme_name: 'LIGHT' });
+    }
 
     console.log('  ➜ 🎸 Connected to the Postgres database');
   } catch (e) {

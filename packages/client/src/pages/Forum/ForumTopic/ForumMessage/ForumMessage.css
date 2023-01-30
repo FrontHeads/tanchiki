@@ -1,8 +1,6 @@
-@import url("../../../../variables.css");
-
 .forum-message {
   padding: 16px 18px;
-  background-color: $section_background_color;
+  background-color: var(--section-background-color);
   border-bottom: 1px solid #737477;
   display: flex;
 
@@ -13,7 +11,7 @@
   }
 
   &:nth-child(odd) {
-    background-color: $background_color;
+    background-color: var(--background-color);
   }
 
   &__meta {
@@ -23,7 +21,7 @@
   }
 
   &__date {
-    color: $font_color_soft;
+    color: var(--font-color-secondary);
   }
 
   &__avatar {
@@ -49,7 +47,7 @@
   &__options {
     cursor: pointer;
     padding: 5px 5px 0;
-    fill: $border_color;
+    fill: var(--border-color);
   }
 
   &__content {
