@@ -42,8 +42,7 @@ export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> 
     if (synced) {
       console.log('  ➜ 🎸 Synchronized the Postgres database');
       // Добавляем темы по умолчанию в БД при старте сервера, без этого не будет корректно работать темизация.
-      await Themes.upsert({ theme_name: 'DARK' });
-      await Themes.upsert({ theme_name: 'LIGHT' });
+      await Themes.bulkCreate([{ theme_name: 'DARK' }, { theme_name: 'LIGHT' }], { ignoreDuplicates: true });
     }
 
     console.log('  ➜ 🎸 Connected to the Postgres database');
