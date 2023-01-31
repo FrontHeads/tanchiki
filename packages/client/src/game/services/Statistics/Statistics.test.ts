@@ -63,4 +63,22 @@ describe('game/services/Statistics', () => {
     expect(observer.mock.calls[0][0]).toHaveProperty('matches', 0);
     expect(observer.mock.calls[0][0]).toHaveProperty('time');
   });
+
+  it('should start and stop timer', async () => {
+    game.statistics.startSession('SINGLEPLAYER');
+    game.statistics.startMap();
+    game.statistics.stopTimer();
+
+    await sleep(100);
+
+    expect(game.statistics.mapElapsedTime < 10).toBe(true);
+
+    game.statistics.startTimer();
+
+    await sleep(100);
+
+    game.statistics.stopTimer();
+
+    expect(game.statistics.mapElapsedTime >= 100).toBe(true);
+  });
 });

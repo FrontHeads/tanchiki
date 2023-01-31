@@ -8,7 +8,7 @@ describe('game/services/IndicatorManager', () => {
   const layerName = 'ceiling';
 
   const game = Game.create();
-  game.createView(document.body);
+  game.view.load(document.body);
   const indicatorManager = new IndicatorManager(game);
 
   const tankEnemiesLeft = 10;
