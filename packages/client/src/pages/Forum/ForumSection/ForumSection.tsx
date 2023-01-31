@@ -26,7 +26,7 @@ export const ForumSection: FC = () => {
           {section.name}
         </h1>
         <div className="actions-wrapper">
-          <Breadcrumbs variant={BreadcrumbsVariant.Wide} />
+          <Breadcrumbs variant={BreadcrumbsVariant.Normal} />
           <div className="add-topic-wrapper">
             <Button
               text="Создать тему"

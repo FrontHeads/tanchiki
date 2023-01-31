@@ -41,7 +41,7 @@ export const forumRoutes = () => {
               return (
                 <>
                   <Link to={`${Paths.Section}/${sectionId}`}>{sectionName}</Link>
-                  <span>{topicName}</span>
+                  <span className={'breadcrumbs__item_topic-name'}>{topicName}</span>
                 </>
               );
             },
@@ -56,7 +56,7 @@ export const forumRoutes = () => {
             crumb: ({ data }: { data: ForumSectionT }) => (
               <>
                 <Link to={`${Paths.Section}/${data.id}`}>{data?.name}</Link>
-                <span>Новая тема</span>
+                <span className={'breadcrumbs__item_topic-name'}>Новая тема</span>
               </>
             ),
           }}></Route>
