@@ -30,7 +30,24 @@ export const forumSectionRoute = Router()
       .catch(next);
   })
   .get('/:id', (req: Request, res: Response, next) => {
-    ForumSection.findByPk(req.params.id, { include: ForumTopic })
+    ForumSection.findByPk(req.params.id, {
+      include: [
+        {
+          model: ForumTopic,
+          attributes: {
+            include: [
+              [
+                Sequelize.literal(` (SELECT COUNT(M.*)
+              FROM FORUM_TOPICS AS T
+              LEFT JOIN FORUM_MESSAGES AS M ON M.TOPIC_ID=T.ID
+              WHERE T.SECTION_ID = "ForumSection"."id")`),
+                'messages',
+              ],
+            ],
+          },
+        },
+      ],
+    })
       .then(throwIf(r => !r, res, 400, 'Категория не найдена'))
       .then(section => res.status(200).json(section))
       .catch(next);

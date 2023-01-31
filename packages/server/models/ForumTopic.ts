@@ -1,4 +1,4 @@
-import { AllowNull, BelongsTo, Column, HasMany, Model, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, Column, ForeignKey, HasMany, Model, Table } from 'sequelize-typescript';
 
 import { ForumMessage } from './ForumMessage';
 import { ForumSection } from './ForumSection';
@@ -14,6 +14,7 @@ export class ForumTopic extends Model {
   @Column
   section_id!: number;
 
+  @ForeignKey(() => User)
   @AllowNull(false)
   @Column
   user_id!: number;
@@ -25,8 +26,8 @@ export class ForumTopic extends Model {
   @BelongsTo(() => ForumSection, 'section_id')
   section!: ForumSection;
 
-  @BelongsTo(() => User, 'user_id')
-  user!: ForumSection;
+  @BelongsTo(() => User)
+  user!: User;
 
   @HasMany(() => ForumMessage, 'topic_id')
   messages!: ForumMessage[];

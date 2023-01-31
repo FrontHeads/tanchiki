@@ -31,7 +31,7 @@ export const proxyMiddleware: RequestHandler = (req, res, next) => {
         if (user && user.id) {
           try {
             await User.upsert({
-              id: user.id,
+              ya_id: user.id,
               login: user.login,
               display_name: user.display_name,
             });
