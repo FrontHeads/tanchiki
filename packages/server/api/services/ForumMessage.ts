@@ -15,17 +15,22 @@ export const forumMessageRoute = Router()
       .catch(next);
   })
   .post('/', (req: Request, res: Response, next) => {
-    ForumMessage.create(req.body, { include: [{ model: User }], logging: true })
+    ForumMessage.create(req.body, { include: [{ model: User }] })
       .then(message => {
-        ForumMessage.findByPk(message.id, { include: [{ model: ForumTopic }, { model: User }], logging: true })
+        ForumMessage.findByPk(message.id, { include: [{ model: ForumTopic }, { model: User }] })
           .then(message => res.status(200).json(message))
           .catch(next);
       })
       .catch(next);
   })
   .put('/:id', (req: Request, res: Response, next) => {
-    ForumMessage.update(req.body, { where: { id: req.params.id } })
-      .then(() => res.status(201).send({ message: 'Комментарий отредактирован' }))
+    ForumMessage.update(req.body, { where: { id: req.params.id }, returning: true })
+      .then(result => {
+        const [, message] = result;
+        ForumMessage.findByPk(message[0].id, { include: [{ model: ForumTopic }, { model: User }] })
+          .then(message => res.status(200).json(message))
+          .catch(next);
+      })
       .catch(next);
   })
   .delete('/:id', (req: Request, res: Response, next) => {

@@ -6,15 +6,15 @@ import { ForumTopic } from './ForumTopic';
 @Table({ tableName: 'users', createdAt: 'created_at', updatedAt: 'updated_at' })
 export class User extends Model {
   @AllowNull(false)
-  @Column
-  login!: string;
-
-  @AllowNull(false)
   @Unique
   @Index
   @PrimaryKey
   @Column(DataType.INTEGER)
-  user_id!: number;
+  ya_id!: number;
+
+  @AllowNull(false)
+  @Column
+  login!: string;
 
   @Column
   display_name!: string;
@@ -22,6 +22,6 @@ export class User extends Model {
   @HasMany(() => ForumTopic)
   topics!: ForumTopic[];
 
-  @HasMany(() => ForumMessage, 'user_id')
+  @HasMany(() => ForumMessage)
   messages!: ForumMessage[];
 }
