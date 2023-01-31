@@ -15,7 +15,9 @@ export const forumTopicRoute = Router()
       .catch(next);
   })
   .get('/:id', (req: Request, res: Response, next) => {
-    ForumTopic.findByPk(req.params.id, { include: [{ model: ForumSection }, { model: ForumMessage }, {model: User}] })
+    ForumTopic.findByPk(req.params.id, {
+      include: [{ model: ForumSection }, { model: ForumMessage, include: [{ model: User }] }, { model: User }],
+    })
       .then(throwIf(r => !r, res, 400, 'Тема не найдена'))
       .then(topic => res.status(200).json(topic))
       .catch(next);

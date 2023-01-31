@@ -16,6 +16,7 @@ export const ForumSection: FC = () => {
   const navigate = useNavigate();
   const { sectionId } = useParams();
   const { data: section } = useLoaderData() as { data: ForumSectionT };
+  console.log(section);
 
   return section ? (
     <>

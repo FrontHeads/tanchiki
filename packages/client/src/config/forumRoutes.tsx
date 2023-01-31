@@ -1,7 +1,6 @@
 import { Link, Route } from 'react-router-dom';
 
-import { forumAPI } from '../api/forumAPI';
-import { type TopicBreadcrumb } from '../components/Breadcrumbs/typings';
+import { type getTopicByIdResponse, forumAPI } from '../api/forumAPI';
 import { Forum } from '../pages/Forum';
 import { ForumSection } from '../pages/Forum/ForumSection';
 import { ForumNewTopic } from '../pages/Forum/ForumSection/ForumNewTopic';
@@ -26,26 +25,23 @@ export const forumRoutes = () => {
           }}></Route>
         <Route
           path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`}
-          // path={`${Paths.Section}/:sectionId/topic/:topicId`}
           element={<ForumTopic />}
           loader={async ({ params }) => {
-            // const section = await forumAPI.getSectionById(Number(params.sectionId));
             const { data: topicData } = await forumAPI.getTopicById(Number(params.topicId));
-            //TODO: убрать парамс v
-            return { params, topicData };
+            return topicData;
           }}
           handle={{
-            //TODO: убрать парамс
-            crumb: ({ params, topicData }: TopicBreadcrumb) => {
-              const { sectionId } = params;
-              console.log(topicData);
-
-              // const [{ name: topicName }] = data.topics.filter(topic => topic.id === Number(topicId));
+            crumb: (topicData: getTopicByIdResponse) => {
+              const {
+                section_id: sectionId,
+                name: topicName,
+                section: { name: sectionName },
+              } = topicData;
 
               return (
                 <>
-                  <Link to={`${Paths.Section}/${sectionId}`}>{topicData.section.name}</Link>
-                  <span>{topicData.name}</span>
+                  <Link to={`${Paths.Section}/${sectionId}`}>{sectionName}</Link>
+                  <span>{topicName}</span>
                 </>
               );
             },

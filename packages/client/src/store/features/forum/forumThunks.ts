@@ -5,7 +5,6 @@ import { type MessageRequest } from './typings';
 
 const createTopic = createAsyncThunk('forum/topic', async (payload: createTopicRequestData) => {
   const data = await forumAPI.createTopic(payload);
-  console.log('create topic thunk', data);
 
   return data;
 });
@@ -21,8 +20,8 @@ const getAllSections = createAsyncThunk('forum/sections', async () => {
 });
 
 const createMessage = createAsyncThunk('forum/message', async (message: MessageRequest) => {
-  await forumAPI.createMessage(message);
-  console.log(message);
+  const { data } = await forumAPI.createMessage(message);
+  return data;
 });
 
 export const forumThunks = { getAllSections, createTopic, getTopicsFromSection, createMessage };

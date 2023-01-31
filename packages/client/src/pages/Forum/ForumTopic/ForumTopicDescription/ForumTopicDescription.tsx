@@ -1,43 +1,28 @@
-import './ForumMessage.css';
-
-import { type FC, memo } from 'react';
+import { type FC } from 'react';
 
 import defaultAvatarPath from '/assets/img/default-avatar.png';
 
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import simplifyDate from '../../../../utils/dateUtils';
-import { type ForumMessageProps } from './typings';
+import { type ForumTopicDescriptionProps } from './typings';
 
-export const ForumMessage: FC<ForumMessageProps> = memo(({ message }) => {
-  const { id, content, created_at } = message;
-  console.log(message);
-  const displayName = message.user.display_name ?? message.user.login;
-
+export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = ({ displayName, date, content }) => {
   const editMessage = () => {
     console.log('Редактировать');
   };
 
-  const deleteMessage = () => {
-    console.log('Удалить');
-  };
-
-  const menuItems: DropdownMenuItems[] = [
-    { onClick: editMessage, title: 'Редактировать' },
-    { onClick: deleteMessage, title: 'Удалить' },
-  ];
-
-  const formattedDate = simplifyDate(new Date(created_at).toString());
+  const menuItems: DropdownMenuItems[] = [{ onClick: editMessage, title: 'Редактировать' }];
 
   return (
-    <div id={`forum-message-${id}`} className="forum-message" data-testid="forum-message">
+    <div className="forum-message">
       <div className="forum-message__avatar">
         <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={defaultAvatarPath} />
       </div>
       <div className="forum-message__content">
         <div className="forum-message__meta">
           <span className="forum-message__username">{displayName}</span>
-          <time className="forum-message__date">{formattedDate}</time>
+          <time className="forum-message__date">{simplifyDate(new Date(date).toString())}</time>
         </div>
         <div className="forum-message__text">{content}</div>
       </div>
@@ -60,4 +45,4 @@ export const ForumMessage: FC<ForumMessageProps> = memo(({ message }) => {
       />
     </div>
   );
-});
+};

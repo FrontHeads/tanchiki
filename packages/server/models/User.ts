@@ -1,5 +1,6 @@
 import { AllowNull, Column, HasMany, Model, Table } from 'sequelize-typescript';
 
+import { ForumMessage } from './ForumMessage';
 import { ForumTopic } from './ForumTopic';
 
 @Table({ tableName: 'users', createdAt: 'created_at', updatedAt: 'updated_at' })
@@ -13,4 +14,7 @@ export class User extends Model {
 
   @HasMany(() => ForumTopic, 'user_id')
   topics!: ForumTopic[];
+
+  @HasMany(() => ForumMessage, 'user_id')
+  messages!: ForumMessage[];
 }

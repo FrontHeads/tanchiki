@@ -1,12 +1,11 @@
 import './ForumNewTopic.css';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { forumAPI } from '../../../../api/forumAPI';
 import { Breadcrumbs } from '../../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../../components/Breadcrumbs/data';
-import { type BreadcrumbsItem } from '../../../../components/Breadcrumbs/typings';
 import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Paths } from '../../../../config/constants';
@@ -15,10 +14,9 @@ import { generateMetaTags } from '../../../../utils/seoUtils';
 
 export const ForumNewTopic = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(authSelectors.userProfile);
 
-  const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsItem[]>([{ href: Paths.Forum, title: 'Форум' }]);
-
-  const { id: userId } = useAppSelector(authSelectors.userProfile);
+  const userId = user?.id;
 
   const { sectionId } = useParams();
 
@@ -26,14 +24,6 @@ export const ForumNewTopic = () => {
     heading: 'Новая тема',
     body: '',
   });
-  // console.log(breadcrumbs);
-
-
-   useEffect(() => {
-    // Should not ever set state during rendering, so do this in useEffect instead.
-     setBreadcrumbs([...breadcrumbs, {href: `${Paths.Section}/${sectionId}`, title: 'Разделы' }]);
-  }, [sectionId]);
-
 
   const headingChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,32 +43,30 @@ export const ForumNewTopic = () => {
   );
 
   const submitHandler = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
+    (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-        forumAPI.createTopic({
+      forumAPI
+        .createTopic({
           name: form.heading,
           content: form.body,
-          //@ts-ignore
-          section_id: sectionId,
+          section_id: Number(sectionId),
           user_id: userId,
-        }
-      ).then((res) => {
-        console.log(res);
-        navigate(`${Paths.Section}/${sectionId}${Paths.Topic}/${res.data.id}`);
+        })
 
-      });
-
+        .then(res => {
+          navigate(`${Paths.Section}/${sectionId}${Paths.Topic}/${res.data.id}`);
+        });
     },
 
     [form]
   );
 
-  return (
+  return user ? (
     <>
       {generateMetaTags({ title: `${form.heading}` })}
       <section className="forum-topic  ">
         <h1 className="forum__title">{`${form.heading}`}</h1>
-        <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Normal} />
+        <Breadcrumbs variant={BreadcrumbsVariant.Normal} />
         <div className="new-topic__container">
           <form onSubmit={submitHandler} className="new-topic">
             <input
@@ -103,5 +91,5 @@ export const ForumNewTopic = () => {
         </div>
       </section>
     </>
-  );
+  ) : null;
 };

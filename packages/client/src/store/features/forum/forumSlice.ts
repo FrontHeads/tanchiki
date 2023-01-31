@@ -7,14 +7,7 @@ const initialState = {};
 export const forumSlice = createSlice({
   name: 'forum',
   initialState,
-  reducers: {
-    addTopic: () => {
-      console.log('add topic');
-    },
-    addComment: () => {
-      console.log('add comment');
-    },
-  },
+  reducers: {},
 });
 
 export const forumSelectors = {
