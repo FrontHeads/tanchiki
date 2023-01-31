@@ -1,36 +1,65 @@
 import './ForumMessage.css';
 
-import { type FC, memo } from 'react';
+import { type FC, memo, useCallback, useState } from 'react';
 
 import defaultAvatarPath from '/assets/img/default-avatar.png';
 
+import { forumAPI } from '../../../../api/forumAPI';
+import { Button } from '../../../../components/Button';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import simplifyDate from '../../../../utils/dateUtils';
 import { type ForumMessageProps } from './typings';
 
-export const ForumMessage: FC<ForumMessageProps> = memo(({ message }) => {
-  const { id, content, created_at } = message;
+export const ForumMessage: FC<ForumMessageProps> = memo(props => {
+  const [message, setMessage] = useState(props.message);
+  const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
+
   console.log(message);
   const displayName = message.user.display_name ?? message.user.login;
 
   const editMessage = () => {
     console.log('Редактировать');
+    setIsEditMessage(true);
   };
 
-  const deleteMessage = () => {
+  const deleteMessage = useCallback(() => {
     console.log('Удалить');
-  };
+    forumAPI.deleteMessage(message.id);
+  }, [message]);
 
   const menuItems: DropdownMenuItems[] = [
     { onClick: editMessage, title: 'Редактировать' },
     { onClick: deleteMessage, title: 'Удалить' },
   ];
 
-  const formattedDate = simplifyDate(new Date(created_at).toString());
+  const [messageInput, setMessageInput] = useState('');
+
+  const messageChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target;
+
+      setMessageInput(value);
+    },
+    [messageInput]
+  );
+
+  const submitHandler = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      forumAPI.editMessage(message.id, { content: messageInput }).then(res => {
+        setMessage(res.data);
+      });
+      setIsEditMessage(false);
+    },
+
+    [messageInput]
+  );
+
+  const formattedDate = simplifyDate(new Date(message.updated_at).toString());
 
   return (
-    <div id={`forum-message-${id}`} className="forum-message" data-testid="forum-message">
+    <div id={`forum-message-${message.id}`} className="forum-message" data-testid="forum-message">
       <div className="forum-message__avatar">
         <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={defaultAvatarPath} />
       </div>
@@ -39,7 +68,14 @@ export const ForumMessage: FC<ForumMessageProps> = memo(({ message }) => {
           <span className="forum-message__username">{displayName}</span>
           <time className="forum-message__date">{formattedDate}</time>
         </div>
-        <div className="forum-message__text">{content}</div>
+        {isEditMessage ? (
+          <form onSubmit={submitHandler}>
+            <input type="text" id="test" onChange={messageChangeHandler} value={message.content} />
+            <Button type="submit" text="Изменить сообщение" />
+          </form>
+        ) : (
+          <div className="forum-message__text">{message.content}</div>
+        )}
       </div>
       <Dropdown
         trigger={

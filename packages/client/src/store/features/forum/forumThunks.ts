@@ -24,4 +24,9 @@ const createMessage = createAsyncThunk('forum/message', async (message: MessageR
   return data;
 });
 
+// const editMessage = createAsyncThunk('forum/message/edit', async (messageId: number, message: MessageRequest) => {
+//   const { data } = await forumAPI.editMessage(messageId, message);
+//   return data;
+// });
+
 export const forumThunks = { getAllSections, createTopic, getTopicsFromSection, createMessage };

@@ -73,6 +73,8 @@ export const API_ENDPOINTS = {
     GET_TOPIC_BY_ID: (topicId: number) => `forum/topic/${topicId}`,
     CREATE_TOPIC: 'forum/topic',
     CREATE_MESSAGE: 'forum/message',
+    EDIT_MESSAGE: (messageId: number) => `forum/message/${messageId}`,
+    DELETE_MESSAGE: (messageId: number) => `forum/message/${messageId}`,
   },
 };
 
