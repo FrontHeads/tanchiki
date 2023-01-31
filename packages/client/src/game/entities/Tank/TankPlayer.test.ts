@@ -13,14 +13,14 @@ describe('game/entities/TankPlayer', () => {
     const loop = new Loop();
     const tank = mockTank();
     const readyObserver = jest.fn();
-    tank.spawnTimeout = 500;
+    tank.spawnTimeout = 50;
 
     loop.load();
     loop.add(tank);
     tank.spawn();
     tank.on(EntityEvent.Ready, readyObserver);
 
-    await sleep(1000);
+    await sleep(500);
 
     expect(readyObserver).toHaveBeenCalled();
     expect(tank.invincible).toBeTruthy();

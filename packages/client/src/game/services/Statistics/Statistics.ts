@@ -160,16 +160,26 @@ export class Statistics {
 
   /** Начинает подсчёт статистики на конкретном игровом уровне. */
   startMap() {
-    this.mapStartTime = Date.now();
+    this.startTimer();
   }
 
   /** Завершает подсчёт статистики на конкретном игровом уровне. */
   finishMap(gameover = false) {
-    this.mapElapsedTime = Date.now() - this.mapStartTime;
+    this.stopTimer();
     this.sessionElapsedTime += this.mapElapsedTime;
     if (!gameover) {
       ++this.sessionCompletedMaps;
     }
     this.sendRecord();
+  }
+
+  /** Запускает отсчёт времени, затрачиваемого на прохождение игрового уровня. */
+  startTimer() {
+    this.mapStartTime = Date.now();
+  }
+
+  /** Останавливает отсчёт времени, затрачиваемого на прохождение игрового уровня. */
+  stopTimer() {
+    this.mapElapsedTime += Date.now() - this.mapStartTime;
   }
 }
