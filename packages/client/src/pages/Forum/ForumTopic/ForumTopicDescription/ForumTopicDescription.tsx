@@ -7,11 +7,17 @@ import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
+import { authSelectors, useAppSelector } from '../../../../store';
 import simplifyDate from '../../../../utils/dateUtils';
 import { type ForumTopicDescriptionProps } from './typings';
 
 export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
-  const { displayName, date, topicId } = props;
+  const { displayName, date, topicId, authorId } = props;
+  const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
+
+  // Проверяем, является ли пользователь создателем темы.
+  const isAuthor = authorId === currentUserId;
+
   const [description, setDescription] = useState<string>(props.description);
   const [isEditDescription, setIsEditDescription] = useState<boolean>(false);
 
@@ -69,23 +75,25 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
           <div className="forum-message__text">{description}</div>
         )}
       </div>
-      <Dropdown
-        trigger={
-          <div className="forum-message__options">
-            <svg
-              aria-label="Show options"
-              role="img"
-              height="16"
-              viewBox="0 0 16 16"
-              version="1.1"
-              width="16"
-              data-view-component="true">
-              <path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
-            </svg>
-          </div>
-        }
-        menuItems={menuItems}
-      />
+      {isAuthor ? (
+        <Dropdown
+          trigger={
+            <div className="forum-message__options">
+              <svg
+                aria-label="Show options"
+                role="img"
+                height="16"
+                viewBox="0 0 16 16"
+                version="1.1"
+                width="16"
+                data-view-component="true">
+                <path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+              </svg>
+            </div>
+          }
+          menuItems={menuItems}
+        />
+      ) : null}
     </div>
   );
 };

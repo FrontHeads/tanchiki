@@ -114,6 +114,7 @@ export const ForumTopic: FC = () => {
         <div className="forum-topic__container">
           <div className="forum-topic__messages">
             <ForumTopicDescription
+              authorId={userId}
               topicId={currentTopic.id}
               description={currentTopic.content}
               date={currentTopic.created_at}

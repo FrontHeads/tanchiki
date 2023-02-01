@@ -10,6 +10,7 @@ import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import { API_ENDPOINTS } from '../../../../config/constants';
+import { authSelectors, useAppSelector } from '../../../../store';
 import simplifyDate from '../../../../utils/dateUtils';
 import { buildPath } from '../../../../utils/HTTP/buildPath';
 import { determineAPIHost } from '../../../../utils/HTTP/determineAPIHost';
@@ -18,8 +19,11 @@ import { type ForumMessageProps } from './typings';
 export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [message, setMessage] = useState(props.message);
   const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
+  const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
   let avatarPath;
-  console.log(message);
+
+  // Проверяем, является ли пользователь отправителем сообщения.
+  const isAuthor = message.user_id === currentUserId;
 
   const displayName = message.user.display_name ?? message.user.login;
 
@@ -89,23 +93,26 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
           <div className="forum-message__text">{message.content}</div>
         )}
       </div>
-      <Dropdown
-        trigger={
-          <div className="forum-message__options">
-            <svg
-              aria-label="Show options"
-              role="img"
-              height="16"
-              viewBox="0 0 16 16"
-              version="1.1"
-              width="16"
-              data-view-component="true">
-              <path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
-            </svg>
-          </div>
-        }
-        menuItems={menuItems}
-      />
+
+      {isAuthor ? (
+        <Dropdown
+          trigger={
+            <div className="forum-message__options">
+              <svg
+                aria-label="Show options"
+                role="img"
+                height="16"
+                viewBox="0 0 16 16"
+                version="1.1"
+                width="16"
+                data-view-component="true">
+                <path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+              </svg>
+            </div>
+          }
+          menuItems={menuItems}
+        />
+      ) : null}
     </div>
   );
 });
