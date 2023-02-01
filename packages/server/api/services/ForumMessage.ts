@@ -1,5 +1,6 @@
 import express, { type Request, type Response, Router } from 'express';
 
+import { checkAuthMiddleware } from '../../middlewares';
 import { ForumMessage } from '../../models/ForumMessage';
 import { ForumTopic } from '../../models/ForumTopic';
 import { User } from '../../models/User';
@@ -8,6 +9,7 @@ import { throwIf } from '../../utils/throwIf';
 export const forumMessageRoute = Router()
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
+  .use('/', checkAuthMiddleware)
   .get('/:id', (req: Request, res: Response, next) => {
     ForumMessage.findByPk(req.params.id, { include: [{ model: ForumTopic }, { model: User }], logging: true })
       .then(throwIf(r => !r, res, 400, 'Комментарий не найден'))
@@ -24,6 +26,9 @@ export const forumMessageRoute = Router()
       .catch(next);
   })
   .put('/:id', (req: Request, res: Response, next) => {
+    console.log('req', req.body);
+    const userId = res.locals.user.id;
+    console.log('usi', userId);
     ForumMessage.update(req.body, { where: { id: req.params.id }, returning: true })
       .then(result => {
         const [, message] = result;

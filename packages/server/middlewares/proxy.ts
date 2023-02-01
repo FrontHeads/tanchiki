@@ -20,7 +20,7 @@ export const proxyMiddleware: RequestHandler = (req, res, next) => {
     selfHandleResponse: true,
     logLevel: 'error',
     onProxyRes: responseInterceptor(async (responseBuffer, _proxyRes, _req, _res) => {
-      if (req.url.includes('/auth/user')) {
+      if (req.url.includes('/auth/user') && req.method === 'GET') {
         const response = responseBuffer.toString(); // convert buffer to string
         let user;
         try {
