@@ -30,6 +30,8 @@ export const ForumTopic: FC = () => {
   const [formMessage, setFormMessage] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [messageHasErrors, setFormHasErrors] = useState(false);
+  console.log('topic messages', topicMessages);
+
   const validation = useValidation([
     {
       title: 'Message',
@@ -43,9 +45,9 @@ export const ForumTopic: FC = () => {
   const deleteMessage = useCallback(
     (messageId: number) => {
       forumAPI.deleteMessage(messageId).then(() => {
-        const freshMessageList = topicMessages.filter(message => message.id !== messageId);
+        const newMessageList = topicMessages.filter(message => message.id !== messageId);
 
-        setTopicMessages(freshMessageList);
+        setTopicMessages(newMessageList);
       });
     },
     [topicMessages]

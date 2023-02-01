@@ -15,7 +15,8 @@ export type ForumMessageProps = {
 export type User = {
   created_at: string;
   updated_at: string;
-  display_name?: string;
+  display_name: string;
   id: number;
   login: string;
+  avatar: string;
 };

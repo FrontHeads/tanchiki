@@ -18,6 +18,7 @@ import { type ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [message, setMessage] = useState(props.message);
+  const [messageInput, setMessageInput] = useState(message.content);
   const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
   const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
   let avatarPath;
@@ -42,13 +43,12 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
     { onClick: () => props.deleteMessageHandler(message.id), title: 'Удалить' },
   ];
 
-  const [messageInput, setMessageInput] = useState('');
-
   const messageChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
 
       setMessageInput(value);
+      console.log(messageInput);
     },
     [messageInput]
   );
@@ -57,6 +57,8 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       forumAPI.editMessage(message.id, { content: messageInput, user_id: message.user_id }).then(res => {
+        console.log(message.id, messageInput, message.user_id, res.data);
+
         setMessage(res.data);
       });
       setIsEditMessage(false);
