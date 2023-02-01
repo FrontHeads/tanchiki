@@ -1,7 +1,5 @@
 import { type FC, useCallback, useState } from 'react';
 
-import defaultAvatarPath from '/assets/img/default-avatar.png';
-
 import { forumAPI } from '../../../../api/forumAPI';
 import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
@@ -12,7 +10,7 @@ import simplifyDate from '../../../../utils/dateUtils';
 import { type ForumTopicDescriptionProps } from './typings';
 
 export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
-  const { displayName, date, topicId, authorId } = props;
+  const { displayName, date, topicId, authorId, avatarPath } = props;
   const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
 
   // Проверяем, является ли пользователь создателем темы.
@@ -52,7 +50,7 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
   return (
     <div className="forum-message">
       <div className="forum-message__avatar">
-        <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={defaultAvatarPath} />
+        <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={avatarPath} />
       </div>
       <div className="forum-message__content">
         <div className="forum-message__meta">

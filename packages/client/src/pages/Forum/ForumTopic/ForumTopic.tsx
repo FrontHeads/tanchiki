@@ -4,14 +4,18 @@ import cn from 'classnames';
 import { type FC, useCallback, useState } from 'react';
 import { useLoaderData, useParams } from 'react-router-dom';
 
+import defaultAvatarPath from '/assets/img/default-avatar.png';
+
 import { forumAPI } from '../../../api/forumAPI';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { ValidationErrors } from '../../../components/ValidationErrors';
+import { API_ENDPOINTS } from '../../../config/constants';
 import { useAppDispatch } from '../../../store';
 import { forumThunks } from '../../../store/features/forum/forumThunks';
+import { buildPath, determineAPIHost } from '../../../utils/HTTP';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
 import { type ValidationErrorList } from '../../../utils/validation/typings';
@@ -30,7 +34,14 @@ export const ForumTopic: FC = () => {
   const [formMessage, setFormMessage] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [messageHasErrors, setFormHasErrors] = useState(false);
-  console.log('topic messages', topicMessages);
+
+  let avatarPath;
+
+  if (currentTopic.user?.avatar) {
+    avatarPath = buildPath(determineAPIHost(), API_ENDPOINTS.USER.GET_AVATAR(currentTopic.user.avatar));
+  } else {
+    avatarPath = defaultAvatarPath;
+  }
 
   const validation = useValidation([
     {
@@ -116,6 +127,7 @@ export const ForumTopic: FC = () => {
         <div className="forum-topic__container">
           <div className="forum-topic__messages">
             <ForumTopicDescription
+              avatarPath={avatarPath}
               authorId={userId}
               topicId={currentTopic.id}
               description={currentTopic.content}

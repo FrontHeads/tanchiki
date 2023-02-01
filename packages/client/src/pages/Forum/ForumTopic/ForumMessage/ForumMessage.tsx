@@ -14,12 +14,15 @@ import { authSelectors, useAppSelector } from '../../../../store';
 import simplifyDate from '../../../../utils/dateUtils';
 import { buildPath } from '../../../../utils/HTTP/buildPath';
 import { determineAPIHost } from '../../../../utils/HTTP/determineAPIHost';
+import { useValidation } from '../../../../utils/validation';
 import { type ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [message, setMessage] = useState(props.message);
   const [messageInput, setMessageInput] = useState(message.content);
   const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
+  // const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
+  // const [messageHasErrors, setFormHasErrors] = useState(false);
   const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
   let avatarPath;
 
@@ -27,6 +30,16 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const isAuthor = message.user_id === currentUserId;
 
   const displayName = message.user.display_name ?? message.user.login;
+
+  const validation = useValidation([
+    {
+      title: 'Edit message',
+      type: 'text',
+      id: 'message',
+      validator: 'NotEmpty',
+      required: true,
+    },
+  ]);
 
   if (message.user?.avatar) {
     avatarPath = buildPath(determineAPIHost(), API_ENDPOINTS.USER.GET_AVATAR(message.user.avatar));
@@ -48,17 +61,22 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
       const { value } = event.target;
 
       setMessageInput(value);
-      console.log(messageInput);
     },
     [messageInput]
   );
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
+      const validationResult = validation({ message: messageInput });
+
+      if (validationResult.hasErrors) {
+        setFormHasErrors(true);
+        setValidationErrors(validationResult.errors);
+        return;
+      }
+
       event.preventDefault();
       forumAPI.editMessage(message.id, { content: messageInput, user_id: message.user_id }).then(res => {
-        console.log(message.id, messageInput, message.user_id, res.data);
-
         setMessage(res.data);
       });
       setIsEditMessage(false);
