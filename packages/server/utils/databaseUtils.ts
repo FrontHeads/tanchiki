@@ -47,7 +47,7 @@ export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> 
 
       // Добавляем категории форума по умолчанию в БД при старте сервера
       await ForumSection.bulkCreate(
-        [{ name: 'Новости' }, { name: 'Вопросы по форуму и игре' }, { name: 'Баги' }, { name: 'Флуд' }],
+        [{ name: 'Новости' }, { name: 'Игра' }, { name: 'Баги' }, { name: 'Флуд' }],
         { ignoreDuplicates: true }
       );
     }

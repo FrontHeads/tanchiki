@@ -13,7 +13,9 @@ export const forumSectionRoute = Router()
       attributes: {
         include: [
           [
-            Sequelize.literal(`(SELECT COUNT(*) from forum_topics as t where t.section_id="ForumSection"."id")`),
+            Sequelize.literal(`(SELECT COUNT(*)
+            from forum_topics as t
+            where t.section_id="ForumSection"."id")`),
             'topicCount',
           ],
           [
@@ -30,17 +32,16 @@ export const forumSectionRoute = Router()
       .catch(next);
   })
   .get('/:id', (req: Request, res: Response, next) => {
-    ForumSection.findByPk(req.params.id, {
+    ForumSection.findByPk(req.params.id,  {
       include: [
         {
           model: ForumTopic,
           attributes: {
             include: [
               [
-                Sequelize.literal(` (SELECT COUNT(M.*)
-              FROM FORUM_TOPICS AS T
-              LEFT JOIN FORUM_MESSAGES AS M ON M.TOPIC_ID=T.ID
-              WHERE T.SECTION_ID = "ForumSection"."id")`),
+                Sequelize.literal(`(SELECT COUNT(*)
+                  FROM FORUM_MESSAGES AS M
+                  WHERE M.TOPIC_ID = "topics"."id")`),
                 'messages',
               ],
             ],
