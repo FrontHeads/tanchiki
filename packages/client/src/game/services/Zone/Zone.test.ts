@@ -77,6 +77,19 @@ describe('game/services/Zone', () => {
     expect(zone.isLegalRect(rect5)).toBe(true);
   });
 
+  it('should check if two rects overlap', () => {
+    const zone = new Zone({ width: 10, height: 10 });
+    const rect1 = { posX: 1, posY: 1, width: 2, height: 2 };
+    const rect2 = { posX: 2, posY: 2, width: 2, height: 2 };
+    const rect3 = { posX: 3, posY: 3, width: 2, height: 2 };
+    const rect4 = { posX: 2.5, posY: 2.5, width: 2, height: 2 };
+
+    expect(zone.currentRectsOverlap(rect1, rect2, 0)).toBe(true);
+    expect(zone.currentRectsOverlap(rect1, rect3, 0)).toBe(false);
+    expect(zone.currentRectsOverlap(rect1, rect4, 0)).toBe(true);
+    expect(zone.currentRectsOverlap(rect1, rect4, 0.5)).toBe(false);
+  });
+
   it('should check if entity rect has collisions with other objects', () => {
     const zone = new Zone({ width: 10, height: 10 });
     const rect1 = { posX: 1, posY: 1, width: 2, height: 2 };

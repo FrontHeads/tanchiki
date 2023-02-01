@@ -28,12 +28,15 @@ export const forumTopicRoute = Router()
       .catch(next);
   })
   .put('/:id', (req: Request, res: Response, next) => {
-    ForumTopic.update(req.body, { where: { id: req.params.id } })
-      .then(() => res.status(201).send({ message: 'Тема отредактирована' }))
+    ForumTopic.update(req.body, { where: { id: req.params.id }, returning: true })
+      .then(result => {
+        const [, message] = result;
+        res.status(200).json(message);
+      })
       .catch(next);
   })
   .delete('/:id', (req: Request, res: Response, next) => {
     ForumTopic.destroy({ where: { id: req.params.id } })
-      .then(() => res.status(201).send({ message: 'Тема удалена' }))
+      .then((topic) => res.status(201).json(topic))
       .catch(next);
   });
