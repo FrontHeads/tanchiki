@@ -12,10 +12,10 @@
     width: 100%;
     padding: 8px;
     resize: vertical;
-    background-color: var(--font-color-primary);
+    background-color: var(--section-background-color);
     box-sizing: border-box;
     border-radius: 6px;
-    color: var(--font-color-third);
+    color: var(--font-color-primary);
   }
 }
 .textarea {

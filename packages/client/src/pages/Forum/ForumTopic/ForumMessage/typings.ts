@@ -9,6 +9,7 @@ export type ForumMessage = {
 };
 export type ForumMessageProps = {
   message: ForumMessage;
+  deleteMessageHandler: (messageId: number) => void;
 };
 
 export type User = {

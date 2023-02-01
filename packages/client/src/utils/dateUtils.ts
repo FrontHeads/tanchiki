@@ -11,10 +11,10 @@ export default function simplifyDate(dateString: string): string {
     const day = date.getDay();
     const month = date.getMonth() - 1;
 
-    result += `${day}.${month} `;
+    result = `${day}.${month}, ${hours}:${minutes} `;
+  } else {
+    result = `Сегодня, ${hours}:${minutes}`;
   }
-
-  result += `${hours}:${minutes}`;
 
   return result;
 }

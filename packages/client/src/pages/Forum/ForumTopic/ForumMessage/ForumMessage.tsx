@@ -6,6 +6,7 @@ import defaultAvatarPath from '/assets/img/default-avatar.png';
 
 import { forumAPI } from '../../../../api/forumAPI';
 import { Button } from '../../../../components/Button';
+import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import simplifyDate from '../../../../utils/dateUtils';
@@ -23,21 +24,17 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
     setIsEditMessage(true);
   };
 
-  const deleteMessage = useCallback(() => {
-    console.log('Удалить');
-    forumAPI.deleteMessage(message.id);
-  }, [message]);
-
   const menuItems: DropdownMenuItems[] = [
     { onClick: editMessage, title: 'Редактировать' },
-    { onClick: deleteMessage, title: 'Удалить' },
+    { onClick: () => props.deleteMessageHandler(message.id), title: 'Удалить' },
   ];
 
   const [messageInput, setMessageInput] = useState('');
 
   const messageChangeHandler = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
+      console.log(value);
 
       setMessageInput(value);
     },
@@ -70,8 +67,15 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
         </div>
         {isEditMessage ? (
           <form onSubmit={submitHandler}>
-            <input type="text" id="test" onChange={messageChangeHandler} value={message.content} />
-            <Button type="submit" text="Изменить сообщение" />
+            <textarea
+              rows={4}
+              name="message"
+              id="message"
+              className="forum-topic__textarea"
+              onChange={messageChangeHandler}
+              defaultValue={message.content}
+            />
+            <Button type="submit" text="Изменить сообщение" variant={ButtonVariant.Secondary} />
           </form>
         ) : (
           <div className="forum-message__text">{message.content}</div>

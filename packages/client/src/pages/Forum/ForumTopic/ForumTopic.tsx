@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { type FC, useCallback, useState } from 'react';
 import { useLoaderData, useParams } from 'react-router-dom';
 
-import { type getTopicByIdResponse } from '../../../api/forumAPI';
+import { type getTopicByIdResponse, forumAPI } from '../../../api/forumAPI';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
 import { Button } from '../../../components/Button';
@@ -38,6 +38,19 @@ export const ForumTopic: FC = () => {
       required: true,
     },
   ]);
+
+  const deleteMessage = useCallback((messageId: number) => {
+    console.log('Удалить');
+    console.log('message id', messageId);
+
+    forumAPI.deleteMessage(messageId).then(() => {
+      const freshMessageList = topicMessages.filter(message => {
+        message.id !== messageId;
+      });
+      setTopicMessages(freshMessageList);
+      console.log(freshMessageList);
+    });
+  }, []);
 
   const textareaChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -100,7 +113,11 @@ export const ForumTopic: FC = () => {
               displayName={currentTopic.user.display_name}
             />
 
-            {topicMessages ? topicMessages.map(row => <ForumMessage key={row.id} message={row} />) : null}
+            {topicMessages
+              ? topicMessages.map(row => (
+                  <ForumMessage key={row.id} message={row} deleteMessageHandler={deleteMessage} />
+                ))
+              : null}
           </div>
           <form onSubmit={submitHandler} className="forum-topic__new-message">
             <textarea
