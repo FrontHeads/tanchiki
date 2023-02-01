@@ -36,7 +36,7 @@ export const forumMessageRoute = Router()
         })
         .catch(next);
     } else {
-      res.status(500).send({type: 'error', message: 'Доступ запрещен'});
+      res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
     }
   })
   .delete('/:id', (req: Request, res: Response, next) => {

@@ -25,14 +25,11 @@ export const forumTopicRoute = Router()
       .catch(next);
   })
   .post('/', (req: Request, res: Response, next) => {
-
-
     ForumTopic.create(req.body)
       .then(topic => res.status(201).send({ id: topic.id }))
       .catch(next);
   })
   .put('/:id', (req: Request, res: Response, next) => {
-
     ForumTopic.update(req.body, { where: { id: req.params.id }, returning: true })
       .then(result => {
         const [, messages] = result;

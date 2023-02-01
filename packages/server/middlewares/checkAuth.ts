@@ -11,15 +11,20 @@ export const checkAuthMiddleware: RequestHandler = async (req, res, next) => {
       headers: {
         Cookie: req.headers.cookie,
       },
-    }).then((isAuth) => {
-      if (isAuth.ok) {
-        // Передаем данные авторизованного юзера в следующий middleware
-        isAuth.json().then((user) => {
-          res.locals.user = user;
-          next();
-        }).catch(next);
-      }
-    }).catch(next);
+    })
+      .then(isAuth => {
+        if (isAuth.ok) {
+          // Передаем данные авторизованного юзера в следующий middleware
+          isAuth
+            .json()
+            .then(user => {
+              res.locals.user = user;
+              next();
+            })
+            .catch(next);
+        }
+      })
+      .catch(next);
   } else {
     next();
   }
