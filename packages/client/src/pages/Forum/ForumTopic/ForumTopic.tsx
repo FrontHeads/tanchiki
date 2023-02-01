@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { type FC, useCallback, useState } from 'react';
 import { useLoaderData, useParams } from 'react-router-dom';
 
-import { type getTopicByIdResponse, forumAPI } from '../../../api/forumAPI';
+import { forumAPI } from '../../../api/forumAPI';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
 import { Button } from '../../../components/Button';
@@ -15,12 +15,14 @@ import { forumThunks } from '../../../store/features/forum/forumThunks';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
 import { type ValidationErrorList } from '../../../utils/validation/typings';
+import { EmoteMenu } from './EmoteMenu/EmoteMenu';
 import { ForumMessage } from './ForumMessage';
 import { ForumTopicDescription } from './ForumTopicDescription/ForumTopicDescription';
+import { type ForumTopicT } from './typings';
 
 export const ForumTopic: FC = () => {
   const dispatch = useAppDispatch();
-  const currentTopic = useLoaderData() as getTopicByIdResponse;
+  const currentTopic = useLoaderData() as ForumTopicT;
   const userId = currentTopic.user_id;
 
   const { topicId } = useParams();
@@ -38,14 +40,16 @@ export const ForumTopic: FC = () => {
     },
   ]);
 
-  const deleteMessage = useCallback((messageId: number) => {
-    forumAPI.deleteMessage(messageId).then(() => {
-      const freshMessageList = topicMessages.filter(message =>
-        message.id !== messageId
-      );
-      setTopicMessages(freshMessageList);
-    });
-  }, []);
+  const deleteMessage = useCallback(
+    (messageId: number) => {
+      forumAPI.deleteMessage(messageId).then(() => {
+        const freshMessageList = topicMessages.filter(message => message.id !== messageId);
+
+        setTopicMessages(freshMessageList);
+      });
+    },
+    [topicMessages]
+  );
 
   const textareaChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -93,6 +97,13 @@ export const ForumTopic: FC = () => {
     'forum-topic_has-errors': messageHasErrors,
   });
 
+  const pasteEmojiHandler = useCallback(
+    (emoji: string) => {
+      setFormMessage(formMessage + emoji);
+    },
+    [formMessage]
+  );
+
   return (
     <>
       {generateMetaTags({ title: `${currentTopic?.name}` })}
@@ -116,16 +127,20 @@ export const ForumTopic: FC = () => {
               : null}
           </div>
           <form onSubmit={submitHandler} className="forum-topic__new-message">
-            <textarea
-              onChange={textareaChangeHandler}
-              name="message"
-              id="message"
-              value={formMessage}
-              className="forum-topic__textarea"
-              rows={4}
-              placeholder="Текст сообщения"
-              data-testid="topic-textarea"
-            />
+            <div className="textarea__container">
+              <textarea
+                onChange={textareaChangeHandler}
+                name="message"
+                id="message"
+                value={formMessage}
+                className="forum-topic__textarea textarea"
+                rows={4}
+                placeholder="Текст сообщения"
+                data-testid="topic-textarea"
+              />
+              <EmoteMenu onEmojiSelect={pasteEmojiHandler} />
+            </div>
+
             <div className="forum-topic__buttons-wrapper">
               <Button type="submit" text="Отправить" variant={ButtonVariant.Primary} />
             </div>

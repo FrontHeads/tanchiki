@@ -9,14 +9,25 @@ import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
+import { API_ENDPOINTS } from '../../../../config/constants';
 import simplifyDate from '../../../../utils/dateUtils';
+import { buildPath } from '../../../../utils/HTTP/buildPath';
+import { determineAPIHost } from '../../../../utils/HTTP/determineAPIHost';
 import { type ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [message, setMessage] = useState(props.message);
   const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
+  let avatarPath;
+  console.log(message);
 
   const displayName = message.user.display_name ?? message.user.login;
+
+  if (message.user?.avatar) {
+    avatarPath = buildPath(determineAPIHost(), API_ENDPOINTS.USER.GET_AVATAR(message.user.avatar));
+  } else {
+    avatarPath = defaultAvatarPath;
+  }
 
   const editMessage = () => {
     setIsEditMessage(true);
@@ -55,7 +66,7 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   return (
     <div id={`forum-message-${message.id}`} className="forum-message" data-testid="forum-message">
       <div className="forum-message__avatar">
-        <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={defaultAvatarPath} />
+        <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={avatarPath} />
       </div>
       <div className="forum-message__content">
         <div className="forum-message__meta">

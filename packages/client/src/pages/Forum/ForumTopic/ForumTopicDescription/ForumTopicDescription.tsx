@@ -28,13 +28,14 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      forumAPI.editTopic(topicId, { content: description }).then(res => {
-        console.log(res.data);
-
-        console.log(res.data.content);
-
-        setDescription(res.data.content);
-      });
+      forumAPI
+        .editTopic(topicId, { content: description })
+        .then(res => {
+          setDescription(res.data.content);
+        })
+        .catch(e => {
+          throw new Error(e.message);
+        });
       setIsEditDescription(false);
     },
     [description]

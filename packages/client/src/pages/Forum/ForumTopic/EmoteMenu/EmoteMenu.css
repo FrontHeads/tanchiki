@@ -1,0 +1,26 @@
+.emote-menu {
+  border: none;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    background-color: var(--section-light-shadow);
+  }
+}
+
+.emote-menu__dropdown {
+  position: absolute !important;
+  top: 5px;
+  right: 5px;
+  .dropdown__menu {
+    display: flex;
+    width: 250px;
+    flex-wrap: wrap;
+    &-item {
+      flex: 1 1 20%;
+    }
+  }
+}
