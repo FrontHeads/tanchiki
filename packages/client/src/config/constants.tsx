@@ -71,6 +71,7 @@ export const API_ENDPOINTS = {
     GET_ALL_SECTIONS: 'forum/section',
     GET_TOPICS_FROM_SECTION: (sectionId?: number) => `forum/topic/?section_id=${sectionId}`,
     GET_TOPIC_BY_ID: (topicId: number) => `forum/topic/${topicId}`,
+    EDIT_TOPIC: (topicId: number) => `forum/topic/${topicId}`,
     CREATE_TOPIC: 'forum/topic',
     CREATE_MESSAGE: 'forum/message',
     EDIT_MESSAGE: (messageId: number) => `forum/message/${messageId}`,

@@ -16,11 +16,9 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [message, setMessage] = useState(props.message);
   const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
 
-  console.log(message);
   const displayName = message.user.display_name ?? message.user.login;
 
   const editMessage = () => {
-    console.log('Редактировать');
     setIsEditMessage(true);
   };
 
@@ -34,7 +32,6 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const messageChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
-      console.log(value);
 
       setMessageInput(value);
     },
@@ -53,7 +50,7 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
     [messageInput]
   );
 
-  const formattedDate = simplifyDate(new Date(message.updated_at).toString());
+  const formattedDate = simplifyDate(new Date(message.created_at).toString());
 
   return (
     <div id={`forum-message-${message.id}`} className="forum-message" data-testid="forum-message">

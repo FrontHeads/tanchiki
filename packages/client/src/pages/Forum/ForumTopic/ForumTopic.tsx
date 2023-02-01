@@ -22,7 +22,6 @@ export const ForumTopic: FC = () => {
   const dispatch = useAppDispatch();
   const currentTopic = useLoaderData() as getTopicByIdResponse;
   const userId = currentTopic.user_id;
-  console.log(currentTopic);
 
   const { topicId } = useParams();
   const [topicMessages, setTopicMessages] = useState(currentTopic?.messages);
@@ -40,15 +39,11 @@ export const ForumTopic: FC = () => {
   ]);
 
   const deleteMessage = useCallback((messageId: number) => {
-    console.log('Удалить');
-    console.log('message id', messageId);
-
     forumAPI.deleteMessage(messageId).then(() => {
       const freshMessageList = topicMessages.filter(message => {
         message.id !== messageId;
       });
       setTopicMessages(freshMessageList);
-      console.log(freshMessageList);
     });
   }, []);
 
@@ -108,7 +103,8 @@ export const ForumTopic: FC = () => {
         <div className="forum-topic__container">
           <div className="forum-topic__messages">
             <ForumTopicDescription
-              content={currentTopic.content}
+              topicId={currentTopic.id}
+              description={currentTopic.content}
               date={currentTopic.created_at}
               displayName={currentTopic.user.display_name}
             />

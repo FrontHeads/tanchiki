@@ -1,18 +1,46 @@
-import { type FC } from 'react';
+import { type FC, useCallback, useState } from 'react';
 
 import defaultAvatarPath from '/assets/img/default-avatar.png';
 
+import { forumAPI } from '../../../../api/forumAPI';
+import { Button } from '../../../../components/Button';
+import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import simplifyDate from '../../../../utils/dateUtils';
 import { type ForumTopicDescriptionProps } from './typings';
 
-export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = ({ displayName, date, content }) => {
-  const editMessage = () => {
-    console.log('Редактировать');
+export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
+  const { displayName, date, topicId } = props;
+  const [description, setDescription] = useState<string>(props.description);
+  const [isEditDescription, setIsEditDescription] = useState<boolean>(false);
+
+  const descriptionChangeHandler = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.target;
+    setDescription(value);
+  }, []);
+
+  const editTopicDescription = () => {
+    setIsEditDescription(true);
   };
 
-  const menuItems: DropdownMenuItems[] = [{ onClick: editMessage, title: 'Редактировать' }];
+  const submitHandler = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+
+      forumAPI.editTopic(topicId, { content: description }).then(res => {
+        console.log(res.data);
+
+        console.log(res.data.content);
+
+        setDescription(res.data.content);
+      });
+      setIsEditDescription(false);
+    },
+    [description]
+  );
+
+  const menuItems: DropdownMenuItems[] = [{ onClick: editTopicDescription, title: 'Редактировать' }];
 
   return (
     <div className="forum-message">
@@ -24,7 +52,21 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = ({ displayN
           <span className="forum-message__username">{displayName}</span>
           <time className="forum-message__date">{simplifyDate(new Date(date).toString())}</time>
         </div>
-        <div className="forum-message__text">{content}</div>
+        {isEditDescription ? (
+          <form onSubmit={submitHandler}>
+            <textarea
+              rows={4}
+              name="description"
+              id="description"
+              className="forum-topic__textarea"
+              onChange={descriptionChangeHandler}
+              defaultValue={description}
+            />
+            <Button type="submit" text="Изменить описание" variant={ButtonVariant.Secondary} />
+          </form>
+        ) : (
+          <div className="forum-message__text">{description}</div>
+        )}
       </div>
       <Dropdown
         trigger={

@@ -1,5 +1,6 @@
 export type ForumTopicDescriptionProps = {
+  topicId: number;
   displayName: string;
   date: string;
-  content: string;
+  description: string;
 };
