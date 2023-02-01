@@ -16,6 +16,7 @@ export const ForumSection: FC = () => {
   const navigate = useNavigate();
   const { sectionId } = useParams();
   const { data: section } = useLoaderData() as { data: ForumSectionT };
+  console.log(section);
 
   return section ? (
     <>
@@ -25,7 +26,7 @@ export const ForumSection: FC = () => {
           {section.name}
         </h1>
         <div className="actions-wrapper">
-          <Breadcrumbs variant={BreadcrumbsVariant.Wide} />
+          <Breadcrumbs variant={BreadcrumbsVariant.Normal} />
           <div className="add-topic-wrapper">
             <Button
               text="Создать тему"

@@ -2,11 +2,14 @@
   &__item {
     display: inline-block;
 
-    :is(a) {
-      &:after {
-        content: "/";
-        padding: 0 5px;
-      }
+    &:not(:last-child):after {
+      content: "/";
+      padding: 0 5px;
+    }
+
+    &_topic-name:before {
+      content: "/";
+      padding: 0 5px;
     }
   }
 

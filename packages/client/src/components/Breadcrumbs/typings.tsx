@@ -9,4 +9,4 @@ export type BreadcrumbsProps = {
   variant: BreadcrumbsVariant;
 };
 
-export type TopicBreadcrumb = { params: { sectionId: number; topicId: number }; section: { data: ForumSectionT } };
+export type TopicBreadcrumb = { params: { sectionId: number; topicId: number }; topicData: { data: ForumSectionT } };

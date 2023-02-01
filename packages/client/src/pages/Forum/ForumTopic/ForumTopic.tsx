@@ -4,28 +4,28 @@ import cn from 'classnames';
 import { type FC, useCallback, useState } from 'react';
 import { useLoaderData, useParams } from 'react-router-dom';
 
+import { type getTopicByIdResponse } from '../../../api/forumAPI';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { ValidationErrors } from '../../../components/ValidationErrors';
-import { authSelectors, useAppDispatch, useAppSelector } from '../../../store';
+import { useAppDispatch } from '../../../store';
 import { forumThunks } from '../../../store/features/forum/forumThunks';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
 import { type ValidationErrorList } from '../../../utils/validation/typings';
-import { type ForumTopicItem } from '../ForumSection/ForumTopicList/typings';
 import { ForumMessage } from './ForumMessage';
+import { ForumTopicDescription } from './ForumTopicDescription/ForumTopicDescription';
 
 export const ForumTopic: FC = () => {
   const dispatch = useAppDispatch();
-  const { id: userId } = useAppSelector(authSelectors.userProfile);
-  const { topicData: currentTopic } = useLoaderData() as { topicData: ForumTopicItem };
+  const currentTopic = useLoaderData() as getTopicByIdResponse;
+  const userId = currentTopic.user_id;
   console.log(currentTopic);
 
   const { topicId } = useParams();
-  // const [currentTopic, setCurrentTopic] = useState<ForumTopicItem | undefined>(undefined);
-  const topicMessages = currentTopic?.messages;
+  const [topicMessages, setTopicMessages] = useState(currentTopic?.messages);
   const [formMessage, setFormMessage] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [messageHasErrors, setFormHasErrors] = useState(false);
@@ -38,18 +38,6 @@ export const ForumTopic: FC = () => {
       required: true,
     },
   ]);
-
-  // useEffect(() => {
-  //   const fetchCurrentTopic = async () => {
-  //     const { data } = await forumAPI.getTopicById(Number(topicId));
-  //     console.log(data);
-
-  //     setCurrentTopic(data);
-  //   };
-  //   if (!currentTopic) {
-  //     fetchCurrentTopic();
-  //   }
-  // }, [topicId]);
 
   const textareaChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -82,7 +70,11 @@ export const ForumTopic: FC = () => {
           topic_id: Number(topicId),
           content: formMessage,
         })
-      );
+      )
+        .unwrap()
+        .then(res => {
+          setTopicMessages(oldState => [...oldState, res]);
+        });
 
       setFormMessage('');
     },
@@ -102,6 +94,12 @@ export const ForumTopic: FC = () => {
         <Breadcrumbs variant={BreadcrumbsVariant.Normal} />
         <div className="forum-topic__container">
           <div className="forum-topic__messages">
+            <ForumTopicDescription
+              content={currentTopic.content}
+              date={currentTopic.created_at}
+              displayName={currentTopic.user.display_name}
+            />
+
             {topicMessages ? topicMessages.map(row => <ForumMessage key={row.id} message={row} />) : null}
           </div>
           <form onSubmit={submitHandler} className="forum-topic__new-message">

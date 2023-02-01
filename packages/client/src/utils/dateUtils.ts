@@ -1,7 +1,6 @@
 export default function simplifyDate(dateString: string): string {
   const date = new Date(dateString);
   const diff = (+new Date() - +date) / 1000;
-  console.log('date: ', date);
 
   const hours = date.getHours();
   const minutes = String(date.getMinutes()).padStart(2, '0');
