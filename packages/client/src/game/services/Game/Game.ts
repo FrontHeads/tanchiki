@@ -66,7 +66,7 @@ export class Game extends EventEmitter {
   }
 
   load(root: HTMLElement | null) {
-    this.createView(root);
+    this.view.load(root);
     this.overlay.load();
     this.loop.load();
     this.audioManager.load();
@@ -107,10 +107,6 @@ export class Game extends EventEmitter {
     this.paused = false;
   }
 
-  createView(root: HTMLElement | null) {
-    this.view.load(root);
-  }
-
   addEntity(entity: Entity) {
     this.loop.add(entity);
     this.view.add(entity);
@@ -136,11 +132,13 @@ export class Game extends EventEmitter {
       this.loop.start();
       this.controllerWasd.load();
       this.controllerArrows.load();
+      this.statistics.startTimer();
     } else if (newState === true || !this.paused) {
       this.overlay.show(ScreenType.Pause);
       this.loop.stop();
       this.controllerWasd.unload();
       this.controllerArrows.unload();
+      this.statistics.stopTimer();
     }
     this.paused = !this.paused;
     this.audioManager.emit('pause', this.paused);
@@ -256,6 +254,7 @@ export class Game extends EventEmitter {
       this.overlay.show(ScreenType.LevelSelector, { level: this.level, showHints: false });
       this.audioManager.emit('levelIntro');
 
+      this.controllerAll.on(ControllerEvent.Pause, resolve);
       this.controllerAll.on(ControllerEvent.Shoot, resolve);
       setTimeout(resolve, startAnimationDelay);
     }).then(() => {
@@ -278,6 +277,17 @@ export class Game extends EventEmitter {
       }
     }
 
+    this.controllerAll
+      .on(ControllerEvent.Pause, () => {
+        this.togglePause();
+      })
+      .on(ControllerEvent.Mute, () => {
+        this.audioManager.emit('pause', { isMuteKey: true });
+      })
+      .on(ControllerEvent.Fullscreen, () => {
+        this.view.toggleFullScreen();
+      });
+
     await this.initGameIntro();
 
     this.statistics.startMap();
@@ -296,17 +306,6 @@ export class Game extends EventEmitter {
         this.statistics.finishMap();
         await this.initGameScore();
         this.initGameLevel();
-      });
-
-    this.controllerAll
-      .on(ControllerEvent.Pause, () => {
-        this.togglePause();
-      })
-      .on(ControllerEvent.Mute, () => {
-        this.audioManager.emit('pause', { isMuteKey: true });
-      })
-      .on(ControllerEvent.Fullscreen, () => {
-        this.view.toggleFullScreen();
       });
   }
 

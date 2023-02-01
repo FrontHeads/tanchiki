@@ -23,6 +23,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     enemiesCounter: 0,
     maxEnemies: 20,
     maxActiveEnemies: 4,
+    enemiesSpawnDelay: 2000,
     enemies: [],
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;
@@ -60,9 +61,16 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
 
     /** Размещаем танки противника */
-    while (this.canCreateTankEnemy()) {
-      this.createTankEnemy();
-    }
+    this.createTankEnemy();
+    this.game.loop.setLoopInterval(
+      () => {
+        if (this.canCreateTankEnemy()) {
+          this.createTankEnemy();
+        }
+      },
+      this.state.enemiesSpawnDelay,
+      'SCENARIO_ENEMY_TANK_CREATION'
+    );
 
     /** Инициализируем обработчики событий уровня */
     this.initEventListeners();
@@ -84,14 +92,9 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
           // playerState.statistics[]++;
         }
 
-        /** Спауним новый вражеский танк если необходимо */
-        if (this.canCreateTankEnemy()) {
-          this.createTankEnemy();
-        } else {
-          /** Триггерим победу в случае если врагов не осталось */
-          if (this.state.enemies.length === 0) {
-            this.emit(ScenarioEvent.MissionAccomplished);
-          }
+        /** Триггерим победу в случае если врагов не осталось */
+        if (!this.canCreateTankEnemy() && this.state.enemies.length === 0) {
+          this.emit(ScenarioEvent.MissionAccomplished);
         }
       })
 
@@ -256,6 +259,21 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       })
       .on(EntityEvent.Shoot, this.onTankShoot.bind(this))
       .spawn(settings);
+
+    // Если позиция для спауна танка игрока заблокирована, пробуем ещё раз через некоторое время
+    if (!entity.spawned) {
+      const respawnRetryInterval = 500;
+      entity.setLoopInterval(
+        () => {
+          entity.spawn(settings);
+          if (entity.spawned) {
+            entity.clearLoopInterval('RESPAWN_INTERVAL');
+          }
+        },
+        respawnRetryInterval,
+        'RESPAWN_INTERVAL'
+      );
+    }
 
     this.on(ScenarioEvent.GameOver, () => {
       if (entity && entity.spawned) {

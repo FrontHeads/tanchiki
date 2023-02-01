@@ -14,7 +14,10 @@ export type BindingConfig = Record<string, KeyBinding>;
 const KeyBindingsGeneral: BindingConfig = {
   KeyP: [ControllerEvent.Pause],
   KeyM: [ControllerEvent.Mute],
-  KeyF: [ControllerEvent.Fullscreen],
+  Minus: [ControllerEvent.Mute],
+  KeyK: [ControllerEvent.Fullscreen],
+  Equal: [ControllerEvent.Fullscreen],
+  Backquote: [ControllerEvent.Fullscreen],
   Escape: [ControllerEvent.Escape],
 };
 

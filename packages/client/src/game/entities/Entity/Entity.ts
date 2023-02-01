@@ -132,6 +132,7 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     settings.spriteFrame ??= 0;
     this.animationList.push(settings);
 
+    this.refreshSprite();
     this.setLoopInterval(
       () => {
         this.refreshSprite();
