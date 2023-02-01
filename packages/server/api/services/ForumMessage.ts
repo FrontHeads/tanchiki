@@ -17,6 +17,7 @@ export const forumMessageRoute = Router()
       .catch(next);
   })
   .post('/', (req: Request, res: Response, next) => {
+    if (res.locals.user && res.locals.user.id === req.body.user_id) {
     ForumMessage.create(req.body, { include: [{ model: User }] })
       .then(message => {
         ForumMessage.findByPk(message.id, { include: [{ model: ForumTopic }, { model: User }] })
@@ -24,6 +25,9 @@ export const forumMessageRoute = Router()
           .catch(next);
       })
       .catch(next);
+    } else {
+      res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
+    }
   })
   .put('/:id', (req: Request, res: Response, next) => {
     if (res.locals.user && res.locals.user.id === req.body.user_id) {

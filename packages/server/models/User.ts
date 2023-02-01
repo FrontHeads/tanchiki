@@ -19,6 +19,9 @@ export class User extends Model {
   @Column
   display_name!: string;
 
+  @Column
+  avatar!: string;
+
   @HasMany(() => ForumTopic)
   topics!: ForumTopic[];
 

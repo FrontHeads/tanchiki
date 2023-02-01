@@ -25,17 +25,25 @@ export const forumTopicRoute = Router()
       .catch(next);
   })
   .post('/', (req: Request, res: Response, next) => {
+    if (res.locals.user && res.locals.user.id === req.body.user_id) {
     ForumTopic.create(req.body)
       .then(topic => res.status(201).send({ id: topic.id }))
-      .catch(next);
+     .catch(next);
+    } else {
+      res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
+    }
   })
   .put('/:id', (req: Request, res: Response, next) => {
+    if (res.locals.user && res.locals.user.id === req.body.user_id) {
     ForumTopic.update(req.body, { where: { id: req.params.id }, returning: true })
       .then(result => {
         const [, messages] = result;
         res.status(200).json(messages[0]);
       })
       .catch(next);
+    } else {
+      res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
+    }
   })
   .delete('/:id', (req: Request, res: Response, next) => {
     ForumTopic.destroy({ where: { id: req.params.id } })

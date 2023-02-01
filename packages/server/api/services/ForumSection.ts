@@ -32,7 +32,7 @@ export const forumSectionRoute = Router()
       .catch(next);
   })
   .get('/:id', (req: Request, res: Response, next) => {
-    ForumSection.findByPk(req.params.id,  {
+    ForumSection.findByPk(req.params.id, {
       include: [
         {
           model: ForumTopic,

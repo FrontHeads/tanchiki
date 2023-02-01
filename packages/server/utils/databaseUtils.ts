@@ -46,10 +46,9 @@ export const initPostgreDBConnection = async (): Promise<Sequelize | undefined> 
       await Themes.bulkCreate([{ theme_name: 'DARK' }, { theme_name: 'LIGHT' }], { ignoreDuplicates: true });
 
       // Добавляем категории форума по умолчанию в БД при старте сервера
-      await ForumSection.bulkCreate(
-        [{ name: 'Новости' }, { name: 'Игра' }, { name: 'Баги' }, { name: 'Флуд' }],
-        { ignoreDuplicates: true }
-      );
+      await ForumSection.bulkCreate([{ name: 'Новости' }, { name: 'Игра' }, { name: 'Баги' }, { name: 'Флуд' }], {
+        ignoreDuplicates: true,
+      });
     }
 
     console.log('  ➜ 🎸 Connected to the Postgres database');
