@@ -16,6 +16,7 @@ export type createTopicRequestData = {
 
 type editMessageRequest = {
   content: string;
+  user_id: number;
 };
 type editTopicRequest = {
   content: string;

@@ -9,7 +9,6 @@ export const forumSectionRoute = Router()
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
   .get('/', (_: Request, res: Response, next) => {
-
     ForumSection.findAll({
       attributes: {
         include: [

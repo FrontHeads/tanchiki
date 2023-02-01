@@ -41,7 +41,7 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      forumAPI.editMessage(message.id, { content: messageInput }).then(res => {
+      forumAPI.editMessage(message.id, { content: messageInput, user_id: message.user_id }).then(res => {
         setMessage(res.data);
       });
       setIsEditMessage(false);

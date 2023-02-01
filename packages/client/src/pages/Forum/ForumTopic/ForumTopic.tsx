@@ -40,9 +40,9 @@ export const ForumTopic: FC = () => {
 
   const deleteMessage = useCallback((messageId: number) => {
     forumAPI.deleteMessage(messageId).then(() => {
-      const freshMessageList = topicMessages.filter(message => {
-        message.id !== messageId;
-      });
+      const freshMessageList = topicMessages.filter(message =>
+        message.id !== messageId
+      );
       setTopicMessages(freshMessageList);
     });
   }, []);

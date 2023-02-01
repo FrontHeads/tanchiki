@@ -26,17 +26,18 @@ export const forumMessageRoute = Router()
       .catch(next);
   })
   .put('/:id', (req: Request, res: Response, next) => {
-    console.log('req', req.body);
-    const userId = res.locals.user.id;
-    console.log('usi', userId);
-    ForumMessage.update(req.body, { where: { id: req.params.id }, returning: true })
-      .then(result => {
-        const [, message] = result;
-        ForumMessage.findByPk(message[0].id, { include: [{ model: ForumTopic }, { model: User }] })
-          .then(message => res.status(200).json(message))
-          .catch(next);
-      })
-      .catch(next);
+    if (res.locals.user && res.locals.user.id === req.body.user_id) {
+      ForumMessage.update(req.body, { where: { id: req.params.id }, returning: true })
+        .then(result => {
+          const [, message] = result;
+          ForumMessage.findByPk(message[0].id, { include: [{ model: ForumTopic }, { model: User }] })
+            .then(message => res.status(200).json(message))
+            .catch(next);
+        })
+        .catch(next);
+    } else {
+      res.status(500).send({type: 'error', message: 'Доступ запрещен'});
+    }
   })
   .delete('/:id', (req: Request, res: Response, next) => {
     ForumMessage.destroy({ where: { id: req.params.id } })

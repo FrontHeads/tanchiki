@@ -7,18 +7,20 @@ import { YANDEX_API_HOST } from '../config/constants';
  */
 export const checkAuthMiddleware: RequestHandler = async (req, res, next) => {
   if (req.headers.cookie) {
-    const isAuth = await fetch(`${YANDEX_API_HOST}/auth/user`, {
+    fetch(`${YANDEX_API_HOST}/auth/user`, {
       headers: {
         Cookie: req.headers.cookie,
       },
-    });
-
-    if (isAuth.ok) {
-      // Передаем данные авторизованного юзера в следующий middleware
-      res.locals.user = await isAuth.json();
-      return next();
-    }
+    }).then((isAuth) => {
+      if (isAuth.ok) {
+        // Передаем данные авторизованного юзера в следующий middleware
+        isAuth.json().then((user) => {
+          res.locals.user = user;
+          next();
+        }).catch(next);
+      }
+    }).catch(next);
+  } else {
+    next();
   }
-
-  return res.status(401).json('not authorized');
 };
