@@ -15,6 +15,7 @@ import simplifyDate from '../../../../utils/dateUtils';
 import { buildPath } from '../../../../utils/HTTP/buildPath';
 import { determineAPIHost } from '../../../../utils/HTTP/determineAPIHost';
 import { useValidation } from '../../../../utils/validation';
+import { EmoteMenu } from '../EmoteMenu';
 import { type ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = memo(props => {
@@ -87,6 +88,13 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
 
   const formattedDate = simplifyDate(new Date(message.created_at).toString());
 
+  const pasteEmojiHandler = useCallback(
+    (emoji: string) => {
+      setMessageInput(messageInput + emoji);
+    },
+    [messageInput]
+  );
+
   return (
     <div id={`forum-message-${message.id}`} className="forum-message" data-testid="forum-message">
       <div className="forum-message__avatar">
@@ -98,7 +106,7 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
           <time className="forum-message__date">{formattedDate}</time>
         </div>
         {isEditMessage ? (
-          <form onSubmit={submitHandler}>
+          <form onSubmit={submitHandler} className="textarea__container">
             <textarea
               rows={4}
               name="message"
@@ -107,6 +115,8 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
               onChange={messageChangeHandler}
               defaultValue={message.content}
             />
+            <EmoteMenu onEmojiSelect={pasteEmojiHandler} />
+
             <Button type="submit" text="Изменить сообщение" variant={ButtonVariant.Secondary} />
           </form>
         ) : (

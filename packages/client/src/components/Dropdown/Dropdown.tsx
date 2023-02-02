@@ -4,7 +4,7 @@ import { type FC, cloneElement, useEffect, useRef, useState } from 'react';
 
 import { type DropdownProps } from './typings';
 
-export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems, className }) => {
+export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems, className, emoteClass }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +30,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems, className }) =
    *  и добавляем ему функцию-обработчик toggleIsOpen
    * */
   return (
-    <div className={`dropdown ${className}`} ref={dropdownRef}>
+    <div className={`dropdown ${className || ''}`} ref={dropdownRef}>
       {cloneElement(trigger, {
         onClick: toggleIsOpen,
       })}
@@ -43,7 +43,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems, className }) =
                   toggleIsOpen();
                   onClick(event);
                 }}
-                className="dropdown__menu-button"
+                className={`dropdown__menu-button ${emoteClass || ''}`}
                 {...rest}>
                 {title}
               </button>

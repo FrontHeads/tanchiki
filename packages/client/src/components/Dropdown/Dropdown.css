@@ -36,6 +36,10 @@
       margin: 0;
       font: inherit;
       cursor: pointer;
+
+      &-emote {
+        text-align: center;
+      }
     }
   }
 }

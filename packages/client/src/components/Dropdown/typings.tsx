@@ -8,5 +8,6 @@ export type DropdownMenuItems = {
 export type DropdownProps = {
   className?: string;
   trigger: ReactElement;
+  emoteClass?: string;
   menuItems: DropdownMenuItems[];
 };

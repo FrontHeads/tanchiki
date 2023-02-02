@@ -10,20 +10,22 @@ export const EmoteMenu: FC<EmoteMenuProps> = ({ onEmojiSelect }) => {
   return (
     <Dropdown
       trigger={
-        <button type="button" className="emote-menu">
+        <div className="emote-menu">
           <svg
-            width="20px"
-            height="20px"
-            viewBox="0 0 1024 1024"
-            fill="#000000"
+            className="emote-menu__svg"
+            viewBox="0 0 330 330"
+            fill="#fff"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg">
-            <path d={emoteMenuSvgPath.face} fill="" />
             <path d={emoteMenuSvgPath.circle} fill="" />
+            <path d={emoteMenuSvgPath.mouth} fill="" />
+            <path d={emoteMenuSvgPath.eyeLeft} fill="" />
+            <path d={emoteMenuSvgPath.eyeRight} fill="" />
           </svg>
-        </button>
+        </div>
       }
       className="emote-menu__dropdown"
+      emoteClass="dropdown__menu-button-emote"
       menuItems={[
         { onClick: () => onEmojiSelect('👍'), title: '👍' },
         { onClick: () => onEmojiSelect('🔥'), title: '🔥' },
