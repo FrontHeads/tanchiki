@@ -1,13 +1,22 @@
 .emote-menu {
-  border: none;
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
+  margin: 5px;
+
   &:hover {
     cursor: pointer;
   }
+
   &:active {
     background-color: var(--section-light-shadow);
+  }
+
+  &__svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+  }
+
+  &__svg:hover {
+    opacity: 1;
   }
 }
 
@@ -15,10 +24,12 @@
   position: absolute !important;
   top: 5px;
   right: 5px;
+
   .dropdown__menu {
     display: flex;
     width: 250px;
     flex-wrap: wrap;
+
     &-item {
       flex: 1 1 20%;
     }

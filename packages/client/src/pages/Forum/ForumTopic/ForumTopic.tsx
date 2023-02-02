@@ -19,7 +19,7 @@ import { buildPath, determineAPIHost } from '../../../utils/HTTP';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
 import { type ValidationErrorList } from '../../../utils/validation/typings';
-import { EmoteMenu } from './EmoteMenu/EmoteMenu';
+import { EmoteMenu } from './EmoteMenu';
 import { ForumMessage } from './ForumMessage';
 import { ForumTopicDescription } from './ForumTopicDescription/ForumTopicDescription';
 import { type ForumTopicT } from './typings';
