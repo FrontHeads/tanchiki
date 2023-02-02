@@ -1,5 +1,6 @@
 import './ForumMessage.css';
 
+import cn from 'classnames';
 import { type FC, memo, useCallback, useState } from 'react';
 
 import defaultAvatarPath from '/assets/img/default-avatar.png';
@@ -9,21 +10,23 @@ import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
+import { ValidationErrors } from '../../../../components/ValidationErrors';
 import { API_ENDPOINTS } from '../../../../config/constants';
 import { authSelectors, useAppSelector } from '../../../../store';
 import simplifyDate from '../../../../utils/dateUtils';
 import { buildPath } from '../../../../utils/HTTP/buildPath';
 import { determineAPIHost } from '../../../../utils/HTTP/determineAPIHost';
 import { useValidation } from '../../../../utils/validation';
+import { type ValidationErrorList } from '../../../../utils/validation/typings';
 import { EmoteMenu } from '../EmoteMenu';
 import { type ForumMessageProps } from './typings';
 
 export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [message, setMessage] = useState(props.message);
-  const [messageInput, setMessageInput] = useState(message.content);
+  const [messageContent, setMessageContent] = useState(message.content);
   const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
-  // const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
-  // const [messageHasErrors, setFormHasErrors] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
+  const [messageHasErrors, setMessageHasErrors] = useState(false);
   const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
   let avatarPath;
 
@@ -60,43 +63,50 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const messageChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
+      const validationResult = validation({ message: value });
+      setValidationErrors(validationResult.errors);
 
-      setMessageInput(value);
+      setMessageContent(value);
     },
-    [messageInput]
+    [messageContent]
   );
+
+  const forumMessageClassNames = cn('forum-message', {
+    'form_has-errors': messageHasErrors,
+  });
 
   const submitHandler = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
-      const validationResult = validation({ message: messageInput });
+      event.preventDefault();
+
+      const validationResult = validation({ message: messageContent });
 
       if (validationResult.hasErrors) {
-        setFormHasErrors(true);
+        setMessageHasErrors(true);
         setValidationErrors(validationResult.errors);
         return;
       }
 
-      event.preventDefault();
-      forumAPI.editMessage(message.id, { content: messageInput, user_id: message.user_id }).then(res => {
+      forumAPI.editMessage(message.id, { content: messageContent, user_id: message.user_id }).then(res => {
         setMessage(res.data);
       });
       setIsEditMessage(false);
     },
 
-    [messageInput]
+    [messageContent]
   );
 
   const formattedDate = simplifyDate(new Date(message.created_at).toString());
 
   const pasteEmojiHandler = useCallback(
     (emoji: string) => {
-      setMessageInput(messageInput + emoji);
+      setMessageContent(messageContent + emoji);
     },
-    [messageInput]
+    [messageContent]
   );
 
   return (
-    <div id={`forum-message-${message.id}`} className="forum-message" data-testid="forum-message">
+    <div id={`forum-message-${message.id}`} className={forumMessageClassNames} data-testid="forum-message">
       <div className="forum-message__avatar">
         <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={avatarPath} />
       </div>
@@ -106,19 +116,22 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
           <time className="forum-message__date">{formattedDate}</time>
         </div>
         {isEditMessage ? (
-          <form onSubmit={submitHandler} className="textarea__container">
-            <textarea
-              rows={4}
-              name="message"
-              id="message"
-              className="forum-topic__textarea"
-              onChange={messageChangeHandler}
-              defaultValue={message.content}
-            />
-            <EmoteMenu onEmojiSelect={pasteEmojiHandler} />
+          <>
+            {validationErrors.message ? <ValidationErrors errorList={validationErrors.message} /> : null}
+            <form onSubmit={submitHandler} className="textarea__container">
+              <textarea
+                rows={4}
+                name="message"
+                id="message"
+                className="forum-topic__textarea"
+                onChange={messageChangeHandler}
+                value={messageContent}
+              />
+              <EmoteMenu onEmojiSelect={pasteEmojiHandler} />
 
-            <Button type="submit" text="Изменить сообщение" variant={ButtonVariant.Secondary} />
-          </form>
+              <Button type="submit" text="Изменить сообщение" variant={ButtonVariant.Secondary} />
+            </form>
+          </>
         ) : (
           <div className="forum-message__text">{message.content}</div>
         )}

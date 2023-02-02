@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { type FC, useCallback, useState } from 'react';
 
 import { forumAPI } from '../../../../api/forumAPI';
@@ -5,8 +6,11 @@ import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
+import { ValidationErrors } from '../../../../components/ValidationErrors';
 import { authSelectors, useAppSelector } from '../../../../store';
 import simplifyDate from '../../../../utils/dateUtils';
+import { useValidation } from '../../../../utils/validation';
+import { type ValidationErrorList } from '../../../../utils/validation/typings';
 import { type ForumTopicDescriptionProps } from './typings';
 
 export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
@@ -18,9 +22,25 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
 
   const [description, setDescription] = useState<string>(props.description);
   const [isEditDescription, setIsEditDescription] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
+  const [formHasErrors, setFormHasErrors] = useState(false);
+
+  const validation = useValidation([
+    {
+      title: 'Message',
+      type: 'text',
+      id: 'message',
+      validator: 'NotEmpty',
+      required: true,
+    },
+  ]);
+
 
   const descriptionChangeHandler = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
+    const validationResult = validation({ message: value });
+
+    setValidationErrors(validationResult.errors);
     setDescription(value);
   }, []);
 
@@ -32,8 +52,15 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      const validationResult = validation({ message: description });
+
+      if (validationResult.hasErrors) {
+        setFormHasErrors(true);
+        setValidationErrors(validationResult.errors);
+        return;
+      }
       forumAPI
-        .editTopic(topicId, { content: description })
+        .editTopic(topicId, { content: description, user_id: authorId })
         .then(res => {
           setDescription(res.data.content);
         })
@@ -44,11 +71,14 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
     },
     [description]
   );
+  const forumMessageClassNames = cn('forum-message', {
+    'form_has-errors': formHasErrors,
+  });
 
   const menuItems: DropdownMenuItems[] = [{ onClick: editTopicDescription, title: 'Редактировать' }];
 
   return (
-    <div className="forum-message">
+    <div className={forumMessageClassNames}>
       <div className="forum-message__avatar">
         <img alt={`${displayName} user avatar`} className="forum-message__avatar-image" src={avatarPath} />
       </div>
@@ -58,7 +88,9 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
           <time className="forum-message__date">{simplifyDate(new Date(date).toString())}</time>
         </div>
         {isEditDescription ? (
-          <form onSubmit={submitHandler}>
+          <>
+          {validationErrors.message ? <ValidationErrors errorList={validationErrors.message} /> : null}
+          <form onSubmit={submitHandler} className="textarea__content">
             <textarea
               rows={4}
               name="description"
@@ -69,6 +101,7 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
             />
             <Button type="submit" text="Изменить описание" variant={ButtonVariant.Secondary} />
           </form>
+          </>
         ) : (
           <div className="forum-message__text">{description}</div>
         )}

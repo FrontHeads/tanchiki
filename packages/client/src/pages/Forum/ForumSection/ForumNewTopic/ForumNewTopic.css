@@ -26,6 +26,7 @@
     margin-bottom: 20px;
   }
   &__content {
+    margin-top: 6px;
     min-height: 150px;
     max-height: 500px;
   }

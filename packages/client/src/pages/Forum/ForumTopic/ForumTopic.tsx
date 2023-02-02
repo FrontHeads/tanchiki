@@ -33,7 +33,7 @@ export const ForumTopic: FC = () => {
   const [topicMessages, setTopicMessages] = useState(currentTopic?.messages);
   const [formMessage, setFormMessage] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
-  const [messageHasErrors, setFormHasErrors] = useState(false);
+  const [formHasErrors, setFormHasErrors] = useState(false);
 
   let avatarPath;
 
@@ -107,7 +107,7 @@ export const ForumTopic: FC = () => {
   );
 
   const forumTopicClassNames = cn('forum-topic', {
-    'forum-topic_has-errors': messageHasErrors,
+    'form_has-errors': formHasErrors,
   });
 
   const pasteEmojiHandler = useCallback(
@@ -142,6 +142,7 @@ export const ForumTopic: FC = () => {
               : null}
           </div>
           <form onSubmit={submitHandler} className="forum-topic__new-message">
+            {validationErrors.message ? <ValidationErrors errorList={validationErrors.message} /> : null}
             <div className="textarea__container">
               <textarea
                 onChange={textareaChangeHandler}
@@ -160,7 +161,6 @@ export const ForumTopic: FC = () => {
               <Button type="submit" text="Отправить" variant={ButtonVariant.Primary} />
             </div>
           </form>
-          {validationErrors.message ? <ValidationErrors errorList={validationErrors.message} /> : null}
         </div>
       </section>
     </>
