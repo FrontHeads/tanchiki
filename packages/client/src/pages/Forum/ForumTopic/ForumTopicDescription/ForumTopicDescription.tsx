@@ -33,7 +33,7 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
       event.preventDefault();
 
       forumAPI
-        .editTopic(topicId, { content: description })
+        .editTopic(topicId, { content: description, user_id: authorId })
         .then(res => {
           setDescription(res.data.content);
         })
