@@ -1,4 +1,5 @@
 import express, { type Request, type Response, Router } from 'express';
+import { Sequelize } from 'sequelize-typescript';
 
 import { checkAuthMiddleware } from '../../middlewares';
 import { ForumMessage } from '../../models/ForumMessage';
@@ -12,13 +13,21 @@ export const forumTopicRoute = Router()
   .use(express.urlencoded({ extended: true }))
   .use('/', checkAuthMiddleware)
   .get('/', (req: Request, res: Response, next) => {
-    ForumTopic.findAll({ where: { section_id: req.query.section_id } })
+    ForumTopic.findAll({ where: { section_id: req.query.section_id }})
       .then((topics: ForumTopic[]) => res.status(200).json(topics))
       .catch(next);
   })
   .get('/:id', (req: Request, res: Response, next) => {
     ForumTopic.findByPk(req.params.id, {
-      include: [{ model: ForumSection }, { model: ForumMessage, include: [{ model: User }] }, { model: User }],
+      include: [
+        { model: ForumSection },
+        { model: ForumMessage,
+          include: [{ model: User }],
+        },
+        { model: User }],
+      order: [
+        [ Sequelize.col('messages.created_at'), 'ASC' ]
+      ]
     })
       .then(throwIf(r => !r, res, 400, 'Тема не найдена'))
       .then(topic => res.status(200).json(topic))

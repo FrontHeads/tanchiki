@@ -48,6 +48,9 @@ export const forumSectionRoute = Router()
           },
         },
       ],
+      order: [
+        [ Sequelize.col('topics.created_at'), 'ASC' ]
+      ]
     })
       .then(throwIf(r => !r, res, 400, 'Категория не найдена'))
       .then(section => res.status(200).json(section))
