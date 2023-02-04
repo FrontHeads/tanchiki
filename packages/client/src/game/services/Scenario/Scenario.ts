@@ -4,6 +4,7 @@ import {
   type Tank,
   Explosion,
   Flag,
+  Powerup,
   TankEnemy,
   TankPlayer,
   Terrain,
@@ -25,6 +26,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     maxActiveEnemies: 4,
     enemiesSpawnDelay: 2000,
     enemies: [],
+    powerup: null,
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;
 
@@ -75,18 +77,14 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   initEventListeners() {
     this
       /** После убийства вражеского танка */
-      .on(ScenarioEvent.TankEnemyDestroyed, ({ source, destination }: EnemyDestroyedPayload) => {
+      .on(ScenarioEvent.TankEnemyDestroyed, ({ destination }: EnemyDestroyedPayload) => {
         this.createExplosion(destination);
+        if (destination?.flashing) {
+          this.createPowerup();
+        }
 
         /** Удаляем его из списка активных */
         this.state.enemies = this.state.enemies.filter(enemy => enemy !== destination);
-
-        /** Ищем кто убил TankEnemy для обновления статистики */
-        const playerState = Object.values(this.state.players).find(({ entity }) => entity === source);
-        if (playerState) {
-          // TODO: доделать подсчет статистики убитых противников
-          // playerState.statistics[]++;
-        }
 
         /** Триггерим победу в случае если врагов не осталось */
         if (!this.canCreateTankEnemy() && this.state.enemies.length === 0) {
@@ -119,6 +117,17 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       .on(ScenarioEvent.ProjectileHit, (projectile: Projectile) => {
         this.createExplosion(projectile);
       });
+  }
+
+  /** Создание бонуса */
+  createPowerup() {
+    if (this.state.powerup) {
+      this.state.powerup.despawn();
+    }
+    this.state.powerup = new Powerup();
+    this.game.addEntity(this.state.powerup);
+    const pos = this.mapManager.getRandomEmptyCell();
+    this.state.powerup.spawn(pos);
   }
 
   /** Проверяем можно ли еще размещать на поле вражеские танки */

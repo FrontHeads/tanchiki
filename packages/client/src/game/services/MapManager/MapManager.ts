@@ -5,8 +5,10 @@ import { brickCells, Cell, concreteCells, spawnPlaces } from './data';
 import { enemyForces } from './enemyForces';
 import { levels } from './levels';
 import { type MapTerrainData } from './typings';
+import { rand } from '../../utils/rand';
 
 export class MapManager {
+  private map: MapTerrainData | null = null;
   private mapLevelIndex = 0;
   private mapTerrainData = levels;
   private mapEnemyForces = enemyForces;
@@ -31,13 +33,33 @@ export class MapManager {
 
   getMap(level: number): MapTerrainData {
     this.mapLevelIndex = level - 1;
-    const map = this.mapTerrainData[this.mapLevelIndex];
+    this.map = this.fixMapData(this.mapTerrainData[this.mapLevelIndex]);
 
-    return this.fixMapData(map);
+    return this.map;
+  }
+
+  getRandomEmptyCell() {
+    if (!this.map) {
+      return this.coordsToRect(0, 0);
+    }
+
+    let cell: Cell;
+    let y = 0;
+    let x = 0;
+    const maxX = this.map.length - 1;
+    const maxY = this.map[0].length - 1;
+
+    do {
+      y = rand(0, maxY);
+      x = rand(0, maxX);
+      cell = this.map[y][x];
+    } while (cell !== Cell.Blank && (!spawnPlaces[y] || !spawnPlaces[y].includes(x)));
+
+    return this.coordsToRect(x, y);
   }
 
   getMapTankEnemyVariant(counter: number): EnemyVariant {
-    const mapEnemyForces = enemyForces[this.mapLevelIndex];
+    const mapEnemyForces = this.mapEnemyForces[this.mapLevelIndex];
     const enemyVariantLetter = mapEnemyForces[counter];
 
     switch (enemyVariantLetter) {
