@@ -35,7 +35,6 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
     },
   ]);
 
-
   const descriptionChangeHandler = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
     const validationResult = validation({ message: value });
@@ -85,22 +84,22 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
       <div className="forum-message__content">
         <div className="forum-message__meta">
           <span className="forum-message__username">{displayName}</span>
-          <time className="forum-message__date">{simplifyDate(new Date(date).toString())}</time>
+          <time className="forum-message__date">{simplifyDate(date)}</time>
         </div>
         {isEditDescription ? (
           <>
-          {validationErrors.message ? <ValidationErrors errorList={validationErrors.message} /> : null}
-          <form onSubmit={submitHandler} className="textarea__content">
-            <textarea
-              rows={4}
-              name="description"
-              id="description"
-              className="forum-topic__textarea"
-              onChange={descriptionChangeHandler}
-              defaultValue={description}
-            />
-            <Button type="submit" text="Изменить описание" variant={ButtonVariant.Secondary} />
-          </form>
+            {validationErrors.message ? <ValidationErrors errorList={validationErrors.message} /> : null}
+            <form onSubmit={submitHandler} className="textarea__content">
+              <textarea
+                rows={4}
+                name="description"
+                id="description"
+                className="forum-topic__textarea"
+                onChange={descriptionChangeHandler}
+                defaultValue={description}
+              />
+              <Button type="submit" text="Изменить описание" variant={ButtonVariant.Secondary} />
+            </form>
           </>
         ) : (
           <div className="forum-message__text">{description}</div>

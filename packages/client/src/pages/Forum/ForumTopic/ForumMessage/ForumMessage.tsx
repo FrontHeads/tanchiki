@@ -96,7 +96,7 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
     [messageContent]
   );
 
-  const formattedDate = simplifyDate(new Date(message.created_at).toString());
+  const formattedDate = simplifyDate(message.created_at);
 
   const pasteEmojiHandler = useCallback(
     (emoji: string) => {
