@@ -1,4 +1,4 @@
-import { type Entity, EntityDynamic, Projectile, Tank } from '../../entities';
+import { type Entity, EntityDynamic, Projectile, Tank, TankPlayer } from '../../entities';
 import { type PosState, type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 
 enum ZoneLayers {
@@ -239,13 +239,18 @@ export class Zone {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
         const projectileLayerCell = this.matrix[ZoneLayers.Projectiles][x]?.[y];
+        const powerupLayerCell = this.matrix[ZoneLayers.Powerups][x]?.[y];
 
-        if (!mainLayerCell && !projectileLayerCell) {
+        if (!mainLayerCell && !projectileLayerCell && !powerupLayerCell) {
           continue;
         }
         if (entity instanceof Tank) {
           if (mainLayerCell !== null && mainLayerCell !== entity && !mainLayerCell.crossable) {
             return true;
+          }
+          if (powerupLayerCell !== null && entity instanceof TankPlayer) {
+            const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
+            powerupLayerCell.takeDamage(entity, damagedRect);
           }
         }
         if (entity instanceof Projectile) {

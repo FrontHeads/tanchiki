@@ -66,5 +66,11 @@ export class Powerup extends Entity {
         flashingIntervalName
       );
     });
+
+    this.on(EntityEvent.Damaged, ({ source }) => {
+      this.despawn();
+      this.destroyedBy = source;
+      this.emit(EntityEvent.Destroyed, source);
+    });
   }
 }

@@ -153,6 +153,9 @@ export class AudioManager extends EventEmitter {
       entity.on(EntityEvent.Spawn, () => {
         this.playSound('powerupAppear');
       });
+      entity.on(EntityEvent.Destroyed, () => {
+        this.playSound('powerupPickup');
+      });
     }
 
     /** Звуки танка врага */
