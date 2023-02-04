@@ -92,7 +92,7 @@ export class TankEnemy extends Tank {
         this.secondarySpriteCoordinates = tempSpriteCoordinates;
       },
       flashingIntervalMs,
-      flashingIntervalName,
+      flashingIntervalName
     );
   }
 
