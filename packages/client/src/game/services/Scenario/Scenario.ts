@@ -124,10 +124,20 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     if (this.state.powerup) {
       this.state.powerup.despawn();
     }
-    this.state.powerup = new Powerup();
-    this.game.addEntity(this.state.powerup);
+    const powerup = new Powerup();
+    this.game.addEntity(powerup);
     const pos = this.mapManager.getRandomEmptyCell();
-    this.state.powerup.spawn(pos);
+    powerup.spawn(pos);
+    this.state.powerup = powerup;
+
+    powerup.on(EntityEvent.Destroyed, () => {
+      if (powerup.variant === 'TANK' && powerup.destroyedBy instanceof TankPlayer) {
+        const playerType = powerup.destroyedBy?.variant;
+        const playerState = this.state.players[playerType];
+        ++playerState.lives;
+        this.indicatorManager.renderPlayerLives(playerType as Player, playerState.lives);
+      }
+    });
   }
 
   /** Проверяем можно ли еще размещать на поле вражеские танки */
