@@ -1,4 +1,5 @@
 import { Color } from '../../services/View/colors';
+import { type SpriteCoordinatesNoAnimations, type SpriteCoordinatesWithAnimations } from '../../services/View/typings';
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { rand } from '../../utils';
 import { Direction, EntityEvent } from '../Entity/typings';
@@ -10,6 +11,10 @@ export class TankEnemy extends Tank {
   lastDirection = Direction.Down;
   /** Разновидность вражеского танка */
   variant: EnemyVariant = 'BASIC';
+  /** Переливающийся танк, за уничтожение которого дают бонус. */
+  flashing = false;
+  /** Альтернативный спрайт (используется для переливающихся танков). */
+  secondarySpriteCoordinates: SpriteCoordinatesNoAnimations | SpriteCoordinatesWithAnimations = null;
 
   constructor(props: TankEnemySettings) {
     super({ posX: 0, posY: 0 });
@@ -22,22 +27,26 @@ export class TankEnemy extends Tank {
         this.setMoveSpeed(Speed.High);
         this.setShootSpeed(Speed.Medium);
         this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.b'];
+        this.secondarySpriteCoordinates = spriteCoordinates['tank.enemy.danger.b'];
         break;
       case 'POWER':
         this.setMoveSpeed(Speed.Medium);
         this.setShootSpeed(Speed.High);
         this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.c'];
+        this.secondarySpriteCoordinates = spriteCoordinates['tank.enemy.danger.c'];
         break;
       case 'ARMOR':
         this.setMoveSpeed(Speed.Low);
         this.setShootSpeed(Speed.Medium);
         this.durability = 4;
         this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.secondary.d'];
+        this.secondarySpriteCoordinates = spriteCoordinates['tank.enemy.danger.d'];
         break;
       default:
         this.setMoveSpeed(Speed.Low);
         this.setShootSpeed(Speed.Low);
         this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.a'];
+        this.secondarySpriteCoordinates = spriteCoordinates['tank.enemy.danger.a'];
     }
 
     this.registerTankEnemyEvents();
@@ -48,6 +57,10 @@ export class TankEnemy extends Tank {
       this.move(Direction.Down);
       this.autoMove();
       this.autoShoot();
+
+      if (this.flashing) {
+        this.setFlashing();
+      }
     });
 
     this.on(EntityEvent.Damaged, () => {
@@ -64,7 +77,23 @@ export class TankEnemy extends Tank {
       if (this.durability === 1) {
         this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.d'];
       }
+      this.secondarySpriteCoordinates = spriteCoordinates['tank.enemy.danger.d'];
     });
+  }
+
+  setFlashing() {
+    const flashingIntervalMs = 200;
+    const flashingIntervalName = 'flashing' + rand(0, 999999);
+
+    this.setLoopInterval(
+      () => {
+        const tempSpriteCoordinates = this.mainSpriteCoordinates;
+        this.mainSpriteCoordinates = this.secondarySpriteCoordinates;
+        this.secondarySpriteCoordinates = tempSpriteCoordinates;
+      },
+      flashingIntervalMs,
+      flashingIntervalName,
+    );
   }
 
   autoMove() {

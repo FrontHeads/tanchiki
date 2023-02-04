@@ -33,10 +33,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   indicatorManager: IndicatorManager;
 
   constructor(private game: Game) {
-    /**
-     * TODO: Доработать после реализации бонусных танков
-     * Четвёртый, одиннадцатый и восемнадцатый танки, независимо от типа, появляются переливающиеся цветами
-     **/
     super();
     this.createBoundaries();
 
@@ -208,7 +204,11 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const tankEnemiesLeft = this.state.maxEnemies - this.state.enemiesCounter;
     this.indicatorManager.renderTankEnemiesLeft(tankEnemiesLeft);
 
-    const tankEnemySettings = { variant: this.mapManager.getMapTankEnemyVariant(this.state.enemiesCounter) };
+    const tankEnemySettings = {
+      variant: this.mapManager.getMapTankEnemyVariant(this.state.enemiesCounter),
+      // Четвёртый, одиннадцатый и восемнадцатый танки появляются переливающимися (за их уничтожение дают бонус)
+      flashing: [4, 11, 18].includes(this.state.enemiesCounter),
+    };
 
     const entity = new TankEnemy(tankEnemySettings);
 
