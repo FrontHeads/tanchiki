@@ -90,6 +90,7 @@ export class TankEnemy extends Tank {
         const tempSpriteCoordinates = this.mainSpriteCoordinates;
         this.mainSpriteCoordinates = this.secondarySpriteCoordinates;
         this.secondarySpriteCoordinates = tempSpriteCoordinates;
+        this.refreshSprite();
       },
       flashingIntervalMs,
       flashingIntervalName
