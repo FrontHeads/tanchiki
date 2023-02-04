@@ -133,7 +133,8 @@ export class Statistics {
   /** Определяет, какому игроку записать очки, и обновляет соответствующие показатели. */
   countPoints(entity: TankEnemy | Powerup) {
     const isPowerup = entity instanceof Powerup && entity.destroyedBy instanceof TankPlayer;
-    const isEnemyTank = entity instanceof TankEnemy &&
+    const isEnemyTank =
+      entity instanceof TankEnemy &&
       entity.destroyedBy instanceof Projectile &&
       entity.destroyedBy.parent instanceof TankPlayer;
 
