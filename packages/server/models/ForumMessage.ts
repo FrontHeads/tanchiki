@@ -1,4 +1,4 @@
-import { AllowNull, BelongsTo, Column, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, Column, ForeignKey, Model, NotEmpty, Table } from 'sequelize-typescript';
 
 import { ForumTopic } from './ForumTopic';
 import { User } from './User';
@@ -15,6 +15,7 @@ export class ForumMessage extends Model {
   topic_id!: number;
 
   @AllowNull(false)
+  @NotEmpty({ msg: 'Поле не может быть пустым' })
   @Column
   content!: string;
 

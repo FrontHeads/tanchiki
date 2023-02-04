@@ -1,4 +1,4 @@
-import { AllowNull, BelongsTo, Column, ForeignKey, HasMany, Model, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, Column, ForeignKey, HasMany, Model, NotEmpty, Table } from 'sequelize-typescript';
 
 import { ForumMessage } from './ForumMessage';
 import { ForumSection } from './ForumSection';
@@ -7,6 +7,7 @@ import { User } from './User';
 @Table({ tableName: 'forum_topics', createdAt: 'created_at', updatedAt: 'updated_at' })
 export class ForumTopic extends Model {
   @AllowNull(false)
+  @NotEmpty({ msg: 'Поле не может быть пустым' })
   @Column
   name!: string;
 
@@ -20,6 +21,7 @@ export class ForumTopic extends Model {
   user_id!: number;
 
   @AllowNull(false)
+  @NotEmpty({ msg: 'Поле не может быть пустым' })
   @Column
   content!: string;
 

@@ -23,7 +23,14 @@ export const ForumNewTopic = () => {
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const validation = useValidation([
     {
-      title: 'Edit message',
+      title: 'Heading',
+      type: 'text',
+      id: 'heading',
+      validator: 'NotEmpty',
+      required: true,
+    },
+    {
+      title: 'Message',
       type: 'text',
       id: 'message',
       validator: 'NotEmpty',
@@ -36,26 +43,29 @@ export const ForumNewTopic = () => {
   const { sectionId } = useParams();
 
   const [form, setForm] = useState({
-    heading: 'Новая тема',
-    body: '',
+    heading: '',
+    message: '',
   });
 
   const headingChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.target;
 
+      const validationResult = validation({ heading: value });
+      setValidationErrors(oldState => ({ ...oldState, heading: validationResult.errors.heading }));
+
       setForm(oldState => ({ ...oldState, heading: value }));
     },
     [form]
   );
-  const bodyChangeHandler = useCallback(
+  const messageChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
 
       const validationResult = validation({ message: value });
-      setValidationErrors(validationResult.errors);
+      setValidationErrors(oldState => ({ ...oldState, message: validationResult.errors.message }));
 
-      setForm(oldState => ({ ...oldState, body: value }));
+      setForm(oldState => ({ ...oldState, message: value }));
     },
     [form]
   );
@@ -68,7 +78,7 @@ export const ForumNewTopic = () => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      const validationResult = validation({ message: form.body });
+      const validationResult = validation({ heading: form.heading, message: form.message });
 
       if (validationResult.hasErrors) {
         setTopicHasErrors(true);
@@ -79,7 +89,7 @@ export const ForumNewTopic = () => {
       forumAPI
         .createTopic({
           name: form.heading,
-          content: form.body,
+          content: form.message,
           section_id: Number(sectionId),
           user_id: userId,
         })
@@ -94,12 +104,13 @@ export const ForumNewTopic = () => {
 
   return user ? (
     <>
-      {generateMetaTags({ title: `${form.heading}` })}
+      {generateMetaTags({ title: `${form.heading || 'Новая тема'}` })}
       <section className={forumTopicClassNames}>
-        <h1 className="forum__title">{`${form.heading}`}</h1>
+        <h1 className="forum__title">{`${form.heading || 'Новая тема'}`}</h1>
         <Breadcrumbs variant={BreadcrumbsVariant.Normal} />
         <div className="new-topic__container">
           <form onSubmit={submitHandler} className="new-topic">
+            {validationErrors.heading ? <ValidationErrors errorList={validationErrors.heading} /> : null}
             <input
               name="heading"
               id="heading"
@@ -113,9 +124,9 @@ export const ForumNewTopic = () => {
               id="message"
               className="new-topic__textarea textarea__content"
               rows={4}
-              onChange={bodyChangeHandler}
+              onChange={messageChangeHandler}
               placeholder="Содержание темы"
-              value={form.body}
+              value={form.message}
             />
             <div className="forum-topic__buttons-wrapper">
               <Button type="submit" text="Создать тему" variant={ButtonVariant.Primary} />
