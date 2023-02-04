@@ -1,4 +1,4 @@
-import { type Entity, Explosion, Projectile, Score, TankEnemy, TankPlayer } from '../../entities';
+import { type Entity, Explosion, Powerup, Projectile, Score, TankEnemy, TankPlayer } from '../../entities';
 import { EntityEvent } from '../../entities/Entity/typings';
 import { type EnemyVariant, type PlayerVariant } from '../../entities/Tank/typings';
 import { type Game } from '../';
@@ -104,33 +104,66 @@ export class Statistics {
 
   /** Добавляет сущность в сервис для отслеживания. */
   add(entity: Entity) {
+    const isPowerup = entity instanceof Powerup;
+    const isEnemyTank = entity instanceof Explosion && entity.parent instanceof TankEnemy;
+
+    if (isPowerup) {
+      // После исчезновения бонуса выводим очки
+      entity.on(EntityEvent.Destroyed, () => {
+        this.createScore(entity);
+      });
+    }
     // Привязываем подсчёт очков к взрыву вражеских танков
-    if (entity instanceof Explosion && entity.parent instanceof TankEnemy) {
-      const enemyTank = entity.parent;
-      // После окончания анимации взрыва подсчитываем очки и показываем надпись с их количеством
+    if (isEnemyTank) {
+      // После окончания анимации взрыва выводим очки
       entity.on(EntityEvent.Despawn, () => {
-        const points = this.countEnemy(enemyTank);
-        const score = new Score({ points, parent: enemyTank });
-        this.game.addEntity(score);
-        score.spawn();
+        this.createScore(entity.parent as TankEnemy);
       });
     }
   }
 
-  /** Определяет, какому игроку записать очки, и обновляет соответствующие показатели. */
-  countEnemy(enemy: TankEnemy) {
-    const score = this.getScoreByEnemyVariant(enemy.variant);
+  /** Подсчитываем очки и показываем надпись с их количеством. */
+  createScore(parentEntity: TankEnemy | Powerup) {
+    const points = this.countPoints(parentEntity);
+    const score = new Score({ points, parent: parentEntity });
+    this.game.addEntity(score);
+    score.spawn();
+  }
 
-    if (!(enemy.destroyedBy instanceof Projectile && enemy.destroyedBy.parent instanceof TankPlayer)) {
+  /** Определяет, какому игроку записать очки, и обновляет соответствующие показатели. */
+  countPoints(entity: TankEnemy | Powerup) {
+    const isPowerup = entity instanceof Powerup && entity.destroyedBy instanceof TankPlayer;
+    const isEnemyTank = entity instanceof TankEnemy &&
+      entity.destroyedBy instanceof Projectile &&
+      entity.destroyedBy.parent instanceof TankPlayer;
+
+    let score = 0;
+    let playerTank;
+
+    if (isPowerup) {
+      // За подбор бонусов даётся 500 очков
+      score = 500;
+      playerTank = entity.destroyedBy;
+    } else if (isEnemyTank) {
+      score = this.getScoreByEnemyVariant(entity.variant);
+      // @ts-expect-error: в переменной isEnemyTank всё проверено, но TS всё равно ругается на тип в parent
+      playerTank = entity.destroyedBy?.parent;
+    } else {
       return 0;
     }
 
-    const playerTank = enemy.destroyedBy.parent;
+    if (!playerTank) {
+      return 0;
+    }
+
     const playerIndex = this.getPlayerIndex(playerTank.variant);
 
     this.sessionScore[playerIndex] += score;
     this.mapScore[playerIndex] += score;
-    ++this.mapEnemiesKilledCount[enemy.variant][playerIndex];
+
+    if (isEnemyTank) {
+      ++this.mapEnemiesKilledCount[entity.variant][playerIndex];
+    }
 
     return score;
   }
