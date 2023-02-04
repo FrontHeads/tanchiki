@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { type LoaderFunction, Route } from 'react-router-dom';
 
 import { leaderboardAPI } from '../api/leaderboardAPI';
 import { Leaderboard } from '../pages/Leaderboard';
@@ -12,7 +12,7 @@ import {
 /**
  * Предзагрузка данных leaderboard
  */
-export const leaderboardLoader = () => {
+export const leaderboardLoader: LoaderFunction = () => {
   const leaderboardData = leaderboardAPI.getLeaderboard({
     ratingFieldName: LEADERBOARD_SORT_FIELD,
     cursor: LEADERBOARD_DEFAULT_PAGE,

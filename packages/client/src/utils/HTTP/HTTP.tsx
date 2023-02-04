@@ -1,4 +1,5 @@
-import { buildPath, determineAPIHost, httpClient } from './';
+import { buildPath, determineAPIHost } from './';
+import { HTTPClient } from './httpClient';
 
 enum Method {
   GET = 'GET',
@@ -59,8 +60,10 @@ export class HTTP {
 
     const url = buildPath(baseUrl, path);
 
-    return httpClient({ headers, method, url, withCredentials, ...rest }).then(({ data, status, headers }) => {
-      return { data, status, headers: { ...headers } };
-    });
+    return HTTPClient.getInstance()
+      .httpClient({ headers, method, url, withCredentials, ...rest })
+      .then(({ data, status, headers }) => {
+        return { data, status, headers: { ...headers } };
+      });
   }
 }

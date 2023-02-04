@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { createRoutesFromElements, Route } from 'react-router-dom';
+import { type LoaderFunction, createRoutesFromElements, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
 import { oauthAPI } from '../api/oauthAPI';
@@ -26,7 +26,8 @@ const Game = lazy(() => import('../pages/Game').then(module => ({ default: modul
   чтобы в случае ошибки (куки не валидны, пользователь не авторизован) пользователю не
   отображалось это сообщение, т.к. при проверке авторизации в этом нет необходимости
 */
-export const rootLoader = () => {
+
+export const rootLoader: LoaderFunction = () => {
   let oauthCode: string | null = null;
 
   // Получаем код только при работе в браузере

@@ -2,7 +2,13 @@ import { render, screen, waitFor, waitForElementToBeRemoved } from '@testing-lib
 import userEvent from '@testing-library/user-event';
 import { type ReactElement } from 'react';
 import { Provider } from 'react-redux';
-import { createMemoryRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import {
+  type LoaderFunction,
+  createMemoryRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
 
 import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
@@ -13,7 +19,7 @@ type renderWithRouterArgs = {
   component?: ReactElement;
   route?: string;
   wrapWithRootLayout?: boolean;
-  routeLoader?: () => Record<string, unknown>;
+  routeLoader?: LoaderFunction;
 };
 
 /**
