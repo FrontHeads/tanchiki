@@ -1,4 +1,4 @@
-export type ForumMessage = {
+export type ForumMessageT = {
   id: number;
   content: string;
   topic_id: number;
@@ -8,7 +8,7 @@ export type ForumMessage = {
   user: User;
 };
 export type ForumMessageProps = {
-  message: ForumMessage;
+  message: ForumMessageT;
   deleteMessageHandler: (messageId: number) => void;
 };
 

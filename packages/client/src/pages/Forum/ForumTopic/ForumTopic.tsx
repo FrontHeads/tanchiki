@@ -13,25 +13,26 @@ import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { ValidationErrors } from '../../../components/ValidationErrors';
 import { API_ENDPOINTS } from '../../../config/constants';
-import { useAppDispatch } from '../../../store';
-import { forumThunks } from '../../../store/features/forum/forumThunks';
+// import { useAppDispatch } from '../../../store';
+// import { forumThunks } from '../../../store/features/forum/forumThunks';
 import { buildPath, determineAPIHost } from '../../../utils/HTTP';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
 import { type ValidationErrorList } from '../../../utils/validation/typings';
 import { EmoteMenu } from './EmoteMenu';
 import { ForumMessage } from './ForumMessage';
+import { type ForumMessageT } from './ForumMessage/typings';
 import { ForumTopicDescription } from './ForumTopicDescription/ForumTopicDescription';
 import { type ForumTopicT } from './typings';
 
 export const ForumTopic: FC = () => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const currentTopic = useLoaderData() as ForumTopicT;
   const userId = currentTopic.user_id;
 
   const { topicId } = useParams();
-  const [topicMessages, setTopicMessages] = useState(currentTopic?.messages);
-  const [formMessage, setFormMessage] = useState('');
+  const [topicMessages, setTopicMessages] = useState<ForumMessageT[]>(currentTopic?.messages);
+  const [formMessage, setFormMessage] = useState<string>('');
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [formHasErrors, setFormHasErrors] = useState(false);
 
@@ -89,16 +90,16 @@ export const ForumTopic: FC = () => {
         return;
       }
 
-      dispatch(
-        forumThunks.createMessage({
+      forumAPI
+        .createMessage({
           user_id: userId,
           topic_id: Number(topicId),
           content: formMessage,
         })
-      )
-        .unwrap()
         .then(res => {
-          setTopicMessages(oldState => [...oldState, res]);
+          console.log(res.data);
+
+          setTopicMessages(oldState => [...oldState, res.data]);
         });
 
       setFormMessage('');
