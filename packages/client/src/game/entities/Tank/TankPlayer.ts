@@ -54,16 +54,22 @@ export class TankPlayer extends Tank {
     ++this.upgradeTier;
 
     if (this.upgradeTier === 2) {
-      this.mainSpriteCoordinates = (this.variant === 'PLAYER1') ?
-        spriteCoordinates['tank.player.primary.b'] : spriteCoordinates['tank.player.secondary.b'];
+      this.mainSpriteCoordinates =
+        this.variant === 'PLAYER1'
+          ? spriteCoordinates['tank.player.primary.b']
+          : spriteCoordinates['tank.player.secondary.b'];
       this.setShootSpeed(Speed.High);
     } else if (this.upgradeTier === 3) {
-      this.mainSpriteCoordinates = (this.variant === 'PLAYER1') ?
-        spriteCoordinates['tank.player.primary.c'] : spriteCoordinates['tank.player.secondary.c'];
+      this.mainSpriteCoordinates =
+        this.variant === 'PLAYER1'
+          ? spriteCoordinates['tank.player.primary.c']
+          : spriteCoordinates['tank.player.secondary.c'];
       this.projectilesLimit = 2;
     } else if (this.upgradeTier >= 4) {
-      this.mainSpriteCoordinates = (this.variant === 'PLAYER1') ?
-        spriteCoordinates['tank.player.primary.d'] : spriteCoordinates['tank.player.secondary.d'];
+      this.mainSpriteCoordinates =
+        this.variant === 'PLAYER1'
+          ? spriteCoordinates['tank.player.primary.d']
+          : spriteCoordinates['tank.player.secondary.d'];
       this.shootForce = 2;
     }
   }
