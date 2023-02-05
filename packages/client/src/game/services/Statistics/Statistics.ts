@@ -132,33 +132,32 @@ export class Statistics {
 
   /** Определяет, какому игроку записать очки, и обновляет соответствующие показатели. */
   countPoints(entity: TankEnemy | Powerup) {
-    const isPowerup = entity instanceof Powerup && entity.destroyedBy instanceof TankPlayer;
-    const isEnemyTank =
-      entity instanceof TankEnemy &&
-      entity.destroyedBy instanceof Projectile &&
-      entity.destroyedBy.parent instanceof TankPlayer;
-
-    let score = 0;
-    let playerTank;
-
-    if (isPowerup) {
-      // За подбор бонусов даётся 500 очков
-      score = 500;
-      playerTank = entity.destroyedBy;
-    } else if (isEnemyTank) {
-      score = this.getScoreByEnemyVariant(entity.variant);
-      // @ts-expect-error: в переменной isEnemyTank всё проверено, но TS всё равно ругается на тип в parent
-      playerTank = entity.destroyedBy?.parent;
-    } else {
+    const isPowerup = entity instanceof Powerup;
+    const isEnemyTank = entity instanceof TankEnemy;
+    if (!isPowerup && !isEnemyTank) {
       return 0;
     }
 
+    let playerTank;
+    if (entity.destroyedBy instanceof TankPlayer) {
+      playerTank = entity.destroyedBy;
+    }
+    if (entity.destroyedBy instanceof Projectile && entity.destroyedBy.parent instanceof TankPlayer) {
+      playerTank = entity.destroyedBy.parent;
+    }
     if (!playerTank) {
       return 0;
     }
 
-    const playerIndex = this.getPlayerIndex(playerTank.variant);
+    let score = 0;
+    if (isPowerup) {
+      score = 500; // За подбор бонусов даётся 500 очков
+    }
+    if (isEnemyTank) {
+      score = this.getScoreByEnemyVariant(entity.variant);
+    }
 
+    const playerIndex = this.getPlayerIndex(playerTank.variant);
     this.sessionScore[playerIndex] += score;
     this.mapScore[playerIndex] += score;
 
@@ -167,10 +166,6 @@ export class Statistics {
     }
 
     return score;
-  }
-
-  countBonus() {
-    //TODO: после создание класса бонусов нужно будет реализовать здесь соотв.метод
   }
 
   /** Запускает игровую сессию, данные которой учитываются в лидерборде. */
