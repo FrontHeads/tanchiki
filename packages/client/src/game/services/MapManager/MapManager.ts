@@ -79,33 +79,10 @@ export class MapManager {
 
     map.forEach((row, y) => {
       row.forEach((cell, x) => {
-        let type: Nullable<EntityType> = null;
-        if (concreteCells.includes(cell)) {
-          type = 'concreteWall';
-        } else if (brickCells.includes(cell)) {
-          type = 'brickWall';
-        } else if (cell === Cell.Forest) {
-          type = 'trees';
-        } else if (cell === Cell.Water) {
-          type = 'water';
-        } else if (cell === Cell.Ice) {
-          type = 'ice';
-        } else if (cell === Cell.Base) {
-          type = 'flag';
-        } else {
+        const entity = this.cellToEntitySettings(cell, x, y);
+
+        if (!entity) {
           return;
-        }
-
-        const entity = {
-          type,
-          width: 4,
-          height: 4,
-          posX: this.coordToPos(x),
-          posY: this.coordToPos(y),
-        };
-
-        if (entity.type === 'brickWall' || entity.type === 'concreteWall') {
-          this.updateWallProps(entity, cell);
         }
 
         result.push(entity);
@@ -113,6 +90,39 @@ export class MapManager {
     });
 
     return result;
+  }
+
+  cellToEntitySettings(cell: number, x: number, y: number) {
+    let type: Nullable<EntityType> = null;
+    if (concreteCells.includes(cell)) {
+      type = 'concreteWall';
+    } else if (brickCells.includes(cell)) {
+      type = 'brickWall';
+    } else if (cell === Cell.Forest) {
+      type = 'trees';
+    } else if (cell === Cell.Water) {
+      type = 'water';
+    } else if (cell === Cell.Ice) {
+      type = 'ice';
+    } else if (cell === Cell.Base) {
+      type = 'flag';
+    } else {
+      return;
+    }
+
+    const entity = {
+      type,
+      width: 4,
+      height: 4,
+      posX: this.coordToPos(x),
+      posY: this.coordToPos(y),
+    };
+
+    if (entity.type === 'brickWall' || entity.type === 'concreteWall') {
+      this.updateWallProps(entity, cell);
+    }
+
+    return entity;
   }
 
   updateWallProps(entity: EntitySettings, cell: Cell) {

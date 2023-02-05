@@ -1,4 +1,4 @@
-import { type Entity, EntityDynamic, Projectile, Tank, TankPlayer } from '../../entities';
+import { type Entity, EntityDynamic, type Powerup, Projectile, Tank, TankPlayer } from '../../entities';
 import { type PosState, type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 
 enum ZoneLayers {
@@ -197,7 +197,7 @@ export class Zone {
   }
 
   /** Наносит урон по заданному прямоугольнику */
-  doAreaDamage(rect: Rect, source: Projectile) {
+  doAreaDamage(rect: Rect, source: Projectile | Powerup) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
@@ -205,9 +205,11 @@ export class Zone {
         // Урон наносится по каждой клетке, координаты которой передаются дальше
         // (это нужно для частичного разрушения стен и уничтожения сразу нескольких объектов)
         const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
-        if (mainLayerCell && mainLayerCell.hittable && mainLayerCell !== source.parent) {
-          if (mainLayerCell.type !== 'tank' || this.currentRectsOverlap(source, mainLayerCell)) {
-            mainLayerCell.takeDamage(source, damagedRect);
+        if (mainLayerCell && mainLayerCell.hittable) {
+          if (!(source instanceof Projectile) || mainLayerCell !== source.parent) {
+            if (mainLayerCell.type !== 'tank' || this.currentRectsOverlap(source, mainLayerCell)) {
+              mainLayerCell.takeDamage(source, damagedRect);
+            }
           }
         }
         if (projectileLayerCell) {

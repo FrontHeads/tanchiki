@@ -14,7 +14,7 @@ import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter } from '../../utils';
 import { type Controller, type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
-import { spawnPlaces } from '../MapManager/data';
+import { Cell, spawnPlaces } from '../MapManager/data';
 import { type MapTerrainData } from '../MapManager/typings';
 import { Player, playerInitialSettings } from './data';
 import { type EnemyDestroyedPayload, type ScenarioPlayerState, type ScenarioState, ScenarioEvent } from './typings';
@@ -137,6 +137,17 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         return;
       }
 
+      // Бонус, прибавляющий силу атаки у игрока
+      if (powerup.variant === 'STAR') {
+        player.upgrade();
+      }
+
+      // Бонус, дающий игроку защитное поле на 10 секунд
+      if (powerup.variant === 'HELMET') {
+        const shieldDuration = 10000;
+        player.useShield(shieldDuration);
+      }
+
       // Бонус, дающий дополнительную жизнь
       if (powerup.variant === 'TANK') {
         const playerType = player.variant;
@@ -180,15 +191,45 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         );
       }
 
-      // Бонус, прибавляющий силу атаки у игрока
-      if (powerup.variant === 'STAR') {
-        player.upgrade();
-      }
+      // Бонус, укрепляющий стены вокруг базы на 10 секунд
+      if (powerup.variant === 'SHOVEL') {
+        const wallCells = [
+          ['BottomRight', 11, 5],
+          ['Bottom', 11, 6],
+          ['BottomLeft', 11, 7],
+          ['Right', 12, 5],
+          ['Left', 12, 7],
+        ];
 
-      // Бонус, дающий игроку защитное поле на 10 секунд
-      if (powerup.variant === 'HELMET') {
-        const shieldDuration = 10000;
-        player.useShield(shieldDuration);
+        const constructWalls = (wallMaterial: 'Brick' | 'Concrete') => {
+          for (const [cellVariant, y, x] of wallCells) {
+            const cell = Cell[(wallMaterial + cellVariant) as keyof typeof Cell];
+            const settings = this.mapManager.cellToEntitySettings(cell, x as number, y as number);
+            if (!settings) {
+              continue;
+            }
+            // Расчищаем место, где должны стать новые стены
+            this.game.zone.doAreaDamage(settings, powerup);
+            this.createEntity(settings);
+          }
+        };
+
+        // Ставим бетонные стены
+        constructWalls('Concrete');
+
+        const wallIntervalName = 'REINFORCED_WALLS_INTERVAL';
+        const wallIntervalDuration = 10000;
+
+        this.game.loop.clearLoopInterval(wallIntervalName);
+        this.game.loop.setLoopInterval(
+          () => {
+            // Возвращаем кирпичные стены спустя 10 секунд
+            constructWalls('Brick');
+            this.game.loop.clearLoopInterval(wallIntervalName);
+          },
+          wallIntervalDuration,
+          wallIntervalName
+        );
       }
     });
   }
