@@ -130,12 +130,29 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     powerup.spawn(pos);
     this.state.powerup = powerup;
 
+
+
     powerup.on(EntityEvent.Destroyed, () => {
-      if (powerup.variant === 'TANK' && powerup.destroyedBy instanceof TankPlayer) {
-        const playerType = powerup.destroyedBy?.variant;
+      const player = powerup.destroyedBy;
+      if (!(player instanceof TankPlayer)) {
+        return;
+      }
+
+      if (powerup.variant === 'TANK') {
+        const playerType = player.variant;
         const playerState = this.state.players[playerType];
         ++playerState.lives;
         this.indicatorManager.renderPlayerLives(playerType as Player, playerState.lives);
+      }
+
+      if (powerup.variant === 'GRENADE') {
+        this.state.enemies.forEach((enemy) => {
+          enemy.beDestroyed(player);
+        });
+      }
+
+      if (powerup.variant === 'HELMET') {
+        player.useShield(10000);
       }
     });
   }
