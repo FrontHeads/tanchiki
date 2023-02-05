@@ -109,7 +109,7 @@ export class Tank extends EntityDynamic {
 
   /** Определяет, что танк должен выстрелить. */
   shoot() {
-    if (!this.spawned || !this.canShoot || this.projectilesFlying >= this.projectilesLimit) {
+    if (!this.spawned || this.frozen || !this.canShoot || this.projectilesFlying >= this.projectilesLimit) {
       return;
     }
 

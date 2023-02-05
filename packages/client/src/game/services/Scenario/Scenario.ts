@@ -137,6 +137,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         return;
       }
 
+      // Бонус, дающий дополнительную жизнь
       if (powerup.variant === 'TANK') {
         const playerType = player.variant;
         const playerState = this.state.players[playerType];
@@ -144,18 +145,50 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         this.indicatorManager.renderPlayerLives(playerType as Player, playerState.lives);
       }
 
+      // Бонус, взрывающий все вражеские танки
       if (powerup.variant === 'GRENADE') {
         this.state.enemies.forEach(enemy => {
           enemy.beDestroyed(player);
         });
       }
 
+      // Бонус, замораживающий врагов на 10 секунд
+      if (powerup.variant === 'CLOCK') {
+        const freezeIntervalName = 'ENEMY_FREEZE_INTERVAL';
+        // Делаем заморозку через каждые 100 мс, чтобы работало и для врагов, которые отспавнились позже
+        const freezeSubDuration = 100;
+        let freezeTicksLeft = 100;
+
+        const setAllEnemiesFrozen = (frozen: boolean) => {
+          this.state.enemies.forEach(enemy => {
+            enemy.frozen = frozen;
+          });
+        };
+
+        this.game.loop.clearLoopInterval(freezeIntervalName);
+        setAllEnemiesFrozen(true);
+        this.game.loop.setLoopInterval(
+          () => {
+            setAllEnemiesFrozen(true);
+            if (--freezeTicksLeft <= 0) {
+              this.game.loop.clearLoopInterval(freezeIntervalName);
+              setAllEnemiesFrozen(false);
+            }
+          },
+          freezeSubDuration,
+          freezeIntervalName
+        );
+      }
+
+      // Бонус, прибавляющий силу атаки у игрока
       if (powerup.variant === 'STAR') {
         player.upgrade();
       }
 
+      // Бонус, дающий игроку защитное поле на 10 секунд
       if (powerup.variant === 'HELMET') {
-        player.useShield(10000);
+        const shieldDuration = 10000;
+        player.useShield(shieldDuration);
       }
     });
   }
