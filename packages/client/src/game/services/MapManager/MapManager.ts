@@ -53,7 +53,7 @@ export class MapManager {
       y = rand(0, maxY);
       x = rand(0, maxX);
       cell = this.map[y][x];
-    } while (cell !== Cell.Blank && (!spawnPlaces[y] || !spawnPlaces[y].includes(x)));
+    } while (cell !== Cell.Blank || (spawnPlaces[y] && spawnPlaces[y].includes(x)));
 
     return this.coordsToRect(x, y);
   }
