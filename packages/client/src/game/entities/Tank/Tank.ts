@@ -18,6 +18,12 @@ export class Tank extends EntityDynamic {
   spawnTimeout = 1000;
   /** Может ли танк стрелять (свойство необходимо для ограничения количества выпускаемых снарядов). */
   canShoot = false;
+  /** Сколько за раз снарядов может выпустить танк. */
+  projectilesLimit = 1;
+  /** Сколько снарядов находится в воздухе. */
+  projectilesFlying = 0;
+  /** Сила взрыва снаряда, выпущенного танком. */
+  shootForce = 1;
   /** Должен ли танк выстрелить в данный момент. */
   shooting = false;
   /** Временно блокирует возможность перемещения (например на время анимации спауна). */
@@ -103,12 +109,11 @@ export class Tank extends EntityDynamic {
 
   /** Определяет, что танк должен выстрелить. */
   shoot() {
-    if (!this.spawned || !this.canShoot) {
+    if (!this.spawned || !this.canShoot || this.projectilesFlying >= this.projectilesLimit) {
       return;
     }
 
     this.shooting = true;
-    this.canShoot = false;
   }
 
   /** Реализует скольжение и стрельбу танка через игровой цикл. */
@@ -131,10 +136,13 @@ export class Tank extends EntityDynamic {
       role: this.role,
       direction: this.direction,
       moveSpeed: this.shootSpeed,
+      explosionForce: this.shootForce,
     });
 
+    ++this.projectilesFlying;
+
     projectile.on(EntityEvent.Exploding, () => {
-      this.canShoot = true;
+      --this.projectilesFlying;
     });
 
     this.emit(EntityEvent.Shoot, projectile);

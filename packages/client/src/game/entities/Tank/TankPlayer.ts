@@ -6,8 +6,11 @@ import { Tank } from './Tank';
 import { type PlayerVariant } from './typings';
 
 export class TankPlayer extends Tank {
-  spawnShieldTimeout = 3000;
   variant: PlayerVariant = 'PLAYER1';
+  /** Сколько танк будет неуязвимым после появления. */
+  spawnShieldTimeout = 3000;
+  /** Уровень улучшений танка (увеличивается за счёт бонусов). */
+  upgradeTier = 1;
 
   constructor(props: EntityDynamicSettings) {
     super(props);
@@ -16,8 +19,7 @@ export class TankPlayer extends Tank {
     this.setShootSpeed(Speed.Medium);
     Object.assign(this, props);
 
-    //TODO выбор спрайта танка также должен зависеть от типа танка (большой/маленький)
-    if (!props.variant || props.variant === 'PLAYER1') {
+    if (this.variant === 'PLAYER1') {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
     } else {
       this.mainSpriteCoordinates = spriteCoordinates['tank.player.secondary.a'];
@@ -42,9 +44,27 @@ export class TankPlayer extends Tank {
     });
 
     this.invincible = true;
-    // Возвращаем танку уязимость после исчезновения силового поля после спауна.
+    // Возвращаем танку уязимость после исчезновения силового поля.
     this.setLoopDelay(() => {
       this.invincible = false;
     }, timeout);
+  }
+
+  upgrade() {
+    ++this.upgradeTier;
+
+    if (this.upgradeTier === 2) {
+      this.mainSpriteCoordinates = (this.variant === 'PLAYER1') ?
+        spriteCoordinates['tank.player.primary.b'] : spriteCoordinates['tank.player.secondary.b'];
+      this.setShootSpeed(Speed.High);
+    } else if (this.upgradeTier === 3) {
+      this.mainSpriteCoordinates = (this.variant === 'PLAYER1') ?
+        spriteCoordinates['tank.player.primary.c'] : spriteCoordinates['tank.player.secondary.c'];
+      this.projectilesLimit = 2;
+    } else if (this.upgradeTier >= 4) {
+      this.mainSpriteCoordinates = (this.variant === 'PLAYER1') ?
+        spriteCoordinates['tank.player.primary.d'] : spriteCoordinates['tank.player.secondary.d'];
+      this.shootForce = 2;
+    }
   }
 }

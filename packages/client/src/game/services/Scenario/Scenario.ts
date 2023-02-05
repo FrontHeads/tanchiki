@@ -48,6 +48,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.createPlayerTank(Player.Player1);
     } else if (this.game.mainMenuState === MainMenuState.Multiplayer) {
       this.state.maxActiveEnemies = 6;
+      this.state.enemiesSpawnDelay = 1000;
       this.createPlayerTank(Player.Player1);
       this.createPlayerTank(Player.Player2);
     }
@@ -130,8 +131,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     powerup.spawn(pos);
     this.state.powerup = powerup;
 
-
-
     powerup.on(EntityEvent.Destroyed, () => {
       const player = powerup.destroyedBy;
       if (!(player instanceof TankPlayer)) {
@@ -146,9 +145,13 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       }
 
       if (powerup.variant === 'GRENADE') {
-        this.state.enemies.forEach((enemy) => {
+        this.state.enemies.forEach(enemy => {
           enemy.beDestroyed(player);
         });
+      }
+
+      if (powerup.variant === 'STAR') {
+        player.upgrade();
       }
 
       if (powerup.variant === 'HELMET') {
