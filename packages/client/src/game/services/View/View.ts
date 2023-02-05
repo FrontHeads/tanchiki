@@ -393,18 +393,17 @@ export class View extends EventEmitter {
      Важно чтобы pixelRatio равнялся числу округленному до целого или 0.5. Иначе будут баги при отрисовке. */
     const resizeStep = 0.5;
 
-    /** Выясняем какая сторона игрового поля меньше */
-    const zoneSmallerSideSize = Math.min(this.width, this.height);
-    let pixelRatio = this.windowSmallerSideSize / zoneSmallerSideSize;
+    let pixelRatioWidth = window.innerWidth / this.width;
 
-    const isCanvasBiggerThanWindow = zoneSmallerSideSize * pixelRatio >= this.windowSmallerSideSize;
-    if (isCanvasBiggerThanWindow) {
-      // Это немного уменьшит размер игрового поля, чтобы были отступы от края экрана.
-      pixelRatio -= resizeStep;
+    let isCanvasHeightBiggerThanWindow = pixelRatioWidth * this.height > window.innerHeight;
+
+    while (isCanvasHeightBiggerThanWindow) {
+      pixelRatioWidth -= resizeStep;
+      isCanvasHeightBiggerThanWindow = pixelRatioWidth * this.height > window.innerHeight;
     }
 
     // pixelRatio д.б. округлен до чисел с шагом 0.5 (например 1.5, 2, 2.5, и т.д.). Иначе будут баги при отрисовке.
-    return Math.round(pixelRatio / resizeStep) * resizeStep;
+    return Math.floor(pixelRatioWidth / resizeStep) * resizeStep;
   }
 
   /** Обработчик для события изменения размера окна. Автоматически ресайзит размер канваса. */

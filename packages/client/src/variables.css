@@ -24,6 +24,7 @@
   --theme-toggle-background-color: var(--background-color);
   --theme-toggle-icon-color: var(--font-color-primary);
   --theme-toggle-selected-icon-color: #313647;
+  --support-btn-shadow-color: transparent;
 }
 
 /* Cветлая тема */
@@ -52,4 +53,5 @@
   --theme-toggle-background-color: var(--background-color);
   --theme-toggle-icon-color: var(--font-color-primary);
   --theme-toggle-selected-icon-color: var(--section-background-color);
+  --support-btn-shadow-color: white;
 }

@@ -1,0 +1,81 @@
+.joystick {
+  --joystick-background-color: #000;
+  --joystick-font-color: #737477;
+
+  background-color: var(--joystick-background-color);
+  border-radius: 100px;
+  box-shadow: 0 0 30px var(--section-light-shadow);
+  color: var(--joystick-font-color);
+  padding: 3px;
+
+  &__button {
+    background-color: var(--joystick-background-color);
+    color: var(--border-color);
+    font-size: 10px;
+  }
+
+  &__row {
+    display: flex;
+  }
+
+  &__vertical-buttons {
+    height: 60px;
+  }
+
+  &__horizontal-buttons {
+    width: 60px;
+  }
+
+  &__up {
+    align-items: start;
+    display: flex;
+    justify-content: center;
+
+    &-button {
+      width: 40px;
+      height: 100%;
+      border-radius: 10px;
+    }
+  }
+
+  &__left {
+    display: flex;
+    justify-content: start;
+
+    &-button {
+      width: 100%;
+      height: 40px;
+      border-radius: 10px;
+    }
+  }
+
+  &__center {
+    width: 40px;
+    height: 40px;
+    box-shadow: inset 1px 1px 6px 0 rgb(255 255 255 / 50%), inset -9px 0 20px -7px rgb(0 0 0 / 50%);
+    border-radius: 100px;
+  }
+
+  &__right {
+    display: flex;
+    justify-content: end;
+
+    &-button {
+      width: 100%;
+      height: 40px;
+      border-radius: 10px;
+    }
+  }
+
+  &__bottom {
+    align-items: end;
+    display: flex;
+    justify-content: center;
+
+    &-button {
+      width: 40px;
+      height: 100%;
+      border-radius: 10px;
+    }
+  }
+}
