@@ -68,9 +68,7 @@ export class Powerup extends Entity {
     });
 
     this.on(EntityEvent.Damaged, ({ source }) => {
-      this.despawn();
-      this.destroyedBy = source;
-      this.emit(EntityEvent.Destroyed, source);
+      this.beDestroyed(source);
     });
   }
 }

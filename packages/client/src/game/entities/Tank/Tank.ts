@@ -66,9 +66,7 @@ export class Tank extends EntityDynamic {
 
     this.on(EntityEvent.Damaged, ({ source }) => {
       if (!this.invincible && this.role !== source.role && --this.durability <= 0) {
-        this.explode();
-        this.destroyedBy = source;
-        this.emit(EntityEvent.Destroyed, source);
+        this.beDestroyed(source);
       }
     });
   }
