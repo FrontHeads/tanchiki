@@ -132,25 +132,25 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.state.powerup = powerup;
 
     powerup.on(EntityEvent.Destroyed, () => {
-      const player = powerup.destroyedBy;
-      if (!(player instanceof TankPlayer)) {
+      const playerTank = powerup.destroyedBy;
+      if (!(playerTank instanceof TankPlayer)) {
         return;
       }
 
       // Бонус, прибавляющий силу атаки у игрока
       if (powerup.variant === 'STAR') {
-        player.upgrade();
+        playerTank.upgrade();
       }
 
       // Бонус, дающий игроку защитное поле на 10 секунд
       if (powerup.variant === 'HELMET') {
         const shieldDuration = 10000;
-        player.useShield(shieldDuration);
+        playerTank.useShield(shieldDuration);
       }
 
       // Бонус, дающий дополнительную жизнь
       if (powerup.variant === 'TANK') {
-        const playerType = player.variant;
+        const playerType = playerTank.variant;
         const playerState = this.state.players[playerType];
         ++playerState.lives;
         this.indicatorManager.renderPlayerLives(playerType as Player, playerState.lives);
@@ -158,8 +158,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
       // Бонус, взрывающий все вражеские танки
       if (powerup.variant === 'GRENADE') {
-        this.state.enemies.forEach(enemy => {
-          enemy.beDestroyed(player);
+        this.state.enemies.forEach(enemyTank => {
+          enemyTank.beDestroyed(playerTank);
         });
       }
 
@@ -171,8 +171,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         let freezeTicksLeft = 100;
 
         const setAllEnemiesFrozen = (frozen: boolean) => {
-          this.state.enemies.forEach(enemy => {
-            enemy.frozen = frozen;
+          this.state.enemies.forEach(enemyTank => {
+            enemyTank.frozen = frozen;
           });
         };
 
@@ -209,7 +209,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
               continue;
             }
             // Расчищаем место, где должны стать новые стены
-            this.game.zone.doAreaDamage(settings, powerup);
+            this.game.zone.doAreaDamage(settings, playerTank);
             this.createEntity(settings);
           }
         };
