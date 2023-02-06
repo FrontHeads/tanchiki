@@ -1,4 +1,5 @@
 import { type UserDTO } from '../api/typings';
+import { type ForumSectionT } from '../pages/Forum/ForumSection/typings';
 
 export const fakeUserProfile: UserDTO = {
   id: 1,
@@ -9,4 +10,16 @@ export const fakeUserProfile: UserDTO = {
   login: 'user1',
   avatar: '',
   phone: '555555',
+};
+
+export const fakeSectionData: ForumSectionT = {
+  id: 1,
+  name: 'Новости',
+  topics: [
+    {
+      id: 1,
+      name: 'Топик 1',
+      messages: 10,
+    },
+  ],
 };
