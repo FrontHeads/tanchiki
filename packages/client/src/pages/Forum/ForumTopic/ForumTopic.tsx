@@ -13,6 +13,7 @@ import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { ValidationErrors } from '../../../components/ValidationErrors';
 import { API_ENDPOINTS } from '../../../config/constants';
+import { authSelectors, useAppSelector } from '../../../store';
 import { buildPath, determineAPIHost } from '../../../utils/HTTP';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
@@ -25,7 +26,8 @@ import { type ForumTopicT } from './typings';
 
 export const ForumTopic: FC = () => {
   const currentTopic = useLoaderData() as ForumTopicT;
-  const userId = currentTopic.user_id;
+  const userId = useAppSelector(authSelectors.userProfile)?.id;
+  const authorId = currentTopic.user_id;
 
   const { topicId } = useParams();
   const [topicMessages, setTopicMessages] = useState<ForumMessageT[]>(currentTopic?.messages);
@@ -94,8 +96,6 @@ export const ForumTopic: FC = () => {
           content: formMessage,
         })
         .then(res => {
-          console.log(res.data);
-
           setTopicMessages(oldState => [...oldState, res.data]);
         });
 
@@ -126,11 +126,11 @@ export const ForumTopic: FC = () => {
           <div className="forum-topic__messages">
             <ForumTopicDescription
               avatarPath={avatarPath}
-              authorId={userId}
+              authorId={authorId}
               topicId={currentTopic.id}
               description={currentTopic.content}
               date={currentTopic.created_at}
-              displayName={currentTopic.user.display_name}
+              displayName={currentTopic.user.display_name || currentTopic.user.login}
             />
 
             {topicMessages

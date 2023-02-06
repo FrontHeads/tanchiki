@@ -18,13 +18,13 @@ export const forumMessageRoute = Router()
   })
   .post('/', (req: Request, res: Response, next) => {
     if (res.locals.user && res.locals.user.id === req.body.user_id) {
-    ForumMessage.create(req.body, { include: [{ model: User }] })
-      .then(message => {
-        ForumMessage.findByPk(message.id, { include: [{ model: ForumTopic }, { model: User }] })
-          .then(message => res.status(200).json(message))
-          .catch(next);
-      })
-      .catch(next);
+      ForumMessage.create(req.body, { include: [{ model: User }] })
+        .then(message => {
+          ForumMessage.findByPk(message.id, { include: [{ model: ForumTopic }, { model: User }] })
+            .then(message => res.status(200).json(message))
+            .catch(next);
+        })
+        .catch(next);
     } else {
       res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
     }

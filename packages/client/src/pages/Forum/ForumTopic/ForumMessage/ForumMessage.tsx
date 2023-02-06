@@ -32,7 +32,8 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   // Проверяем, является ли пользователь отправителем сообщения.
   const isAuthor = message.user_id === userId;
 
-  const displayName = message.user.display_name ?? message.user.login;
+  const displayName = message.user.display_name || message.user.login;
+  console.log(displayName, message.user);
 
   const validation = useValidation([
     {
