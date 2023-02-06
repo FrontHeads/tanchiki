@@ -18,7 +18,7 @@ import { type ValidationErrorList } from '../../../../utils/validation/typings';
 
 export const ForumNewTopic = () => {
   const navigate = useNavigate();
-  const user = useAppSelector(authSelectors.userProfile);
+  const userId = useAppSelector(authSelectors.userProfile)?.id;
   const [topicHasErrors, setTopicHasErrors] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const validation = useValidation([
@@ -37,8 +37,6 @@ export const ForumNewTopic = () => {
       required: true,
     },
   ]);
-
-  const userId = user?.id;
 
   const { sectionId } = useParams();
 
@@ -102,7 +100,7 @@ export const ForumNewTopic = () => {
     [form]
   );
 
-  return user ? (
+  return userId ? (
     <>
       {generateMetaTags({ title: `${form.heading || 'Новая тема'}` })}
       <section className={forumTopicClassNames}>
