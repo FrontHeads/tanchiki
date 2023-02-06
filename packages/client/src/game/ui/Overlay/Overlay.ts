@@ -81,4 +81,10 @@ export class Overlay extends EventEmitter {
     }, animateIntervalMs);
     this.activeAnimations.add(animateProcess);
   }
+
+  /** Стирает и заново отрисовывает текстовую сущность на канвасе. Т.е. обновляет вид сущности в игре. */
+  refreshTextEntity(entity: UIElement) {
+    this.view.eraseFromLayer(entity, 'overlay');
+    this.view.drawTextOnLayer(entity, 'overlay');
+  }
 }

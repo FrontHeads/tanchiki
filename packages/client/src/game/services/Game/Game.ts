@@ -4,9 +4,10 @@ import { Overlay } from '../../ui';
 import { ScreenType } from '../../ui/screens/data';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
+import { isTouchscreen } from '../../utils/isTouchscreen';
 import { AudioManager, Controller, Loop, resources, Scenario, Statistics, View, Zone } from '../';
 import { ControllerEvent } from '../Controller/data';
-import { KeyBindingsArrows, KeyBindingsWasd } from '../Controller/KeyBindings';
+import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
 import { levels } from '../MapManager/levels';
 import { ScenarioEvent } from '../Scenario/typings';
 import { type StatisticsData } from '../Statistics/typings';
@@ -44,9 +45,12 @@ export class Game extends EventEmitter {
     this.view = new View(this.settings);
     this.overlay = new Overlay(this);
     this.audioManager = new AudioManager();
-    this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
-    this.controllerWasd = new Controller(KeyBindingsWasd);
-    this.controllerArrows = new Controller(KeyBindingsArrows);
+    this.controllerAll = new Controller({
+      keyBindings: { ...KeyBindingsWasd, ...KeyBindingsArrows },
+      pointerBindings: PointerBindings,
+    });
+    this.controllerWasd = new Controller({ keyBindings: KeyBindingsWasd, pointerBindings: PointerBindings });
+    this.controllerArrows = new Controller({ keyBindings: KeyBindingsArrows });
     this.statistics = new Statistics(this);
   }
 
@@ -170,7 +174,7 @@ export class Game extends EventEmitter {
         }
         if (direction === Direction.Up) {
           this.mainMenuState = MainMenuState.Singleplayer;
-        } else if (direction === Direction.Down) {
+        } else if (direction === Direction.Down && !isTouchscreen()) {
           this.mainMenuState = MainMenuState.Multiplayer;
         }
 

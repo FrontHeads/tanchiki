@@ -47,7 +47,7 @@ export const Game = () => {
       <div className="desktop-controller">
         <Buttons />
       </div>
-      <div className="mobile-controller">
+      <div className="pointer-controller">
         <Joystick />
         <Buttons />
       </div>

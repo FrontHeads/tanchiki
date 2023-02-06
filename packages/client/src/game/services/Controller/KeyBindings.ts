@@ -38,3 +38,14 @@ export const KeyBindingsArrows: BindingConfig = {
   Enter: [ControllerEvent.Shoot],
   ...KeyBindingsGeneral,
 };
+
+export const PointerBindings: BindingConfig = {
+  'controller__fire-btn': [ControllerEvent.Shoot],
+  'joystick__up-button': [ControllerEvent.Move, Direction.Up],
+  'joystick__right-button': [ControllerEvent.Move, Direction.Right],
+  'joystick__left-button': [ControllerEvent.Move, Direction.Left],
+  'joystick__bottom-button': [ControllerEvent.Move, Direction.Down],
+  'controller__service-btn_pause': [ControllerEvent.Pause],
+  'controller__service-btn_mute': [ControllerEvent.Mute],
+  'controller__service-btn_fullscreen': [ControllerEvent.Fullscreen],
+};
