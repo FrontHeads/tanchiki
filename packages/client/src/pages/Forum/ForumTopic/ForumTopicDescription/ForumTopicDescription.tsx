@@ -15,10 +15,12 @@ import { type ForumTopicDescriptionProps } from './typings';
 
 export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
   const { displayName, date, topicId, authorId, avatarPath } = props;
-  const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
+  const user = useAppSelector(authSelectors.userProfile);
+
+  const userId = user?.id;
 
   // Проверяем, является ли пользователь создателем темы.
-  const isAuthor = authorId === currentUserId;
+  const isAuthor = authorId === userId;
 
   const [description, setDescription] = useState<string>(props.description);
   const [isEditDescription, setIsEditDescription] = useState<boolean>(false);

@@ -26,11 +26,13 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [isEditMessage, setIsEditMessage] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [messageHasErrors, setMessageHasErrors] = useState(false);
-  const { id: currentUserId } = useAppSelector(authSelectors.userProfile);
+  const user = useAppSelector(authSelectors.userProfile);
   let avatarPath;
 
+  const userId = user?.id;
+
   // Проверяем, является ли пользователь отправителем сообщения.
-  const isAuthor = message.user_id === currentUserId;
+  const isAuthor = message.user_id === userId;
 
   const displayName = message.user.display_name ?? message.user.login;
 

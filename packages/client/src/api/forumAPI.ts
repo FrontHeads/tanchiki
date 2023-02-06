@@ -1,15 +1,14 @@
+import { API_ENDPOINTS } from '../config/constants';
 import { type ForumSectionT } from '../pages/Forum/ForumSection/typings';
 import { type ForumSectionItem } from '../pages/Forum/ForumSectionList/typings';
 import { type ForumMessageT } from '../pages/Forum/ForumTopic/ForumMessage/typings';
 import { type ForumTopicT } from '../pages/Forum/ForumTopic/typings';
-import { API_ENDPOINTS } from './../config/constants';
-import { HTTP } from './../utils/HTTP/HTTP';
+import { HTTP } from '../utils/HTTP';
 
 export type createTopicRequestData = {
   name: string;
   section_id: number;
-  user_id: number;
-  username: string;
+  user_id?: number | null;
   content: string;
 };
 

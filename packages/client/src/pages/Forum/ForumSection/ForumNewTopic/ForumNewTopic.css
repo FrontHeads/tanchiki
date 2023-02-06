@@ -18,6 +18,7 @@
     color: var(--font-color-primary);
   }
 }
+
 .textarea {
   &__heading {
     border: 1px solid #737477;
@@ -26,6 +27,7 @@
     margin-bottom: 12px;
     margin-top: 6px;
   }
+
   &__content {
     margin-top: 6px;
     min-height: 150px;
