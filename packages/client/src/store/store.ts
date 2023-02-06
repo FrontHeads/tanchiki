@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { appReducer, authReducer, forumReducer, leaderboardReducer, profileReducer } from '.';
+import { appReducer, authReducer, leaderboardReducer, profileReducer } from '.';
 import { uiReducer } from './features/ui/uiSlice';
 
 const preloadedState = typeof window !== 'undefined' ? window.__PRELOADED_STATE__ : undefined;
@@ -12,7 +12,6 @@ export const store = configureStore({
     auth: authReducer,
     ui: uiReducer,
     leaderboard: leaderboardReducer,
-    forum: forumReducer,
   },
   /** Загружаем начальное состояние, которое было передано из SSR сборки с сервера */
   preloadedState,

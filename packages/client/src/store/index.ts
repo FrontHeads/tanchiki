@@ -1,7 +1,6 @@
 export * from './features/app/appSlice';
 export * from './features/auth/authSlice';
 export * from './features/auth/authThunks';
-export * from './features/forum/forumSlice';
 export * from './features/leaderboard/leaderboardSlice';
 export * from './features/leaderboard/leaderboardThunks';
 export * from './features/oauth/oauthThunks';

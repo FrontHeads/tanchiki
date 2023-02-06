@@ -13,8 +13,6 @@ import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { ValidationErrors } from '../../../components/ValidationErrors';
 import { API_ENDPOINTS } from '../../../config/constants';
-// import { useAppDispatch } from '../../../store';
-// import { forumThunks } from '../../../store/features/forum/forumThunks';
 import { buildPath, determineAPIHost } from '../../../utils/HTTP';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
@@ -26,7 +24,6 @@ import { ForumTopicDescription } from './ForumTopicDescription/ForumTopicDescrip
 import { type ForumTopicT } from './typings';
 
 export const ForumTopic: FC = () => {
-  // const dispatch = useAppDispatch();
   const currentTopic = useLoaderData() as ForumTopicT;
   const userId = currentTopic.user_id;
 
