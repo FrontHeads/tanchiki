@@ -72,5 +72,6 @@ export class TankPlayer extends Tank {
           : spriteCoordinates['tank.player.secondary.d'];
       this.shootForce = 2;
     }
+    this.refreshSprite();
   }
 }

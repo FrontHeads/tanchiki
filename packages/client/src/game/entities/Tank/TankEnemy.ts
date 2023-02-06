@@ -78,6 +78,7 @@ export class TankEnemy extends Tank {
         this.mainSpriteCoordinates = spriteCoordinates['tank.enemy.default.d'];
       }
       this.secondarySpriteCoordinates = spriteCoordinates['tank.enemy.danger.d'];
+      this.refreshSprite();
     });
   }
 
