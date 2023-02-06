@@ -1,5 +1,6 @@
 import { type UserDTO } from '../api/typings';
 import { type ForumSectionT } from '../pages/Forum/ForumSection/typings';
+import { type ForumSectionItem } from '../pages/Forum/ForumSectionList/typings';
 import { type User } from '../pages/Forum/ForumTopic/ForumMessage/typings';
 import { type ForumTopicT } from './../pages/Forum/ForumTopic/typings';
 
@@ -34,6 +35,21 @@ const fakeUser: User = {
   created_at: '',
   updated_at: '',
 };
+
+export const fakeForumSectionListData: ForumSectionItem[] = [
+  {
+    id: 1,
+    name: 'Новости',
+    topicCount: 0,
+    messages: 0,
+  },
+  {
+    id: 2,
+    name: 'Игра',
+    topicCount: 0,
+    messages: 0,
+  },
+];
 
 export const fakeForumTopicData: ForumTopicT = {
   id: 1,
