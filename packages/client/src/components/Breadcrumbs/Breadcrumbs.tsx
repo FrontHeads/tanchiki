@@ -7,29 +7,25 @@ import { type Params, useMatches } from 'react-router-dom';
 import { BreadcrumbsVariant } from './data';
 import { type BreadcrumbsProps } from './typings';
 
+const hasCrumbHandler = (match: Record<string, unknown>): match is {
+  id: string;
+  pathname: string;
+  params: Params<string>;
+  data: unknown;
+  handle: Record<string, (data: unknown) => JSX.Element>;
+} => {
+  return (
+    match.handle !== null &&
+    typeof match.handle === 'object' &&
+    'crumb' in match.handle &&
+    typeof match.handle.crumb === 'function'
+  );
+};
+
 export const Breadcrumbs: FC<BreadcrumbsProps> = ({ variant }) => {
   const matches = useMatches();
 
-  const crumbs = matches
-    .filter(
-      (
-        match
-      ): match is {
-        id: string;
-        pathname: string;
-        params: Params<string>;
-        data: unknown;
-        handle: Record<string, (data: unknown) => JSX.Element>;
-      } => {
-        return (
-          match.handle !== null &&
-          typeof match.handle === 'object' &&
-          'crumb' in match.handle &&
-          typeof match.handle.crumb === 'function'
-        );
-      }
-    )
-    .map(match => match.handle?.crumb(match.data));
+  const crumbs = matches.filter(hasCrumbHandler).map(match => match.handle.crumb(match.data));
 
   const breadcrumbsClassNames = cn('breadcrumbs', {
     breadcrumbs_margins_normal: variant === BreadcrumbsVariant.Normal,
