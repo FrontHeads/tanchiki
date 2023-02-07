@@ -10,16 +10,17 @@ export const forumSectionRoute = Router()
   .use(express.urlencoded({ extended: true }))
   .get('/', (_: Request, res: Response, next) => {
     ForumSection.findAll({
+      logging: console.log,
       attributes: {
         include: [
           [
-            Sequelize.literal(`(SELECT COUNT(*)
+            Sequelize.literal(`(SELECT COUNT(*)::integer
             from forum_topics as t
             where t.section_id="ForumSection"."id")`),
             'topicCount',
           ],
           [
-            Sequelize.literal(` (SELECT COUNT(M.*)
+            Sequelize.literal(` (SELECT COUNT(M.*)::integer
               FROM FORUM_TOPICS AS T
               LEFT JOIN FORUM_MESSAGES AS M ON M.TOPIC_ID=T.ID
               WHERE T.SECTION_ID = "ForumSection"."id")`),
@@ -28,7 +29,10 @@ export const forumSectionRoute = Router()
         ],
       },
     })
-      .then((sections: ForumSection[]) => res.status(200).json(sections))
+      .then((sections: ForumSection[]) => {
+        console.log('s', sections);
+        res.status(200).json(sections);
+      })
       .catch(next);
   })
   .get('/:id', (req: Request, res: Response, next) => {
@@ -39,7 +43,7 @@ export const forumSectionRoute = Router()
           attributes: {
             include: [
               [
-                Sequelize.literal(`(SELECT COUNT(*)
+                Sequelize.literal(`(SELECT COUNT(*)::integer
                   FROM FORUM_MESSAGES AS M
                   WHERE M.TOPIC_ID = "topics"."id")`),
                 'messages',
@@ -48,9 +52,7 @@ export const forumSectionRoute = Router()
           },
         },
       ],
-      order: [
-        [ Sequelize.col('topics.created_at'), 'ASC' ]
-      ]
+      order: [[Sequelize.col('topics.created_at'), 'ASC']],
     })
       .then(throwIf(r => !r, res, 400, 'Категория не найдена'))
       .then(section => res.status(200).json(section))
