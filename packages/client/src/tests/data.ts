@@ -42,12 +42,16 @@ export const fakeForumSectionListData: ForumSectionItem[] = [
     name: 'Новости',
     topicCount: 0,
     messages: 0,
+    created_at: '',
+    updated_at: '',
   },
   {
     id: 2,
     name: 'Игра',
     topicCount: 0,
     messages: 0,
+    created_at: '',
+    updated_at: '',
   },
 ];
 

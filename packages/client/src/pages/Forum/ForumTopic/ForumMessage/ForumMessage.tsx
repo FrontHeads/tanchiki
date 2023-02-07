@@ -3,18 +3,15 @@ import './ForumMessage.css';
 import cn from 'classnames';
 import { type FC, memo, useCallback, useState } from 'react';
 
-import defaultAvatarPath from '/assets/img/default-avatar.png';
-
 import { forumAPI } from '../../../../api/forumAPI';
 import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
 import { type DropdownMenuItems } from '../../../../components/Dropdown/typings';
 import { ValidationErrors } from '../../../../components/ValidationErrors';
-import { API_ENDPOINTS } from '../../../../config/constants';
 import { authSelectors, useAppSelector } from '../../../../store';
 import simplifyDate from '../../../../utils/dateUtils';
-import { buildPath, determineAPIHost } from '../../../../utils/HTTP';
+import { getAvatar } from '../../../../utils/getAvatar';
 import { useValidation } from '../../../../utils/validation';
 import { type ValidationErrorList } from '../../../../utils/validation/typings';
 import { EmoteMenu } from '../EmoteMenu';
@@ -27,13 +24,12 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const [messageHasErrors, setMessageHasErrors] = useState(false);
   const userId = useAppSelector(authSelectors.userProfile)?.id;
-  let avatarPath;
+  const avatarPath = getAvatar(message.user.avatar);
 
   // Проверяем, является ли пользователь отправителем сообщения.
   const isAuthor = message.user_id === userId;
 
   const displayName = message.user.display_name || message.user.login;
-  console.log(displayName, message.user);
 
   const validation = useValidation([
     {
@@ -44,12 +40,6 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
       required: true,
     },
   ]);
-
-  if (message.user?.avatar) {
-    avatarPath = buildPath(determineAPIHost(), API_ENDPOINTS.USER.GET_AVATAR(message.user.avatar));
-  } else {
-    avatarPath = defaultAvatarPath;
-  }
 
   const editMessage = () => {
     setIsEditMessage(true);

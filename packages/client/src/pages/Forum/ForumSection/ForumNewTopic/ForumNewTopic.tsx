@@ -56,6 +56,7 @@ export const ForumNewTopic = () => {
     },
     [form]
   );
+
   const messageChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { value } = event.target;
@@ -100,7 +101,7 @@ export const ForumNewTopic = () => {
     [form]
   );
 
-  return userId ? (
+  return (
     <>
       {generateMetaTags({ title: `${form.heading || 'Новая тема'}` })}
       <section className={forumTopicClassNames}>
@@ -133,5 +134,5 @@ export const ForumNewTopic = () => {
         </div>
       </section>
     </>
-  ) : null;
+  );
 };
