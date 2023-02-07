@@ -2,15 +2,17 @@ import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
 
-import { renderWithRouter } from '../../utils/testingUtils';
-import { Joystick } from './Joystick';
+import { renderWithRouter } from '../../../../utils/testingUtils';
+import { Buttons } from './Buttons';
 
-describe('Logo', () => {
+describe('Controller Buttons', () => {
   test('it render', () => {
-    renderWithRouter({ component: <Joystick /> });
+    renderWithRouter({ component: <Buttons /> });
 
-    const renderedLogo = screen.getByTestId('logo');
+    const renderedServiceButtons = screen.getByTestId('controller__service');
+    const renderedFireButton = screen.getByTestId('controller__fire');
 
-    expect(renderedLogo).toBeInTheDocument();
+    expect(renderedServiceButtons).toBeInTheDocument();
+    expect(renderedFireButton).toBeInTheDocument();
   });
 });

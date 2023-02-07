@@ -1,7 +1,7 @@
 import { sleep } from '../../utils/sleepTimer';
 import { Controller } from '../';
 import { ControllerEvent } from './data';
-import { KeyBindingsArrows, KeyBindingsWasd } from './KeyBindings';
+import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from './KeyBindings';
 
 function mockKeyDown(...codes: Array<string>) {
   for (const code of codes) {
@@ -17,9 +17,23 @@ function mockKeyUp(...codes: Array<string>) {
   }
 }
 
+function mockMousedown(className: string) {
+  const button = document.createElement('button');
+  button.className = className;
+  document.body.appendChild(button);
+
+  const event = new MouseEvent('mousedown', {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  });
+
+  button.dispatchEvent(event);
+}
+
 describe('game/services/Controller', () => {
   it('should handle WASD + space move & shoot bindings', () => {
-    const controller = new Controller(KeyBindingsWasd);
+    const controller = new Controller({ keyBindings: KeyBindingsWasd });
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -37,7 +51,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle WASD stop binding', async () => {
-    const controller = new Controller(KeyBindingsWasd);
+    const controller = new Controller({ keyBindings: KeyBindingsWasd });
     const mockFn = jest.fn();
 
     controller.load();
@@ -56,7 +70,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows + enter move & shoot bindings', () => {
-    const controller = new Controller(KeyBindingsArrows);
+    const controller = new Controller({ keyBindings: KeyBindingsArrows });
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -74,7 +88,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows stop binding', async () => {
-    const controller = new Controller(KeyBindingsArrows);
+    const controller = new Controller({ keyBindings: KeyBindingsArrows });
     const mockFn = jest.fn();
 
     controller.load();
@@ -93,7 +107,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle arrow keys clicks if WASD is chosen', () => {
-    const controller = new Controller(KeyBindingsWasd);
+    const controller = new Controller({ keyBindings: KeyBindingsWasd });
     const mockFn = jest.fn();
 
     controller.load();
@@ -105,7 +119,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle WASD keys clicks if arrows are chosen', () => {
-    const controller = new Controller(KeyBindingsArrows);
+    const controller = new Controller({ keyBindings: KeyBindingsArrows });
     const mockFn = jest.fn();
 
     controller.load();
@@ -117,7 +131,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should auto shoot while key is pressed', async () => {
-    const controller = new Controller(KeyBindingsWasd);
+    const controller = new Controller({ keyBindings: KeyBindingsWasd });
     controller.shootIntervalMs = 500;
     const mockShootFn = jest.fn();
 
@@ -137,7 +151,7 @@ describe('game/services/Controller', () => {
 
   variants.forEach(([name, bindings]) => {
     it(`${name}: should handle pause binding`, () => {
-      const controller = new Controller(bindings);
+      const controller = new Controller({ keyBindings: bindings });
       const mockFn = jest.fn();
 
       controller.load();
@@ -148,7 +162,7 @@ describe('game/services/Controller', () => {
     });
 
     it(`${name}: should disable`, () => {
-      const controller = new Controller(bindings);
+      const controller = new Controller({ keyBindings: bindings });
       const mockFn = jest.fn();
 
       controller.load();
@@ -160,5 +174,26 @@ describe('game/services/Controller', () => {
 
       expect(mockFn).not.toHaveBeenCalled();
     });
+  });
+
+  it(`it should handle shoot binding by mousedown`, () => {
+    const controller = new Controller({ pointerBindings: PointerBindings });
+    const mockMoveFn = jest.fn();
+    const mockShootFn = jest.fn();
+
+    controller.load();
+    controller.on(ControllerEvent.Move, mockMoveFn);
+    controller.on(ControllerEvent.Shoot, mockShootFn);
+    mockMousedown('joystick__up-button');
+    mockMousedown('joystick__bottom-button');
+    mockMousedown('joystick__left-button');
+    mockMousedown('joystick__right-button');
+    mockMousedown('controller__fire-btn');
+
+    expect(mockMoveFn).toHaveBeenNthCalledWith(1, 'UP');
+    expect(mockMoveFn).toHaveBeenNthCalledWith(2, 'DOWN');
+    expect(mockMoveFn).toHaveBeenNthCalledWith(3, 'LEFT');
+    expect(mockMoveFn).toHaveBeenNthCalledWith(4, 'RIGHT');
+    expect(mockShootFn).toBeCalledTimes(1);
   });
 });
