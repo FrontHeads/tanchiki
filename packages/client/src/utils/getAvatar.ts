@@ -1,4 +1,5 @@
-import defaultAvatarPath from '../../public/assets/img/default-avatar.png';
+import defaultAvatarPath from '/assets/img/default-avatar.png';
+
 import { API_ENDPOINTS } from '../config/constants';
 import { buildPath, determineAPIHost } from './HTTP';
 

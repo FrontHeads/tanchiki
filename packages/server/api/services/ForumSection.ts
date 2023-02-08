@@ -10,7 +10,6 @@ export const forumSectionRoute = Router()
   .use(express.urlencoded({ extended: true }))
   .get('/', (_: Request, res: Response, next) => {
     ForumSection.findAll({
-      logging: console.log,
       attributes: {
         include: [
           [
@@ -30,7 +29,6 @@ export const forumSectionRoute = Router()
       },
     })
       .then((sections: ForumSection[]) => {
-        console.log('s', sections);
         res.status(200).json(sections);
       })
       .catch(next);
