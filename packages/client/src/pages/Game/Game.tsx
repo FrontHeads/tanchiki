@@ -1,6 +1,6 @@
 import './Game.css';
 
-import React, { useEffect, useRef } from 'react';
+import { createContext, useEffect, useRef } from 'react';
 
 import { Tanchiki } from '../../game';
 import { GameEvents } from '../../game/services/Game/data';
@@ -11,7 +11,7 @@ import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from
 import { generateMetaTags } from '../../utils/seoUtils';
 import { Buttons, Joystick } from './PointerControl';
 
-export const GameContext = React.createContext<Tanchiki | null>(null);
+export const GameContext = createContext<Tanchiki | null>(null);
 
 export const Game = () => {
   const dispatch = useAppDispatch();
