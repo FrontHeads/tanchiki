@@ -22,8 +22,6 @@ export class View extends EventEmitter {
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
   spriteImg: HTMLImageElement | null = null;
-  /** Выясняем какая сторона окна меньше */
-  windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeListener = this.canvasResizeHandler.bind(this);
 
@@ -408,16 +406,16 @@ export class View extends EventEmitter {
 
   /** Обработчик для события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeHandler() {
-    if (!this.windowSmallerSideSize) {
+    if (!(this.root.firstChild instanceof HTMLCanvasElement) || !this.root.firstChild.width) {
       return;
     }
 
-    const scale = Math.min(
-      window.innerWidth / this.windowSmallerSideSize,
-      window.innerHeight / this.windowSmallerSideSize
-    );
+    const currentWidth = this.root.firstChild.width;
+    const requiredWidth = this.width * this.getPixelRatio();
 
-    this.root.style.transform = 'scale(' + scale * 100 + '%)';
+    const scaleRatio = requiredWidth / currentWidth;
+
+    this.root.style.transform = 'scale(' + scaleRatio * 100 + '%)';
   }
 
   isSpriteImgLoaded() {
