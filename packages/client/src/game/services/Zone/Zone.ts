@@ -1,4 +1,4 @@
-import { type Entity, EntityDynamic, Projectile, Tank, TankPlayer } from '../../entities';
+import { type Entity, EntityDynamic, type Powerup, Projectile, Tank, TankPlayer } from '../../entities';
 import { type PosState, type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 
 enum ZoneLayers {
@@ -197,7 +197,7 @@ export class Zone {
   }
 
   /** Наносит урон по заданному прямоугольнику */
-  doAreaDamage(rect: Rect, source: Projectile | TankPlayer) {
+  doAreaDamage(rect: Rect, source: Projectile | TankPlayer | Powerup) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];

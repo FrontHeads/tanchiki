@@ -209,7 +209,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
               continue;
             }
             // Расчищаем место, где должны стать новые стены
-            this.game.zone.doAreaDamage(settings, playerTank);
+            this.game.zone.doAreaDamage(settings, powerup);
             this.createEntity(settings);
           }
         };
@@ -217,18 +217,37 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         // Ставим бетонные стены
         constructWalls('Concrete');
 
-        const wallIntervalName = 'REINFORCED_WALLS_INTERVAL';
-        const wallIntervalDuration = 10000;
+        const mainIntervalName = 'REINFORCED_WALLS_INTERVAL_MAIN';
+        const mainIntervalDuration = 10000;
+        const finishingIntervalName = 'REINFORCED_WALLS_INTERVAL_FINISHING';
+        const finishingIntervalDuration = 200;
+        let finishingIntervalCountdown = 10;
 
-        this.game.loop.clearLoopInterval(wallIntervalName);
+        // Очищаем интервалы на случай подбора такого же бонуса до окончания текущего
+        this.game.loop.clearLoopInterval(mainIntervalName);
+        this.game.loop.clearLoopInterval(finishingIntervalName);
         this.game.loop.setLoopInterval(
           () => {
-            // Возвращаем кирпичные стены спустя 10 секунд
-            constructWalls('Brick');
-            this.game.loop.clearLoopInterval(wallIntervalName);
+            // Через 10 секунд действие бонуса заканчивается
+            this.game.loop.clearLoopInterval(mainIntervalName);
+            this.game.loop.setLoopInterval(
+              () => {
+                // Делаем, чтобы по истечению действия бонуса стены мигали
+                const shouldPlaceConcreteWalls = --finishingIntervalCountdown % 2 === 0;
+                if (finishingIntervalCountdown <= 0) {
+                  this.game.loop.clearLoopInterval(finishingIntervalName);
+                } else if (shouldPlaceConcreteWalls) {
+                  constructWalls('Concrete');
+                } else {
+                  constructWalls('Brick');
+                }
+              },
+              finishingIntervalDuration,
+              finishingIntervalName
+            );
           },
-          wallIntervalDuration,
-          wallIntervalName
+          mainIntervalDuration,
+          mainIntervalName
         );
       }
     });
