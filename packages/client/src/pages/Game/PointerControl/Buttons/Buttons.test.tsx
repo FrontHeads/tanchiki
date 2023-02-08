@@ -10,9 +10,9 @@ describe('Controller Buttons', () => {
     renderWithRouter({ component: <Buttons /> });
 
     const renderedServiceButtons = screen.getByTestId('controller__service');
-    const renderedFireButton = screen.getByTestId('controller__fire');
+    const renderedShootButton = screen.getByTestId('controller__shoot');
 
     expect(renderedServiceButtons).toBeInTheDocument();
-    expect(renderedFireButton).toBeInTheDocument();
+    expect(renderedShootButton).toBeInTheDocument();
   });
 });

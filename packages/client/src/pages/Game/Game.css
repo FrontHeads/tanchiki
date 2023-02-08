@@ -15,10 +15,14 @@
   }
 
   @media (any-pointer: coarse) and (orientation: landscape) {
-    left: 30%;
+    left: 29%;
     position: absolute;
     top: 0;
     bottom: 0;
+
+    @media (min-width: 650px) {
+      left: 30%;
+    }
 
     @media (min-width: 750px) {
       left: 32%;

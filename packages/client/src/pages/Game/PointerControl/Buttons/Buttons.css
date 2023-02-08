@@ -24,14 +24,14 @@
     }
 
     &-btn {
-      margin-left: var(--support-btn-margin-left);
-      width: var(--support-btn-size);
-      height: var(--support-btn-size);
+      margin-left: var(--service-btn-margin-left);
+      width: var(--service-btn-size);
+      height: var(--service-btn-size);
       fill: var(--font-color-primary);
       stroke: var(--font-color-primary);
       filter: drop-shadow(0 0 5px var(--service-btn-shadow-color));
       cursor: pointer;
-      margin-bottom: var(--support-btn-size);
+      margin-bottom: var(--service-btn-size);
 
       &_pause {
         fill: none;
@@ -51,20 +51,27 @@
       }
     }
 
-    &-btn:hover {
+    &-btn:hover,
+    &-btn_activated {
       fill: var(--dendy-button-primary-color);
       stroke: var(--dendy-button-primary-color);
     }
 
-    &-btn_pause:hover {
+    &-btn:hover {
+      opacity: 0.5;
+    }
+
+    &-btn_pause svg {
       fill: none;
-      stroke: var(--dendy-button-primary-color);
     }
   }
 
-  &__fire {
+  &__shoot {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    @media (any-pointer: coarse) and (orientation: portrait) {
+      min-width: 105px;
+    }
     @media (any-pointer: coarse) and (orientation: landscape) {
       margin-left: 35px;
       display: block;
@@ -83,6 +90,7 @@
       color: var(--joystick-buttons-font-color);
       font-family: "Press Start 2P", cursive;
       box-shadow: 0 0 10px var(--section-light-shadow);
+      fill: var(--font-color-third);
     }
 
     svg {

@@ -1,6 +1,6 @@
 import { sleep } from '../../utils/sleepTimer';
 import { Controller } from '../';
-import { ControllerEvent } from './data';
+import { ControllerBtnClassName, ControllerEvent } from './data';
 import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from './KeyBindings';
 
 function mockKeyDown(...codes: Array<string>) {
@@ -184,11 +184,11 @@ describe('game/services/Controller', () => {
     controller.load();
     controller.on(ControllerEvent.Move, mockMoveFn);
     controller.on(ControllerEvent.Shoot, mockShootFn);
-    mockMousedown('joystick__up-button');
-    mockMousedown('joystick__bottom-button');
-    mockMousedown('joystick__left-button');
-    mockMousedown('joystick__right-button');
-    mockMousedown('controller__fire-btn');
+    mockMousedown(ControllerBtnClassName.MoveUp);
+    mockMousedown(ControllerBtnClassName.MoveDown);
+    mockMousedown(ControllerBtnClassName.MoveLeft);
+    mockMousedown(ControllerBtnClassName.MoveRight);
+    mockMousedown(ControllerBtnClassName.Shoot);
 
     expect(mockMoveFn).toHaveBeenNthCalledWith(1, 'UP');
     expect(mockMoveFn).toHaveBeenNthCalledWith(2, 'DOWN');

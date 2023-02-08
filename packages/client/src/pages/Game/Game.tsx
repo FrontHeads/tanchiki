@@ -1,14 +1,17 @@
 import './Game.css';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Tanchiki } from '../../game';
 import { GameEvents } from '../../game/services/Game/data';
 import { ScreenType } from '../../game/ui/screens/data';
+import { isTouchscreen } from '../../game/utils/isTouchscreen';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
 import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
-import { Buttons, Joystick } from './MobileControl';
+import { Buttons, Joystick } from './PointerControl';
+
+export const GameContext = React.createContext<Tanchiki | null>(null);
 
 export const Game = () => {
   const dispatch = useAppDispatch();
@@ -41,16 +44,19 @@ export const Game = () => {
   }, [isTabActive]);
 
   return (
-    <>
-      {generateMetaTags({ title: 'Игра' })}
+    <GameContext.Provider value={game}>
+      {generateMetaTags({ title: 'Игра Танчики, Battle City 1990 на Dendy' })}
       <div ref={gameRoot} className="game__root"></div>
-      <div className="desktop-controller">
-        <Buttons />
-      </div>
-      <div className="pointer-controller">
-        <Joystick />
-        <Buttons />
-      </div>
-    </>
+      {isTouchscreen() ? (
+        <div className="pointer-controller">
+          <Joystick />
+          <Buttons />
+        </div>
+      ) : (
+        <div className="desktop-controller">
+          <Buttons />
+        </div>
+      )}
+    </GameContext.Provider>
   );
 };

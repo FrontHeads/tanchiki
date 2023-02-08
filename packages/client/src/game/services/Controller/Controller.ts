@@ -41,8 +41,8 @@ export class Controller extends EventEmitter<ControllerEvent> {
 
     if (this.pointerBindings) {
       if (isTouchscreen()) {
-        document.addEventListener('touchstart', this.startPointing);
-        document.addEventListener('touchend', this.endPointing);
+        document.addEventListener('touchstart', this.startPointing, { passive: false });
+        document.addEventListener('touchend', this.endPointing, { passive: false });
       } else {
         document.addEventListener('mousedown', this.startPointing);
         document.addEventListener('mouseup', this.endPointing);
@@ -101,6 +101,7 @@ export class Controller extends EventEmitter<ControllerEvent> {
     const pointerBinding = this.getPointerBinding(event.target);
 
     if (pointerBinding) {
+      event.preventDefault();
       this.emitBindingAction(pointerBinding);
     }
   };
@@ -114,6 +115,7 @@ export class Controller extends EventEmitter<ControllerEvent> {
     const pointerBinding = this.getPointerBinding(event.target);
 
     if (pointerBinding) {
+      event.preventDefault();
       this.stopBindingAction(pointerBinding);
     }
   };

@@ -73,7 +73,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
     this.menuFirstElem = this.overlay.renderElement({
       posX: 23,
       posY: this.mainMenuStateYPos[MainMenuState.Singleplayer],
-      width: 22,
+      width: 24,
       height: 2.2,
       color: Color.White,
       text: isTouchscreen() ? 'НАЖМИ ОГОНЬ' : '1 ИГРОК',

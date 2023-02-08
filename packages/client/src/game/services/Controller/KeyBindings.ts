@@ -1,5 +1,5 @@
 import { Direction } from '../../entities/Entity/typings';
-import { ControllerEvent } from './data';
+import { ControllerBtnClassName, ControllerEvent } from './data';
 
 export type KeyBinding =
   | [ControllerEvent.Move, Direction]
@@ -40,12 +40,12 @@ export const KeyBindingsArrows: BindingConfig = {
 };
 
 export const PointerBindings: BindingConfig = {
-  'controller__fire-btn': [ControllerEvent.Shoot],
-  'joystick__up-button': [ControllerEvent.Move, Direction.Up],
-  'joystick__right-button': [ControllerEvent.Move, Direction.Right],
-  'joystick__left-button': [ControllerEvent.Move, Direction.Left],
-  'joystick__bottom-button': [ControllerEvent.Move, Direction.Down],
-  'controller__service-btn_pause': [ControllerEvent.Pause],
-  'controller__service-btn_mute': [ControllerEvent.Mute],
-  'controller__service-btn_fullscreen': [ControllerEvent.Fullscreen],
+  [ControllerBtnClassName.Shoot]: [ControllerEvent.Shoot],
+  [ControllerBtnClassName.MoveUp]: [ControllerEvent.Move, Direction.Up],
+  [ControllerBtnClassName.MoveRight]: [ControllerEvent.Move, Direction.Right],
+  [ControllerBtnClassName.MoveLeft]: [ControllerEvent.Move, Direction.Left],
+  [ControllerBtnClassName.MoveDown]: [ControllerEvent.Move, Direction.Down],
+  [ControllerBtnClassName.Pause]: [ControllerEvent.Pause],
+  [ControllerBtnClassName.Mute]: [ControllerEvent.Mute],
+  [ControllerBtnClassName.Fullscreen]: [ControllerEvent.Fullscreen],
 };

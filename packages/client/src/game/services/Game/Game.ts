@@ -6,7 +6,7 @@ import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
 import { isTouchscreen } from '../../utils/isTouchscreen';
 import { AudioManager, Controller, Loop, resources, Scenario, Statistics, View, Zone } from '../';
-import { ControllerEvent } from '../Controller/data';
+import { ControllerEvent, ServiceButtonsName } from '../Controller/data';
 import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
 import { levels } from '../MapManager/levels';
 import { ScenarioEvent } from '../Scenario/typings';
@@ -191,6 +191,7 @@ export class Game extends EventEmitter {
 
         // Запускаем игру после выбора уровня
         this.initGameLevel(true);
+        this.emit(GameEvents.ToggleVisibilityServiceBtn);
       });
   }
 
@@ -246,6 +247,9 @@ export class Game extends EventEmitter {
         })
         .on(ControllerEvent.Escape, () => {
           this.initMenu();
+        })
+        .on(ControllerEvent.Fullscreen, () => {
+          this.view.toggleFullScreen();
         });
     });
   }
@@ -284,9 +288,11 @@ export class Game extends EventEmitter {
     this.controllerAll
       .on(ControllerEvent.Pause, () => {
         this.togglePause();
+        this.emit(GameEvents.ToggleColorServiceBtn, ServiceButtonsName.Pause);
       })
       .on(ControllerEvent.Mute, () => {
         this.audioManager.emit('pause', { isMuteKey: true });
+        this.emit(GameEvents.ToggleColorServiceBtn, ServiceButtonsName.Mute);
       })
       .on(ControllerEvent.Fullscreen, () => {
         this.view.toggleFullScreen();
@@ -300,6 +306,7 @@ export class Game extends EventEmitter {
     this.scenario = new Scenario(this)
       .on(ScenarioEvent.GameOver, async () => {
         this.statistics.finishSession();
+        this.emit(GameEvents.ToggleVisibilityServiceBtn);
         await this.initGameOverPopup();
         await this.initGameScore();
         this.initMenu();
@@ -334,8 +341,12 @@ export class Game extends EventEmitter {
         this.controllerAll.on(ControllerEvent.Shoot, resolve);
       };
 
-      this.controllerAll.on(ControllerEvent.Escape, skip);
-      this.controllerAll.on(ControllerEvent.Shoot, skip);
+      this.controllerAll
+        .on(ControllerEvent.Fullscreen, () => {
+          this.view.toggleFullScreen();
+        })
+        .on(ControllerEvent.Escape, skip)
+        .on(ControllerEvent.Shoot, skip);
       setTimeout(resolve, redirectDelay);
     });
   }
@@ -355,7 +366,9 @@ export class Game extends EventEmitter {
       this.controllerWasd.reset();
       this.controllerArrows.reset();
 
-      this.controllerAll.on(ControllerEvent.Escape, resolve);
+      this.controllerAll.on(ControllerEvent.Escape, resolve).on(ControllerEvent.Fullscreen, () => {
+        this.view.toggleFullScreen();
+      });
       setTimeout(resolve, redirectDelay);
     });
   }
