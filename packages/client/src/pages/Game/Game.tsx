@@ -1,6 +1,6 @@
 import './Game.css';
 
-import { createContext, useEffect, useRef } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 
 import { Tanchiki } from '../../game';
 import { GameEvents } from '../../game/services/Game/data';
@@ -10,8 +10,9 @@ import { usePageVisibility } from '../../hooks/usePageVisibility';
 import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
 import { Buttons, Joystick } from './PointerControl';
+import { type GameCreateContext } from './typings';
 
-export const GameContext = createContext<Tanchiki | null>(null);
+export const GameContext = createContext<GameCreateContext>({} as GameCreateContext);
 
 export const Game = () => {
   const dispatch = useAppDispatch();
@@ -20,9 +21,11 @@ export const Game = () => {
   const isTabActive = usePageVisibility();
   const game = Tanchiki.create();
   game.username = useAppSelector(authSelectors.userProfile)?.login || '';
+  const [isGameInited, setIsGameInited] = useState(game.inited);
 
   useEffect(() => {
     game.init(gameRoot.current);
+    setIsGameInited(game.inited);
 
     game.on(GameEvents.UpdateLeaderboard, data => {
       dispatch(leaderboardThunks.addScore(data));
@@ -44,7 +47,7 @@ export const Game = () => {
   }, [isTabActive]);
 
   return (
-    <GameContext.Provider value={game}>
+    <GameContext.Provider value={{ game, isGameInited }}>
       {generateMetaTags({ title: 'Игра Танчики, Battle City 1990 на Dendy' })}
       <div ref={gameRoot} className="game__root"></div>
       {isTouchscreen() ? (

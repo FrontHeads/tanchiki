@@ -10,8 +10,7 @@ import { GameContext } from '../../Game';
 import { FullscreenSvgImage, MuteSvgImage, PauseSvgImage, ShootSvgImage } from './SVGImages';
 
 export const Buttons: FC = () => {
-  const game = useContext(GameContext);
-  const isGameInited = game?.inited;
+  const { game, isGameInited } = useContext(GameContext);
 
   const [showMuteAndPauseBtn, setShowMuteAndPauseButton] = useState<boolean>(false);
   const [isActivePauseBtn, setIsActivePauseButton] = useState<boolean>(false);
