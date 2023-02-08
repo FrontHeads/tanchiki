@@ -342,6 +342,11 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       flashing: [4, 11, 18].includes(this.state.enemiesCounter),
     };
 
+    // Убираем с карты предыдущий бонус, если появился новый бонусный танк
+    if (tankEnemySettings.flashing && this.state.powerup) {
+      this.state.powerup.despawn();
+    }
+
     const entity = new TankEnemy(tankEnemySettings);
 
     entity.on(EntityEvent.Spawn, () => {
