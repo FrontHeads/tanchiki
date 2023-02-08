@@ -154,7 +154,11 @@ export class AudioManager extends EventEmitter {
         this.playSound('powerupAppear');
       });
       entity.on(EntityEvent.Destroyed, () => {
-        this.playSound('powerupPickup');
+        if (entity.variant === 'TANK') {
+          this.playSound('lifePickup');
+        } else {
+          this.playSound('powerupPickup');
+        }
       });
     }
 
