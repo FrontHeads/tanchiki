@@ -303,7 +303,7 @@ export class Game extends EventEmitter {
       .on(ScenarioEvent.MissionAccomplished, async () => {
         this.statistics.finishMap();
         this.controllerAll.offAll(ControllerEvent.Pause);
-        const missionAccomplishedDelay = 3000;
+        const missionAccomplishedDelay = 1000;
         await sleep(missionAccomplishedDelay);
         await this.initGameScore();
         this.initGameLevel();
