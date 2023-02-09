@@ -1,7 +1,7 @@
 import { Direction } from '../../entities/Entity/typings';
 import { ControllerBtnClassName, ControllerEvent } from './data';
 
-export type KeyBinding =
+export type Binding =
   | [ControllerEvent.Move, Direction]
   | [ControllerEvent.Shoot]
   | [ControllerEvent.Pause]
@@ -9,7 +9,7 @@ export type KeyBinding =
   | [ControllerEvent.Fullscreen]
   | [ControllerEvent.Escape];
 
-export type BindingConfig = Record<string, KeyBinding>;
+export type BindingConfig = Record<string, Binding>;
 
 const KeyBindingsGeneral: BindingConfig = {
   KeyP: [ControllerEvent.Pause],

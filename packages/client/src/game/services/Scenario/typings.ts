@@ -1,5 +1,5 @@
 import { type Tank, type TankEnemy } from '../../entities';
-import { type Controller } from '../';
+import { type ControllerBase } from '../Controller/ControllerBase';
 import { type Player } from './data';
 
 export enum ScenarioEvent {
@@ -42,7 +42,7 @@ export type ScenarioState = {
 export type ScenarioPlayerState = {
   entity?: Tank;
   lives: number;
-  controller: Controller;
+  controller: ControllerBase;
 };
 
 export type EnemyDestroyedPayload = {

@@ -11,7 +11,8 @@ import {
 import { type Direction, type EntitySettings, EntityEvent } from '../../entities/Entity/typings';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter } from '../../utils';
-import { type Controller, type Game, IndicatorManager, MapManager } from '../';
+import { type Game, IndicatorManager, MapManager } from '../';
+import { type ControllerBase } from '../Controller/ControllerBase';
 import { ControllerEvent } from '../Controller/data';
 import { spawnPlaces } from '../MapManager/data';
 import { type MapTerrainData } from '../MapManager/typings';
@@ -179,12 +180,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   }
 
   /** Возвращает контроллер в зависимости от режима игры и индекса игрока */
-  getGameController(playerType: Player): Controller {
+  getGameController(playerType: Player): ControllerBase {
     if (this.game.mainMenuState === MainMenuState.Multiplayer) {
       if (playerType === Player.Player1) {
-        return this.game.controllerWasd;
+        return this.game.controllerPlayerOne;
       } else if (playerType === Player.Player2) {
-        return this.game.controllerArrows;
+        return this.game.controllerPlayerTwo;
       }
     }
 

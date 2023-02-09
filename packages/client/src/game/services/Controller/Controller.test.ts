@@ -1,5 +1,6 @@
 import { sleep } from '../../utils/sleepTimer';
-import { Controller } from '../';
+import { ControllerDesktop } from './ControllerDesktop';
+import { ControllerTouchscreen } from './ControllerTouchscreen';
 import { ControllerBtnClassName, ControllerEvent } from './data';
 import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from './KeyBindings';
 
@@ -17,12 +18,12 @@ function mockKeyUp(...codes: Array<string>) {
   }
 }
 
-function mockMousedown(className: string) {
+function mockPointerStart(className: string, eventName: 'mousedown' | 'touchstart') {
   const button = document.createElement('button');
   button.className = className;
   document.body.appendChild(button);
 
-  const event = new MouseEvent('mousedown', {
+  const event = new MouseEvent(eventName, {
     view: window,
     bubbles: true,
     cancelable: true,
@@ -33,7 +34,7 @@ function mockMousedown(className: string) {
 
 describe('game/services/Controller', () => {
   it('should handle WASD + space move & shoot bindings', () => {
-    const controller = new Controller({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -51,7 +52,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle WASD stop binding', async () => {
-    const controller = new Controller({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
     const mockFn = jest.fn();
 
     controller.load();
@@ -70,7 +71,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows + enter move & shoot bindings', () => {
-    const controller = new Controller({ keyBindings: KeyBindingsArrows });
+    const controller = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -88,7 +89,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows stop binding', async () => {
-    const controller = new Controller({ keyBindings: KeyBindingsArrows });
+    const controller = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
     const mockFn = jest.fn();
 
     controller.load();
@@ -107,7 +108,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle arrow keys clicks if WASD is chosen', () => {
-    const controller = new Controller({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
     const mockFn = jest.fn();
 
     controller.load();
@@ -119,7 +120,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle WASD keys clicks if arrows are chosen', () => {
-    const controller = new Controller({ keyBindings: KeyBindingsArrows });
+    const controller = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
     const mockFn = jest.fn();
 
     controller.load();
@@ -131,7 +132,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should auto shoot while key is pressed', async () => {
-    const controller = new Controller({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
     controller.shootIntervalMs = 500;
     const mockShootFn = jest.fn();
 
@@ -151,7 +152,7 @@ describe('game/services/Controller', () => {
 
   variants.forEach(([name, bindings]) => {
     it(`${name}: should handle pause binding`, () => {
-      const controller = new Controller({ keyBindings: bindings });
+      const controller = new ControllerDesktop({ keyBindings: bindings });
       const mockFn = jest.fn();
 
       controller.load();
@@ -162,7 +163,7 @@ describe('game/services/Controller', () => {
     });
 
     it(`${name}: should disable`, () => {
-      const controller = new Controller({ keyBindings: bindings });
+      const controller = new ControllerDesktop({ keyBindings: bindings });
       const mockFn = jest.fn();
 
       controller.load();
@@ -177,18 +178,39 @@ describe('game/services/Controller', () => {
   });
 
   it(`it should handle shoot binding by mousedown`, () => {
-    const controller = new Controller({ pointerBindings: PointerBindings });
+    const controller = new ControllerDesktop({ pointerBindings: PointerBindings });
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
     controller.load();
     controller.on(ControllerEvent.Move, mockMoveFn);
     controller.on(ControllerEvent.Shoot, mockShootFn);
-    mockMousedown(ControllerBtnClassName.MoveUp);
-    mockMousedown(ControllerBtnClassName.MoveDown);
-    mockMousedown(ControllerBtnClassName.MoveLeft);
-    mockMousedown(ControllerBtnClassName.MoveRight);
-    mockMousedown(ControllerBtnClassName.Shoot);
+    mockPointerStart(ControllerBtnClassName.MoveUp, 'mousedown');
+    mockPointerStart(ControllerBtnClassName.MoveDown, 'mousedown');
+    mockPointerStart(ControllerBtnClassName.MoveLeft, 'mousedown');
+    mockPointerStart(ControllerBtnClassName.MoveRight, 'mousedown');
+    mockPointerStart(ControllerBtnClassName.Shoot, 'mousedown');
+
+    expect(mockMoveFn).toHaveBeenNthCalledWith(1, 'UP');
+    expect(mockMoveFn).toHaveBeenNthCalledWith(2, 'DOWN');
+    expect(mockMoveFn).toHaveBeenNthCalledWith(3, 'LEFT');
+    expect(mockMoveFn).toHaveBeenNthCalledWith(4, 'RIGHT');
+    expect(mockShootFn).toBeCalledTimes(1);
+  });
+
+  it(`it should handle shoot binding by touchstart`, () => {
+    const controller = new ControllerTouchscreen({ pointerBindings: PointerBindings });
+    const mockMoveFn = jest.fn();
+    const mockShootFn = jest.fn();
+
+    controller.load();
+    controller.on(ControllerEvent.Move, mockMoveFn);
+    controller.on(ControllerEvent.Shoot, mockShootFn);
+    mockPointerStart(ControllerBtnClassName.MoveUp, 'touchstart');
+    mockPointerStart(ControllerBtnClassName.MoveDown, 'touchstart');
+    mockPointerStart(ControllerBtnClassName.MoveLeft, 'touchstart');
+    mockPointerStart(ControllerBtnClassName.MoveRight, 'touchstart');
+    mockPointerStart(ControllerBtnClassName.Shoot, 'touchstart');
 
     expect(mockMoveFn).toHaveBeenNthCalledWith(1, 'UP');
     expect(mockMoveFn).toHaveBeenNthCalledWith(2, 'DOWN');

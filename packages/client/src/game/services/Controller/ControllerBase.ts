@@ -1,10 +1,9 @@
 import { type Direction } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
-import { isTouchscreen } from '../../utils/isTouchscreen';
 import { ControllerEvent } from './data';
-import { type BindingConfig, type KeyBinding } from './KeyBindings';
+import { type Binding, type BindingConfig } from './KeyBindings';
 
-export class Controller extends EventEmitter<ControllerEvent> {
+export abstract class ControllerBase extends EventEmitter<ControllerEvent> {
   activeDirection: Partial<Record<Direction, boolean>> = {};
   shootProcess: ReturnType<typeof setInterval> | null = null;
   shootIntervalMs = 200;
@@ -33,33 +32,42 @@ export class Controller extends EventEmitter<ControllerEvent> {
     return this;
   }
 
-  registerEvents() {
-    if (this.keyBindings) {
-      document.addEventListener('keydown', this.keydown);
-      document.addEventListener('keyup', this.keyup);
-    }
+  abstract registerEvents(): void;
 
-    if (this.pointerBindings) {
-      if (isTouchscreen()) {
-        document.addEventListener('touchstart', this.startPointing, { passive: false });
-        document.addEventListener('touchend', this.endPointing, { passive: false });
-      } else {
-        document.addEventListener('mousedown', this.startPointing);
-        document.addEventListener('mouseup', this.endPointing);
+  abstract disableEvents(): void;
+
+  /** Запускает событие привязанное к кнопке/клику/тапу, например движение вперед или выстрел. */
+  emitBindingAction([action, direction]: Binding) {
+    if (action === ControllerEvent.Move) {
+      this.activeDirection[direction] = true;
+    }
+    this.emit(action, direction);
+
+    if (action === ControllerEvent.Shoot) {
+      if (this.shootProcess) {
+        clearInterval(this.shootProcess);
+        this.shootProcess = null;
       }
+      this.shootProcess = setInterval(() => {
+        this.emit(action);
+      }, this.shootIntervalMs);
     }
   }
 
-  disableEvents() {
-    document.removeEventListener('keydown', this.keydown);
-    document.removeEventListener('keyup', this.keyup);
-
-    if (isTouchscreen()) {
-      document.removeEventListener('touchstart', this.startPointing);
-      document.removeEventListener('touchend', this.endPointing);
-    } else {
-      document.removeEventListener('mousedown', this.startPointing);
-      document.removeEventListener('mouseup', this.endPointing);
+  /** Останавливает событие привязанное к кнопке/клику/тапу, например движение вперед или выстрел. */
+  stopBindingAction([action, direction]: Binding) {
+    if (action === ControllerEvent.Move) {
+      delete this.activeDirection[direction];
+      const activeDirection = Object.keys(this.activeDirection);
+      if (!activeDirection.length) {
+        this.emit(ControllerEvent.Stop);
+      } else {
+        this.emit(action, activeDirection[0]);
+      }
+    }
+    if (action === ControllerEvent.Shoot && this.shootProcess) {
+      clearInterval(this.shootProcess);
+      this.shootProcess = null;
     }
   }
 
@@ -136,40 +144,5 @@ export class Controller extends EventEmitter<ControllerEvent> {
     }
 
     return result;
-  }
-
-  /** Запускает событие привязанное к кнопке/клику/тапу, например движение вперед или выстрел. */
-  emitBindingAction([action, direction]: KeyBinding) {
-    if (action === ControllerEvent.Move) {
-      this.activeDirection[direction] = true;
-    }
-    this.emit(action, direction);
-
-    if (action === ControllerEvent.Shoot) {
-      if (this.shootProcess) {
-        clearInterval(this.shootProcess);
-        this.shootProcess = null;
-      }
-      this.shootProcess = setInterval(() => {
-        this.emit(action);
-      }, this.shootIntervalMs);
-    }
-  }
-
-  /** Останавливает событие привязанное к кнопке/клику/тапу, например движение вперед или выстрел. */
-  stopBindingAction([action, direction]: KeyBinding) {
-    if (action === ControllerEvent.Move) {
-      delete this.activeDirection[direction];
-      const activeDirection = Object.keys(this.activeDirection);
-      if (!activeDirection.length) {
-        this.emit(ControllerEvent.Stop);
-      } else {
-        this.emit(action, activeDirection[0]);
-      }
-    }
-    if (action === ControllerEvent.Shoot && this.shootProcess) {
-      clearInterval(this.shootProcess);
-      this.shootProcess = null;
-    }
   }
 }

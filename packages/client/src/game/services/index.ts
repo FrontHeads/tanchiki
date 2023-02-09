@@ -1,5 +1,6 @@
 export { AudioManager } from './AudioManager/AudioManager';
-export { Controller } from './Controller/Controller';
+export { ControllerDesktop } from './Controller/ControllerDesktop';
+export { ControllerTouchscreen } from './Controller/ControllerTouchscreen';
 export { Game } from './Game/Game';
 export { IndicatorManager } from './IndicatorManager/IndicatorManager';
 export { Loop } from './Loop/Loop';
