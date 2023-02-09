@@ -2,7 +2,6 @@ import { type PowerupVariant } from './typings';
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { EntityEvent } from '../Entity/typings';
 import { Entity } from '../';
-import { rand } from '../../utils';
 
 const powerupVariants: PowerupVariant[] = ['STAR', 'TANK', 'HELMET', 'GRENADE', 'SHOVEL', 'CLOCK'];
 
@@ -49,22 +48,11 @@ export class Powerup extends Entity {
 
   registerPowerupEvents() {
     this.on(EntityEvent.Spawn, () => {
-      const tempSpriteCoordinates = this.mainSpriteCoordinates;
-      const flashingIntervalMs = 200;
-      const flashingIntervalName = 'flashing' + rand(0, 999999);
-
-      this.setLoopInterval(
-        () => {
-          if (this.mainSpriteCoordinates) {
-            this.mainSpriteCoordinates = null;
-          } else {
-            this.mainSpriteCoordinates = tempSpriteCoordinates;
-          }
-          this.refreshSprite();
-        },
-        flashingIntervalMs,
-        flashingIntervalName
-      );
+      this.startAnimation({
+        delay: 200,
+        spriteCoordinates: this.mainSpriteCoordinates,
+        looped: true,
+      });
     });
 
     this.on(EntityEvent.Damaged, ({ source }) => {
