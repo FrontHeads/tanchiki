@@ -4,6 +4,7 @@ import {
   type Tank,
   Explosion,
   Flag,
+  Powerup,
   TankEnemy,
   TankPlayer,
   Terrain,
@@ -13,7 +14,7 @@ import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter } from '../../utils';
 import { type Controller, type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
-import { spawnPlaces } from '../MapManager/data';
+import { Cell, spawnPlaces } from '../MapManager/data';
 import { type MapTerrainData } from '../MapManager/typings';
 import { Player, playerInitialSettings } from './data';
 import { type EnemyDestroyedPayload, type ScenarioPlayerState, type ScenarioState, ScenarioEvent } from './typings';
@@ -25,6 +26,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     maxActiveEnemies: 4,
     enemiesSpawnDelay: 2000,
     enemies: [],
+    powerup: null,
     players: {} as Record<Player, ScenarioPlayerState>,
   } as ScenarioState;
 
@@ -33,10 +35,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   indicatorManager: IndicatorManager;
 
   constructor(private game: Game) {
-    /**
-     * TODO: Доработать после реализации бонусных танков
-     * Четвёртый, одиннадцатый и восемнадцатый танки, независимо от типа, появляются переливающиеся цветами
-     **/
     super();
     this.createBoundaries();
 
@@ -50,6 +48,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.createPlayerTank(Player.Player1);
     } else if (this.game.mainMenuState === MainMenuState.Multiplayer) {
       this.state.maxActiveEnemies = 6;
+      this.state.enemiesSpawnDelay = 1000;
       this.createPlayerTank(Player.Player1);
       this.createPlayerTank(Player.Player2);
     }
@@ -79,18 +78,14 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   initEventListeners() {
     this
       /** После убийства вражеского танка */
-      .on(ScenarioEvent.TankEnemyDestroyed, ({ source, destination }: EnemyDestroyedPayload) => {
+      .on(ScenarioEvent.TankEnemyDestroyed, ({ destination }: EnemyDestroyedPayload) => {
         this.createExplosion(destination);
+        if (destination?.flashing) {
+          this.createPowerup();
+        }
 
         /** Удаляем его из списка активных */
         this.state.enemies = this.state.enemies.filter(enemy => enemy !== destination);
-
-        /** Ищем кто убил TankEnemy для обновления статистики */
-        const playerState = Object.values(this.state.players).find(({ entity }) => entity === source);
-        if (playerState) {
-          // TODO: доделать подсчет статистики убитых противников
-          // playerState.statistics[]++;
-        }
 
         /** Триггерим победу в случае если врагов не осталось */
         if (!this.canCreateTankEnemy() && this.state.enemies.length === 0) {
@@ -123,6 +118,139 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       .on(ScenarioEvent.ProjectileHit, (projectile: Projectile) => {
         this.createExplosion(projectile);
       });
+  }
+
+  /** Создание бонуса */
+  createPowerup() {
+    if (this.state.powerup) {
+      this.state.powerup.despawn();
+    }
+    const powerup = new Powerup();
+    this.game.addEntity(powerup);
+    const pos = this.mapManager.getRandomEmptyCell();
+    powerup.spawn(pos);
+    this.state.powerup = powerup;
+
+    powerup.on(EntityEvent.Destroyed, () => {
+      const playerTank = powerup.destroyedBy;
+      if (!(playerTank instanceof TankPlayer)) {
+        return;
+      }
+
+      // Бонус, прибавляющий силу атаки у игрока
+      if (powerup.variant === 'STAR') {
+        playerTank.upgrade();
+      }
+
+      // Бонус, дающий игроку защитное поле на 10 секунд
+      if (powerup.variant === 'HELMET') {
+        const shieldDuration = 10000;
+        playerTank.useShield(shieldDuration);
+      }
+
+      // Бонус, дающий дополнительную жизнь
+      if (powerup.variant === 'TANK') {
+        const playerType = playerTank.variant;
+        const playerState = this.state.players[playerType];
+        ++playerState.lives;
+        this.indicatorManager.renderPlayerLives(playerType as Player, playerState.lives);
+      }
+
+      // Бонус, взрывающий все вражеские танки
+      if (powerup.variant === 'GRENADE') {
+        this.state.enemies.forEach(enemyTank => {
+          enemyTank.beDestroyed(playerTank);
+        });
+      }
+
+      // Бонус, замораживающий врагов на 10 секунд
+      if (powerup.variant === 'CLOCK') {
+        const freezeIntervalName = 'ENEMY_FREEZE_INTERVAL';
+        // Делаем заморозку через каждые 100 мс, чтобы работало и для врагов, которые отспавнились позже
+        const freezeSubDuration = 100;
+        let freezeTicksLeft = 100;
+
+        const setAllEnemiesFrozen = (frozen: boolean) => {
+          this.state.enemies.forEach(enemyTank => {
+            enemyTank.frozen = frozen;
+          });
+        };
+
+        this.game.loop.clearLoopInterval(freezeIntervalName);
+        setAllEnemiesFrozen(true);
+        this.game.loop.setLoopInterval(
+          () => {
+            setAllEnemiesFrozen(true);
+            if (--freezeTicksLeft <= 0) {
+              this.game.loop.clearLoopInterval(freezeIntervalName);
+              setAllEnemiesFrozen(false);
+            }
+          },
+          freezeSubDuration,
+          freezeIntervalName
+        );
+      }
+
+      // Бонус, укрепляющий стены вокруг базы на 10 секунд
+      if (powerup.variant === 'SHOVEL') {
+        const wallCells = [
+          ['BottomRight', 11, 5],
+          ['Bottom', 11, 6],
+          ['BottomLeft', 11, 7],
+          ['Right', 12, 5],
+          ['Left', 12, 7],
+        ];
+
+        const constructWalls = (wallMaterial: 'Brick' | 'Concrete') => {
+          for (const [cellVariant, y, x] of wallCells) {
+            const cell = Cell[(wallMaterial + cellVariant) as keyof typeof Cell];
+            const settings = this.mapManager.cellToEntitySettings(cell, x as number, y as number);
+            if (!settings) {
+              continue;
+            }
+            // Расчищаем место, где должны стать новые стены
+            this.game.zone.doAreaDamage(settings, powerup);
+            this.createEntity(settings);
+          }
+        };
+
+        // Ставим бетонные стены
+        constructWalls('Concrete');
+
+        const mainIntervalName = 'REINFORCED_WALLS_INTERVAL_MAIN';
+        const mainIntervalDuration = 10000;
+        const finishingIntervalName = 'REINFORCED_WALLS_INTERVAL_FINISHING';
+        const finishingIntervalDuration = 200;
+        let finishingIntervalCountdown = 10;
+
+        // Очищаем интервалы на случай подбора такого же бонуса до окончания текущего
+        this.game.loop.clearLoopInterval(mainIntervalName);
+        this.game.loop.clearLoopInterval(finishingIntervalName);
+        this.game.loop.setLoopInterval(
+          () => {
+            // Через 10 секунд действие бонуса заканчивается
+            this.game.loop.clearLoopInterval(mainIntervalName);
+            this.game.loop.setLoopInterval(
+              () => {
+                // Делаем, чтобы по истечению действия бонуса стены мигали
+                const shouldPlaceConcreteWalls = --finishingIntervalCountdown % 2 === 0;
+                if (finishingIntervalCountdown <= 0) {
+                  this.game.loop.clearLoopInterval(finishingIntervalName);
+                } else if (shouldPlaceConcreteWalls) {
+                  constructWalls('Concrete');
+                } else {
+                  constructWalls('Brick');
+                }
+              },
+              finishingIntervalDuration,
+              finishingIntervalName
+            );
+          },
+          mainIntervalDuration,
+          mainIntervalName
+        );
+      }
+    });
   }
 
   /** Проверяем можно ли еще размещать на поле вражеские танки */
@@ -208,7 +336,16 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     const tankEnemiesLeft = this.state.maxEnemies - this.state.enemiesCounter;
     this.indicatorManager.renderTankEnemiesLeft(tankEnemiesLeft);
 
-    const tankEnemySettings = { variant: this.mapManager.getMapTankEnemyVariant(this.state.enemiesCounter) };
+    const tankEnemySettings = {
+      variant: this.mapManager.getMapTankEnemyVariant(this.state.enemiesCounter),
+      // Четвёртый, одиннадцатый и восемнадцатый танки появляются переливающимися (за их уничтожение дают бонус)
+      flashing: [4, 11, 18].includes(this.state.enemiesCounter),
+    };
+
+    // Убираем с карты предыдущий бонус, если появился новый бонусный танк
+    if (tankEnemySettings.flashing && this.state.powerup) {
+      this.state.powerup.despawn();
+    }
 
     const entity = new TankEnemy(tankEnemySettings);
 

@@ -23,6 +23,9 @@ export enum SoundPathList {
   hitSteel = '/assets/sounds/hit-steel.mp3',
   playerExplosion = '/assets/sounds/player-explosion.mp3',
   enemyExplosion = '/assets/sounds/enemy-explosion.mp3',
+  powerupAppear = '/assets/sounds/powerup-appear.mp3',
+  powerupPickup = '/assets/sounds/powerup-pickup.mp3',
+  lifePickup = '/assets/sounds/life.mp3',
   // Нужны два одинаковых звука, иначе из-за быстрого проигрывания происходят искажения
   score = '/assets/sounds/score.mp3',
   score2 = '/assets/sounds/score.mp3',
