@@ -1,5 +1,6 @@
 import './Dropdown.css';
 
+import cn from 'classnames';
 import { type FC, cloneElement, useEffect, useRef, useState } from 'react';
 
 import { type DropdownProps } from './typings';
@@ -30,7 +31,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems, className, emo
    *  и добавляем ему функцию-обработчик toggleIsOpen
    * */
   return (
-    <div className={`dropdown ${className || ''}`} ref={dropdownRef}>
+    <div className={cn('dropdown', className)} ref={dropdownRef}>
       {cloneElement(trigger, {
         onClick: toggleIsOpen,
       })}

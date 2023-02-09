@@ -2,18 +2,13 @@ import './Breadcrumbs.css';
 
 import cn from 'classnames';
 import { type FC } from 'react';
-import { type Params, useMatches } from 'react-router-dom';
+import { useMatches } from 'react-router-dom';
 
+import { type HandledMatch } from '../../app.typings';
 import { BreadcrumbsVariant } from './data';
 import { type BreadcrumbsProps } from './typings';
 
-const hasCrumbHandler = (match: Record<string, unknown>): match is {
-  id: string;
-  pathname: string;
-  params: Params<string>;
-  data: unknown;
-  handle: Record<string, (data: unknown) => JSX.Element>;
-} => {
+const hasCrumbHandler = (match: Record<string, unknown>): match is HandledMatch => {
   return (
     match.handle !== null &&
     typeof match.handle === 'object' &&
