@@ -44,7 +44,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, menuItems, className, emo
                   toggleIsOpen();
                   onClick(event);
                 }}
-                className={`dropdown__menu-button ${emoteClass || ''}`}
+                className={cn('dropdown__menu-button', emoteClass)}
                 {...rest}>
                 {title}
               </button>
