@@ -69,7 +69,7 @@ export class View extends EventEmitter {
   }
 
   unload() {
-    document.removeEventListener('resize', this.canvasResizeListener);
+    window.removeEventListener('resize', this.canvasResizeListener);
   }
 
   /** Создает DOM-элементы canvas-слоев и добавляет в корневой DOM-элемент root. */
