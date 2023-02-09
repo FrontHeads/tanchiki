@@ -1,4 +1,4 @@
-import { type Entity, Tank, Terrain } from '../../entities';
+import { type Entity, Powerup, Tank, Terrain } from '../../entities';
 import { type DamageSettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { resources } from '../';
@@ -89,6 +89,7 @@ export class AudioManager extends EventEmitter {
     const isPlayer = entity.role === 'player';
     const isEnemy = entity.role === 'enemy';
     const isTerrain = entity instanceof Terrain;
+    const isPowerup = entity instanceof Powerup;
 
     /** Звуки танка игрока */
     if (isTank && isPlayer) {
@@ -129,7 +130,8 @@ export class AudioManager extends EventEmitter {
         this.stopSound('idle');
         this.playSound('playerExplosion');
       });
-    } else if (isTerrain) {
+    }
+    if (isTerrain) {
       if (entity.type === 'brickWall') {
         entity.on(EntityEvent.Damaged, (damageProps: DamageSettings) => {
           if (damageProps.source.role === 'player') {
@@ -144,6 +146,20 @@ export class AudioManager extends EventEmitter {
           }
         });
       }
+    }
+
+    /** Звуки бонусов */
+    if (isPowerup) {
+      entity.on(EntityEvent.Spawn, () => {
+        this.playSound('powerupAppear');
+      });
+      entity.on(EntityEvent.Destroyed, () => {
+        if (entity.variant === 'TANK') {
+          this.playSound('lifePickup');
+        } else {
+          this.playSound('powerupPickup');
+        }
+      });
     }
 
     /** Звуки танка врага */
