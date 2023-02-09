@@ -13,16 +13,21 @@ export const forumSectionRoute = Router()
       attributes: {
         include: [
           [
-            Sequelize.literal(`(SELECT COUNT(*)::integer
-            from forum_topics as t
-            where t.section_id="ForumSection"."id")`),
+            Sequelize.literal(`
+              (SELECT Count(*) :: INTEGER
+               FROM   forum_topics AS t
+               WHERE  t.section_id = "ForumSection"."id")
+            `),
             'topicCount',
           ],
           [
-            Sequelize.literal(` (SELECT COUNT(M.*)::integer
-              FROM FORUM_TOPICS AS T
-              LEFT JOIN FORUM_MESSAGES AS M ON M.TOPIC_ID=T.ID
-              WHERE T.SECTION_ID = "ForumSection"."id")`),
+            Sequelize.literal(`
+              (SELECT Count(M.*) :: INTEGER
+               FROM   forum_topics AS T
+                      left join forum_messages AS M
+                             ON M.topic_id = T.id
+               WHERE  T.section_id = "ForumSection"."id")
+               `),
             'messages',
           ],
         ],
@@ -41,9 +46,11 @@ export const forumSectionRoute = Router()
           attributes: {
             include: [
               [
-                Sequelize.literal(`(SELECT COUNT(*)::integer
-                  FROM FORUM_MESSAGES AS M
-                  WHERE M.TOPIC_ID = "topics"."id")`),
+                Sequelize.literal(`
+                  (SELECT Count(*) :: INTEGER
+                   FROM   forum_messages AS M
+                   WHERE  M.topic_id = "topics"."id")
+                  `),
                 'messages',
               ],
             ],

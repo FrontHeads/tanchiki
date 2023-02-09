@@ -11,7 +11,7 @@ export const forumMessageRoute = Router()
   .use(express.urlencoded({ extended: true }))
   .use('/', checkAuthMiddleware)
   .get('/:id', (req: Request, res: Response, next) => {
-    ForumMessage.findByPk(req.params.id, { include: [{ model: ForumTopic }, { model: User }], logging: true })
+    ForumMessage.findByPk(req.params.id, { include: [{ model: ForumTopic }, { model: User }] })
       .then(throwIf(r => !r, res, 400, 'Комментарий не найден'))
       .then(message => res.status(200).json(message))
       .catch(next);
