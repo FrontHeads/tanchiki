@@ -27,7 +27,7 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
    */
   return renderToPipeableStream(
     <Provider store={store}>
-      <StaticRouterProvider router={router} context={context} nonce="the-nonce" />
+      <StaticRouterProvider router={router} context={context}/>
     </Provider>,
     streamOptions
   );

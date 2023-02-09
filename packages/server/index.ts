@@ -10,9 +10,11 @@ import { initMongoDBConnection, initPostgreDBConnection } from './utils/database
 dotenv.config();
 
 import express from 'express';
+import { expressCspHeader, NONCE } from 'express-csp-header';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// import { expressCspHeader, NONCE } from './utils/expressCspHeader';
 import { HtmlWritable } from './utils/HtmlWritable';
 
 initPostgreDBConnection();
@@ -61,8 +63,15 @@ async function startServer() {
   /** Пробрасываем статичный файл serviceWorker */
   app.use('/serviceWorker.js', express.static(path.resolve(distPath, 'serviceWorker.js')));
 
+  app.use(
+    expressCspHeader({
+      directives: {
+        'script-src': [NONCE],
+      },
+    })
+  );
   /** Обрабатываем все остальные запросы к серверу */
-  app.use('*', async (req, res, next) => {
+  app.use('*', async (req: any, res: any, next: any) => {
     const url = req.originalUrl;
 
     try {
@@ -136,16 +145,20 @@ async function startServer() {
        * после этого берем шаблон (взятое из index.html ранее) и вставлем
        * в него полученные данные, включая начальное состояние store
        */
+      console.log(req.nonce);
+
       const writable = new HtmlWritable();
       writable.on('finish', () => {
         const helmet = Helmet.renderStatic();
         const appHtml = writable.getHtml();
         const responseHtml = template
+          .replace(`{csp.nonce}`, req.nonce)
+          // .replace(`type="module"`, `type="module" nonce="${req.nonce}"`)
           .replace(
             `<div id="root" class="root"><!--ssr-outlet--></div>`,
             `<div id="root" class="root">${appHtml}</div>
             <script>
-                window.__PRELOADED_STATE__=${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
+            window.__PRELOADED_STATE__=${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
             </script>`
           )
           .replace(
@@ -154,9 +167,9 @@ async function startServer() {
               ${helmet.title.toString()}
               ${helmet.meta.toString()}
               ${helmet.link.toString()}
-            `
-          );
-
+              `
+          )
+          .replace(/<script/g, `<script nonce="${req.nonce}"`);
         res.send(responseHtml);
       });
     } catch (e) {
