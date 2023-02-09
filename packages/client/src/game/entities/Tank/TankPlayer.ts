@@ -56,18 +56,24 @@ export class TankPlayer extends Tank {
     ++this.upgradeTier;
 
     // Апгрейды танка
-    if (this.upgradeTier === 2) { // Увеличение скорости стрельбы
+    if (this.upgradeTier === 2) {
+      // Увеличение скорости стрельбы
       this.setShootSpeed(Speed.High);
-      this.mainSpriteCoordinates =
-        isPlayerOne ? spriteCoordinates['tank.player.primary.b'] : spriteCoordinates['tank.player.secondary.b'];
-    } else if (this.upgradeTier === 3) { // Увеличение лимита выпускаемых за раз снарядов
+      this.mainSpriteCoordinates = isPlayerOne
+        ? spriteCoordinates['tank.player.primary.b']
+        : spriteCoordinates['tank.player.secondary.b'];
+    } else if (this.upgradeTier === 3) {
+      // Увеличение лимита выпускаемых за раз снарядов
       this.projectilesLimit = 2;
-      this.mainSpriteCoordinates =
-        isPlayerOne ? spriteCoordinates['tank.player.primary.c'] : spriteCoordinates['tank.player.secondary.c'];
-    } else if (this.upgradeTier >= 4) { // Увеличение силы взрыва снарядов (лучше пробивает стены)
+      this.mainSpriteCoordinates = isPlayerOne
+        ? spriteCoordinates['tank.player.primary.c']
+        : spriteCoordinates['tank.player.secondary.c'];
+    } else if (this.upgradeTier >= 4) {
+      // Увеличение силы взрыва снарядов (лучше пробивает стены)
       this.shootForce = 2;
-      this.mainSpriteCoordinates =
-        isPlayerOne ? spriteCoordinates['tank.player.primary.d'] : spriteCoordinates['tank.player.secondary.d'];
+      this.mainSpriteCoordinates = isPlayerOne
+        ? spriteCoordinates['tank.player.primary.d']
+        : spriteCoordinates['tank.player.secondary.d'];
     }
     this.refreshSprite();
   }
