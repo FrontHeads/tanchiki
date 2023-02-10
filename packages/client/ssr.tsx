@@ -6,14 +6,8 @@ import { createStaticRouter, StaticRouterProvider } from 'react-router-dom/serve
 
 import { routes } from './src/config/router';
 import { store } from './src/store';
-import { HTTPClient } from './src/utils/HTTP';
 
 export async function render(streamOptions: RenderToPipeableStreamOptions, request: express.Request) {
-  const { httpClient } = HTTPClient.getInstance();
-
-  /** Пробрасываем Cookie в instanse серверный Axios для получения данных из Яндекс API, закрытых авторизацией */
-  httpClient.defaults.headers.common['Cookie'] = request.headers.cookie;
-
   const { query } = createStaticHandler(routes);
   const remixRequest = createFetchRequest(request);
   const context = await query(remixRequest);

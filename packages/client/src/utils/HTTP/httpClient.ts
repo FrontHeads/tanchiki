@@ -20,6 +20,13 @@ class HTTPClient {
   }
 
   private initInterceptors() {
+    /**
+     * Забираем request interceptors из глобального инстанса
+     * В противном случае interceptors с сервера не подключаются
+     * на стороне клиента
+     */
+    this.httpClient.interceptors.request = axios.interceptors.request;
+
     // Check if error response body contains reason of error
     this.httpClient.interceptors.response.use(
       response => response,
