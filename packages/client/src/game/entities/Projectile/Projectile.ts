@@ -11,7 +11,9 @@ export class Projectile extends EntityDynamic {
   moveSpeed = 1;
   moveSpeedPrev = 1;
   moveStepsTotal = 5;
+  /** Радиус взрыва снаряда (прибавляется к размеру). */
   explosionRadius = 1;
+  /** Глубина взрыва снаряда. */
   explosionForce = 1;
   parent: Tank | null = null;
 

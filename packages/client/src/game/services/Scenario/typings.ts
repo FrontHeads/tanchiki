@@ -1,4 +1,4 @@
-import { type Tank, type TankEnemy } from '../../entities';
+import { type Powerup, type Tank, type TankEnemy } from '../../entities';
 import { type ControllerBase } from '../Controller/ControllerBase';
 import { type Player } from './data';
 
@@ -33,8 +33,10 @@ export type ScenarioState = {
   maxEnemies: number;
   /** Задержка (мс) перед появлением новых врагов на карте */
   enemiesSpawnDelay: number;
-  /** Массив с танами протвников на карте */
+  /** Массив с танками протвников на карте */
   enemies: Tank[];
+  /** Бонус на карте */
+  powerup: Powerup | null;
   /** Объект со state игроков */
   players: Record<Player, ScenarioPlayerState>;
 };

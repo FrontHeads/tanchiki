@@ -1,5 +1,6 @@
 import { type EntitySettings, type EntityType, type Pos } from '../../entities/Entity/typings';
 import { type EnemyVariant } from '../../entities/Tank/typings';
+import { rand } from '../../utils/rand';
 import { type GameSettings } from '../Game/typings';
 import { brickCells, Cell, concreteCells, spawnPlaces } from './data';
 import { enemyForces } from './enemyForces';
@@ -7,6 +8,7 @@ import { levels } from './levels';
 import { type MapTerrainData } from './typings';
 
 export class MapManager {
+  private map: MapTerrainData | null = null;
   private mapLevelIndex = 0;
   private mapTerrainData = levels;
   private mapEnemyForces = enemyForces;
@@ -31,13 +33,33 @@ export class MapManager {
 
   getMap(level: number): MapTerrainData {
     this.mapLevelIndex = level - 1;
-    const map = this.mapTerrainData[this.mapLevelIndex];
+    this.map = this.fixMapData(this.mapTerrainData[this.mapLevelIndex]);
 
-    return this.fixMapData(map);
+    return this.map;
+  }
+
+  getRandomEmptyCell() {
+    if (!this.map) {
+      return this.coordsToRect(0, 0);
+    }
+
+    let cell: Cell;
+    let y = 0;
+    let x = 0;
+    const maxX = this.map.length - 1;
+    const maxY = this.map[0].length - 1;
+
+    do {
+      y = rand(0, maxY);
+      x = rand(0, maxX);
+      cell = this.map[y][x];
+    } while (cell !== Cell.Blank || (spawnPlaces[y] && spawnPlaces[y].includes(x)));
+
+    return this.coordsToRect(x, y);
   }
 
   getMapTankEnemyVariant(counter: number): EnemyVariant {
-    const mapEnemyForces = enemyForces[this.mapLevelIndex];
+    const mapEnemyForces = this.mapEnemyForces[this.mapLevelIndex];
     const enemyVariantLetter = mapEnemyForces[counter];
 
     switch (enemyVariantLetter) {
@@ -57,33 +79,10 @@ export class MapManager {
 
     map.forEach((row, y) => {
       row.forEach((cell, x) => {
-        let type: Nullable<EntityType> = null;
-        if (concreteCells.includes(cell)) {
-          type = 'concreteWall';
-        } else if (brickCells.includes(cell)) {
-          type = 'brickWall';
-        } else if (cell === Cell.Forest) {
-          type = 'trees';
-        } else if (cell === Cell.Water) {
-          type = 'water';
-        } else if (cell === Cell.Ice) {
-          type = 'ice';
-        } else if (cell === Cell.Base) {
-          type = 'flag';
-        } else {
+        const entity = this.cellToEntitySettings(cell, x, y);
+
+        if (!entity) {
           return;
-        }
-
-        const entity = {
-          type,
-          width: 4,
-          height: 4,
-          posX: this.coordToPos(x),
-          posY: this.coordToPos(y),
-        };
-
-        if (entity.type === 'brickWall' || entity.type === 'concreteWall') {
-          this.updateWallProps(entity, cell);
         }
 
         result.push(entity);
@@ -91,6 +90,39 @@ export class MapManager {
     });
 
     return result;
+  }
+
+  cellToEntitySettings(cell: number, x: number, y: number) {
+    let type: Nullable<EntityType> = null;
+    if (concreteCells.includes(cell)) {
+      type = 'concreteWall';
+    } else if (brickCells.includes(cell)) {
+      type = 'brickWall';
+    } else if (cell === Cell.Forest) {
+      type = 'trees';
+    } else if (cell === Cell.Water) {
+      type = 'water';
+    } else if (cell === Cell.Ice) {
+      type = 'ice';
+    } else if (cell === Cell.Base) {
+      type = 'flag';
+    } else {
+      return;
+    }
+
+    const entity = {
+      type,
+      width: 4,
+      height: 4,
+      posX: this.coordToPos(x),
+      posY: this.coordToPos(y),
+    };
+
+    if (entity.type === 'brickWall' || entity.type === 'concreteWall') {
+      this.updateWallProps(entity, cell);
+    }
+
+    return entity;
   }
 
   updateWallProps(entity: EntitySettings, cell: Cell) {

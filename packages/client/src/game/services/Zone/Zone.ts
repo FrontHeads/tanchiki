@@ -1,4 +1,4 @@
-import { type Entity, EntityDynamic, Projectile, Tank } from '../../entities';
+import { type Entity, type Powerup, EntityDynamic, Projectile, Tank, TankPlayer } from '../../entities';
 import { type PosState, type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 
 enum ZoneLayers {
@@ -197,7 +197,7 @@ export class Zone {
   }
 
   /** Наносит урон по заданному прямоугольнику */
-  doAreaDamage(rect: Rect, source: Projectile) {
+  doAreaDamage(rect: Rect, source: Projectile | TankPlayer | Powerup) {
     for (let x = rect.posX + rect.width - 1; x >= rect.posX; --x) {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
@@ -205,9 +205,11 @@ export class Zone {
         // Урон наносится по каждой клетке, координаты которой передаются дальше
         // (это нужно для частичного разрушения стен и уничтожения сразу нескольких объектов)
         const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
-        if (mainLayerCell && mainLayerCell.hittable && mainLayerCell !== source.parent) {
-          if (mainLayerCell.type !== 'tank' || this.currentRectsOverlap(source, mainLayerCell)) {
-            mainLayerCell.takeDamage(source, damagedRect);
+        if (mainLayerCell && mainLayerCell.hittable) {
+          if (!(source instanceof Projectile) || mainLayerCell !== source.parent) {
+            if (mainLayerCell.type !== 'tank' || this.currentRectsOverlap(source, mainLayerCell)) {
+              mainLayerCell.takeDamage(source, damagedRect);
+            }
           }
         }
         if (projectileLayerCell) {
@@ -239,13 +241,18 @@ export class Zone {
       for (let y = rect.posY + rect.height - 1; y >= rect.posY; --y) {
         const mainLayerCell = this.matrix[ZoneLayers.Main][x]?.[y];
         const projectileLayerCell = this.matrix[ZoneLayers.Projectiles][x]?.[y];
+        const powerupLayerCell = this.matrix[ZoneLayers.Powerups][x]?.[y];
 
-        if (!mainLayerCell && !projectileLayerCell) {
+        if (!mainLayerCell && !projectileLayerCell && !powerupLayerCell) {
           continue;
         }
         if (entity instanceof Tank) {
           if (mainLayerCell !== null && mainLayerCell !== entity && !mainLayerCell.crossable) {
             return true;
+          }
+          if (powerupLayerCell !== null && entity instanceof TankPlayer) {
+            const damagedRect = { posX: x, posY: y, width: 1, height: 1 };
+            powerupLayerCell.takeDamage(entity, damagedRect);
           }
         }
         if (entity instanceof Projectile) {

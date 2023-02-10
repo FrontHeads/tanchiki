@@ -117,6 +117,13 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
     this.despawn();
   }
 
+  /** Уничтожает объект. */
+  beDestroyed(source: Entity) {
+    this.explode();
+    this.destroyedBy = source;
+    this.emit(EntityEvent.Destroyed, source);
+  }
+
   /** Наносит урон по объекту. */
   takeDamage(source: Entity, rect: Rect) {
     if (this.type === 'tank' && this.damagedBy === source) {
