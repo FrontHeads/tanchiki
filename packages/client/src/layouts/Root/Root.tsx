@@ -1,6 +1,6 @@
 import './Root.css';
 
-import { type FC, Suspense } from 'react';
+import { type FC, Suspense, useEffect, useLayoutEffect } from 'react';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -24,8 +24,9 @@ export const Root: FC = () => {
 
   if (typeof loaderData?.user?.then === 'function') {
     loaderData.user.then(response => {
-      const profileData = response ? response.data : null;
-      return dispatch(authActions.setUserProfile(profileData));
+      if (response?.data) {
+        dispatch(authActions.setUserProfile(response.data));
+      }
     });
   }
 
