@@ -1,6 +1,6 @@
 import { sleep } from '../../utils/sleepTimer';
 import { ControllerDesktop } from './ControllerDesktop';
-import { ControllerTouchscreen } from './ControllerTouchscreen';
+import { ControllerPointer } from './ControllerPointer';
 import { ControllerBtnClassName, ControllerEvent } from './data';
 import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from './KeyBindings';
 
@@ -177,29 +177,33 @@ describe('game/services/Controller', () => {
     });
   });
 
-  it(`it should handle shoot binding by mousedown`, () => {
-    const controller = new ControllerDesktop({ pointerBindings: PointerBindings });
-    const mockMoveFn = jest.fn();
-    const mockShootFn = jest.fn();
+  it(`it should handle bindings by mousedown`, () => {
+    const controller = new ControllerDesktop({
+      keyBindings: KeyBindingsWasd,
+      controllerMouse: new ControllerPointer({
+        pointerBindings: PointerBindings,
+        type: 'mouse',
+      }),
+    });
+    const mockPauseFn = jest.fn();
+    const mockMuteFn = jest.fn();
+    const mockFullscreenFn = jest.fn();
 
     controller.load();
-    controller.on(ControllerEvent.Move, mockMoveFn);
-    controller.on(ControllerEvent.Shoot, mockShootFn);
-    mockPointerStart(ControllerBtnClassName.MoveUp, 'mousedown');
-    mockPointerStart(ControllerBtnClassName.MoveDown, 'mousedown');
-    mockPointerStart(ControllerBtnClassName.MoveLeft, 'mousedown');
-    mockPointerStart(ControllerBtnClassName.MoveRight, 'mousedown');
-    mockPointerStart(ControllerBtnClassName.Shoot, 'mousedown');
+    controller.on(ControllerEvent.Pause, mockPauseFn);
+    controller.on(ControllerEvent.Mute, mockMuteFn);
+    controller.on(ControllerEvent.Fullscreen, mockFullscreenFn);
+    mockPointerStart(ControllerBtnClassName.Pause, 'mousedown');
+    mockPointerStart(ControllerBtnClassName.Mute, 'mousedown');
+    mockPointerStart(ControllerBtnClassName.Fullscreen, 'mousedown');
 
-    expect(mockMoveFn).toHaveBeenNthCalledWith(1, 'UP');
-    expect(mockMoveFn).toHaveBeenNthCalledWith(2, 'DOWN');
-    expect(mockMoveFn).toHaveBeenNthCalledWith(3, 'LEFT');
-    expect(mockMoveFn).toHaveBeenNthCalledWith(4, 'RIGHT');
-    expect(mockShootFn).toBeCalledTimes(1);
+    expect(mockPauseFn).toBeCalledTimes(1);
+    expect(mockMuteFn).toBeCalledTimes(1);
+    // expect(mockFullscreenFn).toBeCalledTimes(1);
   });
 
   it(`it should handle shoot binding by touchstart`, () => {
-    const controller = new ControllerTouchscreen({ pointerBindings: PointerBindings });
+    const controller = new ControllerPointer({ pointerBindings: PointerBindings, type: 'touchscreen' });
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 

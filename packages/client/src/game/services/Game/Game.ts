@@ -16,7 +16,7 @@ import {
   View,
   Zone,
 } from '../';
-import { type ControllerBase } from '../Controller/ControllerBase';
+import { ControllerPointer } from '../Controller/ControllerPointer';
 import { ControllerEvent, ServiceButtonsName } from '../Controller/data';
 import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
 import { levels } from '../MapManager/levels';
@@ -35,9 +35,9 @@ export class Game extends EventEmitter {
   audioManager: AudioManager;
   overlay: Overlay;
   scenario: Scenario | undefined;
-  controllerAll: ControllerBase;
-  controllerPlayerOne: ControllerBase;
-  controllerPlayerTwo: ControllerBase;
+  controllerAll: ControllerPointer | ControllerDesktop;
+  controllerPlayerOne: ControllerPointer | ControllerDesktop;
+  controllerPlayerTwo: ControllerPointer | ControllerDesktop;
   statistics: Statistics;
   /** Настройки игрового экрана. Размеры заданы в игровых клетках.*/
   settings: GameSettings = { width: 62, height: 56, boundarySize: 2, indicatorsSidebarSize: 6 };
@@ -386,10 +386,14 @@ export class Game extends EventEmitter {
     return isTouchscreen()
       ? new ControllerTouchscreen({
           pointerBindings: PointerBindings,
+          type: 'touchscreen',
         })
       : new ControllerDesktop({
           keyBindings: keyBinding,
-          pointerBindings: PointerBindings,
+          controllerMouse: new ControllerPointer({
+            pointerBindings: PointerBindings,
+            type: 'mouse',
+          }),
         });
   }
 }

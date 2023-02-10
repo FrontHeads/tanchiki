@@ -1,22 +1,15 @@
 import { type Direction } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { ControllerEvent } from './data';
-import { type Binding, type BindingConfig } from './KeyBindings';
+import { type Binding } from './KeyBindings';
 
 export abstract class ControllerBase extends EventEmitter<ControllerEvent> {
   activeDirection: Partial<Record<Direction, boolean>> = {};
   shootProcess: ReturnType<typeof setInterval> | null = null;
   shootIntervalMs = 200;
-  /** Кнопки зарезервированные для управления игрой.  */
-  keyBindings: BindingConfig;
-  /** СSS классы зарезервированные для управления игрой через
-   * клики мышкой или касания тачскрина по элементам с этими классами. */
-  pointerBindings: BindingConfig;
 
-  constructor({ keyBindings, pointerBindings }: Record<string, BindingConfig>) {
+  constructor() {
     super();
-    this.keyBindings = keyBindings;
-    this.pointerBindings = pointerBindings;
   }
 
   load() {
@@ -69,80 +62,5 @@ export abstract class ControllerBase extends EventEmitter<ControllerEvent> {
       clearInterval(this.shootProcess);
       this.shootProcess = null;
     }
-  }
-
-  keydown = (event: KeyboardEvent) => {
-    if (event.repeat) {
-      return false;
-    }
-    const keyBinding = this.getKeyBinding(event.code);
-    if (keyBinding) {
-      this.emitBindingAction(keyBinding);
-      this.preventDefaultEvent(event);
-    }
-  };
-
-  keyup = (event: KeyboardEvent) => {
-    const keyBinding = this.getKeyBinding(event.code);
-    if (keyBinding) {
-      this.stopBindingAction(keyBinding);
-      this.preventDefaultEvent(event);
-    }
-  };
-
-  preventDefaultEvent(event: KeyboardEvent) {
-    if (!event.ctrlKey && !event.shiftKey && !event.altKey) {
-      event.preventDefault();
-    }
-  }
-
-  getKeyBinding(code: string) {
-    return this.keyBindings[code] || null;
-  }
-
-  /** Обрабатывает события mouseDown и touchStart */
-  startPointing = (event: MouseEvent | TouchEvent) => {
-    if (!event.target) {
-      return;
-    }
-
-    const pointerBinding = this.getPointerBinding(event.target);
-
-    if (pointerBinding) {
-      event.preventDefault();
-      this.emitBindingAction(pointerBinding);
-    }
-  };
-
-  /** Обрабатывает события mouseUp и touchEnd */
-  endPointing = (event: MouseEvent | TouchEvent) => {
-    if (!event.target) {
-      return;
-    }
-
-    const pointerBinding = this.getPointerBinding(event.target);
-
-    if (pointerBinding) {
-      event.preventDefault();
-      this.stopBindingAction(pointerBinding);
-    }
-  };
-
-  /** Проверяет существует ли соответствующее событие для клика/тапа по элементу с определенным CSS-классом. */
-  getPointerBinding(target: EventTarget) {
-    if (!(target instanceof HTMLElement || target instanceof SVGElement) || !this.pointerBindings) {
-      return;
-    }
-
-    let result = null;
-
-    for (const [key, value] of Object.entries(this.pointerBindings)) {
-      if (target.closest(`.${key}`)) {
-        result = value;
-        break;
-      }
-    }
-
-    return result;
   }
 }
