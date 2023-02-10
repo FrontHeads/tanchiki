@@ -1,4 +1,4 @@
-import { type UserDTO } from '../api/typings';
+import type { LeaderboardRecord, UserDTO } from '../api/typings';
 
 export const fakeUserProfile: UserDTO = {
   id: 1,
@@ -10,3 +10,24 @@ export const fakeUserProfile: UserDTO = {
   avatar: '',
   phone: '555555',
 };
+
+export const fakeLeaderboardData: Array<LeaderboardRecord> = [
+  {
+    data: {
+      rate: 1,
+      time: 100,
+      score: 200,
+      matches: 6,
+      username: 'User1',
+    },
+  },
+  {
+    data: {
+      rate: 2,
+      time: 200,
+      score: 300,
+      matches: 10,
+      username: 'User2',
+    },
+  },
+];
