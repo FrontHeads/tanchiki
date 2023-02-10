@@ -1,4 +1,4 @@
-import { type UserDTO } from '../api/typings';
+import type { LeaderboardRecord, UserDTO } from '../api/typings';
 import { type ForumSectionT } from '../pages/Forum/ForumSection/typings';
 import { type ForumSectionItem } from '../pages/Forum/ForumSectionList/typings';
 import { type User } from '../pages/Forum/ForumTopic/ForumMessage/typings';
@@ -78,3 +78,24 @@ export const fakeForumTopicData: ForumTopicT = {
   user: fakeUser,
   username: 'user1',
 };
+
+export const fakeLeaderboardData: Array<LeaderboardRecord> = [
+  {
+    data: {
+      rate: 1,
+      time: 100,
+      score: 200,
+      matches: 6,
+      username: 'User1',
+    },
+  },
+  {
+    data: {
+      rate: 2,
+      time: 200,
+      score: 300,
+      matches: 10,
+      username: 'User2',
+    },
+  },
+];

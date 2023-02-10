@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { createRoutesFromElements, Link, Route } from 'react-router-dom';
+import { type LoaderFunction, createRoutesFromElements, Link, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
 import { oauthAPI } from '../api/oauthAPI';
@@ -9,12 +9,12 @@ import { Root as RootLayout } from '../layouts/Root';
 import { Contact } from '../pages/Contact';
 import { ErrorPage } from '../pages/ErrorPage';
 import { Home } from '../pages/Home';
-import { Leaderboard } from '../pages/Leaderboard';
 import { SignIn } from '../pages/SignIn';
 import { SignUp } from '../pages/SignUp';
 import { UserProfile } from '../pages/UserProfile';
 import { PATH, Paths } from './constants';
 import { forumRoutes } from './forumRoutes';
+import { leaderboardRoute } from './leaderboardRoute';
 
 /** Делаем "ленивую" подгрузку игры только в момент перехода в соответствующий раздел */
 const Game = lazy(() => import('../pages/Game').then(module => ({ default: module.Game })));
@@ -24,7 +24,8 @@ const Game = lazy(() => import('../pages/Game').then(module => ({ default: modul
   чтобы в случае ошибки (куки не валидны, пользователь не авторизован) пользователю не
   отображалось это сообщение, т.к. при проверке авторизации в этом нет необходимости
 */
-export const rootLoader = () => {
+
+export const rootLoader: LoaderFunction = () => {
   let oauthCode: string | null = null;
 
   // Получаем код только при работе в браузере
@@ -68,7 +69,7 @@ export const routes = createRoutesFromElements(
 
       <Route element={<ProtectedRoutes />}>
         <Route path={Paths.UserProfile} element={<UserProfile />}></Route>
-        <Route path={Paths.Leaderboard} element={<Leaderboard />}></Route>
+        {leaderboardRoute()}
         <Route
           path={Paths.Forum}
           handle={{

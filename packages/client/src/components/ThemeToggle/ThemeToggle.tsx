@@ -65,11 +65,17 @@ export const ThemeToggle: FC = () => {
   useEffect(() => {
     (async function getThemeFromAPI() {
       if (userId && !localStorage.getItem('theme')) {
-        const themeNameFromDB = await themizationAPI.getUserTheme();
+        try {
+          const themeNameFromDB = await themizationAPI.getUserTheme();
 
-        const themeNameFromDBIsValid = typeof themeNameFromDB === 'string' && themeNameFromDB !== themeName;
-        if (themeNameFromDBIsValid) {
-          toggleTheme({ currentThemeName: themeNameFromDB, skipServerRequest: true });
+          const themeNameFromDBIsValid = typeof themeNameFromDB === 'string' && themeNameFromDB !== themeName;
+          if (themeNameFromDBIsValid) {
+            toggleTheme({ currentThemeName: themeNameFromDB, skipServerRequest: true });
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            console.log('Get theme error. Server response:', error.message);
+          }
         }
       }
     })();
