@@ -13,7 +13,7 @@ const isToday = (date: Date) => {
 export default function simplifyDate(dateString: string): string {
   const date = new Date(dateString);
 
-  const hours = date.getHours();
+  const hours = getPaddedDatePart(date.getHours());
   const minutes = getPaddedDatePart(date.getMinutes());
 
   const day = getPaddedDatePart(date.getDate());
