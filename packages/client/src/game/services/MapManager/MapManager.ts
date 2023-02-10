@@ -1,11 +1,11 @@
 import { type EntitySettings, type EntityType, type Pos } from '../../entities/Entity/typings';
 import { type EnemyVariant } from '../../entities/Tank/typings';
+import { rand } from '../../utils/rand';
 import { type GameSettings } from '../Game/typings';
 import { brickCells, Cell, concreteCells, spawnPlaces } from './data';
 import { enemyForces } from './enemyForces';
 import { levels } from './levels';
 import { type MapTerrainData } from './typings';
-import { rand } from '../../utils/rand';
 
 export class MapManager {
   private map: MapTerrainData | null = null;

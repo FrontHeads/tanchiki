@@ -1,7 +1,7 @@
-import { type PowerupVariant } from './typings';
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
-import { EntityEvent } from '../Entity/typings';
 import { Entity } from '../';
+import { EntityEvent } from '../Entity/typings';
+import { type PowerupVariant } from './typings';
 
 const powerupVariants: PowerupVariant[] = ['STAR', 'TANK', 'HELMET', 'GRENADE', 'SHOVEL', 'CLOCK'];
 

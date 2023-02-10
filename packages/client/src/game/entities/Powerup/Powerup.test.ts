@@ -1,7 +1,7 @@
 import { Game, Scenario } from '../../services';
+import { sleep } from '../../utils';
 import { type Powerup, TankPlayer } from '../';
 import { Direction } from '../Entity/typings';
-import { sleep } from '../../utils';
 
 let game: Game;
 let scenario: Scenario;

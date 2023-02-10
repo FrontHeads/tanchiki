@@ -1,6 +1,6 @@
 import './Root.css';
 
-import { type FC, Suspense, useEffect, useLayoutEffect } from 'react';
+import { type FC, Suspense } from 'react';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
