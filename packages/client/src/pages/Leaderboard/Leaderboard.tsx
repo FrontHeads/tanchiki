@@ -1,9 +1,11 @@
 import './Leaderboard.css';
 
-import { type FC, useEffect } from 'react';
+import { type FC, Suspense } from 'react';
+import { Await, useLoaderData } from 'react-router-dom';
 
-import { Loader } from '../../components/Loader';
-import { leaderboardSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
+import { type GetLeaderboardResponseData } from '../../api/typings';
+import { leaderboardActions, leaderboardSelectors, useAppDispatch, useAppSelector } from '../../store';
+import { type ResponseType } from '../../utils/HTTP';
 import { generateMetaTags } from '../../utils/seoUtils';
 import { leaderboardFields } from './data';
 import { LeaderboardField } from './LeaderboardField/LeaderboardField';
@@ -14,15 +16,15 @@ export const headerText = 'Рейтинг игроков';
 
 export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const dispatch = useAppDispatch();
-  const { isLoading, sortDirection } = useAppSelector(leaderboardSelectors.all);
+  const sortDirection = useAppSelector(leaderboardSelectors.sortDirection);
+  const loaderData = useLoaderData() as { leaderboardData: Promise<ResponseType<GetLeaderboardResponseData>> };
   const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
 
-  useEffect(() => {
-    dispatch(leaderboardThunks.getLeaderboard());
-  }, []);
-
-  if (isLoading) {
-    return <Loader />;
+  if (typeof loaderData?.leaderboardData?.then === 'function') {
+    loaderData.leaderboardData.then(response => {
+      const leaderboardData = response ? response.data : null;
+      return dispatch(leaderboardActions.setLeaderboardTable(leaderboardData));
+    });
   }
 
   return (
@@ -32,31 +34,35 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
         <h1 data-testid="lb-header" className="no-margin-top leaderboard__header">
           {header}
         </h1>
-        <table border={1} className="leaderboard">
-          <thead className="leaderboard__row-header">
-            <tr>
-              {leaderboardFields.map(field => (
-                <LeaderboardField
-                  key={field.fieldId}
-                  fieldName={field.fieldName}
-                  fieldId={field.fieldId}
-                  title={field.title}
-                />
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {leaderboard.map((row, index) => {
-              return (
-                <LeaderboardRow
-                  key={row.data.username}
-                  data={row.data}
-                  place={sortDirection === 'desc' ? index + 1 : leaderboard.length - index}
-                />
-              );
-            })}
-          </tbody>
-        </table>
+        <Suspense fallback={<span data-testid="leaderboard-table-loader">Загрузка данных...</span>}>
+          <Await resolve={(loaderData && loaderData.leaderboardData) || Promise.resolve()}>
+            <table border={1} className="leaderboard">
+              <thead className="leaderboard__row-header">
+                <tr>
+                  {leaderboardFields.map(field => (
+                    <LeaderboardField
+                      key={field.fieldId}
+                      fieldName={field.fieldName}
+                      fieldId={field.fieldId}
+                      title={field.title}
+                    />
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboard.map((row, index) => {
+                  return (
+                    <LeaderboardRow
+                      key={row.data.username}
+                      data={row.data}
+                      place={sortDirection === 'desc' ? index + 1 : leaderboard.length - index}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </Await>
+        </Suspense>
       </section>
     </>
   );
