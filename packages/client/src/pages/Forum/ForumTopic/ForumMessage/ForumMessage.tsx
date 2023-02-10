@@ -77,7 +77,7 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
         return;
       }
 
-      forumAPI.editMessage(message.id, { content: messageContent, user_id: message.user_id }).then(res => {
+      forumAPI.editMessage(message.id, { content: messageContent }).then(res => {
         setMessage(res.data);
       });
       setIsEditMessage(false);

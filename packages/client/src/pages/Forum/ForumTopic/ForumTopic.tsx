@@ -10,7 +10,6 @@ import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { ValidationErrors } from '../../../components/ValidationErrors';
-import { authSelectors, useAppSelector } from '../../../store';
 import { getAvatar } from '../../../utils/getAvatar';
 import { generateMetaTags } from '../../../utils/seoUtils';
 import { useValidation } from '../../../utils/validation';
@@ -23,7 +22,6 @@ import { type ForumTopicT } from './typings';
 
 export const ForumTopic: FC = () => {
   const currentTopic = useLoaderData() as ForumTopicT;
-  const userId = useAppSelector(authSelectors.userProfile)?.id;
   const authorId = currentTopic.user_id;
 
   const { topicId } = useParams();
@@ -82,7 +80,6 @@ export const ForumTopic: FC = () => {
 
       forumAPI
         .createMessage({
-          user_id: userId,
           topic_id: Number(topicId),
           content: formMessage,
         })

@@ -1,4 +1,4 @@
-import { AllowNull, Column, DataType, HasMany, Index, Model, Table, Unique } from 'sequelize-typescript';
+import { AllowNull, Column, DataType, HasMany, Model, Table, Unique } from 'sequelize-typescript';
 
 import { ForumTopic } from './ForumTopic';
 
@@ -6,7 +6,6 @@ import { ForumTopic } from './ForumTopic';
 export class ForumSection extends Model {
   @AllowNull(false)
   @Unique
-  @Index
   @Column(DataType.STRING)
   name!: string;
 

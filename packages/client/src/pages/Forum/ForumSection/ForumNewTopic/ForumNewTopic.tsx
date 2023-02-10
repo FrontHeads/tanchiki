@@ -11,14 +11,12 @@ import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { ValidationErrors } from '../../../../components/ValidationErrors';
 import { Paths } from '../../../../config/constants';
-import { authSelectors, useAppSelector } from '../../../../store';
 import { generateMetaTags } from '../../../../utils/seoUtils';
 import { useValidation } from '../../../../utils/validation';
 import { type ValidationErrorList } from '../../../../utils/validation/typings';
 
 export const ForumNewTopic = () => {
   const navigate = useNavigate();
-  const userId = useAppSelector(authSelectors.userProfile)?.id;
   const [topicHasErrors, setTopicHasErrors] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const validation = useValidation([
@@ -90,7 +88,6 @@ export const ForumNewTopic = () => {
           name: form.heading,
           content: form.message,
           section_id: Number(sectionId),
-          user_id: userId,
         })
 
         .then(res => {

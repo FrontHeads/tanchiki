@@ -59,7 +59,7 @@ export const ForumTopicDescription: FC<ForumTopicDescriptionProps> = props => {
         return;
       }
       forumAPI
-        .editTopic(topicId, { content: description, user_id: authorId })
+        .editTopic(topicId, { content: description })
         .then(res => {
           setDescription(res.data.content);
         })

@@ -8,23 +8,19 @@ import { HTTP } from '../utils/HTTP';
 type createTopicRequest = {
   name: string;
   section_id: number;
-  user_id?: number | null;
   content: string;
 };
 
 type createMessageRequest = {
-  user_id?: number | null;
   topic_id: number;
   content: string;
 };
 
 type editMessageRequest = {
   content: string;
-  user_id: number;
 };
 type editTopicRequest = {
   content: string;
-  user_id: number;
 };
 
 export const forumAPI = {

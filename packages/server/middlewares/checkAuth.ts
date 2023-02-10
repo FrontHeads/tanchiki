@@ -22,6 +22,8 @@ export const checkAuthMiddleware: RequestHandler = async (req, res, next) => {
               next();
             })
             .catch(next);
+        } else {
+          next();
         }
       })
       .catch(next);
