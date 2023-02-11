@@ -25,5 +25,13 @@ services:
     depends_on:
       - mongo
 
+  postgres:
+    ports:
+      - 5432:5432
+
+  mongo:
+    ports:
+      - 27017:27017
+
 volumes:
   pgadmin-data:
