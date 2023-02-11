@@ -10,11 +10,11 @@ import { initMongoDBConnection, initPostgreDBConnection } from './utils/database
 dotenv.config();
 
 import express from 'express';
-import { expressCspHeader, NONCE } from 'express-csp-header';
+import { expressCspHeader } from 'express-csp-header';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// import { expressCspHeader, NONCE } from './utils/expressCspHeader';
+import { getCspDirectives } from '../server/config/cspDirectives';
 import { HtmlWritable } from './utils/HtmlWritable';
 
 initPostgreDBConnection();
@@ -65,9 +65,7 @@ async function startServer() {
 
   app.use(
     expressCspHeader({
-      directives: {
-        'script-src': [NONCE],
-      },
+      directives: getCspDirectives(),
     })
   );
   /** Обрабатываем все остальные запросы к серверу */
