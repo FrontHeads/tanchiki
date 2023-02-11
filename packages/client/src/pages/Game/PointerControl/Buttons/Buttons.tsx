@@ -57,31 +57,29 @@ export const Buttons: FC = () => {
 
   return (
     <div className="controller">
-      <div className="controller__service_wrapper">
-        <div className="controller__service" data-testid="controller__service">
-          {showServiceButtons ? (
-            <>
-              <div className={pauseButtonClassName}>
-                <PauseSvgImage />
-              </div>
-              <div className={muteButtonClassName}>
-                <MuteSvgImage />
-              </div>
-            </>
-          ) : null}
-          {/iPad|iPhone/.test(navigator.userAgent) ? null : (
-            <div className={fullscreenButtonClassName}>
-              <FullscreenSvgImage />
+      <div className="controller__service" data-testid="controller__service">
+        {showServiceButtons ? (
+          <>
+            <div className={pauseButtonClassName}>
+              <PauseSvgImage />
             </div>
-          )}
-        </div>
+            <div className={muteButtonClassName}>
+              <MuteSvgImage />
+            </div>
+          </>
+        ) : null}
+        {/iPad|iPhone/.test(navigator.userAgent) ? null : (
+          <div className={fullscreenButtonClassName}>
+            <FullscreenSvgImage />
+          </div>
+        )}
       </div>
+
       <div className="controller__shoot" data-testid="controller__shoot">
         <button className={ControllerElemsClassName.ShootBtn}>
           <ShootSvgImage />
         </button>
       </div>
-      <div className="controller__shoot_centering-balancer"></div>
     </div>
   );
 };

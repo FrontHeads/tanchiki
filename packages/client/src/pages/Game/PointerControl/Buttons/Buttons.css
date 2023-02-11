@@ -7,9 +7,9 @@
   position: relative;
 
   @media (any-pointer: coarse) and (orientation: landscape) {
-    align-self: flex-start;
     min-height: 230px;
     height: 100%;
+    justify-content: center;
 
     @media (min-height: 730px) {
       align-self: center;
@@ -29,6 +29,9 @@
       left: 0;
       align-items: center;
       display: flex;
+      height: 100%;
+      justify-content: flex-end;
+      z-index: 900;
     }
 
     &-btn {
@@ -75,6 +78,8 @@
   &__shoot {
     display: flex;
     justify-content: center;
+    z-index: 990;
+
     @media (any-pointer: coarse) and (orientation: portrait) {
       min-width: 105px;
     }
