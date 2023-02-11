@@ -11,12 +11,11 @@
     "lint": "lerna run lint",
     "format": "lerna run format",
     "preview": "yarn build && lerna run preview --parallel",
-    "docker": "docker-compose up",
-    "docker:preview": "docker-compose up --build",
-    "docker:db": "docker-compose up postgres -d",
-    "docker:pgadmin": "docker-compose up pgadmin -d",
-    "docker:mongo": "docker-compose up mongo-express -d",
-    "docker:dev": "yarn docker:pgadmin && yarn docker:mongo && yarn dev"
+    "docker": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d",
+    "docker:build": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build",
+    "docker:pgadmin": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up pgadmin -d",
+    "docker:mongo-express": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up mongo-express -d",
+    "docker:dev": "yarn docker:pgadmin && yarn docker:mongo-express && yarn dev"
   },
   "license": "MIT",
   "workspaces": [

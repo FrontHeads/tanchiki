@@ -1,0 +1,30 @@
+name: deploy to Yandex Cloud
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - main
+      - task/120-deploy
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - uses: wshihadeh/docker-deployment-action@v1
+        with:
+          remote_docker_host: ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}
+          ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
+          # deploy_path: /root/my-deployment
+          stack_file_name: docker-compose.yaml -f docker-compose.prod.yml
+          # keep_files: 5
+          docker_prune: true
+          # args: my_applicaion
