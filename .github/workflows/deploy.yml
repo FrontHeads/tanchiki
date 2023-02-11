@@ -24,6 +24,7 @@ jobs:
           ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           ssh_public_key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
           stack_file_name: docker-compose.yml
+          docker_compose_ver: 'v1'
           docker_prune: 'true'
           copy_stack_file: 'true'
           args: up -d
