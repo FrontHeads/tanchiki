@@ -24,8 +24,9 @@ export const Root: FC = () => {
 
   if (typeof loaderData?.user?.then === 'function') {
     loaderData.user.then(response => {
-      const profileData = response ? response.data : null;
-      return dispatch(authActions.setUserProfile(profileData));
+      if (response?.data) {
+        dispatch(authActions.setUserProfile(response.data));
+      }
     });
   }
 

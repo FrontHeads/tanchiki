@@ -1,6 +1,6 @@
 import { Color } from '../../services/View/colors';
-import { type SpriteCoordinatesNoAnimations, type SpriteCoordinatesWithAnimations } from '../../services/View/typings';
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
+import { type SpriteCoordinatesNoAnimations, type SpriteCoordinatesWithAnimations } from '../../services/View/typings';
 import { rand } from '../../utils';
 import { Direction, EntityEvent } from '../Entity/typings';
 import { Speed } from '../EntityDynamic/data';

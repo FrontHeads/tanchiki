@@ -1,4 +1,4 @@
-import { type Entity, EntityDynamic, type Powerup, Projectile, Tank, TankPlayer } from '../../entities';
+import { type Entity, type Powerup, EntityDynamic, Projectile, Tank, TankPlayer } from '../../entities';
 import { type PosState, type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 
 enum ZoneLayers {

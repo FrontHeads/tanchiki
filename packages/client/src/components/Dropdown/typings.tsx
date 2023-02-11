@@ -6,6 +6,8 @@ export type DropdownMenuItems = {
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export type DropdownProps = {
+  className?: string;
   trigger: ReactElement;
+  emoteClass?: string;
   menuItems: DropdownMenuItems[];
 };

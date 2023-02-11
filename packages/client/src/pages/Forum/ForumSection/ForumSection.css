@@ -1,0 +1,21 @@
+.actions-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  align-self: center;
+  max-width: 950px;
+  width: 100%;
+  @media (max-width: 420px) {
+    flex-direction: column-reverse;
+  }
+
+  .add-topic-wrapper {
+    @media (max-width: 420px) {
+      align-self: end;
+      flex-direction: column-reverse;
+    }
+
+    width: fit-content;
+  }
+}
