@@ -25,4 +25,4 @@ jobs:
           ssh_public_key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
           stack_file_name: docker-compose.yaml -f docker-compose.prod.yml
           docker_prune: true
-          # args: my_applicaion
+          args: my_applicaion
