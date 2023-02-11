@@ -6,7 +6,9 @@ import { renderWithRouter } from '../../../utils/testingUtils';
 import { ForumSectionList } from './ForumSectionList';
 
 describe('ForumSectionList', () => {
-  const sectionList = [{ id: 1, name: 'Как побеждать?', topicCount: 2400, messages: 100 }];
+  const sectionList = [
+    { id: 1, name: 'Как побеждать?', topicCount: 2400, messages: 100, created_at: '', updated_at: '' },
+  ];
   const sectionListItem = sectionList[0];
 
   beforeEach(() => {

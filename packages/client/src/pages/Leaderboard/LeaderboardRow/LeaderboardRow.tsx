@@ -11,7 +11,7 @@ export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { username, scor
   const leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_desc' : '_asc'}`;
 
   return (
-    <tr className={leaderboardRowClassName}>
+    <tr className={leaderboardRowClassName} data-testid="leaderboard-row">
       <td>{place}</td>
       <td>{username}</td>
       <td>{score}</td>

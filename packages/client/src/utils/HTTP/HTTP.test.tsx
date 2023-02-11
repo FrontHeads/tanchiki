@@ -2,9 +2,9 @@ import MockAdapter from 'axios-mock-adapter';
 
 import { buildPath } from './buildPath';
 import { HTTP } from './HTTP';
-import { axios } from './httpClient';
+import { HTTPClient } from './httpClient';
 
-const mock = new MockAdapter(axios);
+const mock = new MockAdapter(HTTPClient.getInstance().httpClient);
 const baseUrl = `http://localhost:${__SERVER_PORT__}`;
 const data = { response: true };
 

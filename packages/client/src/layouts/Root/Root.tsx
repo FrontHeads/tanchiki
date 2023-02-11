@@ -1,6 +1,6 @@
 import './Root.css';
 
-import { type FC, Suspense, useEffect } from 'react';
+import { type FC, Suspense } from 'react';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -11,7 +11,6 @@ import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
 import { Paths } from '../../config/constants';
-import { rootLoader } from '../../config/router';
 import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
 import { type ResponseType } from '../../utils/HTTP';
 
@@ -21,32 +20,20 @@ export const Root: FC = () => {
   const printHeaderAndFooter = location?.pathname !== Paths.Game;
   const dispatch = useAppDispatch();
 
-  let data = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
+  const loaderData = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
 
-  useEffect(() => {
-    /**
-     * В React Router 6.6.1 была добавлена функция createStaticRouter и StaticRouterProvider,
-     * необходимые для создания data роутера для SSR. Однако, в этой версии по какой-то причине
-     * не происходит обработка loader для роута (смотри router.tsx). В связи с этим сделан данный хак -
-     * проверяем наличие Promise для пользователя в data.user и если его нет, то вызываем rootLoader
-     * вручную.
-     * Потрачено много времени на поиск решения проблемы, но по createStaticRouter пока еще мало информации
-     * в интернете.
-     */
-    if (typeof data?.user?.then !== 'function') {
-      data = rootLoader() as { user: Promise<ResponseType<UserDTO>> };
-    }
-
-    data.user.then(response => {
-      const profileData = response ? response.data : null;
-      return dispatch(authActions.setUserProfile(profileData));
+  if (typeof loaderData?.user?.then === 'function') {
+    loaderData.user.then(response => {
+      if (response?.data) {
+        dispatch(authActions.setUserProfile(response.data));
+      }
     });
-  }, [data]);
+  }
 
   return (
     <ErrorBoundary>
       <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
-        <Await resolve={(data && data.user) || Promise.resolve()}>
+        <Await resolve={(loaderData && loaderData.user) || Promise.resolve()}>
           <main className="layout">
             <header>
               <BurgerMenu />
