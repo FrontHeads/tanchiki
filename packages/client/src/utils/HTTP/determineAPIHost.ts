@@ -1,4 +1,4 @@
-import { CLIENT_ONLY_HOSTS, LOCAL_API_HOST, YANDEX_API_HOST } from '../../config/constants';
+import { API_HOST, CLIENT_ONLY_HOSTS, YANDEX_API_HOST } from '../../config/constants';
 
 /** Определяет, как клиенту нужно ходить к API Яндекса - через наш сервер или напрямую */
 export function determineAPIHost() {
@@ -12,9 +12,9 @@ export function determineAPIHost() {
 
     // Если в браузерной строке IP вместо localhost, то заменяем, чтобы не было ругани из-за CORS
     if (hostname && hostname === '127.0.0.1') {
-      return LOCAL_API_HOST.replace('localhost', '127.0.0.1');
+      return API_HOST.replace('localhost', '127.0.0.1');
     }
   }
 
-  return LOCAL_API_HOST;
+  return API_HOST;
 }
