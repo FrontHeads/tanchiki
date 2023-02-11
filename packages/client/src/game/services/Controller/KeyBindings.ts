@@ -1,5 +1,5 @@
 import { Direction } from '../../entities/Entity/typings';
-import { ControllerBtnClassName, ControllerEvent } from './data';
+import { ControllerElemsClassName, ControllerEvent } from './data';
 
 export type Binding =
   | [ControllerEvent.Move, Direction]
@@ -40,12 +40,12 @@ export const KeyBindingsArrows: BindingConfig = {
 };
 
 export const PointerBindings: BindingConfig = {
-  [ControllerBtnClassName.Shoot]: [ControllerEvent.Shoot],
-  [ControllerBtnClassName.MoveUp]: [ControllerEvent.Move, Direction.Up],
-  [ControllerBtnClassName.MoveRight]: [ControllerEvent.Move, Direction.Right],
-  [ControllerBtnClassName.MoveLeft]: [ControllerEvent.Move, Direction.Left],
-  [ControllerBtnClassName.MoveDown]: [ControllerEvent.Move, Direction.Down],
-  [ControllerBtnClassName.Pause]: [ControllerEvent.Pause],
-  [ControllerBtnClassName.Mute]: [ControllerEvent.Mute],
-  [ControllerBtnClassName.Fullscreen]: [ControllerEvent.Fullscreen],
+  [ControllerElemsClassName.ShootBtn]: [ControllerEvent.Shoot],
+  [ControllerElemsClassName.MoveUpBtn]: [ControllerEvent.Move, Direction.Up],
+  [ControllerElemsClassName.MoveRightBtn]: [ControllerEvent.Move, Direction.Right],
+  [ControllerElemsClassName.MoveLeftBtn]: [ControllerEvent.Move, Direction.Left],
+  [ControllerElemsClassName.MoveDownBtn]: [ControllerEvent.Move, Direction.Down],
+  [ControllerElemsClassName.PauseBtn]: [ControllerEvent.Pause],
+  [ControllerElemsClassName.MuteBtn]: [ControllerEvent.Mute],
+  [ControllerElemsClassName.FullscreenBtn]: [ControllerEvent.Fullscreen],
 };

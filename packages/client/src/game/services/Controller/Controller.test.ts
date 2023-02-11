@@ -1,7 +1,7 @@
 import { sleep } from '../../utils/sleepTimer';
 import { ControllerDesktop } from './ControllerDesktop';
 import { ControllerPointer } from './ControllerPointer';
-import { ControllerBtnClassName, ControllerEvent } from './data';
+import { ControllerElemsClassName, ControllerEvent } from './data';
 import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from './KeyBindings';
 
 function mockKeyDown(...codes: Array<string>) {
@@ -193,9 +193,9 @@ describe('game/services/Controller', () => {
     controller.on(ControllerEvent.Pause, mockPauseFn);
     controller.on(ControllerEvent.Mute, mockMuteFn);
     controller.on(ControllerEvent.Fullscreen, mockFullscreenFn);
-    mockPointerStart(ControllerBtnClassName.Pause, 'mousedown');
-    mockPointerStart(ControllerBtnClassName.Mute, 'mousedown');
-    mockPointerStart(ControllerBtnClassName.Fullscreen, 'mousedown');
+    mockPointerStart(ControllerElemsClassName.PauseBtn, 'mousedown');
+    mockPointerStart(ControllerElemsClassName.MuteBtn, 'mousedown');
+    mockPointerStart(ControllerElemsClassName.FullscreenBtn, 'mousedown');
 
     expect(mockPauseFn).toBeCalledTimes(1);
     expect(mockMuteFn).toBeCalledTimes(1);
@@ -210,11 +210,11 @@ describe('game/services/Controller', () => {
     controller.load();
     controller.on(ControllerEvent.Move, mockMoveFn);
     controller.on(ControllerEvent.Shoot, mockShootFn);
-    mockPointerStart(ControllerBtnClassName.MoveUp, 'touchstart');
-    mockPointerStart(ControllerBtnClassName.MoveDown, 'touchstart');
-    mockPointerStart(ControllerBtnClassName.MoveLeft, 'touchstart');
-    mockPointerStart(ControllerBtnClassName.MoveRight, 'touchstart');
-    mockPointerStart(ControllerBtnClassName.Shoot, 'touchstart');
+    mockPointerStart(ControllerElemsClassName.MoveUpBtn, 'touchstart');
+    mockPointerStart(ControllerElemsClassName.MoveDownBtn, 'touchstart');
+    mockPointerStart(ControllerElemsClassName.MoveLeftBtn, 'touchstart');
+    mockPointerStart(ControllerElemsClassName.MoveRightBtn, 'touchstart');
+    mockPointerStart(ControllerElemsClassName.ShootBtn, 'touchstart');
 
     expect(mockMoveFn).toHaveBeenNthCalledWith(1, 'UP');
     expect(mockMoveFn).toHaveBeenNthCalledWith(2, 'DOWN');

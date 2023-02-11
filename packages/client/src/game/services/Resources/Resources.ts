@@ -47,6 +47,14 @@ class Resources {
       } else if (assetType === 'sound') {
         resource = new Audio();
         this.soundList[assetName] = resource;
+
+        // TODO переделать загрузку звуков на Web Audio API и убрать этот костыль.
+        if (/iPad|iPhone/.test(navigator.userAgent)) {
+          resource.addEventListener('loadedmetadata', () => {
+            resolve(resource);
+          });
+        }
+
         resource.oncanplaythrough = () => {
           resolve(resource);
         };

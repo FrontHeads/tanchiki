@@ -14,15 +14,16 @@ export enum ServiceButtonsName {
   Fullscreen = 'FULLSCREEN',
 }
 
-export enum ControllerBtnClassName {
-  Shoot = 'controller__shoot-btn',
-  MoveUp = 'joystick__up-button',
-  MoveRight = 'joystick__right-button',
-  MoveLeft = 'joystick__left-button',
-  MoveDown = 'joystick__bottom-button',
-  Pause = 'controller__service-btn_pause',
-  Mute = 'controller__service-btn_mute',
-  Fullscreen = 'controller__service-btn_fullscreen',
+export enum ControllerElemsClassName {
+  ShootBtn = 'controller__shoot-btn',
+  MoveUpBtn = 'joystick__up-button',
+  MoveRightBtn = 'joystick__right-button',
+  MoveLeftBtn = 'joystick__left-button',
+  MoveDownBtn = 'joystick__bottom-button',
+  PauseBtn = 'controller__service-btn_pause',
+  MuteBtn = 'controller__service-btn_mute',
+  FullscreenBtn = 'controller__service-btn_fullscreen',
   DefaultServiceBtn = 'controller__service-btn',
   ActivatedServiceBtn = 'controller__service-btn_activated',
+  FullscreenWrapper = 'game__fullscreen-wrapper',
 }

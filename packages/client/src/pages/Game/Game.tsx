@@ -3,6 +3,7 @@ import './Game.css';
 import { createContext, useEffect, useRef, useState } from 'react';
 
 import { Tanchiki } from '../../game';
+import { ControllerElemsClassName } from '../../game/services/Controller/data';
 import { GameEvents } from '../../game/services/Game/data';
 import { ScreenType } from '../../game/ui/screens/data';
 import { isTouchscreen } from '../../game/utils/isTouchscreen';
@@ -48,18 +49,20 @@ export const Game = () => {
 
   return (
     <GameContext.Provider value={{ game, isGameInited }}>
-      {generateMetaTags({ title: 'Игра Танчики, Battle City 1990 на Dendy' })}
-      <div ref={gameRoot} className="game__root"></div>
-      {isTouchscreen() ? (
-        <div className="pointer-controller">
-          <Joystick />
-          <Buttons />
-        </div>
-      ) : (
-        <div className="desktop-controller">
-          <Buttons />
-        </div>
-      )}
+      <div className={ControllerElemsClassName.FullscreenWrapper}>
+        {generateMetaTags({ title: 'Игра Танчики, Battle City 1990 на Dendy' })}
+        <div ref={gameRoot} className="game__root"></div>
+        {isTouchscreen() ? (
+          <div className="pointer-controller">
+            <Joystick />
+            <Buttons />
+          </div>
+        ) : (
+          <div className="desktop-controller">
+            <Buttons />
+          </div>
+        )}
+      </div>
     </GameContext.Provider>
   );
 };

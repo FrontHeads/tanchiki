@@ -1,23 +1,29 @@
 .pointer-controller {
   --controllers-buttons-font-color: #fff;
   --controllers-buttons-extra-background-color: #afb2b6;
-  --service-btn-size: 35px;
+  --shoot-btn-size: 65px;
+  --service-btn-size: 20px;
   --service-btn-margin-left: var(--service-btn-size);
 
-  width: 102%;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   align-self: center;
   z-index: 900;
-  margin-top: -10px;
+
+  @media (min-width: 700px) {
+    --shoot-btn-size: 90px;
+  }
 
   @media (any-pointer: coarse) and (orientation: landscape) {
     height: 90vh;
+    position: absolute;
+    top: 16px;
 
     @media (min-width: 650px) {
-      width: 100%;
+      width: 97%;
     }
 
     @media (min-width: 730px) and (max-width: 1000px) {
@@ -26,10 +32,17 @@
     @media (min-width: 1000px) {
       width: 97%;
     }
+
+    @media (min-height: 600px) {
+      --service-btn-size: 30px;
+    }
   }
 
   @media (any-pointer: coarse) and (orientation: portrait) {
+    --shoot-btn-size: 90px;
+
     width: 97%;
+
     @media (min-width: 730px) {
       width: 90%;
     }

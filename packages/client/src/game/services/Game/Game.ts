@@ -22,6 +22,7 @@ import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings
 import { levels } from '../MapManager/levels';
 import { ScenarioEvent } from '../Scenario/typings';
 import { type StatisticsData } from '../Statistics/typings';
+import { ViewEvents } from '../View/data';
 import { GameEvents } from './data';
 import { type GameSettings } from './typings';
 
@@ -53,11 +54,11 @@ export class Game extends EventEmitter {
     super();
     this.loop = new Loop();
     this.zone = new Zone(this.settings);
-    this.view = new View(this.settings);
+    this.view = new View(this.settings, this);
     this.overlay = new Overlay(this);
     this.audioManager = new AudioManager();
-    this.controllerAll = this.getControllerType({ ...KeyBindingsWasd, ...KeyBindingsArrows });
-    this.controllerPlayerOne = this.getControllerType(KeyBindingsWasd);
+    this.controllerAll = this.createController({ ...KeyBindingsWasd, ...KeyBindingsArrows });
+    this.controllerPlayerOne = this.createController(KeyBindingsWasd);
     this.controllerPlayerTwo = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
     this.statistics = new Statistics(this);
   }
@@ -199,7 +200,7 @@ export class Game extends EventEmitter {
 
         // Запускаем игру после выбора уровня
         this.initGameLevel(true);
-        this.emit(GameEvents.ToggleVisibilityServiceBtn);
+        this.emit(ViewEvents.ToggleVisibilityServiceBtn);
       });
   }
 
@@ -296,11 +297,11 @@ export class Game extends EventEmitter {
     this.controllerAll
       .on(ControllerEvent.Pause, () => {
         this.togglePause();
-        this.emit(GameEvents.ToggleColorServiceBtn, ServiceButtonsName.Pause);
+        this.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Pause);
       })
       .on(ControllerEvent.Mute, () => {
         this.audioManager.emit('pause', { isMuteKey: true });
-        this.emit(GameEvents.ToggleColorServiceBtn, ServiceButtonsName.Mute);
+        this.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Mute);
       })
       .on(ControllerEvent.Fullscreen, () => {
         this.view.toggleFullScreen();
@@ -314,7 +315,7 @@ export class Game extends EventEmitter {
     this.scenario = new Scenario(this)
       .on(ScenarioEvent.GameOver, async () => {
         this.statistics.finishSession();
-        this.emit(GameEvents.ToggleVisibilityServiceBtn);
+        this.emit(ViewEvents.ToggleVisibilityServiceBtn);
         await this.initGameOverPopup();
         await this.initGameScore();
         this.initMenu();
@@ -382,7 +383,7 @@ export class Game extends EventEmitter {
     });
   }
 
-  private getControllerType(keyBinding: BindingConfig) {
+  private createController(keyBinding: BindingConfig) {
     return isTouchscreen()
       ? new ControllerTouchscreen({
           pointerBindings: PointerBindings,

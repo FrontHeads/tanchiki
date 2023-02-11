@@ -2,7 +2,10 @@ import { type Entity, Tank } from '../../entities';
 import { type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
+import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
+import { type Game } from '../Game/Game';
 import { Color } from './colors';
+import { ViewEvents } from './data';
 import {
   type AnimationSettings,
   type GetSpriteCoordinates,
@@ -12,6 +15,7 @@ import {
 } from './typings';
 
 export class View extends EventEmitter {
+  game: Game;
   width = 0;
   height = 0;
   pixelRatio = 10;
@@ -25,16 +29,17 @@ export class View extends EventEmitter {
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeListener = this.canvasResizeHandler.bind(this);
 
-  constructor({ width, height }: Size) {
+  constructor({ width, height }: Size, game: Game) {
     super();
     this.width = width;
     this.height = height;
     this.pixelRatio = this.getPixelRatio();
+    this.game = game;
   }
 
   toggleFullScreen() {
     if (!document.fullscreenElement) {
-      this.root.requestFullscreen();
+      document.querySelector(`.${ControllerElemsClassName.FullscreenWrapper}`)?.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
@@ -64,10 +69,14 @@ export class View extends EventEmitter {
 
     // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
     window.addEventListener('resize', this.canvasResizeListener);
+
+    // Переключение в полноэкранный режим.
+    document.addEventListener('fullscreenchange', this.toggleFullscreenListener);
   }
 
   unload() {
     window.removeEventListener('resize', this.canvasResizeListener);
+    document.removeEventListener('fullscreenchange', this.toggleFullscreenListener);
   }
 
   /** Создает DOM-элементы canvas-слоев и добавляет в корневой DOM-элемент root. */
@@ -426,4 +435,8 @@ export class View extends EventEmitter {
       this.spriteImg.height > 0
     );
   }
+
+  private toggleFullscreenListener = () => {
+    this.game.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Fullscreen);
+  };
 }
