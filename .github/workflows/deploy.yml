@@ -18,42 +18,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # - uses: gonzalochief/docker-deployment-action@master
-      #   with:
-      #     remote_docker_host: ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}
-      #     ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-      #     ssh_public_key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
-      #     stack_file_name: docker-compose.yml
-      #     docker_compose_ver: 'v1'
-      #     docker_prune: 'true'
-      #     copy_stack_file: 'true'
-      #     args: up -d
-
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 19
-      # - name: Install main deps
-      #   run: yarn
-      # - name: Initialize
-      #   run: yarn lerna bootstrap
-      # - name: Lint
-      #   run: yarn lint
-      # - name: Test
-      #   run: yarn test
-
       - uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           ARGS: '-rlgoDzvc -i'
-          # SOURCE: "/"
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           TARGET: '/home/${{ secrets.DEPLOY_USER }}/tanchiki'
           EXCLUDE: '/.git/'
-          SCRIPT_BEFORE: |
-            whoami
-            ls -al
           SCRIPT_AFTER: |
             cd /home/${{ secrets.DEPLOY_USER }}/tanchiki
             printf '%s\n' "${{ secrets.DEPLOY_ENV }}" > .env
-            docker-compose up --build -d &
+            docker-compose up --build -d
