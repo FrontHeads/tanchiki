@@ -1,4 +1,3 @@
-import { resources } from '../../../services';
 import { Color } from '../../../services/View/colors';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
 import { Screen } from '../Screen';
@@ -43,7 +42,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 12,
       width: view.width,
       height: 7,
-      backImg: resources.getImage('brickBg'),
+      backImg: this.overlay.game.resources.getImage('brickBg'),
       text: 'ТАНЧИКИ',
       align: 'center',
     });
@@ -53,7 +52,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 21,
       width: view.width,
       height: 7,
-      backImg: resources.getImage('brickBg'),
+      backImg: this.overlay.game.resources.getImage('brickBg'),
       text: '2023',
       align: 'center',
     });

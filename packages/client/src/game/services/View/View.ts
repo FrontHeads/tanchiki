@@ -1,5 +1,6 @@
+import { type Game, ResourcesEvent } from '../';
 import { type Entity, Tank } from '../../entities';
-import { type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
+import { type Rect, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
 import { Color } from './colors';
@@ -27,11 +28,16 @@ export class View extends EventEmitter {
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeListener = this.canvasResizeHandler.bind(this);
 
-  constructor({ width, height }: Size) {
+  constructor(private game: Game) {
     super();
+    const { width, height } = this.game.state;
     this.width = width;
     this.height = height;
     this.pixelRatio = this.getPixelRatio();
+
+    this.game.resources.on(ResourcesEvent.Loaded, () => {
+      this.spriteImg = this.game.resources.getImage('classicDesignSprite');
+    });
   }
 
   toggleFullScreen() {
