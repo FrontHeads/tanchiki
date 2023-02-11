@@ -10,7 +10,6 @@ import {
   Terrain,
 } from '../../entities';
 import { type Direction, type EntitySettings, EntityEvent } from '../../entities/Entity/typings';
-import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter } from '../../utils';
 import { type Controller, type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
@@ -18,6 +17,8 @@ import { Cell, spawnPlaces } from '../MapManager/data';
 import { type MapTerrainData } from '../MapManager/typings';
 import { Player, playerInitialSettings } from './data';
 import { type EnemyDestroyedPayload, type ScenarioPlayerState, type ScenarioState, ScenarioEvent } from './typings';
+
+export { ScenarioEvent };
 
 export class Scenario extends EventEmitter<ScenarioEvent> {
   state = {
@@ -38,15 +39,15 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     super();
     this.createBoundaries();
 
-    this.mapManager = new MapManager(game.settings);
-    this.map = this.mapManager.getMap(game.level);
+    this.mapManager = new MapManager(game.state);
+    this.map = this.mapManager.getMap(game.state.level);
 
     /** Индикаторы в боковой панели (сколько осталось танков врагов, сколько жизней, текущий уровень) */
     this.indicatorManager = new IndicatorManager(game);
 
-    if (this.game.mainMenuState === MainMenuState.Singleplayer) {
+    if (this.game.state.mode === 'SINGLEPLAYER') {
       this.createPlayerTank(Player.Player1);
-    } else if (this.game.mainMenuState === MainMenuState.Multiplayer) {
+    } else if (this.game.state.mode === 'MULTIPLAYER') {
       this.state.maxActiveEnemies = 6;
       this.state.enemiesSpawnDelay = 1000;
       this.createPlayerTank(Player.Player1);
@@ -108,7 +109,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
           return;
         }
 
-        /** Если еще есть жизни - уменьшаем их количество и спауним по-новой */
+        /** Если еще есть жизни - спауним по-новой */
         if (playerState.lives > 0) {
           this.createPlayerTank(playerType);
         }
@@ -275,7 +276,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   /** Создаем рамки вокруг карты */
   createBoundaries() {
-    const { settings } = this.game;
+    const settings = this.game.state;
     this.createEntity({
       type: 'boundary',
       width: settings.width,
@@ -308,7 +309,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   /** Возвращает контроллер в зависимости от режима игры и индекса игрока */
   getGameController(playerType: Player): Controller {
-    if (this.game.mainMenuState === MainMenuState.Multiplayer) {
+    if (this.game.state.mode === 'MULTIPLAYER') {
       if (playerType === Player.Player1) {
         return this.game.controllerWasd;
       } else if (playerType === Player.Player2) {
@@ -431,7 +432,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       .offAll(ControllerEvent.Shoot)
       .on(ControllerEvent.Shoot, () => {
         /** Если игра не на паузе, то вызываем выстрел у игрока */
-        !this.game.paused && entity.shoot();
+        !this.game.state.paused && entity.shoot();
       });
 
     return entity;
@@ -439,7 +440,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
   /** Обработчик события выстрела танка */
   onTankShoot(projectile: Projectile) {
-    if (!this.game.paused) {
+    if (!this.game.state.paused) {
       this.createProjectile(projectile);
     }
   }

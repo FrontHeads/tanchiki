@@ -3,7 +3,7 @@ import './Game.css';
 import { useEffect, useRef } from 'react';
 
 import { Tanchiki } from '../../game';
-import { GameEvents } from '../../game/services/Game/data';
+import { GameEvents } from '../../game/services/';
 import { ScreenType } from '../../game/ui/screens/data';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
 import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
@@ -15,7 +15,7 @@ export const Game = () => {
   const gameRoot = useRef(null);
   const isTabActive = usePageVisibility();
   const game = Tanchiki.create();
-  game.username = useAppSelector(authSelectors.userProfile)?.login || '';
+  game.state.username = useAppSelector(authSelectors.userProfile)?.login || '';
 
   useEffect(() => {
     game.init(gameRoot.current);
@@ -31,7 +31,7 @@ export const Game = () => {
 
   /** Если вкладка становится не активной, то ставим игру на паузу */
   useEffect(() => {
-    if (isTabActive === false && !game.paused && game.screen === ScreenType.GameStart) {
+    if (isTabActive === false && !game.state.paused && game.state.screen === ScreenType.GameStart) {
       game.togglePause();
     }
   }, [isTabActive]);

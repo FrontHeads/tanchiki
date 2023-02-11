@@ -3,6 +3,8 @@ import { EventEmitter } from '../../utils';
 import { ControllerEvent } from './data';
 import { type BindingConfig, type KeyBinding } from './KeyBindings';
 
+export { ControllerEvent };
+
 export class Controller extends EventEmitter<ControllerEvent> {
   activeDirection: Partial<Record<Direction, boolean>> = {};
   shootProcess: ReturnType<typeof setInterval> | null = null;

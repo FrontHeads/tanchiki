@@ -4,19 +4,30 @@ import { Overlay } from '../../ui';
 import { ScreenType } from '../../ui/screens/data';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
-import { AudioManager, Controller, Loop, resources, Scenario, Statistics, View, Zone } from '../';
-import { ControllerEvent } from '../Controller/data';
+import {
+  AudioManager,
+  Controller,
+  ControllerEvent,
+  Loop,
+  Resources,
+  ResourcesEvent,
+  Scenario,
+  ScenarioEvent,
+  State,
+  Statistics,
+  View,
+  Zone,
+} from '../';
 import { KeyBindingsArrows, KeyBindingsWasd } from '../Controller/KeyBindings';
-import { levels } from '../MapManager/levels';
-import { ScenarioEvent } from '../Scenario/typings';
 import { type StatisticsData } from '../Statistics/typings';
 import { GameEvents } from './data';
-import { type GameSettings } from './typings';
+
+export { GameEvents };
 
 export class Game extends EventEmitter {
   static __instance: Game;
-  inited = false;
-  paused = false;
+  state: State;
+  resources: Resources;
   loop: Loop;
   zone: Zone;
   view: View;
@@ -27,23 +38,21 @@ export class Game extends EventEmitter {
   controllerWasd: Controller;
   controllerArrows: Controller;
   statistics: Statistics;
-  /** Настройки игрового экрана. Размеры заданы в игровых клетках.*/
-  settings: GameSettings = { width: 62, height: 56, boundarySize: 2, indicatorsSidebarSize: 6 };
   screen: ScreenType = ScreenType.Loading;
   mainMenuState = MainMenuState.Singleplayer;
-  level = 1;
-  maxLevels = levels.length;
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/
   username = '';
 
   private constructor() {
     super();
+    this.state = new State();
+    this.resources = new Resources();
     this.loop = new Loop();
-    this.zone = new Zone(this.settings);
-    this.view = new View(this.settings);
+    this.zone = new Zone(this);
+    this.view = new View(this);
     this.overlay = new Overlay(this);
-    this.audioManager = new AudioManager();
+    this.audioManager = new AudioManager(this);
     this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerWasd = new Controller(KeyBindingsWasd);
     this.controllerArrows = new Controller(KeyBindingsArrows);
@@ -66,6 +75,8 @@ export class Game extends EventEmitter {
   }
 
   load(root: HTMLElement | null) {
+    this.state.load();
+    this.resources.load();
     this.view.load(root);
     this.overlay.load();
     this.loop.load();
@@ -74,11 +85,11 @@ export class Game extends EventEmitter {
     this.controllerWasd.load();
     this.controllerArrows.load();
     this.statistics.load();
-    this.inited = true;
   }
 
   unload() {
     this.clearAllListeners();
+    this.state.unload();
     this.loop.unload();
     this.view.unload();
     this.overlay.unload();
@@ -87,14 +98,13 @@ export class Game extends EventEmitter {
     this.controllerWasd.unload();
     this.controllerArrows.unload();
     this.statistics.unload();
-    this.inited = false;
-    this.paused = false;
   }
 
   reset() {
     if (this.scenario) {
       delete this.scenario;
     }
+    this.state.reset();
     this.loop.reset();
     this.zone.reset();
     this.view.reset();
@@ -104,7 +114,6 @@ export class Game extends EventEmitter {
     this.controllerWasd.reset();
     this.controllerArrows.reset();
     this.statistics.reset();
-    this.paused = false;
   }
 
   addEntity(entity: Entity) {
@@ -117,38 +126,38 @@ export class Game extends EventEmitter {
 
   /** Эмитит событие с данными, которое отлавливается на странице с игрой для обновления лидерборда. */
   updateLeaderboard(data: StatisticsData) {
-    if (this.username) {
-      this.emit(GameEvents.UpdateLeaderboard, { username: this.username, ...data });
+    if (this.state.username) {
+      this.emit(GameEvents.UpdateLeaderboard, { username: this.state.username, ...data });
     }
   }
 
   togglePause(newState: boolean | null = null) {
-    if (!this.inited) {
+    if (!this.state.inited) {
       return;
     }
 
-    if (newState === false || this.paused) {
+    if (newState === false || this.state.paused) {
       this.overlay.clearScreen();
       this.loop.start();
       this.controllerWasd.load();
       this.controllerArrows.load();
       this.statistics.startTimer();
-    } else if (newState === true || !this.paused) {
+    } else if (newState === true || !this.state.paused) {
       this.overlay.show(ScreenType.Pause);
       this.loop.stop();
       this.controllerWasd.unload();
       this.controllerArrows.unload();
       this.statistics.stopTimer();
     }
-    this.paused = !this.paused;
-    this.audioManager.emit('pause', this.paused);
+    this.state.paused = !this.state.paused;
+    this.audioManager.emit('pause', this.state.paused);
   }
 
   initLoading() {
-    this.screen = ScreenType.Loading;
-    this.overlay.show(this.screen);
-    resources.loadAll().then(() => {
-      this.view.spriteImg = resources.getImage('classicDesignSprite'); //TODO: это нужно вынести в класс View
+    this.state.screen = ScreenType.Loading;
+    this.overlay.show(this.state.screen);
+
+    this.resources.on(ResourcesEvent.Loaded, () => {
       this.initMenu();
     });
   }
@@ -156,8 +165,8 @@ export class Game extends EventEmitter {
   initMenu() {
     this.reset();
 
-    this.screen = ScreenType.MainMenu;
-    this.overlay.show(this.screen, this.mainMenuState);
+    this.state.screen = ScreenType.MainMenu;
+    this.overlay.show(this.state.screen, this.state.mainMenuState);
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
@@ -165,20 +174,20 @@ export class Game extends EventEmitter {
         this.view.toggleFullScreen();
       })
       .on(ControllerEvent.Move, (direction: Direction) => {
-        if (this.screen !== ScreenType.MainMenu) {
+        if (this.state.screen !== ScreenType.MainMenu) {
           return;
         }
         if (direction === Direction.Up) {
-          this.mainMenuState = MainMenuState.Singleplayer;
+          this.state.mainMenuState = MainMenuState.Singleplayer;
         } else if (direction === Direction.Down) {
-          this.mainMenuState = MainMenuState.Multiplayer;
+          this.state.mainMenuState = MainMenuState.Multiplayer;
         }
 
-        this.overlay.show(this.screen, this.mainMenuState);
+        this.overlay.show(this.state.screen, this.state.mainMenuState);
       })
       // Обрабатываем нажатие на указанном пункте меню
       .on(ControllerEvent.Shoot, async () => {
-        if (this.screen !== ScreenType.MainMenu) {
+        if (this.state.screen !== ScreenType.MainMenu) {
           return;
         }
 
@@ -194,8 +203,8 @@ export class Game extends EventEmitter {
     return new Promise<void>(resolve => {
       this.reset();
 
-      this.screen = ScreenType.LevelSelector;
-      this.overlay.show(ScreenType.LevelSelector, { level: this.level, showHints: true });
+      this.state.screen = ScreenType.LevelSelector;
+      this.overlay.show(ScreenType.LevelSelector, { level: this.state.level, showHints: true });
 
       /** Объект setInterval для обработки непрерывного изменения уровня */
       let changeLevelInterval: ReturnType<typeof setInterval>;
@@ -203,29 +212,29 @@ export class Game extends EventEmitter {
       const resetLevelInterval = () => changeLevelInterval && clearInterval(changeLevelInterval);
       const handleMove = (direction: Direction) => {
         let shouldTrigger = false;
-        if ((direction === Direction.Up || direction === Direction.Right) && this.level < this.maxLevels) {
-          this.level++;
+        if ((direction === Direction.Up || direction === Direction.Right) && this.state.level < this.state.maxLevels) {
+          this.state.level++;
           shouldTrigger = true;
-        } else if ((direction === Direction.Down || direction === Direction.Left) && this.level > 1) {
-          this.level--;
+        } else if ((direction === Direction.Down || direction === Direction.Left) && this.state.level > 1) {
+          this.state.level--;
           shouldTrigger = true;
         } else {
           resetLevelInterval();
         }
         // Триггерим обновление экрана выбора уровня только в случае изменения значения уровня
         if (shouldTrigger) {
-          this.overlay.show(ScreenType.LevelSelector, { level: this.level });
+          this.overlay.show(ScreenType.LevelSelector, { level: this.state.level });
         }
       };
 
       this.controllerAll
         .on(ControllerEvent.Stop, () => {
-          if (this.screen === ScreenType.LevelSelector) {
+          if (this.state.screen === ScreenType.LevelSelector) {
             resetLevelInterval();
           }
         })
         .on(ControllerEvent.Move, (direction: Direction) => {
-          if (this.screen !== ScreenType.LevelSelector) {
+          if (this.state.screen !== ScreenType.LevelSelector) {
             return;
           }
 
@@ -235,7 +244,7 @@ export class Game extends EventEmitter {
           changeLevelInterval = setInterval(handleMove.bind(this, direction), 130);
         })
         .on(ControllerEvent.Shoot, () => {
-          if (this.screen !== ScreenType.LevelSelector) {
+          if (this.state.screen !== ScreenType.LevelSelector) {
             return;
           }
           resolve();
@@ -251,7 +260,7 @@ export class Game extends EventEmitter {
     return new Promise<void>(resolve => {
       const startAnimationDelay = 2000;
 
-      this.overlay.show(ScreenType.LevelSelector, { level: this.level, showHints: false });
+      this.overlay.show(ScreenType.LevelSelector, { level: this.state.level, showHints: false });
       this.audioManager.emit('levelIntro');
 
       this.controllerAll.on(ControllerEvent.Pause, resolve);
@@ -259,21 +268,23 @@ export class Game extends EventEmitter {
       setTimeout(resolve, startAnimationDelay);
     }).then(() => {
       this.controllerAll.offAll(ControllerEvent.Shoot);
-      this.screen = ScreenType.GameStart;
-      this.overlay.show(this.screen);
+      this.state.screen = ScreenType.GameStart;
+      this.overlay.show(this.state.screen);
     });
   }
 
   async initGameLevel(firstInit = false) {
     this.reset();
 
+    this.state.mode = this.state.mainMenuState === MainMenuState.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER';
+
     if (firstInit) {
-      this.statistics.startSession(this.mainMenuState === MainMenuState.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER');
+      this.statistics.startSession(this.state.mode);
     } else {
-      if (this.level < this.maxLevels) {
-        this.level++;
+      if (this.state.level < this.state.maxLevels) {
+        this.state.level++;
       } else {
-        this.level = 1;
+        this.state.level = 1;
       }
     }
 
@@ -296,6 +307,7 @@ export class Game extends EventEmitter {
     this.scenario = new Scenario(this)
       .on(ScenarioEvent.GameOver, async () => {
         this.statistics.finishSession();
+        this.state.resetSession();
         await this.initGameOverPopup();
         await this.initGameScore();
         this.initMenu();
@@ -312,11 +324,11 @@ export class Game extends EventEmitter {
 
   initGameScore() {
     return new Promise<void>(resolve => {
-      const meta = { level: this.level, username: this.username };
+      const meta = { level: this.state.level, username: this.state.username };
       const stats = this.statistics.getCurrentStatistics();
       this.reset();
-      this.screen = ScreenType.Score;
-      this.overlay.show(this.screen, { ...meta, ...stats });
+      this.state.screen = ScreenType.Score;
+      this.overlay.show(this.state.screen, { ...meta, ...stats });
       const redirectDelay = 7000;
 
       this.overlay.on('score', () => {
@@ -324,7 +336,7 @@ export class Game extends EventEmitter {
       });
 
       const skip = () => {
-        this.overlay.show(this.screen, { ...meta, ...stats, skip: true });
+        this.overlay.show(this.state.screen, { ...meta, ...stats, skip: true });
         this.controllerAll.offAll(ControllerEvent.Escape);
         this.controllerAll.on(ControllerEvent.Escape, resolve);
         this.controllerAll.offAll(ControllerEvent.Shoot);
@@ -339,13 +351,13 @@ export class Game extends EventEmitter {
 
   initGameOverPopup() {
     return new Promise<void>(resolve => {
-      if (this.screen === ScreenType.GameOverPopup) {
+      if (this.state.screen === ScreenType.GameOverPopup) {
         return;
       }
 
       const redirectDelay = 3000;
-      this.screen = ScreenType.GameOverPopup;
-      this.overlay.show(this.screen);
+      this.state.screen = ScreenType.GameOverPopup;
+      this.overlay.show(this.state.screen);
       this.audioManager.emit('gameOver');
 
       this.controllerAll.reset();
