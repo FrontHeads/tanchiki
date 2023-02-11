@@ -56,4 +56,4 @@ jobs:
           SCRIPT_AFTER: |
             cd /home/${{ secrets.DEPLOY_USER }}/tanchiki
             printf '%s\n' "${{ secrets.DEPLOY_ENV }}" > .env
-            docker-compose up --build -d
+            docker-compose up --build -d &
