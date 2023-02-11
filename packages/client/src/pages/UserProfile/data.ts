@@ -34,11 +34,11 @@ export const userProfileFieldList: FormInputAndHeadingList = [
     required: false,
   },
   {
-    title: 'Имя в чате',
+    title: 'Имя на форуме',
     type: 'text',
     id: 'display_name',
     validator: 'firstName',
-    placeholder: 'Имя в чате',
+    placeholder: 'Имя на форуме',
     required: false,
   },
   {

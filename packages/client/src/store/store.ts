@@ -1,9 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { appReducer } from './features/app/appSlice';
-import { authReducer } from './features/auth/authSlice';
-import { leaderboardReducer } from './features/leaderboard/leaderboardSlice';
-import { profileReducer } from './features/profile/profileSlice';
+import { appReducer, authReducer, leaderboardReducer, profileReducer } from '.';
 import { uiReducer } from './features/ui/uiSlice';
 
 const preloadedState = typeof window !== 'undefined' ? window.__PRELOADED_STATE__ : undefined;

@@ -13,6 +13,7 @@ export enum Paths {
   Forum = '/forum',
   Section = '/forum/section',
   Topic = '/topic',
+  NewTopic = '/new-topic',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
   Leaderboard = '/leaderboard',
@@ -65,6 +66,17 @@ export const API_ENDPOINTS = {
     GET: (teamName: string) => `leaderboard/${teamName}`,
   },
   THEMIZATION: 'themization',
+  FORUM: {
+    GET_SECTION_BY_ID: (sectionId: number) => `forum/section/${sectionId}`,
+    GET_ALL_SECTIONS: 'forum/section',
+    GET_TOPICS_FROM_SECTION: (sectionId?: number) => `forum/topic/?section_id=${sectionId}`,
+    GET_TOPIC_BY_ID: (topicId: number) => `forum/topic/${topicId}`,
+    EDIT_TOPIC: (topicId: number) => `forum/topic/${topicId}`,
+    CREATE_TOPIC: 'forum/topic',
+    CREATE_MESSAGE: 'forum/message',
+    EDIT_MESSAGE: (messageId: number) => `forum/message/${messageId}`,
+    DELETE_MESSAGE: (messageId: number) => `forum/message/${messageId}`,
+  },
 };
 
 export const LEADERBOARD_TEAM_NAME = 'FrontHeadsMain1';

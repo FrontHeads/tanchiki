@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { type LoaderFunction, createRoutesFromElements, Route } from 'react-router-dom';
+import { type LoaderFunction, createRoutesFromElements, Link, Route } from 'react-router-dom';
 
 import { authAPI } from '../api/authAPI';
 import { oauthAPI } from '../api/oauthAPI';
@@ -8,14 +8,12 @@ import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
 import { Contact } from '../pages/Contact';
 import { ErrorPage } from '../pages/ErrorPage';
-import { Forum } from '../pages/Forum';
-import { ForumSection } from '../pages/Forum/ForumSection';
-import { ForumTopic } from '../pages/Forum/ForumTopic';
 import { Home } from '../pages/Home';
 import { SignIn } from '../pages/SignIn';
 import { SignUp } from '../pages/SignUp';
 import { UserProfile } from '../pages/UserProfile';
 import { PATH, Paths } from './constants';
+import { forumRoutes } from './forumRoutes';
 import { leaderboardRoute } from './leaderboardRoute';
 
 /** Делаем "ленивую" подгрузку игры только в момент перехода в соответствующий раздел */
@@ -72,12 +70,12 @@ export const routes = createRoutesFromElements(
       <Route element={<ProtectedRoutes />}>
         <Route path={Paths.UserProfile} element={<UserProfile />}></Route>
         {leaderboardRoute()}
-        <Route path={Paths.Forum}>
-          <Route index={true} element={<Forum />}></Route>
-          <Route path={`${Paths.Section}/:sectionId`}>
-            <Route index={true} element={<ForumSection />}></Route>
-            <Route path={`${Paths.Section}/:sectionId/${Paths.Topic}/:topicId`} element={<ForumTopic />}></Route>
-          </Route>
+        <Route
+          path={Paths.Forum}
+          handle={{
+            crumb: () => <Link to={Paths.Forum}>Форум</Link>,
+          }}>
+          {forumRoutes()}
         </Route>
       </Route>
     </Route>
