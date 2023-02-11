@@ -44,16 +44,16 @@ jobs:
       - uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-          ARGS: "-rlgoDzvc -i"
+          ARGS: '-rlgoDzvc -i'
           # SOURCE: "/"
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           TARGET: '/home/${{ secrets.DEPLOY_USER }}/tanchiki'
-          # EXCLUDE: "/dist/, /node_modules/"
+          EXCLUDE: '/.git/'
           SCRIPT_BEFORE: |
             whoami
             ls -al
           SCRIPT_AFTER: |
-            whoami
-            ls -al
-            echo $RSYNC_STDOUT
+            cd /home/${{ secrets.DEPLOY_USER }}/tanchiki
+            printf '%s\n' "${{ DEPLOY_ENV }}" > .env
+            docker-compose up --build -d
