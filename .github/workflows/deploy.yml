@@ -22,7 +22,7 @@ jobs:
         with:
           remote_docker_host: ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}
           ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-          ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
+          ssh_public_key: ${{ secrets.DOCKER_PUBLIC_KEY }}
           # deploy_path: /root/my-deployment
           stack_file_name: docker-compose.yaml -f docker-compose.prod.yml
           # keep_files: 5
