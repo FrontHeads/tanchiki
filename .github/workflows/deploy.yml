@@ -23,7 +23,7 @@ jobs:
           remote_docker_host: ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}
           ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           ssh_public_key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
-          stack_file_name: docker-compose.yaml -f docker-compose.prod.yml
+          stack_file_name: docker-compose.yaml
           docker_prune: 'true'
           copy_stack_file: 'true'
           args: up -d
