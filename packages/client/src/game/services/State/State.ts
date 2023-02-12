@@ -11,6 +11,8 @@ export class State {
   maxLevels = levels.length;
   mode: GameMode = 'SINGLEPLAYER';
 
+  /** Используется при отправке статистики на сервер и отображается на экране с очками.
+  * Пустое значение, если игрок не авторизован.*/
   username = '';
 
   playerOne = {
@@ -26,7 +28,7 @@ export class State {
   screen = ScreenType.Loading;
   mainMenuState = MainMenuState.Singleplayer;
 
-  /** Настройки игрового экрана. Размеры заданы в игровых клетках.*/
+  // Настройки игрового экрана. Размеры заданы в игровых клетках.
   width = 62;
   height = 56;
   boundarySize = 2;
@@ -44,7 +46,7 @@ export class State {
   multiplayerMaxActiveEnemies = 6;
   multiplayerEnemiesSpawnDelay = 1000;
 
-  respawnRetryInterval = 500;
+  tankRespawnRetryInterval = 500;
 
   load() {
     this.inited = true;

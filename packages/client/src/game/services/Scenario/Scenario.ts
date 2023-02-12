@@ -39,8 +39,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     super();
     this.createBoundaries();
 
-    this.mapManager = new MapManager(game.state);
-    this.map = this.mapManager.getMap(game.state.level);
+    this.mapManager = new MapManager(game);
+    this.map = this.mapManager.getMap();
 
     /** Индикаторы в боковой панели (сколько осталось танков врагов, сколько жизней, текущий уровень) */
     this.indicatorManager = new IndicatorManager(game);

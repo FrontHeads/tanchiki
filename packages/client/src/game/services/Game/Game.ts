@@ -38,11 +38,6 @@ export class Game extends EventEmitter {
   controllerWasd: Controller;
   controllerArrows: Controller;
   statistics: Statistics;
-  screen: ScreenType = ScreenType.Loading;
-  mainMenuState = MainMenuState.Singleplayer;
-  /** Используется при отправке статистики на сервер и отображается на экране с очками.
-   * Пустое значение, если игрок не авторизован.*/
-  username = '';
 
   private constructor() {
     super();
