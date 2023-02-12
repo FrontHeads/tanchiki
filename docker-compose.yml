@@ -1,5 +1,7 @@
 version: '3.9'
 
+name: tanchiki
+
 services:
   postgres:
     image: postgres:14
@@ -10,8 +12,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pg-data:/var/lib/postgresql/data
-    networks:
-      - mynet
 
   mongo:
     image: mongo
@@ -25,13 +25,7 @@ services:
     volumes:
       - mongodb-data:/data/db
       - ./init.d/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
-    networks:
-      - mynet
 
 volumes:
   pg-data:
   mongodb-data:
-
-networks:
-    mynet:
-        driver: bridge

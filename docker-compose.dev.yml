@@ -13,8 +13,6 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     depends_on:
       - postgres
-    networks:
-      - mynet
 
   mongo-express:
     image: mongo-express
@@ -23,11 +21,9 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_DB}:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${MONGO_DB}
     depends_on:
       - mongo
-    networks:
-      - mynet
 
   postgres:
     ports:
@@ -41,6 +37,6 @@ volumes:
   pgadmin-data:
 
 networks:
-  mynet:
-    name: tanchiki_mynet
+  default:
+    name: tanchiki_default
     external: true
