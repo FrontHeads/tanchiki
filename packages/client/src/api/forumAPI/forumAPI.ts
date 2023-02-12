@@ -4,25 +4,12 @@ import { type ForumSectionItem } from '../../pages/Forum/ForumSectionList/typing
 import { type ForumMessageT } from '../../pages/Forum/ForumTopic/ForumMessage/typings';
 import { type ForumTopicT } from '../../pages/Forum/ForumTopic/typings';
 import { HTTP } from '../../utils/HTTP';
-
-type createTopicRequestData = {
-  name: string;
-  section_id: number;
-  content: string;
-};
-
-type createMessageRequestData = {
-  topic_id: number;
-  content: string;
-};
-
-type editMessageRequestData = {
-  content: string;
-};
-
-type editTopicRequestData = {
-  content: string;
-};
+import {
+  type createMessageRequestData,
+  type createTopicRequestData,
+  type editMessageRequestData,
+  type editTopicRequestData,
+} from './typings';
 
 export const forumAPI = {
   getAllSections: () => HTTP.get<ForumSectionItem[]>(API_ENDPOINTS.FORUM.GET_ALL_SECTIONS),

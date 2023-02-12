@@ -1,17 +1,11 @@
 import { API_ENDPOINTS } from '../../config/constants';
 import { HTTP } from '../../utils/HTTP';
-
-export type OAuthPostRequestData = {
-  code: string | null;
-  redirect_uri: string;
-};
-export type OAuthGetServiceRequestData = {
-  redirect_uri: string;
-};
-
-type OAuthGetServiceResponseData = { service_id: string };
-
-type OAuthPostResponseData = { reason: string } | 'OK';
+import {
+  type OAuthGetServiceRequestData,
+  type OAuthGetServiceResponseData,
+  type OAuthPostRequestData,
+  type OAuthPostResponseData,
+} from './typings';
 
 export const oauthAPI = {
   getServiceId: (params: OAuthGetServiceRequestData) =>

@@ -1,25 +1,12 @@
-import { type UserProfile } from '../../app.typings';
 import { API_ENDPOINTS } from '../../config/constants';
 import { HTTP } from '../../utils/HTTP';
-
-export type SigninRequestData = {
-  login: string;
-  password: string;
-};
-
-export type SignupRequestData = {
-  login: string;
-  password: string;
-  password_check: string;
-  first_name: string;
-  second_name: string;
-  email: string;
-  phone: string;
-};
-
-type SigninResponseData = Record<string, never>;
-type SignupResponseData = { id: number };
-type UserResponseData = UserProfile;
+import {
+  type SigninRequestData,
+  type SigninResponseData,
+  type SignupRequestData,
+  type SignupResponseData,
+  type UserResponseData,
+} from './typings';
 
 export const authAPI = {
   signin: (data: SigninRequestData) => HTTP.post<SigninResponseData>(API_ENDPOINTS.AUTH.SIGNIN, { data }),

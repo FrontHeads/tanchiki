@@ -4,8 +4,8 @@ import {
   type UpdatePasswordRequestData,
   type UpdateProfileAvatarRequestData,
   type UpdateProfileRequestData,
-  userAPI,
-} from '../../../api/userAPI/userAPI';
+} from '../../../api/userAPI/typings';
+import { userAPI } from '../../../api/userAPI/userAPI';
 import { type UserProfile } from '../../../app.typings';
 import { type RootState } from '../../store';
 import { me } from '../auth/authThunks';
