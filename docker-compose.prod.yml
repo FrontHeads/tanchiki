@@ -14,6 +14,7 @@ services:
     environment:
       POSTGRES_HOST: postgres
       MONGO_HOST: mongo
+      LETSENCRYPT_HOST: ${APP_HOSTNAME}
       VIRTUAL_HOST: ${APP_HOSTNAME}
       VIRTUAL_PORT: ${SERVER_PORT}
     depends_on:
@@ -41,7 +42,7 @@ services:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
     environment:
-      - DEFAULT_EMAIL=mail@yourdomain.tld
+      - DEFAULT_EMAIL=mail@${APP_HOSTNAME}
     volumes_from:
       - nginx-proxy
     volumes:
