@@ -1,7 +1,5 @@
 version: '3.9'
 
-name: tanchiki
-
 services:
   postgres:
     image: postgres:14
