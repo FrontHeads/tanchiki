@@ -1,48 +1,77 @@
-import { Tank } from '../../entities';
+import { TankPlayer } from '../../entities';
 import { Game, Scenario } from '../';
 import { Player, playerInitialSettings } from './data';
 import { ScenarioEvent } from './typings';
 
+let game: Game;
+
+function getPlayerOneTank() {
+  return [...game?.loop?.loopEntities || null]
+    .filter(item => {
+      return item instanceof TankPlayer && item.variant === 'PLAYER1';
+    })
+    .pop() as TankPlayer;
+}
+
 describe('game/services/Scenario', () => {
-  it('should create tank', () => {
-    const game = Game.create();
+  it('should create tanks', () => {
+    game = Game.create();
     game.view.load(document.body);
+    game.audioManager.playSound = jest.fn();
+    game.state.mode = 'SINGLEPLAYER';
+
     const scenario = new Scenario(game);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const tank = scenario.state.players[Player.Player1].entity!;
+    const tank = getPlayerOneTank();
 
-    expect(tank instanceof Tank).toBe(true);
+    expect(scenario).toBeTruthy();
     expect(tank.spawned).toBe(true);
     expect(tank.posX).toBe(playerInitialSettings[Player.Player1].posX);
     expect(tank.posY).toBe(playerInitialSettings[Player.Player1].posY);
-    expect(game.loop.loopEntities.has(tank)).toBe(true);
   });
 
-  // TODO: этот тест особо ничего не проверяет, его нужно отрефакторить
-  it('should destroy entity', () => {
-    const game = Game.create();
-    game.view.load(document.body);
+  it('should create projectiles', () => {
+    game.reset();
     const scenario = new Scenario(game);
+    const createProjectileMock = jest.spyOn(scenario, 'createProjectile').mockImplementation();
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const tank = scenario.state.players[Player.Player1].entity!;
+    const tank = getPlayerOneTank();
+    tank.canShoot = true;
+    tank.frozen = false;
 
-    game.loop.loopEntities.delete(tank);
+    tank.shoot();
+    tank.update();
 
-    expect(tank.spawned).toBe(false);
-    expect(game.loop.loopEntities.has(tank)).toBe(false);
+    expect(tank.spawned).toBe(true);
+    expect(createProjectileMock).toHaveBeenCalledTimes(1);
   });
 
-  it('should create projectile and tank explosions', () => {
-    const game = Game.create();
-    game.view.load(document.body);
+  it('should create explosions', () => {
+    game.reset();
     const scenario = new Scenario(game);
     const createExplosionMock = jest.spyOn(scenario, 'createExplosion').mockImplementation();
 
-    scenario.emit(ScenarioEvent.ProjectileHit, {});
-    scenario.emit(ScenarioEvent.TankEnemyDestroyed, {});
+    const tank = getPlayerOneTank();
 
-    expect(createExplosionMock).toHaveBeenCalledTimes(2);
+    tank.beDestroyed(tank);
+
+    expect(tank.spawned).toBe(false);
+    expect(createExplosionMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should emit game over event', () => {
+    game.reset();
+    const scenario = new Scenario(game);
+    const gameOverObserver = jest.fn();
+
+    scenario.on(ScenarioEvent.GameOver, gameOverObserver);
+
+    const tank = getPlayerOneTank();
+
+    // У танка две жизни. Первую сняли в предыдущем тесте.
+    tank.beDestroyed(tank);
+
+    expect(tank.spawned).toBe(false);
+    expect(gameOverObserver).toHaveBeenCalledTimes(1);
   });
 });

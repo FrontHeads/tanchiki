@@ -14,14 +14,14 @@ describe('game/entities/Powerup', () => {
     scenario = new Scenario(game);
 
     scenario.createPowerup();
-    const powerup = scenario.state.powerup;
+    const powerup = scenario.activePowerup;
 
     expect(powerup).not.toBe(null);
     expect(powerup).toHaveProperty('spawned', true);
   });
 
   it('should be taken by player', async () => {
-    const powerup = scenario.state.powerup as Powerup;
+    const powerup = scenario.activePowerup as Powerup;
     const playerTank = new TankPlayer({ posX: powerup.posX, posY: powerup.posY });
     game.addEntity(playerTank);
     playerTank.spawnTimeout = 1;
