@@ -33,10 +33,12 @@ export const Game = () => {
     });
 
     document.querySelector('.layout')?.classList.add('layout__game');
+    setViewportAttributes({ isScalable: false });
 
     return () => {
       game.unload();
       document.querySelector('.layout')?.classList.remove('layout__game');
+      setViewportAttributes({ isScalable: true });
     };
   }, []);
 
@@ -66,3 +68,12 @@ export const Game = () => {
     </GameContext.Provider>
   );
 };
+
+function setViewportAttributes({ isScalable }: Record<string, boolean>) {
+  const scalableContent = isScalable ? '' : ', maximum-scale=1, user-scalable=no';
+  const viewport = document.querySelector('meta[name="viewport"]');
+
+  if (viewport) {
+    viewport.setAttribute('content', `width=device-width, initial-scale=1.0${scalableContent}`);
+  }
+}
