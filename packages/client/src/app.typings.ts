@@ -6,6 +6,10 @@ export type FormHeading = { heading: string };
 
 export type FormInputAndHeadingList = (FieldProps | FormHeading)[];
 
+export type APIError = {
+  reason: string;
+};
+
 export type UserProfile = {
   id: number;
   login: string;
