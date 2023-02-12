@@ -20,16 +20,26 @@ import { ScenarioEvent } from './typings';
 
 export { ScenarioEvent };
 
+/** Сервис, который отвечает за игровой сценарий, появление танков/снарядов/бонусов, их взаимодействие.
+ * Определяет победу/проигрыш на карте. Использует вспомогательные сервисы MapManager и IndicatorManager.
+ * Привязывает сервис управления (Controller) к танкам игроков. */
 export class Scenario extends EventEmitter<ScenarioEvent> {
+  /** Сервис, который загружает игровые карты. */
   mapManager: MapManager;
-  /** Индикаторы в боковой панели (сколько осталось танков врагов, сколько жизней, текущий уровень) */
+  /** Индикаторы в боковой панели (сколько осталось танков врагов, сколько жизней, текущий уровень). */
   indicatorManager: IndicatorManager;
 
+  /** Вражеские танки на карте. */
   activeEnemies: TankEnemy[] = [];
+  /** Текущий бонус на карте. */
   activePowerup: Powerup | null = null;
+  /** Максимальное количество врагов, которые должны появиться на карте. */
   maxTotalEnemies = 20;
+  /** Максимальное количество врагов, которые могут быть одновременно на карте. */
   maxActiveEnemies = 4;
+  /** Задержка между спауном вражеских танков. */
   enemiesSpawnDelay = 1000;
+  /** Сколько вражеских танков отспаунено. */
   enemiesSpawnCounter = 0;
 
   constructor(private game: Game) {
@@ -42,6 +52,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     this.createPlayers();
   }
 
+  /** Создаёт статические объекты. */
   createTerrain() {
     this.createBoundaries();
     /** Размещаем объекты на карте */
@@ -52,7 +63,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
   }
 
-  /** Создаем элемент карты */
+  /** Размещает отдельный статический элемент на карте. */
   createEntity(props: EntitySettings) {
     let entity: Entity;
     if (props.type === 'flag') {
@@ -66,7 +77,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     entity.spawn(props);
   }
 
-  /** Создаем рамки вокруг карты */
+  /** Создаёт рамки вокруг карты. */
   createBoundaries() {
     const settings = this.game.state;
     this.createEntity({
@@ -99,7 +110,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     });
   }
 
-  /** Размещает танки противника */
+  /** Создаёт танки противника. */
   createEnemies() {
     if (this.game.state.mode === 'SINGLEPLAYER') {
       this.maxTotalEnemies = this.game.state.singleplayerMaxTotalEnemies;
@@ -123,12 +134,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     );
   }
 
-  /** Проверяем можно ли еще размещать на поле вражеские танки */
+  /** Проверяет, можно ли ещё размещать на поле вражеские танки. */
   canCreateTankEnemy() {
     return this.activeEnemies.length < this.maxActiveEnemies && this.enemiesSpawnCounter < this.maxTotalEnemies;
   }
 
-  /** Создаем вражеский танк */
+  /** Создаёт отдельный вражеский танк. */
   createTankEnemy() {
     ++this.enemiesSpawnCounter;
     const tankEnemiesLeft = this.maxTotalEnemies - this.enemiesSpawnCounter;
@@ -184,7 +195,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
   }
 
-  /** Размещает танки игроков. */
+  /** Создаёт танки игроков. */
   createPlayers() {
     if (this.game.state.mode === 'SINGLEPLAYER') {
       this.createPlayerTank(Player.Player1);
@@ -194,7 +205,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
   }
 
-  /** Создаем танк игрока */
+  /** Создаёт отдельный танк игрока. */
   createPlayerTank(playerType: Player = Player.Player1) {
     const settings = playerInitialSettings[playerType];
 
@@ -266,6 +277,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
   }
 
+  /** Возвращает стейт первого или второго игрока. */ 
   getPlayerState(playerType: Player | PlayerVariant) {
     return playerType === Player.Player1 ? this.game.state.playerOne : this.game.state.playerTwo;
   }
@@ -283,27 +295,30 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     return this.game.controllerAll;
   }
 
+  /** Создаёт снаряд. */
   createProjectile(projectile: Projectile | null) {
     if (!projectile) {
       return null;
     }
     this.game.addEntity(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
+    // Обновляем, чтобы снаряд начал движение не из середины танка, а перед ним 
     projectile.update();
 
     projectile.on(EntityEvent.Exploding, () => {
-      /** Показываем анимацию взрыва при попадании снаряда куда-либо. */
+      // Показываем анимацию взрыва при попадании снаряда куда-либо.
       this.createExplosion(projectile);
     });
   }
 
+  /** Создаёт взрыв. */
   createExplosion(entity: Tank | Projectile) {
     const explosion = new Explosion({ parent: entity });
     this.game.addEntity(explosion);
     explosion.spawn();
   }
 
-  /** Создание бонуса */
+  /** Создаёт бонус. */
   createPowerup() {
     if (this.activePowerup) {
       this.activePowerup.despawn();
