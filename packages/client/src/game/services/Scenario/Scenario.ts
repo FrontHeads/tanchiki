@@ -64,7 +64,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
     this.game.addEntity(entity);
     entity.spawn(props);
-    return entity;
   }
 
   /** Создаем рамки вокруг карты */
@@ -147,6 +146,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
 
     const entity = new TankEnemy(tankEnemySettings);
+    this.game.addEntity(entity);
+    this.activeEnemies.push(entity);
 
     entity
       .on(EntityEvent.Shoot, projectile => {
@@ -168,10 +169,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
           this.emit(ScenarioEvent.MissionAccomplished);
         }
       });
-
-    this.activeEnemies.push(entity);
-
-    this.game.addEntity(entity);
 
     this.trySpawnTankEnemy(entity);
   }
@@ -217,10 +214,14 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       .on(EntityEvent.Destroyed, () => {
         this.createExplosion(entity);
 
+        playerState.upgradeTier = 1;
         --playerState.lives;
         this.indicatorManager.renderPlayerLives(playerType, playerState.lives);
 
-        if (this.game.state.playerOne.lives <= 0 && this.game.state.playerTwo.lives <= 0) {
+        const playerOneIsOut = this.game.state.playerOne.lives <= 0;
+        const playerTwoIsOut = this.game.state.mode === 'SINGLEPLAYER' || this.game.state.playerTwo.lives <= 0;
+
+        if (playerOneIsOut && playerTwoIsOut) {
           this.emit(ScenarioEvent.GameOver);
         }
 
@@ -238,7 +239,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       }
     });
 
-    const controller = this.getGameController(playerType);
+    const controller = this.getPlayerController(playerType);
     /** Навешиваем события на котроллер, предварительно почистив старые. */
     controller
       .offAll(ControllerEvent.Move)
@@ -254,8 +255,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         /** Если игра не на паузе, то вызываем выстрел у игрока. */
         !this.game.state.paused && entity.shoot();
       });
-
-    return entity;
   }
 
   /** Попытка спаунить танк игрока. */
@@ -272,7 +271,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   }
 
   /** Возвращает контроллер в зависимости от режима игры и индекса игрока. */
-  getGameController(playerType: Player): Controller {
+  getPlayerController(playerType: Player): Controller {
     if (this.game.state.mode === 'MULTIPLAYER') {
       if (playerType === Player.Player1) {
         return this.game.controllerWasd;
@@ -320,22 +319,22 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       if (!(playerTank instanceof TankPlayer)) {
         return;
       }
+      const playerType = playerTank.variant;
+      const playerState = this.getPlayerState(playerType);
 
       // Бонус, прибавляющий силу атаки у игрока
       if (powerup.variant === 'STAR') {
+        ++playerState.upgradeTier;
         playerTank.upgrade();
       }
 
       // Бонус, дающий игроку защитное поле на 10 секунд
       if (powerup.variant === 'HELMET') {
-        const shieldDuration = 10000;
-        playerTank.useShield(shieldDuration);
+        playerTank.useShield(this.game.state.shieldPowerupDuration);
       }
 
       // Бонус, дающий дополнительную жизнь
       if (powerup.variant === 'TANK') {
-        const playerType = playerTank.variant;
-        const playerState = this.getPlayerState(playerType);
         ++playerState.lives;
         this.indicatorManager.renderPlayerLives(playerType as Player, playerState.lives);
       }
@@ -351,8 +350,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       if (powerup.variant === 'CLOCK') {
         const freezeIntervalName = 'ENEMY_FREEZE_INTERVAL';
         // Делаем заморозку через каждые 100 мс, чтобы работало и для врагов, которые отспавнились позже
-        const freezeSubDuration = 100;
         let freezeTicksLeft = 100;
+        const freezeSubDuration = Math.round(this.game.state.freezePowerupDuration / freezeTicksLeft);
 
         const setAllEnemiesFrozen = (frozen: boolean) => {
           this.activeEnemies.forEach(enemyTank => {
@@ -402,7 +401,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         constructWalls('Concrete');
 
         const mainIntervalName = 'REINFORCED_WALLS_INTERVAL_MAIN';
-        const mainIntervalDuration = 10000;
+        const mainIntervalDuration = this.game.state.wallsPowerupDuration;
         const finishingIntervalName = 'REINFORCED_WALLS_INTERVAL_FINISHING';
         const finishingIntervalDuration = 200;
         let finishingIntervalCountdown = 10;

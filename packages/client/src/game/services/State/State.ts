@@ -40,7 +40,11 @@ export class State {
   gameOverPopupTimeout = 3000;
   scoreScreenTimeout = 7000;
 
-  singleplayerMaxTotalEnemies = 20;
+  wallsPowerupDuration = 10000;
+  shieldPowerupDuration = 10000;
+  freezePowerupDuration = 10000;
+
+  singleplayerMaxTotalEnemies = 5;
   singleplayerMaxActiveEnemies = 4;
   singleplayerEnemiesSpawnDelay = 2000;
   multiplayerMaxTotalEnemies = 20;
