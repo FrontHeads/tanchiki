@@ -30,6 +30,5 @@ jobs:
           SCRIPT_AFTER: |
             cd /home/${{ secrets.DEPLOY_USER }}/tanchiki
             printf '%s\n' "${{ secrets.DEPLOY_ENV }}" > .env
-            docker system prune -f
             export COMPOSE_PROJECT_NAME=tanchiki
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
