@@ -15,8 +15,10 @@ function mockEntity(rect: Rect) {
 }
 
 describe('game/services/View', () => {
+  const game = Game.create();
+
   it('should create layers', () => {
-    const view = new View({ width: 10, height: 10 });
+    const view = new View({ width: 10, height: 10 }, game);
     const root = document.body.appendChild(document.createElement('div'));
 
     view.load(root);
@@ -27,7 +29,7 @@ describe('game/services/View', () => {
   });
 
   it('should bind entities to layers and subscribe to the updates', () => {
-    const view = new View({ width: 10, height: 10 });
+    const view = new View({ width: 10, height: 10 }, game);
     const root = document.body.appendChild(document.createElement('div'));
 
     view.load(root);
@@ -45,7 +47,7 @@ describe('game/services/View', () => {
   });
 
   it('should subscribe to entity destruction', () => {
-    const view = new View({ width: 10, height: 10 });
+    const view = new View({ width: 10, height: 10 }, game);
     const root = document.body.appendChild(document.createElement('div'));
     view.drawOnLayer = jest.fn();
     view.eraseFromLayer = jest.fn();
@@ -64,7 +66,7 @@ describe('game/services/View', () => {
   });
 
   it('should calculate entity rect in pixels', () => {
-    const view = new View({ width: 10, height: 10 });
+    const view = new View({ width: 10, height: 10 }, game);
     const root = document.body.appendChild(document.createElement('div'));
     view.pixelRatio = 10;
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
