@@ -12,7 +12,7 @@ export class State {
   mode: GameMode = 'SINGLEPLAYER';
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
-  * Пустое значение, если игрок не авторизован.*/
+   * Пустое значение, если игрок не авторизован.*/
   username = '';
 
   playerOne = {
@@ -40,13 +40,16 @@ export class State {
   gameOverPopupTimeout = 3000;
   scoreScreenTimeout = 7000;
 
+  singleplayerMaxTotalEnemies = 20;
   singleplayerMaxActiveEnemies = 4;
   singleplayerEnemiesSpawnDelay = 2000;
-
+  multiplayerMaxTotalEnemies = 20;
   multiplayerMaxActiveEnemies = 6;
   multiplayerEnemiesSpawnDelay = 1000;
 
-  tankRespawnRetryInterval = 500;
+  tankRespawnRetryInterval = 200;
+  /** Четвёртый, одиннадцатый и восемнадцатый танки появляются переливающимися (за их уничтожение дают бонус). */
+  flashingEnemyTanksWithPowerups = [4, 11, 18];
 
   load() {
     this.inited = true;
