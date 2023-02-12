@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { leaderboardAPI } from '../../../api/leaderboardAPI/leaderboardAPI';
-import { type LeaderboardRecordData } from '../../../api/typings';
+import { type LeaderboardRecordData } from '../../../api/leaderboardAPI/typings';
 import {
   LEADERBOARD_DEFAULT_PAGE,
   LEADERBOARD_RECORDS_DISPLAY_LIMIT,

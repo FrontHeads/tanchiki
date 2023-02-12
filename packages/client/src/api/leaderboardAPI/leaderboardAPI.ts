@@ -6,7 +6,7 @@ import {
   type LeaderboardRecord,
   type LeaderboardRequest,
   type NewLeaderboardRecordRequest,
-} from '../typings';
+} from './typings';
 
 export const leaderboardAPI = {
   addScore: (data: NewLeaderboardRecordRequest) => HTTP.post(API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),
