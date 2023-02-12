@@ -5,7 +5,7 @@ import {
   type UpdateProfileAvatarRequestData,
   type UpdateProfileRequestData,
   userAPI,
-} from '../../../api/userAPI';
+} from '../../../api/userAPI/userAPI';
 import { type UserProfile } from '../../../app.typings';
 import { type RootState } from '../../store';
 import { me } from '../auth/authThunks';

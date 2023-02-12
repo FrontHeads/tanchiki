@@ -1,9 +1,9 @@
-import { API_ENDPOINTS } from '../config/constants';
-import { type ForumSectionT } from '../pages/Forum/ForumSection/typings';
-import { type ForumSectionItem } from '../pages/Forum/ForumSectionList/typings';
-import { type ForumMessageT } from '../pages/Forum/ForumTopic/ForumMessage/typings';
-import { type ForumTopicT } from '../pages/Forum/ForumTopic/typings';
-import { HTTP } from '../utils/HTTP';
+import { API_ENDPOINTS } from '../../config/constants';
+import { type ForumSectionT } from '../../pages/Forum/ForumSection/typings';
+import { type ForumSectionItem } from '../../pages/Forum/ForumSectionList/typings';
+import { type ForumMessageT } from '../../pages/Forum/ForumTopic/ForumMessage/typings';
+import { type ForumTopicT } from '../../pages/Forum/ForumTopic/typings';
+import { HTTP } from '../../utils/HTTP';
 
 type createTopicRequestData = {
   name: string;

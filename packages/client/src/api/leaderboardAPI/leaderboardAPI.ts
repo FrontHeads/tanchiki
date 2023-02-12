@@ -1,12 +1,12 @@
-import { API_ENDPOINTS, LEADERBOARD_TEAM_NAME } from '../config/constants';
-import { HTTP } from '../utils/HTTP';
-import { type ResponseType } from '../utils/HTTP/HTTP';
+import { API_ENDPOINTS, LEADERBOARD_TEAM_NAME } from '../../config/constants';
+import { HTTP } from '../../utils/HTTP';
+import { type ResponseType } from '../../utils/HTTP/HTTP';
 import {
   type GetLeaderboardResponseData,
   type LeaderboardRecord,
   type LeaderboardRequest,
   type NewLeaderboardRecordRequest,
-} from './typings';
+} from '../typings';
 
 export const leaderboardAPI = {
   addScore: (data: NewLeaderboardRecordRequest) => HTTP.post(API_ENDPOINTS.LEADERBOARD.ADD_SCORE, { data }),

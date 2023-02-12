@@ -3,7 +3,7 @@ import './ThemeToggle.css';
 import cn from 'classnames';
 import { type FC, useEffect, useState } from 'react';
 
-import { themizationAPI } from '../../api/themizationAPI';
+import { themizationAPI } from '../../api/themizationAPI/themizationAPI';
 import { authSelectors, useAppSelector } from '../../store';
 import { THEME_LIST, ThemeNames } from './data';
 import { type toggleThemeArgs } from './typings';

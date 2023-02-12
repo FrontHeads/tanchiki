@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { forumAPI } from '../../../api/forumAPI';
+import { forumAPI } from '../../../api/forumAPI/forumAPI';
 import { renderWithRouter } from '../../../utils/testingUtils';
 import { ForumTopic } from './ForumTopic';
 

@@ -2,7 +2,7 @@ import './Forum.css';
 
 import { type FC, useEffect, useState } from 'react';
 
-import { forumAPI } from '../../api/forumAPI';
+import { forumAPI } from '../../api/forumAPI/forumAPI';
 import { generateMetaTags } from '../../utils/seoUtils';
 import { ForumSectionList } from './ForumSectionList';
 import { type ForumSectionItem } from './ForumSectionList/typings';

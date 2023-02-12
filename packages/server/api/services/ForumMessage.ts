@@ -17,7 +17,7 @@ export const forumMessageRoute = Router()
       .catch(next);
   })
   .post('/', (req: Request, res: Response, next) => {
-    if (res.locals.user && res.locals.user.id ) {
+    if (res.locals.user && res.locals.user.id) {
       req.body.user_id = res.locals.user.id;
       ForumMessage.create(req.body, { include: [{ model: User }] })
         .then(message => {
@@ -49,10 +49,10 @@ export const forumMessageRoute = Router()
   })
   .delete('/:id', (req: Request, res: Response, next) => {
     if (res.locals.user && res.locals.user.id) {
-    ForumMessage.destroy({ where: { id: req.params.id, user_id: res.locals.user.id } })
-      .then(throwIf(r => !r, res, 400, 'Комментарий не найден'))
-      .then(() => res.status(201).send({ message: 'Комментарий удален' }))
-      .catch(next);
+      ForumMessage.destroy({ where: { id: req.params.id, user_id: res.locals.user.id } })
+        .then(throwIf(r => !r, res, 400, 'Комментарий не найден'))
+        .then(() => res.status(201).send({ message: 'Комментарий удален' }))
+        .catch(next);
     } else {
       res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
     }

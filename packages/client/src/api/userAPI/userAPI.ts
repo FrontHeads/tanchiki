@@ -1,6 +1,6 @@
-import { type UserProfile } from '../app.typings';
-import { API_ENDPOINTS } from '../config/constants';
-import { HTTP } from '../utils/HTTP';
+import { type UserProfile } from '../../app.typings';
+import { API_ENDPOINTS } from '../../config/constants';
+import { HTTP } from '../../utils/HTTP';
 
 export type UpdatePasswordRequestData = {
   oldPassword: string;

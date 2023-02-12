@@ -1,6 +1,6 @@
 import { type LoaderFunction, Route } from 'react-router-dom';
 
-import { leaderboardAPI } from '../api/leaderboardAPI';
+import { leaderboardAPI } from '../api/leaderboardAPI/leaderboardAPI';
 import { Leaderboard } from '../pages/Leaderboard';
 import {
   LEADERBOARD_DEFAULT_PAGE,

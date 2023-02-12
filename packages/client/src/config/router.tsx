@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { type LoaderFunction, createRoutesFromElements, Link, Route } from 'react-router-dom';
 
-import { authAPI } from '../api/authAPI';
-import { oauthAPI } from '../api/oauthAPI';
+import { authAPI } from '../api/authAPI/authAPI';
+import { oauthAPI } from '../api/oauthAPI/oauthAPI';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';

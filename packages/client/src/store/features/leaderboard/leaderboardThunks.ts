@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { leaderboardAPI } from '../../../api/leaderboardAPI';
+import { leaderboardAPI } from '../../../api/leaderboardAPI/leaderboardAPI';
 import { type LeaderboardRecordData } from '../../../api/typings';
 import {
   LEADERBOARD_DEFAULT_PAGE,

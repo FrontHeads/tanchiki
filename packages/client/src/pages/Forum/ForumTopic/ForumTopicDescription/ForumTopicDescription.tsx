@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { type FC, useCallback, useState } from 'react';
 
-import { forumAPI } from '../../../../api/forumAPI';
+import { forumAPI } from '../../../../api/forumAPI/forumAPI';
 import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';

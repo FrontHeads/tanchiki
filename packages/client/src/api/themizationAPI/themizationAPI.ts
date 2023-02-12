@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from '../config/constants';
-import { HTTP } from '../utils/HTTP';
+import { API_ENDPOINTS } from '../../config/constants';
+import { HTTP } from '../../utils/HTTP';
 
 type responseData = Record<string, never>;
 
