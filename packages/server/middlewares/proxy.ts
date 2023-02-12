@@ -1,10 +1,20 @@
 import type { RequestHandler } from 'express';
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
 
-import { YANDEX_API_HOST } from '../config/constants';
+import { allowedHosts, YANDEX_API_HOST } from '../config/constants';
 import { User } from '../models/User';
 
 export const proxyMiddleware: RequestHandler = (req, res, next) => {
+  console.log('---------------------------- req.hostname ----------------------------', req.hostname);
+  console.log('---------------------------- req.cookie ----------------------------', req.headers['Cookie']);
+
+  // Если обращение к API идёт из незнакомого места - отклоняем
+  if (!allowedHosts.includes(req.hostname)) {
+    res.statusCode = 403;
+    res.send('<!doctype html><p>Forbidden</p>');
+    return;
+  }
+
   return createProxyMiddleware({
     target: YANDEX_API_HOST,
     pathRewrite: { '^/api': '' }, // чтобы в конец пути target не добавлялось лишнее /api

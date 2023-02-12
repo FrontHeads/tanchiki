@@ -7,12 +7,10 @@ WORKDIR /app
 
 FROM base as builder
 
-COPY package.json yarn.lock
-RUN yarn install --frozen-lockfile
-
 COPY . .
 
-RUN rm -rf /app/packages/server/dist/ \
+RUN yarn install --frozen-lockfile \
+  && rm -rf /app/packages/server/dist/ \
   && yarn build
 
 FROM node:$NODE_VERSION-bullseye-slim as production

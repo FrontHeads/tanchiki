@@ -12,8 +12,10 @@
     "format": "lerna run format",
     "preview": "yarn build && lerna run preview --parallel",
     "docker": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d",
+    "docker:up": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:build": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build",
-    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d && yarn dev"
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d && yarn dev",
+    "docker:stop": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.prod.yml stop"
   },
   "license": "MIT",
   "workspaces": [

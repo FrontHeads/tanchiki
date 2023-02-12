@@ -9,12 +9,12 @@ services:
       args:
         SERVER_PORT: ${SERVER_PORT}
     restart: always
+    env_file:
+      - .env
     environment:
       POSTGRES_HOST: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-      VIRTUAL_HOST: ${SERVER_HOST}
+      MONGO_HOST: mongo
+      VIRTUAL_HOST: ${APP_HOSTNAME}
       VIRTUAL_PORT: ${SERVER_PORT}
     depends_on:
       - postgres
@@ -68,5 +68,5 @@ volumes:
 
 networks:
   mynet:
-    name: tanchiki_mynet
+    name: tanchiki_default
     external: true
