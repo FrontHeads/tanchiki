@@ -6,7 +6,7 @@ import { ScenarioEvent } from './typings';
 let game: Game;
 
 function getPlayerOneTank() {
-  return [...game?.loop?.loopEntities || null]
+  return [...(game?.loop?.loopEntities || null)]
     .filter(item => {
       return item instanceof TankPlayer && item.variant === 'PLAYER1';
     })
