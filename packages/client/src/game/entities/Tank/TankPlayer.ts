@@ -1,9 +1,10 @@
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { EntityEvent } from '../Entity/typings';
 import { Speed } from '../EntityDynamic/data';
-import { type EntityDynamicSettings } from '../EntityDynamic/typings';
+import { type PlayerVariant, type TankPlayerSettings } from './typings';
 import { Tank } from './Tank';
-import { type PlayerVariant } from './typings';
+
+export { type PlayerVariant, type TankPlayerSettings };
 
 export class TankPlayer extends Tank {
   variant: PlayerVariant = 'PLAYER1';
@@ -12,19 +13,12 @@ export class TankPlayer extends Tank {
   /** Уровень улучшений танка (увеличивается за счёт бонусов). */
   upgradeTier = 1;
 
-  constructor(props: EntityDynamicSettings) {
-    super(props);
+  constructor(props: TankPlayerSettings) {
+    super({ posX: 0, posY: 0 });
     this.role = 'player';
-    this.setMoveSpeed(Speed.Medium);
-    this.setShootSpeed(Speed.Medium);
     Object.assign(this, props);
 
-    if (this.variant === 'PLAYER1') {
-      this.mainSpriteCoordinates = spriteCoordinates['tank.player.primary.a'];
-    } else {
-      this.mainSpriteCoordinates = spriteCoordinates['tank.player.secondary.a'];
-    }
-
+    this.updateTankSpecs();
     this.registerTankPlayerEvents();
   }
 
@@ -51,30 +45,43 @@ export class TankPlayer extends Tank {
   }
 
   upgrade() {
+    ++this.upgradeTier;
+    this.updateTankSpecs();
+  }
+
+  updateTankSpecs() {
     const isPlayerOne = this.variant === 'PLAYER1';
 
-    ++this.upgradeTier;
-
     // Апгрейды танка
-    if (this.upgradeTier === 2) {
+    if (this.upgradeTier >= 1) {
+      this.setMoveSpeed(Speed.Medium);
+      this.setShootSpeed(Speed.Medium);
+      this.mainSpriteCoordinates = isPlayerOne
+        ? spriteCoordinates['tank.player.primary.a']
+        : spriteCoordinates['tank.player.secondary.a'];
+    }
+    if (this.upgradeTier >= 2) {
       // Увеличение скорости стрельбы
       this.setShootSpeed(Speed.High);
       this.mainSpriteCoordinates = isPlayerOne
         ? spriteCoordinates['tank.player.primary.b']
         : spriteCoordinates['tank.player.secondary.b'];
-    } else if (this.upgradeTier === 3) {
+    }
+    if (this.upgradeTier >= 3) {
       // Увеличение лимита выпускаемых за раз снарядов
       this.projectilesLimit = 2;
       this.mainSpriteCoordinates = isPlayerOne
         ? spriteCoordinates['tank.player.primary.c']
         : spriteCoordinates['tank.player.secondary.c'];
-    } else if (this.upgradeTier >= 4) {
+    }
+    if (this.upgradeTier >= 4) {
       // Увеличение силы взрыва снарядов (лучше пробивает стены)
       this.shootForce = 2;
       this.mainSpriteCoordinates = isPlayerOne
         ? spriteCoordinates['tank.player.primary.d']
         : spriteCoordinates['tank.player.secondary.d'];
     }
+
     this.refreshSprite();
   }
 }
