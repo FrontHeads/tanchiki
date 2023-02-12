@@ -1,0 +1,36 @@
+.new-topic {
+  padding: 6px 12px 12px;
+  background: var(--section-background-color);
+  overflow: hidden;
+  border: 1px double var(--border-color);
+  border-radius: 10px;
+  margin-bottom: 30px;
+
+  &__textarea {
+    display: block;
+    font-size: 16px;
+    width: 100%;
+    padding: 8px;
+    resize: vertical;
+    background-color: var(--section-background-color);
+    box-sizing: border-box;
+    border-radius: 6px;
+    color: var(--font-color-primary);
+  }
+}
+
+.textarea {
+  &__heading {
+    border: 1px solid #737477;
+    min-height: 50px;
+    max-height: 100px;
+    margin-bottom: 12px;
+    margin-top: 6px;
+  }
+
+  &__content {
+    margin-top: 6px;
+    min-height: 150px;
+    max-height: 500px;
+  }
+}

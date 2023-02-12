@@ -35,7 +35,7 @@
   }
 
   &__new-message {
-    padding: 12px;
+    padding: 6px 12px 12px;
     background: var(--section-background-color);
     overflow: hidden;
     border: 1px double var(--border-color);
@@ -62,14 +62,16 @@
     min-height: 100px;
     max-height: 500px;
     padding: 8px;
+    padding-right: 40px;
     resize: vertical;
     background-color: var(--section-background-color);
     box-sizing: border-box;
     border-radius: 6px;
     color: var(--font-color-primary);
   }
+}
 
-  &_has-errors .validation-errors {
-    color: var(--font-color-danger);
-  }
+.textarea__container {
+  position: relative;
+  margin-top: 6px;
 }

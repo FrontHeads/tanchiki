@@ -2,6 +2,7 @@ export { Entity } from './Entity/Entity';
 export { EntityDynamic } from './EntityDynamic/EntityDynamic';
 export { Explosion } from './Explosion/Explosion';
 export { Flag } from './Flag/Flag';
+export { Powerup } from './Powerup/Powerup';
 export { Projectile } from './Projectile/Projectile';
 export { Score } from './Score/Score';
 export { Tank } from './Tank/Tank';

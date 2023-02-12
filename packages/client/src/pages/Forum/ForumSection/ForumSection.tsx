@@ -1,24 +1,44 @@
-import { type FC } from 'react';
-import { useParams } from 'react-router-dom';
+import './ForumSection.css';
+
+import { type FC, Suspense } from 'react';
+import { Await, useLoaderData, useNavigate, useParams } from 'react-router-dom';
 
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../components/Breadcrumbs/data';
+import { Button } from '../../../components/Button';
+import { ButtonVariant } from '../../../components/Button/data';
+import { Paths } from '../../../config/constants';
 import { generateMetaTags } from '../../../utils/seoUtils';
-import { DUMMY_SECTION as topicList, DUMMY_SECTION_BREADCRUMBS as breadcrumbs } from '../DummyData';
 import { ForumTopicList } from './ForumTopicList';
-import { type ForumSectionProps } from './typings';
+import { type ForumSectionT } from './typings';
 
-export const ForumSection: FC<ForumSectionProps> = () => {
+export const ForumSection: FC = () => {
+  const navigate = useNavigate();
   const { sectionId } = useParams();
+  const { data: section } = useLoaderData() as { data: ForumSectionT };
+
   return (
     <>
-      {generateMetaTags({ title: `Раздел ${sectionId}` })}
+      {generateMetaTags({ title: section.name })}
       <section className="forum__wrapper">
-        <h1 className="forum__title" data-testid="forum-section-title">
-          Раздел {sectionId}
-        </h1>
-        <Breadcrumbs data={breadcrumbs} variant={BreadcrumbsVariant.Wide} />
-        <ForumTopicList topicList={topicList} sectionId={sectionId} />
+        <Suspense fallback={<span>Загрузка данных...</span>}>
+          <Await resolve={section || Promise.resolve()}>
+            <h1 className="forum__title" data-testid="forum-section-title">
+              {section.name}
+            </h1>
+            <div className="actions-wrapper">
+              <Breadcrumbs variant={BreadcrumbsVariant.Normal} />
+              <div className="add-topic-wrapper">
+                <Button
+                  text="Создать тему"
+                  variant={ButtonVariant.Primary}
+                  onClick={() => navigate(`${Paths.Section}/${sectionId}${Paths.NewTopic}`)}
+                />
+              </div>
+            </div>
+            <ForumTopicList topicList={section.topics} sectionId={sectionId} />
+          </Await>
+        </Suspense>
       </section>
     </>
   );

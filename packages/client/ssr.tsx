@@ -24,13 +24,18 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
    * При этом возвращается stream, а не строка, который нужно
    * обрабатывать на стороне сервера
    * https://github.com/reactwg/react-18/discussions/22
+   * Так же возвращаем store, который был сформирован на сервере, чтобы
+   * на клиенте отрендерить preloadedState
    */
-  return renderToPipeableStream(
-    <Provider store={store}>
-      <StaticRouterProvider router={router} context={context}/>
-    </Provider>,
-    streamOptions
-  );
+  return {
+    stream: renderToPipeableStream(
+      <Provider store={store}>
+        <StaticRouterProvider router={router} context={context} />
+      </Provider>,
+      streamOptions
+    ),
+    store,
+  };
 }
 
 export function createFetchHeaders(requestHeaders: express.Request['headers']): Headers {
