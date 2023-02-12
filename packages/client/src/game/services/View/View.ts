@@ -35,7 +35,7 @@ export class View extends EventEmitter {
     this.height = height;
     this.pixelRatio = this.getPixelRatio();
 
-    this.game.resources.on(ResourcesEvent.Loaded, () => {
+    this.game.resources?.on(ResourcesEvent.Loaded, () => {
       this.spriteImg = this.game.resources.getImage('classicDesignSprite');
     });
   }

@@ -1,7 +1,9 @@
 import { assetPathList, errorMsg, timeoutMsg } from './data';
-import { resources } from './Resources';
+import { Resources, ResourcesEvent } from './Resources';
 
 describe('game/services/Resources', () => {
+  const resources = new Resources();
+
   /** Jest не умеет обрабатывать события загрузки файлов. Приходится мокать таким образом. */
 
   // @ts-expect-error: mock doesn't have all parameters of HTMLImageElement
@@ -26,10 +28,14 @@ describe('game/services/Resources', () => {
   /** Jest не умеет обрабатывать alert. Его тоже приходится мокать. */
   global.alert = jest.fn();
 
-  it('should return true with correct data', async () => {
-    const isResourcesLoaded = await resources.loadAll(assetPathList);
+  it('should load', async () => {
+    const loadedObserver = jest.fn();
+
+    resources.on(ResourcesEvent.Loaded, loadedObserver);
+    const isResourcesLoaded = await resources.load(assetPathList);
 
     expect(isResourcesLoaded).toBeTruthy();
+    expect(loadedObserver).toHaveBeenCalled();
   });
 
   it('should return false on loading error', async () => {
@@ -44,14 +50,14 @@ describe('game/services/Resources', () => {
       }
     };
 
-    const isResourcesLoaded = await resources.loadAll();
+    const isResourcesLoaded = await resources.load();
 
     expect(global.alert).toBeCalledWith(errorMsg);
     expect(isResourcesLoaded).toBeFalsy();
   });
 
   it('should show alert about timeout', async () => {
-    const isResourcesLoaded = await resources.loadAll(assetPathList, 50);
+    const isResourcesLoaded = await resources.load(assetPathList, 50);
 
     expect(global.alert).toBeCalledWith(timeoutMsg);
     expect(isResourcesLoaded).toBeFalsy();
