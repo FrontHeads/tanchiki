@@ -1,4 +1,5 @@
 import { Color } from '../../../services/View/colors';
+import { isTouchscreen } from '../../../utils/isTouchscreen';
 import { Screen } from '../Screen';
 import { type LevelSelectorScreenProps } from './typings';
 
@@ -22,7 +23,7 @@ export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
         posX: 0,
         posY: 50,
         width: this.overlay.view.width,
-        height: 1,
+        height: isTouchscreen() ? 1.5 : 1,
         color: Color.Black,
         text: 'ДЛЯ ВЫБОРА УРОВНЯ ВОСПОЛЬЗУЙТЕСЬ',
         align: 'center',
@@ -30,9 +31,9 @@ export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
 
       this.overlay.renderElement({
         posX: 0,
-        posY: 52,
+        posY: isTouchscreen() ? 52.7 : 52,
         width: this.overlay.view.width,
-        height: 1,
+        height: isTouchscreen() ? 1.5 : 1,
         color: Color.Black,
         text: 'СТРЕЛКАМИ ВВЕРХ И ВНИЗ',
         align: 'center',
