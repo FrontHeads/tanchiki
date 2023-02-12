@@ -1,8 +1,9 @@
+import { type Game } from '../';
 import { assetPathList, errorMsg, timeoutMsg } from './data';
 import { Resources, ResourcesEvent } from './Resources';
 
 describe('game/services/Resources', () => {
-  const resources = new Resources();
+  const resources = new Resources({ state: { loadResourcesTimeout: 60000 } } as Game);
 
   /** Jest не умеет обрабатывать события загрузки файлов. Приходится мокать таким образом. */
 

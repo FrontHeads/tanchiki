@@ -1,4 +1,5 @@
 import { EventEmitter } from '../../utils';
+import { type Game } from '../';
 import {
   type ImagePathList,
   type SoundPathList,
@@ -17,8 +18,12 @@ export class Resources extends EventEmitter<ResourcesEvent> {
   private imageList: ImageList = {};
   private soundList: SoundList = {};
 
+  constructor(private game: Game) {
+    super();
+  }
+
   /** Загружает все изображения и звуки из AssetsDataList */
-  load(assets: AssetPathList = assetPathList, timeout = 60000): Promise<boolean> {
+  load(assets: AssetPathList = assetPathList, timeout = this.game.state.loadResourcesTimeout): Promise<boolean> {
     const loadAllTimeout = setTimeout(() => {
       alert(timeoutMsg);
     }, timeout);

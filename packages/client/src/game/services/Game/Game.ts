@@ -42,7 +42,7 @@ export class Game extends EventEmitter {
   private constructor() {
     super();
     this.state = new State();
-    this.resources = new Resources();
+    this.resources = new Resources(this);
     this.loop = new Loop();
     this.zone = new Zone(this);
     this.view = new View(this);
@@ -253,14 +253,12 @@ export class Game extends EventEmitter {
   /** Анимация перехода с экрана выбора уровня в игру */
   initGameIntro() {
     return new Promise<void>(resolve => {
-      const startAnimationDelay = 2000;
-
       this.overlay.show(ScreenType.LevelSelector, { level: this.state.level, showHints: false });
       this.audioManager.emit('levelIntro');
 
       this.controllerAll.on(ControllerEvent.Pause, resolve);
       this.controllerAll.on(ControllerEvent.Shoot, resolve);
-      setTimeout(resolve, startAnimationDelay);
+      setTimeout(resolve, this.state.gameIntroPopupTimeout);
     }).then(() => {
       this.controllerAll.offAll(ControllerEvent.Shoot);
       this.state.screen = ScreenType.GameStart;
@@ -310,8 +308,7 @@ export class Game extends EventEmitter {
       .on(ScenarioEvent.MissionAccomplished, async () => {
         this.statistics.finishMap();
         this.controllerAll.offAll(ControllerEvent.Pause);
-        const missionAccomplishedDelay = 1000;
-        await sleep(missionAccomplishedDelay);
+        await sleep(this.state.missionAccomplishedRedirectTimeout);
         await this.initGameScore();
         this.initGameLevel();
       });
@@ -324,7 +321,6 @@ export class Game extends EventEmitter {
       this.reset();
       this.state.screen = ScreenType.Score;
       this.overlay.show(this.state.screen, { ...meta, ...stats });
-      const redirectDelay = 7000;
 
       this.overlay.on('score', () => {
         this.audioManager.emit('score');
@@ -340,7 +336,7 @@ export class Game extends EventEmitter {
 
       this.controllerAll.on(ControllerEvent.Escape, skip);
       this.controllerAll.on(ControllerEvent.Shoot, skip);
-      setTimeout(resolve, redirectDelay);
+      setTimeout(resolve, this.state.scoreScreenTimeout);
     });
   }
 
@@ -350,7 +346,6 @@ export class Game extends EventEmitter {
         return;
       }
 
-      const redirectDelay = 3000;
       this.state.screen = ScreenType.GameOverPopup;
       this.overlay.show(this.state.screen);
       this.audioManager.emit('gameOver');
@@ -360,7 +355,7 @@ export class Game extends EventEmitter {
       this.controllerArrows.reset();
 
       this.controllerAll.on(ControllerEvent.Escape, resolve);
-      setTimeout(resolve, redirectDelay);
+      setTimeout(resolve, this.state.gameOverPopupTimeout);
     });
   }
 }
