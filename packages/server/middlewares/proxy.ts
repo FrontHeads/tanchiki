@@ -5,9 +5,6 @@ import { allowedHosts, YANDEX_API_HOST } from '../config/constants';
 import { User } from '../models/User';
 
 export const proxyMiddleware: RequestHandler = (req, res, next) => {
-  console.log('---------------------------- req.hostname ----------------------------', req.hostname);
-  console.log('---------------------------- req.cookie ----------------------------', req.headers['Cookie']);
-
   // Если обращение к API идёт из незнакомого места - отклоняем
   if (!allowedHosts.includes(req.hostname)) {
     res.statusCode = 403;

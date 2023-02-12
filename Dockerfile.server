@@ -23,7 +23,7 @@ COPY --from=builder /app/packages/server/package.json /app/package.json
 # Подменяем пакет клиента на физический путь к пакету, т.к. в Docker
 #  нельзя подключить соседний пакет из monorepo
 RUN sed -i 's/"client": "0.0.0"/"client": "file:..\/client"/g' /app/package.json \
-    && yarn install --production=true
+  && yarn install --production=true
 
 EXPOSE $SERVER_PORT
 CMD [ "node", "/app/index.js" ]
