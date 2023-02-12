@@ -277,7 +277,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
   }
 
-  /** Возвращает стейт первого или второго игрока. */ 
+  /** Возвращает стейт первого или второго игрока. */
   getPlayerState(playerType: Player | PlayerVariant) {
     return playerType === Player.Player1 ? this.game.state.playerOne : this.game.state.playerTwo;
   }
@@ -302,7 +302,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
     this.game.addEntity(projectile);
     projectile.spawn({ posX: projectile.posX, posY: projectile.posY });
-    // Обновляем, чтобы снаряд начал движение не из середины танка, а перед ним 
+    // Обновляем, чтобы снаряд начал движение не из середины танка, а перед ним
     projectile.update();
 
     projectile.on(EntityEvent.Exploding, () => {
