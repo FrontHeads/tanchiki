@@ -44,7 +44,7 @@ export class State {
   shieldPowerupDuration = 10000;
   freezePowerupDuration = 10000;
 
-  singleplayerMaxTotalEnemies = 5;
+  singleplayerMaxTotalEnemies = 20;
   singleplayerMaxActiveEnemies = 4;
   singleplayerEnemiesSpawnDelay = 2000;
   multiplayerMaxTotalEnemies = 20;

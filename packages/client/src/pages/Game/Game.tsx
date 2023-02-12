@@ -29,7 +29,7 @@ export const Game = () => {
     };
   }, []);
 
-  /** Если вкладка становится не активной, то ставим игру на паузу */
+  /** Если вкладка становится неактивной, то ставим игру на паузу */
   useEffect(() => {
     if (isTabActive === false && !game.state.paused && game.state.screen === ScreenType.GameStart) {
       game.togglePause();
