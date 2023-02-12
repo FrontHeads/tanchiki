@@ -5,18 +5,6 @@ export type APIError = {
   reason: string;
 };
 
-export type UserDTO = {
-  id: number;
-  login: string;
-  first_name: string;
-  second_name: string;
-  display_name: string;
-  avatar: string;
-  phone: string;
-  email: string;
-  role?: string;
-};
-
 export type LeaderboardRecordData = {
   username: string;
   score: number;
@@ -35,7 +23,7 @@ export type NewLeaderboardRecordRequest = {
   /** Какое поле используется для сортировки(данные сохраняются, если новое значение больше старого) */
   ratingFieldName: SortOption;
 
-  /**Название команды. Используется чтобы создоть уникольный лидерборд для каждого проекта (взято из Swagger) */
+  /**Название команды. Используется, чтобы создать уникальный лидерборд для каждого проекта (взято из Swagger) */
   teamName: typeof LEADERBOARD_TEAM_NAME;
 };
 
@@ -45,6 +33,6 @@ export type LeaderboardRequest = {
   /**Используется для пагинации. Если limit=10, для 1-ой страницы cursor=0, для 2-ой cursor=10 */
   cursor: number;
 
-  /**Сколько записей возвращить на одну страницу */
+  /**Сколько записей возвращать на одну страницу */
   limit: number;
 };

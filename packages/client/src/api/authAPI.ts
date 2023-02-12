@@ -1,6 +1,6 @@
+import { type UserProfile } from '../app.typings';
 import { API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
-import { type UserDTO } from './typings';
 
 export type SigninRequestData = {
   login: string;
@@ -19,7 +19,7 @@ export type SignupRequestData = {
 
 type SigninResponseData = Record<string, never>;
 type SignupResponseData = { id: number };
-type UserResponseData = UserDTO;
+type UserResponseData = UserProfile;
 
 export const authAPI = {
   signin: (data: SigninRequestData) => HTTP.post<SigninResponseData>(API_ENDPOINTS.AUTH.SIGNIN, { data }),

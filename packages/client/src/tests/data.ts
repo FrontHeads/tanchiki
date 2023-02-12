@@ -1,10 +1,11 @@
-import type { LeaderboardRecord, UserDTO } from '../api/typings';
+import type { LeaderboardRecord } from '../api/typings';
+import { type UserProfile } from '../app.typings';
 import { type ForumSectionT } from '../pages/Forum/ForumSection/typings';
 import { type ForumSectionItem } from '../pages/Forum/ForumSectionList/typings';
 import { type User } from '../pages/Forum/ForumTopic/ForumMessage/typings';
-import { type ForumTopicT } from './../pages/Forum/ForumTopic/typings';
+import { type ForumTopicT } from '../pages/Forum/ForumTopic/typings';
 
-export const fakeUserProfile: UserDTO = {
+export const fakeUserProfile: UserProfile = {
   id: 1,
   display_name: 'User1',
   first_name: 'First Name',

@@ -1,6 +1,6 @@
+import { type UserProfile } from '../app.typings';
 import { API_ENDPOINTS } from '../config/constants';
 import { HTTP } from '../utils/HTTP';
-import { type UserDTO } from './typings';
 
 export type UpdatePasswordRequestData = {
   oldPassword: string;
@@ -19,8 +19,8 @@ export type UpdateProfileRequestData = {
 export type UpdateProfileAvatarRequestData = FormData;
 
 type UpdatePasswordResponseData = Record<string, never>;
-type UpdateProfileResponseData = UserDTO;
-type UpdateProfileAvatarResponseData = UserDTO;
+type UpdateProfileResponseData = UserProfile;
+type UpdateProfileAvatarResponseData = UserProfile;
 
 export const userAPI = {
   updatePassword: (data: UpdatePasswordRequestData) =>
