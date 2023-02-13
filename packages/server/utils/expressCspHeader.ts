@@ -1,5 +1,3 @@
-// За основу взят https://github.com/frux/express-csp-header
-
 import crypto from 'crypto';
 import { type CSPHeaderParams, getCSP, nonce } from 'csp-header';
 import type { Request, RequestHandler, Response } from 'express';
@@ -26,9 +24,7 @@ const CSP_REPORT_ONLY_HEADER = 'Content-Security-Policy-Report-Only';
 
 function applyNonce(req: Request, cspString: string): string {
   if (cspString.includes(NONCE)) {
-    //@ts-ignore
     req.nonce = crypto.randomBytes(16).toString('base64');
-    //@ts-ignore
 
     return cspString.replace(new RegExp(NONCE, 'g'), nonce(req.nonce));
   }

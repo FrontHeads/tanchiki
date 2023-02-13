@@ -12,7 +12,7 @@ import express from 'express';
 import { expressCspHeader } from 'express-csp-header';
 import * as path from 'path';
 
-import { getCspDirectives } from '../server/config/cspDirectives';
+import { getCspDirectives } from './config/cspDirectives';
 import { SSRRoute } from './routes/SSR';
 import { isDev } from './utils/isDev';
 
