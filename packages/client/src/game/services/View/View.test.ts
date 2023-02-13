@@ -17,6 +17,8 @@ function mockEntity(rect: Rect) {
 const game = { state: { width: 10, height: 10 } } as Game;
 
 describe('game/services/View', () => {
+  const game = Game.create();
+
   it('should create layers', () => {
     const view = new View(game);
     const root = document.body.appendChild(document.createElement('div'));

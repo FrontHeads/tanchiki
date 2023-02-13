@@ -12,7 +12,7 @@ import {
 } from '../../entities';
 import { type Direction, type EntitySettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
-import { type Controller, type Game, IndicatorManager, MapManager } from '../';
+import { type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
 import { Cell, spawnPlaces } from '../MapManager/data';
 import { Player, playerInitialSettings } from './data';
@@ -283,12 +283,12 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
   }
 
   /** Возвращает контроллер в зависимости от режима игры и индекса игрока. */
-  getPlayerController(playerType: Player): Controller {
+  getPlayerController(playerType: Player) {
     if (this.game.state.mode === 'MULTIPLAYER') {
       if (playerType === Player.Player1) {
-        return this.game.controllerWasd;
+        return this.game.controllerPlayerOne;
       } else if (playerType === Player.Player2) {
-        return this.game.controllerArrows;
+        return this.game.controllerPlayerTwo;
       }
     }
 

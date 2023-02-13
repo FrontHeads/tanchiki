@@ -1,7 +1,7 @@
 import { Direction } from '../../entities/Entity/typings';
-import { ControllerEvent } from './data';
+import { ControllerElemsClassName, ControllerEvent } from './data';
 
-export type KeyBinding =
+export type Binding =
   | [ControllerEvent.Move, Direction]
   | [ControllerEvent.Shoot]
   | [ControllerEvent.Pause]
@@ -9,7 +9,7 @@ export type KeyBinding =
   | [ControllerEvent.Fullscreen]
   | [ControllerEvent.Escape];
 
-export type BindingConfig = Record<string, KeyBinding>;
+export type BindingConfig = Record<string, Binding>;
 
 const KeyBindingsGeneral: BindingConfig = {
   KeyP: [ControllerEvent.Pause],
@@ -37,4 +37,15 @@ export const KeyBindingsArrows: BindingConfig = {
   ArrowRight: [ControllerEvent.Move, Direction.Right],
   Enter: [ControllerEvent.Shoot],
   ...KeyBindingsGeneral,
+};
+
+export const PointerBindings: BindingConfig = {
+  [ControllerElemsClassName.ShootBtn]: [ControllerEvent.Shoot],
+  [ControllerElemsClassName.MoveUpBtn]: [ControllerEvent.Move, Direction.Up],
+  [ControllerElemsClassName.MoveRightBtn]: [ControllerEvent.Move, Direction.Right],
+  [ControllerElemsClassName.MoveLeftBtn]: [ControllerEvent.Move, Direction.Left],
+  [ControllerElemsClassName.MoveDownBtn]: [ControllerEvent.Move, Direction.Down],
+  [ControllerElemsClassName.PauseBtn]: [ControllerEvent.Pause],
+  [ControllerElemsClassName.MuteBtn]: [ControllerEvent.Mute],
+  [ControllerElemsClassName.FullscreenBtn]: [ControllerEvent.Fullscreen],
 };

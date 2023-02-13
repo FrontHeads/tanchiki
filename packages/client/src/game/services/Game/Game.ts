@@ -6,7 +6,8 @@ import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
 import {
   AudioManager,
-  Controller,
+  ControllerDesktop,
+  ControllerTouchscreen,
   ControllerEvent,
   Loop,
   Resources,
@@ -18,9 +19,13 @@ import {
   View,
   Zone,
 } from '../';
-import { KeyBindingsArrows, KeyBindingsWasd } from '../Controller/KeyBindings';
+import { ControllerPointer } from '../Controller/ControllerPointer';
+import { ServiceButtonsName } from '../Controller/data';
+import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
 import { type StatisticsData } from '../Statistics/typings';
+import { ViewEvents } from '../View/data';
 import { GameEvents } from './data';
+import { isTouchscreen } from '../../utils/isTouchscreen';
 
 export { GameEvents };
 
@@ -34,9 +39,9 @@ export class Game extends EventEmitter {
   audioManager: AudioManager;
   overlay: Overlay;
   scenario: Scenario | undefined;
-  controllerAll: Controller;
-  controllerWasd: Controller;
-  controllerArrows: Controller;
+  controllerAll: ControllerPointer | ControllerDesktop;
+  controllerPlayerOne: ControllerPointer | ControllerDesktop;
+  controllerPlayerTwo: ControllerPointer | ControllerDesktop;
   statistics: Statistics;
 
   private constructor() {
@@ -48,9 +53,9 @@ export class Game extends EventEmitter {
     this.view = new View(this);
     this.overlay = new Overlay(this);
     this.audioManager = new AudioManager(this);
-    this.controllerAll = new Controller({ ...KeyBindingsWasd, ...KeyBindingsArrows });
-    this.controllerWasd = new Controller(KeyBindingsWasd);
-    this.controllerArrows = new Controller(KeyBindingsArrows);
+    this.controllerAll = this.createController({ ...KeyBindingsWasd, ...KeyBindingsArrows });
+    this.controllerPlayerOne = this.createController(KeyBindingsWasd);
+    this.controllerPlayerTwo = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
     this.statistics = new Statistics(this);
   }
 
@@ -77,8 +82,8 @@ export class Game extends EventEmitter {
     this.loop.load();
     this.audioManager.load();
     this.controllerAll.load();
-    this.controllerWasd.load();
-    this.controllerArrows.load();
+    this.controllerPlayerOne.load();
+    this.controllerPlayerTwo.load();
     this.statistics.load();
   }
 
@@ -90,8 +95,8 @@ export class Game extends EventEmitter {
     this.overlay.unload();
     this.audioManager.unload();
     this.controllerAll.unload();
-    this.controllerWasd.unload();
-    this.controllerArrows.unload();
+    this.controllerPlayerOne.unload();
+    this.controllerPlayerTwo.unload();
     this.statistics.unload();
   }
 
@@ -106,8 +111,8 @@ export class Game extends EventEmitter {
     this.overlay.reset();
     this.audioManager.reset();
     this.controllerAll.reset();
-    this.controllerWasd.reset();
-    this.controllerArrows.reset();
+    this.controllerPlayerOne.reset();
+    this.controllerPlayerTwo.reset();
     this.statistics.reset();
   }
 
@@ -134,14 +139,14 @@ export class Game extends EventEmitter {
     if (newState === false || this.state.paused) {
       this.overlay.clearScreen();
       this.loop.start();
-      this.controllerWasd.load();
-      this.controllerArrows.load();
+      this.controllerPlayerOne.load();
+      this.controllerPlayerTwo.load();
       this.statistics.startTimer();
     } else if (newState === true || !this.state.paused) {
       this.overlay.show(ScreenType.Pause);
       this.loop.stop();
-      this.controllerWasd.unload();
-      this.controllerArrows.unload();
+      this.controllerPlayerOne.unload();
+      this.controllerPlayerTwo.unload();
       this.statistics.stopTimer();
     }
     this.state.paused = !this.state.paused;
@@ -174,7 +179,7 @@ export class Game extends EventEmitter {
         }
         if (direction === Direction.Up) {
           this.state.mainMenuState = MainMenuState.Singleplayer;
-        } else if (direction === Direction.Down) {
+        } else if (direction === Direction.Down && !isTouchscreen()) {
           this.state.mainMenuState = MainMenuState.Multiplayer;
         }
 
@@ -191,6 +196,7 @@ export class Game extends EventEmitter {
 
         // Запускаем игру после выбора уровня
         this.initGameLevel(true);
+        this.emit(ViewEvents.ToggleVisibilityServiceBtn);
       });
   }
 
@@ -246,6 +252,9 @@ export class Game extends EventEmitter {
         })
         .on(ControllerEvent.Escape, () => {
           this.initMenu();
+        })
+        .on(ControllerEvent.Fullscreen, () => {
+          this.view.toggleFullScreen();
         });
     });
   }
@@ -284,9 +293,11 @@ export class Game extends EventEmitter {
     this.controllerAll
       .on(ControllerEvent.Pause, () => {
         this.togglePause();
+        this.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Pause);
       })
       .on(ControllerEvent.Mute, () => {
         this.audioManager.emit('pause', { isMuteKey: true });
+        this.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Mute);
       })
       .on(ControllerEvent.Fullscreen, () => {
         this.view.toggleFullScreen();
@@ -334,8 +345,12 @@ export class Game extends EventEmitter {
         this.controllerAll.on(ControllerEvent.Shoot, resolve);
       };
 
-      this.controllerAll.on(ControllerEvent.Escape, skip);
-      this.controllerAll.on(ControllerEvent.Shoot, skip);
+      this.controllerAll
+        .on(ControllerEvent.Fullscreen, () => {
+          this.view.toggleFullScreen();
+        })
+        .on(ControllerEvent.Escape, skip)
+        .on(ControllerEvent.Shoot, skip);
       setTimeout(resolve, this.state.scoreScreenTimeout);
     });
   }
@@ -351,11 +366,26 @@ export class Game extends EventEmitter {
       this.audioManager.emit('gameOver');
 
       this.controllerAll.reset();
-      this.controllerWasd.reset();
-      this.controllerArrows.reset();
+      this.controllerPlayerOne.reset();
+      this.controllerPlayerTwo.reset();
 
       this.controllerAll.on(ControllerEvent.Escape, resolve);
       setTimeout(resolve, this.state.gameOverPopupTimeout);
     });
+  }
+
+  private createController(keyBinding: BindingConfig) {
+    return isTouchscreen()
+      ? new ControllerTouchscreen({
+          pointerBindings: PointerBindings,
+          type: 'touchscreen',
+        })
+      : new ControllerDesktop({
+          keyBindings: keyBinding,
+          controllerMouse: new ControllerPointer({
+            pointerBindings: PointerBindings,
+            type: 'mouse',
+          }),
+        });
   }
 }
