@@ -227,20 +227,25 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
 
         playerState.upgradeTier = 1;
         --playerState.lives;
-        this.indicatorManager.renderPlayerLives(playerType, playerState.lives);
 
-        const playerOneIsOut = this.game.state.playerOne.lives <= 0;
-        const playerTwoIsOut = this.game.state.mode === 'SINGLEPLAYER' || this.game.state.playerTwo.lives <= 0;
+        const playerOneIsOut = this.game.state.playerOne.lives < 0;
+        const playerTwoIsOut = this.game.state.mode === 'SINGLEPLAYER' || this.game.state.playerTwo.lives < 0;
 
         if (playerOneIsOut && playerTwoIsOut) {
           this.emit(ScenarioEvent.GameOver);
         }
 
-        if (playerState.lives > 0) {
+        if (playerState.lives >= 0) {
+          this.indicatorManager.renderPlayerLives(playerType, playerState.lives);
           this.createPlayerTank(playerType);
         }
       });
 
+    /** Если в двупользовательском режиме у одного из игроков кончаются жизни,
+     * мы всё равно его спауним на следующем уровне. */
+    if (playerState.lives < 0) {
+      playerState.lives = 0;
+    }
     this.trySpawnTankPlayer(entity);
 
     // Если флаг уничтожен, останавливаем танки игроков
@@ -348,8 +353,8 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         playerTank.useShield(this.game.state.shieldPowerupDuration);
       }
 
-      // Бонус, дающий дополнительную жизнь
-      if (powerup.variant === 'TANK') {
+      // Бонус, дающий дополнительную жизнь (максимальный показатель - 9, иначе ломается индикационная панель)
+      if (powerup.variant === 'TANK' && playerState.lives < 9) {
         ++playerState.lives;
         this.indicatorManager.renderPlayerLives(playerType as Player, playerState.lives);
       }

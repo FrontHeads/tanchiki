@@ -2,6 +2,7 @@ import { TankPlayer } from '../../entities';
 import { Game, Scenario } from '../';
 import { Player, playerInitialSettings } from './data';
 import { ScenarioEvent } from './typings';
+import { sleep } from '../../utils';
 
 let game: Game;
 
@@ -59,7 +60,7 @@ describe('game/services/Scenario', () => {
     expect(createExplosionMock).toHaveBeenCalledTimes(1);
   });
 
-  it('should emit game over event', () => {
+  it('should emit game over event', async () => {
     game.reset();
     const scenario = new Scenario(game);
     const gameOverObserver = jest.fn();
@@ -68,7 +69,12 @@ describe('game/services/Scenario', () => {
 
     const tank = getPlayerOneTank();
 
-    // У танка две жизни. Первую сняли в предыдущем тесте.
+    // У танка три жизни. Первую сняли в предыдущем тесте. Это вторая.
+    tank.beDestroyed(tank);
+
+    await sleep(100);
+
+    // Убиваем танк третий раз.
     tank.beDestroyed(tank);
 
     expect(tank.spawned).toBe(false);
