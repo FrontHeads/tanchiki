@@ -1,14 +1,14 @@
 import { type Direction } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { ControllerEvent } from './data';
-import { type BindingConfig, type KeyBinding } from './KeyBindings';
+import { type Binding } from './KeyBindings';
 
-export class Controller extends EventEmitter<ControllerEvent> {
+export abstract class ControllerBase extends EventEmitter<ControllerEvent> {
   activeDirection: Partial<Record<Direction, boolean>> = {};
   shootProcess: ReturnType<typeof setInterval> | null = null;
   shootIntervalMs = 200;
 
-  constructor(private keyBindings: BindingConfig) {
+  constructor() {
     super();
   }
 
@@ -25,42 +25,12 @@ export class Controller extends EventEmitter<ControllerEvent> {
     return this;
   }
 
-  registerEvents() {
-    this.keydown = this.keydown.bind(this);
-    this.keyup = this.keyup.bind(this);
-    document.addEventListener('keydown', this.keydown);
-    document.addEventListener('keyup', this.keyup);
-  }
+  abstract registerEvents(): void;
 
-  disableEvents() {
-    document.removeEventListener('keydown', this.keydown);
-    document.removeEventListener('keyup', this.keyup);
-  }
+  abstract disableEvents(): void;
 
-  getKeyBinding(code: string) {
-    return this.keyBindings[code] || null;
-  }
-
-  keydown(event: KeyboardEvent) {
-    if (event.repeat) {
-      return false;
-    }
-    const keyBinding = this.getKeyBinding(event.code);
-    if (keyBinding) {
-      this.keyPressed(keyBinding);
-      this.preventDefaultEvent(event);
-    }
-  }
-
-  keyup(event: KeyboardEvent) {
-    const keyBinding = this.getKeyBinding(event.code);
-    if (keyBinding) {
-      this.keyReleased(keyBinding);
-      this.preventDefaultEvent(event);
-    }
-  }
-
-  keyPressed([action, direction]: KeyBinding) {
+  /** Запускает событие привязанное к кнопке/клику/тапу, например движение вперед или выстрел. */
+  emitBindingAction([action, direction]: Binding) {
     if (action === ControllerEvent.Move) {
       this.activeDirection[direction] = true;
     }
@@ -77,7 +47,8 @@ export class Controller extends EventEmitter<ControllerEvent> {
     }
   }
 
-  keyReleased([action, direction]: KeyBinding) {
+  /** Останавливает событие привязанное к кнопке/клику/тапу, например движение вперед или выстрел. */
+  stopBindingAction([action, direction]: Binding) {
     if (action === ControllerEvent.Move) {
       delete this.activeDirection[direction];
       const activeDirection = Object.keys(this.activeDirection);
@@ -90,12 +61,6 @@ export class Controller extends EventEmitter<ControllerEvent> {
     if (action === ControllerEvent.Shoot && this.shootProcess) {
       clearInterval(this.shootProcess);
       this.shootProcess = null;
-    }
-  }
-
-  preventDefaultEvent(event: KeyboardEvent) {
-    if (!event.ctrlKey && !event.shiftKey && !event.altKey) {
-      event.preventDefault();
     }
   }
 }

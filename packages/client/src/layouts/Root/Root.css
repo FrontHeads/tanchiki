@@ -7,4 +7,8 @@
   @media (max-width: 730px) {
     width: 95%;
   }
+
+  &__game {
+    height: 100%;
+  }
 }

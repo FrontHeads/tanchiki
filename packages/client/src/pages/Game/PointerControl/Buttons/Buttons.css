@@ -1,0 +1,113 @@
+.controller {
+  display: flex;
+  justify-content: space-between;
+  min-height: 166px;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+
+  @media (any-pointer: coarse) and (orientation: landscape) {
+    min-height: 230px;
+    height: 100%;
+    justify-content: center;
+
+    @media (min-height: 730px) {
+      align-self: center;
+    }
+  }
+
+  &__service {
+    display: flex;
+    align-self: center;
+    @media (any-pointer: coarse) and (orientation: portrait) {
+      flex-direction: row;
+    }
+    @media (any-pointer: coarse) and (orientation: landscape) {
+      flex-direction: column-reverse;
+      position: absolute;
+      right: 0;
+      left: 0;
+      align-items: center;
+      display: flex;
+      height: 100%;
+      justify-content: flex-end;
+      z-index: 900;
+    }
+
+    &-btn {
+      margin-left: var(--service-btn-margin-left);
+      width: var(--service-btn-size);
+      height: var(--service-btn-size);
+      fill: var(--font-color-primary);
+      stroke: var(--font-color-primary);
+      filter: drop-shadow(0 0 5px var(--service-btn-shadow-color));
+      cursor: pointer;
+      margin-bottom: calc(var(--service-btn-size) - 5px);
+
+      @media (any-pointer: coarse) and (orientation: landscape) {
+        margin-left: 0;
+      }
+
+      &_pause {
+        fill: none;
+        stroke: var(--font-color-primary);
+      }
+    }
+
+    &-btn:nth-child(1) {
+      @media (any-pointer: coarse) and (orientation: portrait) {
+        margin-left: 0;
+      }
+    }
+
+    &-btn:hover,
+    &-btn_activated {
+      fill: var(--dendy-button-primary-color);
+      stroke: var(--dendy-button-primary-color);
+    }
+
+    &-btn:hover {
+      opacity: 0.5;
+    }
+
+    &-btn_pause svg {
+      fill: none;
+    }
+  }
+
+  &__shoot {
+    display: flex;
+    justify-content: center;
+    z-index: 990;
+
+    @media (any-pointer: coarse) and (orientation: portrait) {
+      min-width: 105px;
+    }
+    @media (any-pointer: coarse) and (orientation: landscape) {
+      /* margin-left: 20px; */
+      display: block;
+    }
+    @media (any-pointer: fine) {
+      display: none;
+    }
+
+    &-btn {
+      background-color: var(--dendy-button-primary-color);
+      margin: 7px;
+      border-radius: 100px;
+      padding: 5px;
+      width: var(--shoot-btn-size);
+      height: var(--shoot-btn-size);
+      color: var(--joystick-buttons-font-color);
+      font-family: "Press Start 2P", cursive;
+      box-shadow: 0 0 10px var(--section-light-shadow);
+      fill: var(--font-color-third);
+      user-select: none;
+    }
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}

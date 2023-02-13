@@ -57,8 +57,10 @@
     box-shadow: 0 0 30px var(--section-light-shadow);
     overflow-x: hidden;
     overflow-y: overlay;
-    height: 80vh;
     transition: 0.5s ease-in-out;
+    @media (max-height: 620px) {
+      height: 80vh;
+    }
 
     @media (max-width: 420px) {
       padding: 10px 15px 0 20px;
