@@ -1,7 +1,7 @@
 import React, { type FC, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { contactAPI } from '../../api/contactAPI/contactAPI';
+import { contactAPI } from '../../api/contactAPI';
 import { Button } from '../../components/Button';
 import { ButtonVariant } from '../../components/Button/data';
 import { Form } from '../../components/Form';

@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { forumAPI } from '../../../../api/forumAPI/forumAPI';
+import { forumAPI } from '../../../../api/forumAPI';
 import { Breadcrumbs } from '../../../../components/Breadcrumbs';
 import { BreadcrumbsVariant } from '../../../../components/Breadcrumbs/data';
 import { Button } from '../../../../components/Button';

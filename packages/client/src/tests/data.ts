@@ -1,4 +1,4 @@
-import type { LeaderboardRecord } from '../api/leaderboardAPI/typings';
+import type { LeaderboardRecord } from '../api/leaderboardAPI';
 import { type UserProfile } from '../app.typings';
 import { type ForumSectionT } from '../pages/Forum/ForumSection/typings';
 import { type ForumSectionItem } from '../pages/Forum/ForumSectionList/typings';
