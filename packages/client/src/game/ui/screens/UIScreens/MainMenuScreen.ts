@@ -114,7 +114,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
     const opacity = isOdd(counter) ? 0 : 1;
 
     /** Убираем анимацию при уходе с экрана главного меню */
-    if (this.overlay.game.screen !== 'MAIN_MENU') {
+    if (this.overlay.game.state.screen !== 'MAIN_MENU') {
       return false;
     }
 
