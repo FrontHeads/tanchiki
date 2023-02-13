@@ -10,7 +10,7 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "format": "lerna run format",
-    "preview": "yarn build && lerna run preview --parallel",
+    "preview": "yarn build && lerna run preview --parallel --stream",
     "docker": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d",
     "docker:up": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:build": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml build",
