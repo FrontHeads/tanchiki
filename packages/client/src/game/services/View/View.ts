@@ -2,10 +2,19 @@ import { type Entity, Tank } from '../../entities';
 import { type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
+import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
+import { type Game } from '../Game/Game';
 import { Color } from './colors';
-import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
+import { ViewEvents } from './data';
+import {
+  type AnimationSettings,
+  type GetSpriteCoordinates,
+  type LayerEntity,
+  type LayerList,
+} from './typings';
 
 export class View extends EventEmitter {
+  game: Game;
   width = 0;
   height = 0;
   pixelRatio = 10;
@@ -16,21 +25,20 @@ export class View extends EventEmitter {
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
   spriteImg: HTMLImageElement | null = null;
-  /** Выясняем какая сторона окна меньше */
-  windowSmallerSideSize = Math.min(window.innerWidth, window.innerHeight);
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeListener = this.canvasResizeHandler.bind(this);
 
-  constructor({ width, height }: Size) {
+  constructor({ width, height }: Size, game: Game) {
     super();
     this.width = width;
     this.height = height;
     this.pixelRatio = this.getPixelRatio();
+    this.game = game;
   }
 
   toggleFullScreen() {
     if (!document.fullscreenElement) {
-      this.root.requestFullscreen();
+      document.querySelector(`.${ControllerElemsClassName.FullscreenWrapper}`)?.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
@@ -60,10 +68,14 @@ export class View extends EventEmitter {
 
     // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
     window.addEventListener('resize', this.canvasResizeListener);
+
+    // Переключение в полноэкранный режим.
+    document.addEventListener('fullscreenchange', this.toggleFullscreenListener);
   }
 
   unload() {
     window.removeEventListener('resize', this.canvasResizeListener);
+    document.removeEventListener('fullscreenchange', this.toggleFullscreenListener);
   }
 
   /** Создает DOM-элементы canvas-слоев и добавляет в корневой DOM-элемент root. */
@@ -381,32 +393,31 @@ export class View extends EventEmitter {
      Важно чтобы pixelRatio равнялся числу округленному до целого или 0.5. Иначе будут баги при отрисовке. */
     const resizeStep = 0.5;
 
-    /** Выясняем какая сторона игрового поля меньше */
-    const zoneSmallerSideSize = Math.min(this.width, this.height);
-    let pixelRatio = this.windowSmallerSideSize / zoneSmallerSideSize;
+    let pixelRatioWidth = window.innerWidth / this.width;
 
-    const isCanvasBiggerThanWindow = zoneSmallerSideSize * pixelRatio >= this.windowSmallerSideSize;
-    if (isCanvasBiggerThanWindow) {
-      // Это немного уменьшит размер игрового поля, чтобы были отступы от края экрана.
-      pixelRatio -= resizeStep;
+    let isCanvasHeightBiggerThanWindow = pixelRatioWidth * this.height > window.innerHeight;
+
+    while (isCanvasHeightBiggerThanWindow) {
+      pixelRatioWidth -= resizeStep;
+      isCanvasHeightBiggerThanWindow = pixelRatioWidth * this.height > window.innerHeight;
     }
 
     // pixelRatio д.б. округлен до чисел с шагом 0.5 (например 1.5, 2, 2.5, и т.д.). Иначе будут баги при отрисовке.
-    return Math.round(pixelRatio / resizeStep) * resizeStep;
+    return Math.floor(pixelRatioWidth / resizeStep) * resizeStep;
   }
 
   /** Обработчик для события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeHandler() {
-    if (!this.windowSmallerSideSize) {
+    if (!(this.root.firstChild instanceof HTMLCanvasElement) || !this.root.firstChild.width) {
       return;
     }
 
-    const scale = Math.min(
-      window.innerWidth / this.windowSmallerSideSize,
-      window.innerHeight / this.windowSmallerSideSize
-    );
+    const currentWidth = this.root.firstChild.width;
+    const requiredWidth = this.width * this.getPixelRatio();
 
-    this.root.style.transform = 'scale(' + scale * 100 + '%)';
+    const scaleRatio = requiredWidth / currentWidth;
+
+    this.root.style.transform = 'scale(' + scaleRatio * 100 + '%)';
   }
 
   isSpriteImgLoaded() {
@@ -417,4 +428,8 @@ export class View extends EventEmitter {
       this.spriteImg.height > 0
     );
   }
+
+  private toggleFullscreenListener = () => {
+    this.game.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Fullscreen);
+  };
 }

@@ -1,19 +1,31 @@
 import { resources } from '../../../services';
 import { Color } from '../../../services/View/colors';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
+import { isOdd } from '../../../utils';
+import { isTouchscreen } from '../../../utils/isTouchscreen';
+import { type UIElement } from '../../UIElement/UIElement';
 import { Screen } from '../Screen';
 import { MainMenuState } from './data';
 
 export class MainMenuScreen extends Screen<MainMenuState> {
   tankElemInterval: string | null = null;
   mainMenuStateYPos = {
-    [MainMenuState.Singleplayer]: 32,
+    [MainMenuState.Singleplayer]: isTouchscreen() ? 38 : 32,
     [MainMenuState.Multiplayer]: 37,
   };
+  menuFirstElem: UIElement | null = null;
 
   show(state: MainMenuState) {
-    this.render();
     const verticalCenteringCorrection = -1;
+
+    if (isTouchscreen()) {
+      state = MainMenuState.Singleplayer;
+      if (!this.menuFirstElem) {
+        this.overlay.animate(this.animateMenuFirstElem, 500);
+      }
+    }
+
+    this.render();
 
     const tankElem = this.overlay.renderElement({
       posX: 17,
@@ -58,42 +70,60 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       align: 'center',
     });
 
-    this.overlay.renderElement({
+    this.menuFirstElem = this.overlay.renderElement({
       posX: 23,
       posY: this.mainMenuStateYPos[MainMenuState.Singleplayer],
-      width: 20,
+      width: 24,
       height: 2.2,
       color: Color.White,
-      text: '1 ИГРОК',
+      text: isTouchscreen() ? 'НАЖМИ ОГОНЬ' : '1 ИГРОК',
     });
 
-    this.overlay.renderElement({
-      posX: 23,
-      posY: this.mainMenuStateYPos[MainMenuState.Multiplayer],
-      width: 20,
-      height: 2.2,
-      color: Color.White,
-      text: '2 ИГРОКА',
-    });
+    if (!isTouchscreen()) {
+      this.overlay.renderElement({
+        posX: 23,
+        posY: this.mainMenuStateYPos[MainMenuState.Multiplayer],
+        width: 20,
+        height: 2.2,
+        color: Color.White,
+        text: '2 ИГРОКА',
+      });
+    }
 
     this.overlay.renderElement({
       posX: 0,
       posY: 50,
       width: view.width,
-      height: 1,
+      height: isTouchscreen() ? 1.5 : 1,
       color: Color.LightGrey,
-      text: 'WASD ИЛИ СТРЕЛКИ ДЛЯ ДВИЖЕНИЯ',
+      text: isTouchscreen() ? 'ДЖОЙСТИК ДЛЯ ДВИЖЕНИЯ' : 'WASD ИЛИ СТРЕЛКИ ДЛЯ ДВИЖЕНИЯ',
       align: 'center',
     });
 
     this.overlay.renderElement({
       posX: 0,
-      posY: 52,
+      posY: isTouchscreen() ? 52.7 : 52,
       width: view.width,
-      height: 1,
+      height: isTouchscreen() ? 1.5 : 1,
       color: Color.LightGrey,
-      text: 'ПРОБЕЛ ИЛИ ВВОД ДЛЯ СТРЕЛЬБЫ',
+      text: isTouchscreen() ? 'ОГОНЬ ДЛЯ ВЫБОРА В МЕНЮ И СТРЕЛЬБЫ' : 'ПРОБЕЛ ИЛИ ВВОД ДЛЯ СТРЕЛЬБЫ',
       align: 'center',
     });
   }
+
+  animateMenuFirstElem = (counter = 0) => {
+    const opacity = isOdd(counter) ? 0 : 1;
+
+    /** Убираем анимацию при уходе с экрана главного меню */
+    if (this.overlay.game.screen !== 'MAIN_MENU') {
+      return false;
+    }
+
+    if (this.menuFirstElem) {
+      this.menuFirstElem.color = `rgba(255,255,255,${opacity ?? 1})`;
+      this.overlay.refreshTextEntity(this.menuFirstElem);
+    }
+
+    return true;
+  };
 }
