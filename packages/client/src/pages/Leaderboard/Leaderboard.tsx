@@ -3,7 +3,7 @@ import './Leaderboard.css';
 import { type FC, Suspense } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 
-import { type GetLeaderboardResponseData } from '../../api/leaderboardAPI/typings';
+import { type GetLeaderboardResponseData } from '../../api/leaderboardAPI';
 import { leaderboardActions, leaderboardSelectors, useAppDispatch, useAppSelector } from '../../store';
 import { type ResponseType } from '../../utils/HTTP';
 import { generateMetaTags } from '../../utils/seoUtils';

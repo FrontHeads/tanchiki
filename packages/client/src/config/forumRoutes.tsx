@@ -1,6 +1,6 @@
 import { Link, Route } from 'react-router-dom';
 
-import { forumAPI } from '../api/forumAPI/forumAPI';
+import { forumAPI } from '../api/forumAPI';
 import { Forum } from '../pages/Forum';
 import { ForumSection } from '../pages/Forum/ForumSection';
 import { ForumNewTopic } from '../pages/Forum/ForumSection/ForumNewTopic';

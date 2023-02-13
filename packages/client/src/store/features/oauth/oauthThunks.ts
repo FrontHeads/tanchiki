@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { oauthAPI } from '../../../api/oauthAPI/oauthAPI';
+import { oauthAPI } from '../../../api/oauthAPI';
 import { PATH } from '../../../config/constants';
 
 /**

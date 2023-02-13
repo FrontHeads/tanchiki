@@ -3,7 +3,7 @@ import './ForumMessage.css';
 import cn from 'classnames';
 import { type FC, memo, useCallback, useState } from 'react';
 
-import { forumAPI } from '../../../../api/forumAPI/forumAPI';
+import { forumAPI } from '../../../../api/forumAPI';
 import { Button } from '../../../../components/Button';
 import { ButtonVariant } from '../../../../components/Button/data';
 import { Dropdown } from '../../../../components/Dropdown';
