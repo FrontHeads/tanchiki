@@ -37,7 +37,7 @@ export const ForumTopic: FC = () => {
       title: 'Message',
       type: 'text',
       id: 'message',
-      validator: 'NotEmpty',
+      validator: 'forumText',
       required: true,
     },
   ]);
