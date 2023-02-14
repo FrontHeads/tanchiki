@@ -36,8 +36,6 @@ export const CLIENT_ONLY_HOSTS = [
   `frontheads.github.io`,
 ];
 
-export const LOCAL_API_HOST = `http://localhost:${LOCAL_SERVER_PORT}/api`;
-
 export const YANDEX_API_HOST = 'https://ya-praktikum.tech/api/v2';
 
 export const API_ENDPOINTS = {

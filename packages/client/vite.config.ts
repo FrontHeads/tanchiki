@@ -13,7 +13,7 @@ export default defineConfig({
     port: Number(process.env.CLIENT_PORT) || 3000,
   },
   define: {
-    __SERVER_PORT__: process.env.SERVER_PORT || 5000,
+    __API_HOST__: `'${process.env.API_HOST}'` || '',
     __SLACK_FEEDBACK_WEBHOOK_URL__: `'${process.env.SLACK_FEEDBACK_WEBHOOK_URL}'` || '',
   },
   css: {

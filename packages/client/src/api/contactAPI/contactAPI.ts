@@ -5,7 +5,7 @@ import { type SendRequestData, type SendToSlackRequestData } from './typings';
 export const contactAPI = {
   send: (data: SendRequestData) => HTTP.post<void>(API_ENDPOINTS.CONTACT.SEND, { data }),
 
-  sentToSlack: (data: SendToSlackRequestData) => {
+  sendToSlack: (data: SendToSlackRequestData) => {
     try {
       const slackWebhookUrl = new URL(__SLACK_FEEDBACK_WEBHOOK_URL__);
       return HTTP.post<void>(slackWebhookUrl.pathname, {

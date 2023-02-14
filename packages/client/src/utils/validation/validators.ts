@@ -95,6 +95,20 @@ export const validators: Validators = {
     return errors;
   },
 
+  forumText(value: string): string[] {
+    const errors: string[] = [];
+
+    if (!value.length) {
+      errors.push(ValidationErrorMessage.NotEmpty);
+    }
+
+    if (ValidationRegex.hasClosedTagScript.test(value)) {
+      errors.push(ValidationErrorMessage.ForumTextFormat);
+    }
+
+    return errors;
+  },
+
   NotEmpty(value: string): string[] {
     const errors: string[] = [];
 

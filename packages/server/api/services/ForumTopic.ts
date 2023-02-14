@@ -2,6 +2,7 @@ import express, { type Request, type Response, Router } from 'express';
 import { Sequelize } from 'sequelize-typescript';
 
 import { checkAuthMiddleware } from '../../middlewares';
+import { xssErrorHandler, xssValidator } from '../../middlewares/xssValidation';
 import { ForumMessage } from '../../models/ForumMessage';
 import { ForumSection } from '../../models/ForumSection';
 import { ForumTopic } from '../../models/ForumTopic';
@@ -26,7 +27,7 @@ export const forumTopicRoute = Router()
       .then(topic => res.status(200).json(topic))
       .catch(next);
   })
-  .post('/', (req: Request, res: Response, next) => {
+  .post('/', xssValidator(), xssErrorHandler, (req: Request, res: Response, next) => {
     if (res.locals.user && res.locals.user.id) {
       req.body.user_id = res.locals.user.id;
       ForumTopic.create(req.body)
@@ -36,7 +37,7 @@ export const forumTopicRoute = Router()
       res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
     }
   })
-  .put('/:id', (req: Request, res: Response, next) => {
+  .put('/:id', xssValidator(), xssErrorHandler, (req: Request, res: Response, next) => {
     if (res.locals.user && res.locals.user.id) {
       ForumTopic.update(req.body, { where: { id: req.params.id, user_id: res.locals.user.id }, returning: true })
         .then(result => {

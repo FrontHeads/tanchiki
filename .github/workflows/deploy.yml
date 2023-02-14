@@ -1,0 +1,35 @@
+name: deploy to Yandex Cloud
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - main
+      - task/120-deploy
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          ARGS: '-rlgoDzvc -i'
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          TARGET: '/home/${{ secrets.DEPLOY_USER }}/tanchiki'
+          EXCLUDE: '/.git/'
+          SCRIPT_BEFORE: |
+            rm -rf /home/${{ secrets.DEPLOY_USER }}/tanchiki/*
+          SCRIPT_AFTER: |
+            cd /home/${{ secrets.DEPLOY_USER }}/tanchiki
+            printf '%s\n' "${{ secrets.DEPLOY_ENV }}" > .env
+            export COMPOSE_PROJECT_NAME=tanchiki
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d &
