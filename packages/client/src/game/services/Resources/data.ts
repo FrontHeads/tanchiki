@@ -37,3 +37,8 @@ export const extensionList = {
   images: ['png', 'svg', 'jpg', 'jpeg', 'gif'],
   sounds: ['mp3'],
 };
+
+export enum ResourcesEvent {
+  Loaded = 'LOADED',
+  Error = 'ERROR',
+}

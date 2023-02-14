@@ -1,3 +1,4 @@
+import { type Game } from '../';
 import { Tank } from '../../entities';
 import { type Rect } from '../../entities/Entity/typings';
 import { AudioManager } from './AudioManager';
@@ -10,7 +11,7 @@ function mockEntity(rect: Rect) {
 
 describe('game/services/AudioManager', () => {
   it('should play sounds', () => {
-    const audioManager = new AudioManager();
+    const audioManager = new AudioManager({} as Game);
 
     audioManager.playSound = jest.fn();
 
@@ -29,7 +30,7 @@ describe('game/services/AudioManager', () => {
   });
 
   it('should play pause sound', () => {
-    const audioManager = new AudioManager();
+    const audioManager = new AudioManager({} as Game);
 
     audioManager.playSound = jest.fn();
 
@@ -39,7 +40,7 @@ describe('game/services/AudioManager', () => {
   });
 
   it('should not play sounds while paused', () => {
-    const audioManager = new AudioManager();
+    const audioManager = new AudioManager({} as Game);
 
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 

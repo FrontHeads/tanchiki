@@ -12,8 +12,8 @@ export class PausePopupScreen extends Screen {
     const textPauseOpacity = isOdd(counter) ? 0 : 1;
     this.overlay.clearScreen();
 
-    //** Убироаем анимацию при снятии паузы */
-    if (!this.overlay.game.paused) {
+    //** Убираем анимацию при снятии паузы */
+    if (!this.overlay.game.state.paused) {
       return false;
     }
     this.showPause(textPauseOpacity);

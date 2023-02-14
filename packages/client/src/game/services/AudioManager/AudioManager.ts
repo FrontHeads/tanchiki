@@ -1,7 +1,7 @@
 import { type Entity, Powerup, Tank, Terrain } from '../../entities';
 import { type DamageSettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
-import { resources } from '../';
+import { type Game } from '../';
 import { type SoundPathList } from '../Resources/data';
 
 export class AudioManager extends EventEmitter {
@@ -11,10 +11,15 @@ export class AudioManager extends EventEmitter {
   /** Хранит все проигрываемые в настоящий момент звуки. */
   public activeSounds: Set<keyof typeof SoundPathList> = new Set();
 
-  constructor() {
+  constructor(private game: Game) {
     super();
 
     this.registerGlobalEvents();
+  }
+
+  /** Берёт HTMLAudioElement из соответствующего сервиса. */
+  getSound(sound: keyof typeof SoundPathList) {
+    return this.game.resources.getSound(sound);
   }
 
   load() {
@@ -183,7 +188,7 @@ export class AudioManager extends EventEmitter {
 
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList) {
-    const soundResource = resources.getSound(sound);
+    const soundResource = this.getSound(sound);
     if (soundResource && !this.isStopped) {
       if (sound === 'idle' || sound === 'move' || sound === 'ice') {
         soundResource.volume = 0.5;
@@ -205,7 +210,7 @@ export class AudioManager extends EventEmitter {
 
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList) {
-    const soundResource = resources.getSound(sound);
+    const soundResource = this.getSound(sound);
     if (soundResource && this.isPlaying(soundResource)) {
       soundResource.pause();
       soundResource.currentTime = 0;
@@ -214,7 +219,7 @@ export class AudioManager extends EventEmitter {
   }
 
   pauseSound(sound: keyof typeof SoundPathList) {
-    const soundResource = resources.getSound(sound);
+    const soundResource = this.getSound(sound);
     if (!this.isStopped && soundResource && this.isPlaying(soundResource)) {
       soundResource.pause();
     }
@@ -227,7 +232,7 @@ export class AudioManager extends EventEmitter {
   }
 
   resumeSound(sound: keyof typeof SoundPathList) {
-    const soundResource = resources.getSound(sound);
+    const soundResource = this.getSound(sound);
     if (soundResource && !this.isStopped) {
       soundResource.play().catch(() => {
         /* Чтобы не было ошибок в консоли */
