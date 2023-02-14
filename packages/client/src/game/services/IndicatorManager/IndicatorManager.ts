@@ -11,7 +11,7 @@ export class IndicatorManager {
   layerName = 'ceiling';
 
   constructor(private game: Game) {
-    this.renderLevel(game.level);
+    this.renderLevel(game.state.level);
   }
 
   /** Рендерит иконки не отспаунившихся танков врагов. */

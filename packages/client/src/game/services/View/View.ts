@@ -1,9 +1,9 @@
+import { type Game, ResourcesEvent } from '../';
 import { type Entity, Tank } from '../../entities';
-import { type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
+import { type Rect, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
-import { type Game } from '../Game/Game';
 import { Color } from './colors';
 import { ViewEvents } from './data';
 import {
@@ -15,7 +15,6 @@ import {
 } from './typings';
 
 export class View extends EventEmitter {
-  game: Game;
   width = 0;
   height = 0;
   pixelRatio = 10;
@@ -29,12 +28,16 @@ export class View extends EventEmitter {
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeListener = this.canvasResizeHandler.bind(this);
 
-  constructor({ width, height }: Size, game: Game) {
+  constructor(private game: Game) {
     super();
+    const { width, height } = this.game.state;
     this.width = width;
     this.height = height;
     this.pixelRatio = this.getPixelRatio();
-    this.game = game;
+
+    this.game.resources?.on(ResourcesEvent.Loaded, () => {
+      this.spriteImg = this.game.resources.getImage('classicDesignSprite');
+    });
   }
 
   toggleFullScreen() {
@@ -436,6 +439,7 @@ export class View extends EventEmitter {
     );
   }
 
+  //TODO: здесь нужен рефакторинг, т.к. один сервис не может эмитить события другого
   private toggleFullscreenListener = () => {
     this.game.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Fullscreen);
   };

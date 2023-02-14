@@ -26,7 +26,7 @@ describe('game/services/IndicatorManager', () => {
 
     const level = layerItem?.instance instanceof UIElement ? layerItem?.instance.text : null;
 
-    expect(level).toBe(game.level.toString());
+    expect(level).toBe(game.state.level.toString());
   });
 
   it('should render tank enemies icons', () => {

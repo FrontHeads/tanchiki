@@ -1,20 +1,40 @@
-import { type ImagePathList, type SoundPathList, assetPathList, errorMsg, extensionList, timeoutMsg } from './data';
+import { EventEmitter } from '../../utils';
+import { type Game } from '../';
+import {
+  type ImagePathList,
+  type SoundPathList,
+  assetPathList,
+  errorMsg,
+  extensionList,
+  ResourcesEvent,
+  timeoutMsg,
+} from './data';
 import { type AssetPathList, type ImageList, type Resource, type SoundList } from './typings';
 
+export { ResourcesEvent };
+
 /** Загружает и хранит изображения и звуки. */
-class Resources {
+export class Resources extends EventEmitter<ResourcesEvent> {
   private imageList: ImageList = {};
   private soundList: SoundList = {};
 
+  constructor(private game: Game) {
+    super();
+  }
+
   /** Загружает все изображения и звуки из AssetsDataList */
-  loadAll(assets: AssetPathList = assetPathList, timeout = 60000): Promise<boolean> {
+  load(assets: AssetPathList = assetPathList, timeout = this.game.state.loadResourcesTimeout): Promise<boolean> {
     const loadAllTimeout = setTimeout(() => {
       alert(timeoutMsg);
     }, timeout);
 
-    return Promise.all(Object.entries(assets).map(asset => this.load(asset)))
-      .then(() => true)
+    return Promise.all(Object.entries(assets).map(asset => this.loadResource(asset)))
+      .then(() => {
+        this.emit(ResourcesEvent.Loaded);
+        return true;
+      })
       .catch(() => {
+        this.emit(ResourcesEvent.Error);
         alert(errorMsg);
         return false;
       })
@@ -31,7 +51,7 @@ class Resources {
   }
 
   /** Загружает конкретный ресурс и кладет в объект (imageList | soundList) внутри Resources*/
-  private load(asset: [string, string]): Promise<Resource> {
+  private loadResource(asset: [string, string]): Promise<Resource> {
     const [assetName, assetPath] = asset;
 
     return new Promise((resolve, reject) => {
@@ -82,6 +102,3 @@ class Resources {
     return 'unknown';
   }
 }
-
-/** Синглтон-экземпляр класса Resources. Загружает и хранит изображения и звуки. */
-export const resources = new Resources();

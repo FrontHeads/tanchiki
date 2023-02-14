@@ -1,4 +1,3 @@
-import { resources } from '../../../services';
 import { Color } from '../../../services/View/colors';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
 import { isOdd } from '../../../utils';
@@ -55,7 +54,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 12,
       width: view.width,
       height: 7,
-      backImg: resources.getImage('brickBg'),
+      backImg: this.overlay.game.resources.getImage('brickBg'),
       text: 'ТАНЧИКИ',
       align: 'center',
     });
@@ -65,7 +64,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
       posY: 21,
       width: view.width,
       height: 7,
-      backImg: resources.getImage('brickBg'),
+      backImg: this.overlay.game.resources.getImage('brickBg'),
       text: '2023',
       align: 'center',
     });
@@ -115,7 +114,7 @@ export class MainMenuScreen extends Screen<MainMenuState> {
     const opacity = isOdd(counter) ? 0 : 1;
 
     /** Убираем анимацию при уходе с экрана главного меню */
-    if (this.overlay.game.screen !== 'MAIN_MENU') {
+    if (this.overlay.game.state.screen !== 'MAIN_MENU') {
       return false;
     }
 

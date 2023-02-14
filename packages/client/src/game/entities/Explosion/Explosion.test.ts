@@ -1,4 +1,4 @@
-import { Game, Loop, View } from '../../services';
+import { type Game, Loop, View } from '../../services';
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { sleep } from '../../utils';
 import { type TankEnemy, Explosion, Projectile } from '../';
@@ -16,9 +16,9 @@ describe('game/entities/Explosion', () => {
   });
 
   it('should despawn after showing', async () => {
-    const game = Game.create();
+    const game = { state: { width: 10, height: 10 } } as Game;
     const loop = new Loop();
-    const view = new View({ width: 10, height: 10 }, game);
+    const view = new View(game);
     const root = document.body.appendChild(document.createElement('div'));
     const tank = { posX: 2, posY: 2, width: 4, height: 4 } as TankEnemy;
     const explosion = new Explosion({ parent: tank });

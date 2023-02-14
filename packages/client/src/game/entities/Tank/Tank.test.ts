@@ -1,4 +1,4 @@
-import { Zone } from '../../services';
+import { type Game, Zone } from '../../services';
 import { Projectile, TankPlayer, Terrain } from '../';
 import { Direction, EntityEvent } from '../Entity/typings';
 
@@ -86,7 +86,8 @@ describe('game/entities/Tank', () => {
   });
 
   it('should shoot after projectile exploded', () => {
-    const zone = new Zone({ width: 6, height: 6 });
+    const game = { state: { width: 6, height: 6 } } as Game;
+    const zone = new Zone(game);
     const tank = mockTank();
     const mockFn = jest.fn();
     const projectileUpdateCycles = 10;
@@ -125,7 +126,8 @@ describe('game/entities/Tank', () => {
   });
 
   it('should slide on ice', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const game = { state: { width: 10, height: 10 } } as Game;
+    const zone = new Zone(game);
     const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 9, height: 9 });
     const tank = mockTank();
     const slideObserver = jest.fn();
@@ -153,7 +155,8 @@ describe('game/entities/Tank', () => {
   });
 
   it('should stop on ice edge after sliding', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const game = { state: { width: 10, height: 10 } } as Game;
+    const zone = new Zone(game);
     const ice = new Terrain({ type: 'ice', posX: 0, posY: 1, width: 4, height: 4 });
     const tank = mockTank();
     const tankUpdateCycles = 30;
