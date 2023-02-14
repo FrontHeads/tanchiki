@@ -1,11 +1,12 @@
 import MockAdapter from 'axios-mock-adapter';
 
 import { buildPath } from './buildPath';
+import { determineAPIHost } from './determineAPIHost';
 import { HTTP } from './HTTP';
 import { HTTPClient } from './httpClient';
 
 const mock = new MockAdapter(HTTPClient.getInstance().httpClient);
-const baseUrl = `http://localhost:${__SERVER_PORT__}`;
+const baseUrl = determineAPIHost();
 const data = { response: true };
 
 describe('Request util', () => {

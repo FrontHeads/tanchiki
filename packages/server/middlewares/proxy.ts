@@ -34,7 +34,7 @@ export const proxyMiddleware: RequestHandler = (req, res, next) => {
               ya_id: user.id,
               login: user.login,
               display_name: user.display_name,
-              avatar: user.avatar
+              avatar: user.avatar,
             });
           } catch (e) {
             console.error(e);
