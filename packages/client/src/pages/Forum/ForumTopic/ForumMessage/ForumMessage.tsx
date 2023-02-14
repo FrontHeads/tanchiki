@@ -36,7 +36,7 @@ export const ForumMessage: FC<ForumMessageProps> = memo(props => {
       title: 'Edit message',
       type: 'text',
       id: 'message',
-      validator: 'NotEmpty',
+      validator: 'forumText',
       required: true,
     },
   ]);
