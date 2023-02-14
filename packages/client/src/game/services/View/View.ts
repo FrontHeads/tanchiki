@@ -1,11 +1,12 @@
-import { type Game, ResourcesEvent } from '../';
 import { type Entity, Tank } from '../../entities';
 import { type Rect, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
+import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
+import { type ImagePathList } from '../Resources/data';
 import { Color } from './colors';
-import { ViewEvents } from './data';
+import { Design, ViewEvents } from './data';
 import {
   type AnimationSettings,
   type GetSpriteCoordinates,
@@ -443,4 +444,10 @@ export class View extends EventEmitter {
   private toggleFullscreenListener = () => {
     this.game.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Fullscreen);
   };
+
+  changeSpriteImg(designName: Design) {
+    const spriteName: keyof typeof ImagePathList =
+      designName === Design.Classic ? 'classicDesignSprite' : 'modernDesignSprite';
+    this.spriteImg = this.game.resources.getImage(spriteName);
+  }
 }

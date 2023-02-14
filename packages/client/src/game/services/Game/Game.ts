@@ -2,13 +2,14 @@ import { type Entity } from '../../entities';
 import { Direction } from '../../entities/Entity/typings';
 import { Overlay } from '../../ui';
 import { ScreenType } from '../../ui/screens/data';
-import { MainMenuState } from '../../ui/screens/UIScreens/data';
+import { MainMenuItem } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
+import { isTouchscreen } from '../../utils/isTouchscreen';
 import {
   AudioManager,
   ControllerDesktop,
-  ControllerTouchscreen,
   ControllerEvent,
+  ControllerTouchscreen,
   Loop,
   Resources,
   ResourcesEvent,
@@ -23,9 +24,8 @@ import { ControllerPointer } from '../Controller/ControllerPointer';
 import { ServiceButtonsName } from '../Controller/data';
 import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
 import { type StatisticsData } from '../Statistics/typings';
-import { ViewEvents } from '../View/data';
+import { Design, ViewEvents } from '../View/data';
 import { GameEvents } from './data';
-import { isTouchscreen } from '../../utils/isTouchscreen';
 
 export { GameEvents };
 
@@ -177,10 +177,20 @@ export class Game extends EventEmitter {
         if (this.state.screen !== ScreenType.MainMenu) {
           return;
         }
-        if (direction === Direction.Up) {
-          this.state.mainMenuState = MainMenuState.Singleplayer;
-        } else if (direction === Direction.Down && !isTouchscreen()) {
-          this.state.mainMenuState = MainMenuState.Multiplayer;
+
+        //TODO вынести куда-то в отдельный метод или в другой класс
+        const menuItems = Object.values(MainMenuItem);
+        const currentMenuItemIndex = menuItems.indexOf(this.state.mainMenuState);
+        /** На тачскрине не выводится пункт меню "2 игрока",
+         * поэтому шаг передвижения по меню делаем с учетом пропуска этого пункта в menuItems */
+        const menuStepSize = isTouchscreen() ? 2 : 1;
+        const nextMenuItemIndex =
+          direction === Direction.Up ? currentMenuItemIndex - menuStepSize : currentMenuItemIndex + menuStepSize;
+
+        if (direction === Direction.Up && nextMenuItemIndex >= 0) {
+          this.state.mainMenuState = menuItems[nextMenuItemIndex];
+        } else if (direction === Direction.Down && nextMenuItemIndex < menuItems.length) {
+          this.state.mainMenuState = menuItems[nextMenuItemIndex];
         }
 
         this.overlay.show(this.state.screen, this.state.mainMenuState);
@@ -188,6 +198,15 @@ export class Game extends EventEmitter {
       // Обрабатываем нажатие на указанном пункте меню
       .on(ControllerEvent.Shoot, async () => {
         if (this.state.screen !== ScreenType.MainMenu) {
+          return;
+        }
+
+        if (this.state.mainMenuState === MainMenuItem.Design) {
+          //TODO возможно оформить событием
+          this.state.design = this.state.design === Design.Classic ? Design.Modern : Design.Classic;
+          this.view.changeSpriteImg(this.state.design);
+          this.overlay.show(this.state.screen, this.state.mainMenuState);
+
           return;
         }
 
@@ -278,7 +297,7 @@ export class Game extends EventEmitter {
   async initGameLevel(firstInit = false) {
     this.reset();
 
-    this.state.mode = this.state.mainMenuState === MainMenuState.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER';
+    this.state.mode = this.state.mainMenuState === MainMenuItem.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER';
 
     if (firstInit) {
       this.statistics.startSession(this.state.mode);

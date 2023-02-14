@@ -8,6 +8,7 @@ export const errorMsg = 'Не удалось загрузить данные д�
 export enum ImagePathList {
   brickBg = '/assets/img/bricks.png',
   classicDesignSprite = '/assets/img/sprite.png',
+  modernDesignSprite = '/assets/img/sprite_modern.png',
 }
 
 export enum SoundPathList {

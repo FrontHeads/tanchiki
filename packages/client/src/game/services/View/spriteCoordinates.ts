@@ -1,3 +1,5 @@
+import { Design } from './data';
+
 /** Координаты сущностей на sprite-изображении с классическим дизайном */
 export const classicDesignSprite = {
   flag: [[1532, 736, 64, 60]],
@@ -447,4 +449,8 @@ export const classicDesignSprite = {
 const modernDesignSprite = {}; //view
 
 /** Координаты сущностей на sprite-изображении */
-export const spriteCoordinates = classicDesignSprite; //view
+export let spriteCoordinates = classicDesignSprite; //view
+
+export function toggleSpriteCoordinates(designName: Design) {
+  spriteCoordinates = designName === Design.Classic ? modernDesignSprite : classicDesignSprite;
+}
