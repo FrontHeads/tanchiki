@@ -1,4 +1,4 @@
-import { type LeaderboardRecord } from '../../../api/typings';
+import { type LeaderboardRecord } from '../../../api/leaderboardAPI';
 
 export type SortOption = 'username' | 'score' | 'time' | 'matches' | 'rate';
 

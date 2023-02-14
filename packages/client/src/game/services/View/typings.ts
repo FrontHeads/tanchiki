@@ -1,9 +1,10 @@
 import { type Entity } from '../../entities';
+import { type Rect } from '../../entities/Entity/typings';
 
 /** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
 export type LayerEntity = {
   instance: Entity;
-  listeners: Record<string, (...args: Array<any>) => void>;
+  listeners: Record<string, (...args: Array<Rect>) => void>;
 };
 
 /** Список canvas-слоев и прикрепленных к ним сущностей. */
