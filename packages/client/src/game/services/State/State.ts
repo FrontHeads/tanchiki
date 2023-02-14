@@ -2,7 +2,7 @@ import { ScreenType } from '../../ui/screens/data';
 import { MainMenuItem } from '../../ui/screens/UIScreens/data';
 import { type GameMode } from '../Game/typings';
 import { levels } from '../MapManager/levels';
-import { Design } from '../View/data';
+import { DesignName } from '../View/data';
 
 export class State {
   /** Запущена ли игра. */
@@ -17,7 +17,7 @@ export class State {
   /** Режим игры. */
   mode: GameMode = 'SINGLEPLAYER';
   /** Дизайн игры. */
-  design = Design.Classic;
+  designName = DesignName.Classic;
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/
@@ -54,7 +54,7 @@ export class State {
   /** Текущий игровой экран. */
   screen = ScreenType.Loading;
   /** Выбранный пункт основного меню. */
-  mainMenuState = MainMenuItem.Singleplayer;
+  mainMenuItem = MainMenuItem.Singleplayer;
 
   // Настройки игрового экрана.
   /** Ширина игрового поля в игровых клетках. */

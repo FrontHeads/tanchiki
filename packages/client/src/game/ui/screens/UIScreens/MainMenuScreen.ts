@@ -1,5 +1,6 @@
+import { SpriteName } from '../../../services/Resources/data';
 import { Color } from '../../../services/View/colors';
-import { Design } from '../../../services/View/data';
+import { DesignName } from '../../../services/View/data';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
 import { isTouchscreen } from '../../../utils/isTouchscreen';
 import { Screen } from '../Screen';
@@ -38,6 +39,8 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
   render() {
     const { view } = this.overlay;
+    const state = this.overlay.game.state;
+    const BrickBgName = state.designName === DesignName.Classic ? SpriteName.BrickBgClassic : SpriteName.BrickBgModern;
 
     this.overlay.renderSplashScreen();
 
@@ -46,7 +49,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
       posY: 7,
       width: view.width,
       height: 7,
-      backImg: this.overlay.game.resources.getImage('brickBg'),
+      backImg: this.overlay.game.resources.getImage(BrickBgName),
       text: 'ТАНЧИКИ',
       align: 'center',
     });
@@ -56,7 +59,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
       posY: 16,
       width: view.width,
       height: 7,
-      backImg: this.overlay.game.resources.getImage('brickBg'),
+      backImg: this.overlay.game.resources.getImage(BrickBgName),
       text: '2023',
       align: 'center',
     });
@@ -87,7 +90,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
       width: 24,
       height: 2.2,
       color: Color.White,
-      text: 'СТИЛЬ: ' + (this.overlay.game.state.design === Design.Classic ? '1990' : '2023'),
+      text: 'СТИЛЬ: ' + (state.designName === DesignName.Classic ? '1990' : '2023'),
     });
 
     this.overlay.renderElement({

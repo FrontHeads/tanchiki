@@ -4,9 +4,10 @@ import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
 import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
-import { type ImagePathList } from '../Resources/data';
+import { type ImagePathList, SpriteName } from '../Resources/data';
 import { Color } from './colors';
-import { Design, ViewEvents } from './data';
+import { DesignName, ViewEvents } from './data';
+import { toggleSpriteCoordinates } from './spriteCoordinates';
 import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
 
 export class View extends EventEmitter {
@@ -31,7 +32,7 @@ export class View extends EventEmitter {
     this.pixelRatio = this.getPixelRatio();
 
     this.game.resources?.on(ResourcesEvent.Loaded, () => {
-      this.spriteImg = this.game.resources.getImage('classicDesignSprite');
+      this.spriteImg = this.game.resources.getImage(SpriteName.ClassicDesignSprite);
     });
   }
 
@@ -428,14 +429,19 @@ export class View extends EventEmitter {
     );
   }
 
+  toggleGameDesign() {
+    const state = this.game.state;
+    state.designName = state.designName === DesignName.Classic ? DesignName.Modern : DesignName.Classic;
+
+    const spriteName: keyof typeof ImagePathList =
+      state.designName === DesignName.Classic ? SpriteName.ClassicDesignSprite : SpriteName.ModernDesignSprite;
+
+    this.spriteImg = this.game.resources.getImage(spriteName);
+    toggleSpriteCoordinates(state.designName);
+  }
+
   //TODO: здесь нужен рефакторинг, т.к. один сервис не может эмитить события другого
   private toggleFullscreenListener = () => {
     this.game.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Fullscreen);
   };
-
-  changeSpriteImg(designName: Design) {
-    const spriteName: keyof typeof ImagePathList =
-      designName === Design.Classic ? 'classicDesignSprite' : 'modernDesignSprite';
-    this.spriteImg = this.game.resources.getImage(spriteName);
-  }
 }

@@ -3,7 +3,7 @@ export enum ViewEvents {
   ToggleColorServiceBtn = 'TOGGLE_COLOR_SERVICE_BUTTONS',
 }
 
-export enum Design {
+export enum DesignName {
   Classic = 'CLASSIC',
   Modern = 'MODERN',
 }

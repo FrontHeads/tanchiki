@@ -24,7 +24,7 @@ import { ControllerPointer } from '../Controller/ControllerPointer';
 import { ServiceButtonsName } from '../Controller/data';
 import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
 import { type StatisticsData } from '../Statistics/typings';
-import { Design, ViewEvents } from '../View/data';
+import { ViewEvents } from '../View/data';
 import { GameEvents } from './data';
 
 export { GameEvents };
@@ -166,7 +166,7 @@ export class Game extends EventEmitter {
     this.reset();
 
     this.state.screen = ScreenType.MainMenu;
-    this.overlay.show(this.state.screen, this.state.mainMenuState);
+    this.overlay.show(this.state.screen, this.state.mainMenuItem);
 
     // Обрабатываем переходы по пунктам меню
     this.controllerAll
@@ -178,22 +178,8 @@ export class Game extends EventEmitter {
           return;
         }
 
-        //TODO вынести куда-то в отдельный метод или в другой класс
-        const menuItems = Object.values(MainMenuItem);
-        const currentMenuItemIndex = menuItems.indexOf(this.state.mainMenuState);
-        /** На тачскрине не выводится пункт меню "2 игрока",
-         * поэтому шаг передвижения по меню делаем с учетом пропуска этого пункта в menuItems */
-        const menuStepSize = isTouchscreen() ? 2 : 1;
-        const nextMenuItemIndex =
-          direction === Direction.Up ? currentMenuItemIndex - menuStepSize : currentMenuItemIndex + menuStepSize;
-
-        if (direction === Direction.Up && nextMenuItemIndex >= 0) {
-          this.state.mainMenuState = menuItems[nextMenuItemIndex];
-        } else if (direction === Direction.Down && nextMenuItemIndex < menuItems.length) {
-          this.state.mainMenuState = menuItems[nextMenuItemIndex];
-        }
-
-        this.overlay.show(this.state.screen, this.state.mainMenuState);
+        this.overlay.selectMainMenuItem(direction);
+        this.overlay.show(this.state.screen, this.state.mainMenuItem);
       })
       // Обрабатываем нажатие на указанном пункте меню
       .on(ControllerEvent.Shoot, async () => {
@@ -201,12 +187,9 @@ export class Game extends EventEmitter {
           return;
         }
 
-        if (this.state.mainMenuState === MainMenuItem.Design) {
-          //TODO возможно оформить событием
-          this.state.design = this.state.design === Design.Classic ? Design.Modern : Design.Classic;
-          this.view.changeSpriteImg(this.state.design);
-          this.overlay.show(this.state.screen, this.state.mainMenuState);
-
+        if (this.state.mainMenuItem === MainMenuItem.Design) {
+          this.view.toggleGameDesign();
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
           return;
         }
 
@@ -297,7 +280,7 @@ export class Game extends EventEmitter {
   async initGameLevel(firstInit = false) {
     this.reset();
 
-    this.state.mode = this.state.mainMenuState === MainMenuItem.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER';
+    this.state.mode = this.state.mainMenuItem === MainMenuItem.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER';
 
     if (firstInit) {
       this.statistics.startSession(this.state.mode);
