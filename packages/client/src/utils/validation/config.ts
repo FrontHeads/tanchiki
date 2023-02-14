@@ -5,6 +5,7 @@ export const ValidationRegex = {
   PhoneFormat: /^(\+|\d)[0-9]+$/i,
   EmailFormat: /@\w+\./,
   onlyNumbers: /^[\d]+$/,
+  hasClosedTagScript: /<\/script>/i,
   atLeastOneDigit: /\d{1,}/,
   firstLetterIsCapital: /^[A-ZА-ЯЁ]{1}/,
   atLeastOneCapitalChar: /[A-ZА-ЯЁ]{1,}/,
@@ -12,6 +13,7 @@ export const ValidationRegex = {
 
 export enum ValidationErrorMessage {
   NotEmpty = 'Поле не может быть пустым.',
+  ForumTextFormat = 'Поле не может содержать этот текст',
   PhoneLength = 'Длина номера телефона должна быть от 10 до 15 символов.',
   PhoneFormat = 'Телефон может состоять только из цифр и знака + в начале.',
   EmailCompound = 'Email может состоять только из латинских символов, цифр, дефиса, точки и символа @',

@@ -1,30 +1,9 @@
 version: '3.9'
 
 services:
-  server:
-    image: prakticum-server
-    build:
-      context: .
-      dockerfile: Dockerfile.server
-      args:
-        SERVER_PORT: ${SERVER_PORT}
-    restart: always
-    ports:
-      - '${SERVER_PORT}:${SERVER_PORT}'
-    environment:
-      POSTGRES_HOST: 'postgres'
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-    depends_on:
-      - postgres
-      - mongo
-
   postgres:
     image: postgres:14
     restart: always
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -32,46 +11,23 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4:6.19
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-      PGADMIN_LISTEN_PORT: 80
-    ports:
-      - 8080:80
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - postgres
-
   mongo:
     image: mongo
     restart: always
-    ports:
-      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
       MONGO_INITDB_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_PASSWORD: ${MONGO_PASSWORD}
-    volumes: 
+    volumes:
       - mongodb-data:/data/db
       - ./init.d/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
 
-  mongo-express:
-    image: mongo-express
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_DB}:27017/
-    depends_on:
-      - mongo
-
 volumes:
   pg-data:
-  pgadmin-data:
   mongodb-data:
+
+networks:
+  default:
+    driver: bridge

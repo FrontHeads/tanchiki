@@ -24,14 +24,14 @@ export const ForumNewTopic = () => {
       title: 'Heading',
       type: 'text',
       id: 'heading',
-      validator: 'NotEmpty',
+      validator: 'forumText',
       required: true,
     },
     {
       title: 'Message',
       type: 'text',
       id: 'message',
-      validator: 'NotEmpty',
+      validator: 'forumText',
       required: true,
     },
   ]);

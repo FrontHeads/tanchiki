@@ -29,7 +29,7 @@ export const Contact: FC = () => {
       message = `От: ${formData.name}\n${message}`;
     }
 
-    Promise.allSettled([contactAPI.sentToSlack({ text: message }), contactAPI.send(formData)])
+    Promise.allSettled([contactAPI.sendToSlack({ text: message }), contactAPI.send(formData)])
       .then(response => {
         const isSuccess = response.some(v => v.status === 'fulfilled');
 
