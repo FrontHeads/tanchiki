@@ -6,12 +6,7 @@ import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data
 import { type Game } from '../Game/Game';
 import { Color } from './colors';
 import { ViewEvents } from './data';
-import {
-  type AnimationSettings,
-  type GetSpriteCoordinates,
-  type LayerEntity,
-  type LayerList,
-} from './typings';
+import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
 
 export class View extends EventEmitter {
   game: Game;
