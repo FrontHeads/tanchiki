@@ -7,13 +7,7 @@ import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data
 import { type ImagePathList } from '../Resources/data';
 import { Color } from './colors';
 import { Design, ViewEvents } from './data';
-import {
-  type AnimationSettings,
-  type GetSpriteCoordinates,
-  type LayerEntity,
-  type LayerList,
-  type SpriteCoordinatesNoAnimations,
-} from './typings';
+import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
 
 export class View extends EventEmitter {
   width = 0;
@@ -237,7 +231,7 @@ export class View extends EventEmitter {
       entity.animationList.forEach(animation => {
         const spriteCoordinates = this.getSpriteCoordinates({ entity, animation });
 
-        if (!spriteCoordinates) {
+        if (!spriteCoordinates || this.spriteImg === null) {
           return;
         }
 
@@ -245,8 +239,14 @@ export class View extends EventEmitter {
           this.drawMainEntitySprite(entity, context);
         }
 
-        //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут важна скорость работы.
-        context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getActualRect(entity));
+        context.drawImage(
+          this.spriteImg,
+          spriteCoordinates[0],
+          spriteCoordinates[1],
+          spriteCoordinates[2],
+          spriteCoordinates[3],
+          ...this.getActualRect(entity)
+        );
         this.setNextSpriteFrame(animation, entity);
       });
     }
@@ -256,12 +256,18 @@ export class View extends EventEmitter {
   drawMainEntitySprite(entity: Entity, context: CanvasRenderingContext2D) {
     const spriteCoordinates = this.getSpriteCoordinates({ entity });
 
-    if (!spriteCoordinates) {
+    if (!spriteCoordinates || this.spriteImg === null) {
       return;
     }
 
-    //@ts-expect-error tuple создавать неудобно, влечет лишние проверки, а тут нужна скорость работы.
-    context.drawImage(this.spriteImg, ...spriteCoordinates, ...this.getActualRect(entity));
+    context.drawImage(
+      this.spriteImg,
+      spriteCoordinates[0],
+      spriteCoordinates[1],
+      spriteCoordinates[2],
+      spriteCoordinates[3],
+      ...this.getActualRect(entity)
+    );
   }
 
   /** Стирает отображение сущности на canvas-слое, но не удаляет сущность. */
@@ -311,24 +317,6 @@ export class View extends EventEmitter {
       this.convertToPixels(item.width, correctTankSize),
       this.convertToPixels(item.height, correctTankSize),
     ] as const;
-  }
-
-  /** Возвращает канвас с отдельным изображением из спрайта. Используется, чтобы задать шрифтовой фон из спрайта. */
-  getSpriteContent(spriteCoordinates: SpriteCoordinatesNoAnimations) {
-    const tempCanvas = document.createElement('canvas');
-    if (!spriteCoordinates) {
-      return null;
-    }
-    tempCanvas.width = spriteCoordinates[0][2];
-    tempCanvas.height = spriteCoordinates[0][3];
-
-    const rect = [0, 0, tempCanvas.width, tempCanvas.height];
-
-    const tempContext = tempCanvas.getContext('2d');
-    //@ts-expect-error tuple создавать неудобно, влечет лишние проверки.
-    tempContext?.drawImage(this.spriteImg, ...spriteCoordinates[0], ...rect);
-
-    return tempCanvas;
   }
 
   /** Возвращает координаты сущности на спрайте */

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-import { type APIError } from '../../api/typings';
+import { type APIError } from '../../app.typings';
 import { apiHasError } from '../apiUtils';
 
 class HTTPClient {

@@ -1,6 +1,6 @@
-import { API_ENDPOINTS, LEADERBOARD_TEAM_NAME } from '../config/constants';
-import { HTTP } from '../utils/HTTP';
-import { type ResponseType } from '../utils/HTTP/HTTP';
+import { API_ENDPOINTS, LEADERBOARD_TEAM_NAME } from '../../config/constants';
+import { HTTP } from '../../utils/HTTP';
+import { type ResponseType } from '../../utils/HTTP/HTTP';
 import {
   type GetLeaderboardResponseData,
   type LeaderboardRecord,
