@@ -1,5 +1,6 @@
 import { type Powerup, type Tank, type TankEnemy } from '../../entities';
-import { type Controller } from '../';
+import { type ControllerDesktop } from '../Controller/ControllerDesktop';
+import { type ControllerPointer } from '../Controller/ControllerPointer';
 import { type Player } from './data';
 
 export enum ScenarioEvent {
@@ -44,7 +45,7 @@ export type ScenarioState = {
 export type ScenarioPlayerState = {
   entity?: Tank;
   lives: number;
-  controller: Controller;
+  controller: ControllerPointer | ControllerDesktop;
 };
 
 export type EnemyDestroyedPayload = {
