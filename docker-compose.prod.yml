@@ -1,0 +1,66 @@
+version: '3.9'
+
+services:
+  server:
+    image: prakticum-server
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+      args:
+        SERVER_PORT: ${SERVER_PORT}
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      MONGO_HOST: mongo
+      LETSENCRYPT_HOST: ${APP_HOSTNAME}
+      VIRTUAL_HOST: ${APP_HOSTNAME}
+      VIRTUAL_PORT: ${SERVER_PORT}
+    depends_on:
+      - postgres
+      - mongo
+    networks:
+      - mynet
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - mynet
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    environment:
+      - DEFAULT_EMAIL=mail@${APP_HOSTNAME}
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  pg-data:
+  mongodb-data:
+  volumes:
+  conf:
+  vhost:
+  html:
+  certs:
+  acme:
+
+networks:
+  mynet:
+    name: tanchiki_default
+    external: true
