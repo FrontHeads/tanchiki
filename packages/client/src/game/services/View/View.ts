@@ -432,6 +432,7 @@ export class View extends EventEmitter {
   toggleGameDesign() {
     const state = this.game.state;
     state.designName = state.designName === DesignName.Classic ? DesignName.Modern : DesignName.Classic;
+    localStorage.setItem('gameDesignName', state.designName);
 
     const spriteName: keyof typeof ImagePathList =
       state.designName === DesignName.Classic ? SpriteName.ClassicDesignSprite : SpriteName.ModernDesignSprite;

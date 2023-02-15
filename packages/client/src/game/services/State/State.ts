@@ -16,8 +16,8 @@ export class State {
   maxLevels = levels.length;
   /** Режим игры. */
   mode: GameMode = 'SINGLEPLAYER';
-  /** Дизайн игры. */
-  designName = DesignName.Classic;
+  /** Имя дизайн игры. */
+  designName = (localStorage.getItem('gameDesignName') || DesignName.Classic) as DesignName;
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/
