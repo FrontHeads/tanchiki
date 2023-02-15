@@ -1,4 +1,4 @@
-import { DesignName } from './data';
+import { DesignName, gameDesignInLS } from './data';
 
 /** Координаты сущностей на sprite-изображении с классическим дизайном */
 export const classicDesignSprite = {
@@ -867,6 +867,10 @@ const modernDesignSprite = {
 
 /** Координаты сущностей на sprite-изображении */
 export let spriteCoordinates = classicDesignSprite;
+
+if (localStorage.getItem(gameDesignInLS) === DesignName.Modern) {
+  spriteCoordinates = modernDesignSprite;
+}
 
 export function toggleSpriteCoordinates(designName: DesignName) {
   spriteCoordinates = designName === DesignName.Classic ? classicDesignSprite : modernDesignSprite;

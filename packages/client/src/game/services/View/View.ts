@@ -6,7 +6,7 @@ import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
 import { type ImagePathList, SpriteName } from '../Resources/data';
 import { Color } from './colors';
-import { DesignName, ViewEvents } from './data';
+import { DesignName, gameDesignInLS, ViewEvents } from './data';
 import { toggleSpriteCoordinates } from './spriteCoordinates';
 import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
 
@@ -32,7 +32,13 @@ export class View extends EventEmitter {
     this.pixelRatio = this.getPixelRatio();
 
     this.game.resources?.on(ResourcesEvent.Loaded, () => {
-      this.spriteImg = this.game.resources.getImage(SpriteName.ClassicDesignSprite);
+      let initialSpriteName = SpriteName.ClassicDesignSprite;
+
+      if (this.game.state.designName === DesignName.Modern) {
+        initialSpriteName = SpriteName.ModernDesignSprite;
+      }
+
+      this.spriteImg = this.game.resources.getImage(initialSpriteName);
     });
   }
 
@@ -432,7 +438,7 @@ export class View extends EventEmitter {
   toggleGameDesign() {
     const state = this.game.state;
     state.designName = state.designName === DesignName.Classic ? DesignName.Modern : DesignName.Classic;
-    localStorage.setItem('gameDesignName', state.designName);
+    localStorage.setItem(gameDesignInLS, state.designName);
 
     const spriteName: keyof typeof ImagePathList =
       state.designName === DesignName.Classic ? SpriteName.ClassicDesignSprite : SpriteName.ModernDesignSprite;

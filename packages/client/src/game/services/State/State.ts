@@ -2,7 +2,7 @@ import { ScreenType } from '../../ui/screens/data';
 import { MainMenuItem } from '../../ui/screens/UIScreens/data';
 import { type GameMode } from '../Game/typings';
 import { levels } from '../MapManager/levels';
-import { DesignName } from '../View/data';
+import { DesignName, gameDesignInLS } from '../View/data';
 
 export class State {
   /** Запущена ли игра. */
@@ -17,7 +17,7 @@ export class State {
   /** Режим игры. */
   mode: GameMode = 'SINGLEPLAYER';
   /** Имя дизайн игры. */
-  designName = (localStorage.getItem('gameDesignName') || DesignName.Classic) as DesignName;
+  designName = (localStorage.getItem(gameDesignInLS) || DesignName.Classic) as DesignName;
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/
