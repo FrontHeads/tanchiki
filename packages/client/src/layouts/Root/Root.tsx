@@ -4,7 +4,7 @@ import { type FC, Suspense } from 'react';
 import { Await, Outlet, ScrollRestoration, useLoaderData, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
-import { type UserDTO } from '../../api/typings';
+import { type UserProfile } from '../../app.typings';
 import { BurgerMenu } from '../../components/BurgerMenu';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { Footer } from '../../components/Footer';
@@ -20,7 +20,7 @@ export const Root: FC = () => {
   const printHeaderAndFooter = location?.pathname !== Paths.Game;
   const dispatch = useAppDispatch();
 
-  const loaderData = useLoaderData() as { user: Promise<ResponseType<UserDTO>> };
+  const loaderData = useLoaderData() as { user: Promise<ResponseType<UserProfile>> };
 
   if (typeof loaderData?.user?.then === 'function') {
     loaderData.user.then(response => {

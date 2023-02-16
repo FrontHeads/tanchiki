@@ -1,6 +1,6 @@
 import { type Entity, Tank, Terrain } from '../../entities';
 import { type Rect, EntityEvent } from '../../entities/Entity/typings';
-import { Zone } from '../';
+import { type Game, Zone } from '../';
 
 function mockEntity(rect: Rect) {
   const entity = new Tank(rect);
@@ -8,20 +8,22 @@ function mockEntity(rect: Rect) {
   return entity;
 }
 
+const game = { state: { width: 10, height: 10 } } as Game;
+
 describe('game/services/Zone', () => {
   it('should build matrix on init', () => {
-    const zone = new Zone({ width: 100, height: 100 });
+    const zone = new Zone(game);
 
     expect(zone.matrix.length).toBe(4);
-    expect(zone.matrix[0].length).toBe(100);
-    expect(zone.matrix[0][99].length).toBe(100);
+    expect(zone.matrix[0].length).toBe(10);
+    expect(zone.matrix[0][9].length).toBe(10);
     expect(zone.matrix[0][0][0]).toBe(null);
-    expect(zone.matrix[0][99][99]).toBe(null);
-    expect(zone.matrix[0][99][100]).toBe(undefined);
+    expect(zone.matrix[0][9][9]).toBe(null);
+    expect(zone.matrix[0][9][10]).toBe(undefined);
   });
 
   it('should reset matrix', () => {
-    const zone = new Zone({ width: 2, height: 2 });
+    const zone = new Zone(game);
     const rect = { posX: 0, posY: 0, width: 2, height: 2 };
     const entity = {} as Entity;
 
@@ -35,7 +37,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should update matrix', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const rect = { posX: 1, posY: 1, width: 2, height: 2 };
     const entity = {} as Entity;
 
@@ -50,7 +52,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should check if entity rect is beyond matrix', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const rect1 = { posX: -1, posY: -1, width: 1, height: 1 };
     const rect2 = { posX: 1, posY: 1, width: 1, height: 1 };
     const rect3 = { posX: 1, posY: 1, width: 10, height: 1 };
@@ -63,7 +65,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should check if entity rect does not have floats', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const rect1 = { posX: 1.5, posY: 1, width: 1, height: 1 };
     const rect2 = { posX: 1, posY: 1.5, width: 1, height: 1 };
     const rect3 = { posX: 1, posY: 1, width: 1.5, height: 1 };
@@ -78,7 +80,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should check if two rects overlap', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const rect1 = { posX: 1, posY: 1, width: 2, height: 2 };
     const rect2 = { posX: 2, posY: 2, width: 2, height: 2 };
     const rect3 = { posX: 3, posY: 3, width: 2, height: 2 };
@@ -91,7 +93,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should check if entity rect has collisions with other objects', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const rect1 = { posX: 1, posY: 1, width: 2, height: 2 };
     const entity1 = mockEntity(rect1);
     const rect2 = { posX: 2, posY: 2, width: 2, height: 2 };
@@ -107,7 +109,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should subscribe to entity updates and write them to matrix', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const entity1 = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
     const entity2 = mockEntity({ posX: 5, posY: 5, width: 2, height: 2 });
 
@@ -125,7 +127,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should listen to position changes and update its state', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const entity = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
     const posState = {
       hasCollision: undefined,
@@ -140,7 +142,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should listen to entity partial destruction', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const entity = new Terrain({ type: 'brickWall', posX: 1, posY: 1, width: 2, height: 2 });
 
     zone.add(entity);
@@ -154,7 +156,7 @@ describe('game/services/Zone', () => {
   });
 
   it('should subscribe to entity destruction', () => {
-    const zone = new Zone({ width: 10, height: 10 });
+    const zone = new Zone(game);
     const entity = mockEntity({ posX: 1, posY: 1, width: 2, height: 2 });
 
     zone.add(entity);

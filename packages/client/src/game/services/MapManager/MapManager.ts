@@ -1,7 +1,7 @@
 import { type EntitySettings, type EntityType, type Pos } from '../../entities/Entity/typings';
 import { type EnemyVariant } from '../../entities/Tank/typings';
 import { rand } from '../../utils/rand';
-import { type GameSettings } from '../Game/typings';
+import { type Game } from '../';
 import { brickCells, Cell, concreteCells, spawnPlaces } from './data';
 import { enemyForces } from './enemyForces';
 import { levels } from './levels';
@@ -13,7 +13,9 @@ export class MapManager {
   private mapTerrainData = levels;
   private mapEnemyForces = enemyForces;
 
-  constructor(private gameSettings: GameSettings) {}
+  constructor(private game: Game) {
+    this.mapLevelIndex = this.game.state.level - 1;
+  }
 
   fixMapData(map: MapTerrainData): MapTerrainData {
     this.clearSpawnPlaces(map);
@@ -21,7 +23,7 @@ export class MapManager {
   }
 
   coordToPos(value: number) {
-    return value * 4 + this.gameSettings.boundarySize;
+    return value * 4 + this.game.state.boundarySize;
   }
 
   coordsToRect(x: number, y: number): Pos {
@@ -31,8 +33,7 @@ export class MapManager {
     };
   }
 
-  getMap(level: number): MapTerrainData {
-    this.mapLevelIndex = level - 1;
+  getMap(): MapTerrainData {
     this.map = this.fixMapData(this.mapTerrainData[this.mapLevelIndex]);
 
     return this.map;

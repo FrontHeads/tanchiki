@@ -1,4 +1,4 @@
-import { type LeaderboardRecordData } from '../../../api/typings';
+import { type LeaderboardRecordData } from '../../../api/leaderboardAPI';
 
 export type LeaderboardRowProps = {
   data: LeaderboardRecordData;

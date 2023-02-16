@@ -1,12 +1,14 @@
 export { AudioManager } from './AudioManager/AudioManager';
+export { ControllerEvent } from './Controller/ControllerBase';
 export { ControllerDesktop } from './Controller/ControllerDesktop';
 export { ControllerPointer as ControllerTouchscreen } from './Controller/ControllerPointer';
-export { Game } from './Game/Game';
+export { Game, GameEvents } from './Game/Game';
 export { IndicatorManager } from './IndicatorManager/IndicatorManager';
 export { Loop } from './Loop/Loop';
 export { MapManager } from './MapManager/MapManager';
-export { resources } from './Resources/Resources';
-export { Scenario } from './Scenario/Scenario';
+export { Resources, ResourcesEvent } from './Resources/Resources';
+export { Scenario, ScenarioEvent } from './Scenario/Scenario';
+export { State } from './State/State';
 export { Statistics } from './Statistics/Statistics';
 export { View } from './View/View';
 export { Zone } from './Zone/Zone';

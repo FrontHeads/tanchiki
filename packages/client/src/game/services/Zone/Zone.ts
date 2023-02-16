@@ -1,5 +1,6 @@
 import { type Entity, type Powerup, EntityDynamic, Projectile, Tank, TankPlayer } from '../../entities';
-import { type PosState, type Rect, type Size, EntityEvent } from '../../entities/Entity/typings';
+import { type PosState, type Rect, EntityEvent } from '../../entities/Entity/typings';
+import { type Game } from '../';
 
 enum ZoneLayers {
   Main = 0,
@@ -13,7 +14,8 @@ export class Zone {
   height = 0;
   matrix: Array<Array<Array<Entity | null>>>;
 
-  constructor({ width, height }: Size) {
+  constructor(private game: Game) {
+    const { width, height } = game.state;
     this.width = width;
     this.height = height;
 

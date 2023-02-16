@@ -7,5 +7,5 @@ export { Projectile } from './Projectile/Projectile';
 export { Score } from './Score/Score';
 export { Tank } from './Tank/Tank';
 export { TankEnemy } from './Tank/TankEnemy';
-export { TankPlayer } from './Tank/TankPlayer';
+export { type PlayerVariant, type TankPlayerSettings,TankPlayer } from './Tank/TankPlayer';
 export { Terrain } from './Terrain/Terrain';

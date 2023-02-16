@@ -1,11 +1,6 @@
-import { API_ENDPOINTS } from '../config/constants';
-import { HTTP } from '../utils/HTTP';
-
-type responseData = Record<string, never>;
-
-type setUserThemeData = {
-  themeName: string;
-};
+import { API_ENDPOINTS } from '../../config/constants';
+import { HTTP } from '../../utils/HTTP';
+import { type responseData, type setUserThemeData } from './typings';
 
 export const themizationAPI = {
   getUserTheme: async () => {

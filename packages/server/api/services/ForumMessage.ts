@@ -1,6 +1,7 @@
 import express, { type Request, type Response, Router } from 'express';
 
 import { checkAuthMiddleware } from '../../middlewares';
+import { xssErrorHandler, xssValidator } from '../../middlewares/xssValidation';
 import { ForumMessage } from '../../models/ForumMessage';
 import { ForumTopic } from '../../models/ForumTopic';
 import { User } from '../../models/User';
@@ -16,7 +17,7 @@ export const forumMessageRoute = Router()
       .then(message => res.status(200).json(message))
       .catch(next);
   })
-  .post('/', (req: Request, res: Response, next) => {
+  .post('/', xssValidator(), xssErrorHandler, (req: Request, res: Response, next) => {
     if (res.locals.user && res.locals.user.id) {
       req.body.user_id = res.locals.user.id;
       ForumMessage.create(req.body, { include: [{ model: User }] })
@@ -30,7 +31,7 @@ export const forumMessageRoute = Router()
       res.status(500).send({ type: 'error', message: 'Доступ запрещен' });
     }
   })
-  .put('/:id', (req: Request, res: Response, next) => {
+  .put('/:id', xssValidator(), xssErrorHandler, (req: Request, res: Response, next) => {
     if (res.locals.user && res.locals.user.id) {
       ForumMessage.update(req.body, { where: { id: req.params.id, user_id: res.locals.user.id }, returning: true })
         .then(result => {
