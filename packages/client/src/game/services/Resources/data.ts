@@ -9,6 +9,7 @@ export enum SpriteName {
   BrickBgModern = 'BRICK_BG_MODERN',
   ClassicDesignSprite = 'CLASSIC_DESIGN_SPRITE',
   ModernDesignSprite = 'MODERN_DESIGN_SPRITE',
+  Tarmac = 'TARMAC',
 }
 
 // Файлы с ресурсами лежат в папке packages/client/public/assets, а vite копирует их в dist при build
@@ -17,6 +18,7 @@ export const ImagePathList = {
   [SpriteName.BrickBgModern]: '/assets/img/bricks_modern.png',
   [SpriteName.ClassicDesignSprite]: '/assets/img/sprite.png',
   [SpriteName.ModernDesignSprite]: '/assets/img/sprite_modern.png',
+  [SpriteName.Tarmac]: '/assets/img/tarmac_background.png',
 };
 
 export enum SoundPathList {

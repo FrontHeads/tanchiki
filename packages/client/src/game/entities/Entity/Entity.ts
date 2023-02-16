@@ -62,6 +62,10 @@ export abstract class Entity extends EventEmitter<EntityEvent> {
   mainSpriteFrame = 0;
   /** Список анимаций для данной сущности. Хранит настройки необходимые для работы анимации. */
   animationList: Animations = [];
+  /** Фоновое изображение под основной спрайт */
+  backImg: HTMLImageElement | HTMLCanvasElement | null = null;
+  /** Фоновый цвет под основной спрайт */
+  backColor: Color | null = null;
 
   constructor(props: EntitySettings) {
     super();

@@ -4,7 +4,7 @@ import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
 import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
-import { type ImagePathList, SpriteName } from '../Resources/data';
+import { ImagePathList, SpriteName } from '../Resources/data';
 import { Color } from './colors';
 import { DesignName, gameDesignInLS, ViewEvents } from './data';
 import { toggleSpriteCoordinates } from './spriteCoordinates';
@@ -20,6 +20,7 @@ export class View extends EventEmitter {
   layers: LayerList = {};
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
+  floorLayer!: HTMLCanvasElement;
   spriteImg: HTMLImageElement | null = null;
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeListener = this.canvasResizeHandler.bind(this);
@@ -64,7 +65,8 @@ export class View extends EventEmitter {
     }
     this.root = root;
     if (this.isRootEmpty()) {
-      this.createLayer('floor').style.background = this.gameBgColor;
+      this.floorLayer = this.createLayer('floor');
+      this.setFloorBackground();
       this.createLayer('tanks');
       this.createLayer('projectiles');
       this.createLayer('ceiling');
@@ -225,6 +227,22 @@ export class View extends EventEmitter {
         context.fillRect(...this.getActualRect(entity));
       }
       return;
+    }
+
+    // Отрисовка фонового цвета или фонового спрайта для сущности.
+    if (entity.backColor || entity.backImg) {
+      if (entity.backColor) {
+        context.fillStyle = entity.backColor;
+      }
+
+      if (entity.backImg) {
+        const pattern = context.createPattern(entity.backImg, 'repeat');
+        if (pattern !== null) {
+          context.fillStyle = pattern;
+        }
+      }
+
+      context.fillRect(...this.getActualRect(entity));
     }
 
     // Отрисовка основного спрайта сущности, без анимаций.
@@ -438,6 +456,7 @@ export class View extends EventEmitter {
   toggleGameDesign() {
     const state = this.game.state;
     state.designName = state.designName === DesignName.Classic ? DesignName.Modern : DesignName.Classic;
+    this.setFloorBackground();
     localStorage.setItem(gameDesignInLS, state.designName);
 
     const spriteName: keyof typeof ImagePathList =
@@ -445,6 +464,14 @@ export class View extends EventEmitter {
 
     this.spriteImg = this.game.resources.getImage(spriteName);
     toggleSpriteCoordinates(state.designName);
+  }
+
+  private setFloorBackground() {
+    this.floorLayer.style.background =
+      this.game.state.designName === DesignName.Classic
+        ? // Если не писать 'url("")', то магии не произойдет - фон не поменяется.
+          'url("")' + this.gameBgColor
+        : `url(${ImagePathList[SpriteName.Tarmac]}) center/15%`;
   }
 
   //TODO: здесь нужен рефакторинг, т.к. один сервис не может эмитить события другого

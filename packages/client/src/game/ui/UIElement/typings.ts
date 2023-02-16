@@ -9,6 +9,7 @@ export type UIElementSettings = Pos &
     align: CanvasTextAlign;
     color: Color | string;
     backImg: HTMLImageElement | HTMLCanvasElement;
+    backColor: Color | string;
     mainSpriteCoordinates: SpriteCoordinatesNoAnimations;
     indicatorName?: string;
   }>;

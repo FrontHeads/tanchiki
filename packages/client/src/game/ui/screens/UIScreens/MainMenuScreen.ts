@@ -25,6 +25,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
       width: 4,
       height: 4,
       color: Color.Yellow,
+      backColor: Color.Black,
       mainSpriteCoordinates: spriteCoordinates['tank.player.primary.a'].RIGHT,
     });
 
