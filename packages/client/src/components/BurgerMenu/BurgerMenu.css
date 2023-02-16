@@ -73,4 +73,8 @@
   &__list_hide {
     left: -1000px;
   }
+
+  &__home {
+    position: static;
+  }
 }

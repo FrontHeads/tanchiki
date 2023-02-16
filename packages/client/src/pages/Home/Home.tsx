@@ -12,7 +12,7 @@ export const Home: FC = () => {
     <>
       {generateMetaTags({ title: 'Главная' })}
       <img src={promoImg} alt="Игра Танчики на Денди" className="promo-img" />
-      <div className="menu">
+      <div className="menu menu__home">
         <div className="delimiter" />
         <nav data-testid="menu-nav-home" className="menu-nav">
           <ul className="navigation-list">
