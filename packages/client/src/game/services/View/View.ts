@@ -20,6 +20,7 @@ export class View extends EventEmitter {
   layers: LayerList = {};
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
+  /** Нижний слой канваса, используется как фон. */
   floorLayer!: HTMLCanvasElement;
   spriteImg: HTMLImageElement | null = null;
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
@@ -33,11 +34,10 @@ export class View extends EventEmitter {
     this.pixelRatio = this.getPixelRatio();
 
     this.game.resources?.on(ResourcesEvent.Loaded, () => {
-      let initialSpriteName = SpriteName.ClassicDesignSprite;
-
-      if (this.game.state.designName === DesignName.Modern) {
-        initialSpriteName = SpriteName.ModernDesignSprite;
-      }
+      const initialSpriteName =
+        this.game.state.designName === DesignName.Modern
+          ? SpriteName.ModernDesignSprite
+          : SpriteName.ClassicDesignSprite;
 
       this.spriteImg = this.game.resources.getImage(initialSpriteName);
     });
@@ -456,13 +456,14 @@ export class View extends EventEmitter {
   toggleGameDesign() {
     const state = this.game.state;
     state.designName = state.designName === DesignName.Classic ? DesignName.Modern : DesignName.Classic;
-    this.setFloorBackground();
     localStorage.setItem(gameDesignInLS, state.designName);
+
+    this.setFloorBackground();
 
     const spriteName: keyof typeof ImagePathList =
       state.designName === DesignName.Classic ? SpriteName.ClassicDesignSprite : SpriteName.ModernDesignSprite;
-
     this.spriteImg = this.game.resources.getImage(spriteName);
+
     toggleSpriteCoordinates(state.designName);
   }
 
