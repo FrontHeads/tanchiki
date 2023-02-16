@@ -5,6 +5,8 @@
   flex-direction: column;
   padding-top: 10px;
   margin-bottom: 15px;
+  position: fixed;
+  z-index: 999;
 
   &__button {
     background: transparent;

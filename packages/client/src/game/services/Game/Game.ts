@@ -178,7 +178,7 @@ export class Game extends EventEmitter {
           return;
         }
 
-        this.overlay.selectMainMenuItem(direction);
+        this.overlay.changeMainMenuItem(direction);
         this.overlay.show(this.state.screen, this.state.mainMenuItem);
       })
       // Обрабатываем нажатие на указанном пункте меню
@@ -187,8 +187,8 @@ export class Game extends EventEmitter {
           return;
         }
 
-        if (this.state.mainMenuItem === MainMenuItem.Design) {
-          this.view.toggleGameDesign();
+        if (this.state.mainMenuItem === MainMenuItem.Style) {
+          this.view.changeGameTheme();
           this.overlay.show(this.state.screen, this.state.mainMenuItem);
           return;
         }
@@ -280,7 +280,8 @@ export class Game extends EventEmitter {
   async initGameLevel(firstInit = false) {
     this.reset();
 
-    this.state.mode = this.state.mainMenuItem === MainMenuItem.Singleplayer ? 'SINGLEPLAYER' : 'MULTIPLAYER';
+    this.state.mode =
+      this.state.mainMenuItem === MainMenuItem.Singleplayer ? MainMenuItem.Singleplayer : MainMenuItem.Multiplayer;
 
     if (firstInit) {
       this.statistics.startSession(this.state.mode);

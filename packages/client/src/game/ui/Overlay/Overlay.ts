@@ -91,7 +91,7 @@ export class Overlay extends EventEmitter {
     this.view.drawTextOnLayer(entity, 'overlay');
   }
 
-  selectMainMenuItem(direction: Direction) {
+  changeMainMenuItem(direction: Direction) {
     const state = this.game.state;
     const menuItems = Object.values(MainMenuItem);
     const currentItemIndex = menuItems.indexOf(state.mainMenuItem);

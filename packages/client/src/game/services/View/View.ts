@@ -4,9 +4,8 @@ import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
 import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
-import { ImagePathList, SpriteName } from '../Resources/data';
 import { Color } from './colors';
-import { DesignName, gameDesignInLS, ViewEvents } from './data';
+import { gameTheme, gameThemeInLS, GameThemeName, ViewEvents } from './data';
 import { toggleSpriteCoordinates } from './spriteCoordinates';
 import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
 
@@ -34,10 +33,7 @@ export class View extends EventEmitter {
     this.pixelRatio = this.getPixelRatio();
 
     this.game.resources?.on(ResourcesEvent.Loaded, () => {
-      const initialSpriteName =
-        this.game.state.designName === DesignName.Modern
-          ? SpriteName.ModernDesignSprite
-          : SpriteName.ClassicDesignSprite;
+      const initialSpriteName = gameTheme[this.game.state.themeName].spriteName;
 
       this.spriteImg = this.game.resources.getImage(initialSpriteName);
     });
@@ -66,7 +62,7 @@ export class View extends EventEmitter {
     this.root = root;
     if (this.isRootEmpty()) {
       this.floorLayer = this.createLayer('floor');
-      this.setFloorBackground();
+      this.floorLayer.style.background = gameTheme[this.game.state.themeName]?.floorBg;
       this.createLayer('tanks');
       this.createLayer('projectiles');
       this.createLayer('ceiling');
@@ -453,26 +449,23 @@ export class View extends EventEmitter {
     );
   }
 
-  toggleGameDesign() {
+  changeGameTheme() {
     const state = this.game.state;
-    state.designName = state.designName === DesignName.Classic ? DesignName.Modern : DesignName.Classic;
-    localStorage.setItem(gameDesignInLS, state.designName);
+    this.setNextGameTheme();
+    localStorage.setItem(gameThemeInLS, state.themeName);
 
-    this.setFloorBackground();
-
-    const spriteName: keyof typeof ImagePathList =
-      state.designName === DesignName.Classic ? SpriteName.ClassicDesignSprite : SpriteName.ModernDesignSprite;
-    this.spriteImg = this.game.resources.getImage(spriteName);
-
-    toggleSpriteCoordinates(state.designName);
+    this.spriteImg = this.game.resources.getImage(gameTheme[state.themeName].spriteName);
+    this.floorLayer.style.background = gameTheme[state.themeName].floorBg;
+    toggleSpriteCoordinates(state.themeName);
   }
 
-  private setFloorBackground() {
-    this.floorLayer.style.background =
-      this.game.state.designName === DesignName.Classic
-        ? // Если не писать 'url("")', то магии не произойдет - фон не поменяется.
-          'url("")' + this.gameBgColor
-        : `url(${ImagePathList[SpriteName.Tarmac]}) center/15%`;
+  private setNextGameTheme() {
+    const themes = Object.values(GameThemeName);
+
+    const currentThemeIndex = themes.indexOf(this.game.state.themeName);
+    const nextThemeIndex = currentThemeIndex === themes.length - 1 ? 0 : currentThemeIndex + 1;
+
+    this.game.state.themeName = themes[nextThemeIndex];
   }
 
   //TODO: здесь нужен рефакторинг, т.к. один сервис не может эмитить события другого

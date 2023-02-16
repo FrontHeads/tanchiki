@@ -1,6 +1,5 @@
-import { SpriteName } from '../../../services/Resources/data';
 import { Color } from '../../../services/View/colors';
-import { DesignName } from '../../../services/View/data';
+import { gameTheme } from '../../../services/View/data';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
 import { isTouchscreen } from '../../../utils/isTouchscreen';
 import { Screen } from '../Screen';
@@ -11,7 +10,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
   mainMenuStateYPos = {
     [MainMenuItem.Singleplayer]: isTouchscreen() ? 32 : 30,
     [MainMenuItem.Multiplayer]: 35,
-    [MainMenuItem.Design]: isTouchscreen() ? 38 : 40,
+    [MainMenuItem.Style]: isTouchscreen() ? 38 : 40,
   };
 
   show(state: MainMenuItem) {
@@ -41,7 +40,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
   render() {
     const { view } = this.overlay;
     const state = this.overlay.game.state;
-    const BrickBgName = state.designName === DesignName.Classic ? SpriteName.BrickBgClassic : SpriteName.BrickBgModern;
+    const BrickBgName = gameTheme[state.themeName].brickBg;
 
     this.overlay.renderSplashScreen();
 
@@ -87,11 +86,11 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     this.overlay.renderElement({
       posX: 23,
-      posY: this.mainMenuStateYPos[MainMenuItem.Design],
+      posY: this.mainMenuStateYPos[MainMenuItem.Style],
       width: 24,
       height: 2.2,
       color: Color.White,
-      text: 'СТИЛЬ: ' + (state.designName === DesignName.Classic ? '1990' : '2023'),
+      text: 'СТИЛЬ: ' + gameTheme[state.themeName].menuTitle,
     });
 
     this.overlay.renderElement({

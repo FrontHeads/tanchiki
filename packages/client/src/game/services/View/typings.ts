@@ -1,5 +1,7 @@
 import { type Entity } from '../../entities';
 import { type Rect } from '../../entities/Entity/typings';
+import { type SpriteName } from '../Resources/data';
+import { type GameThemeName } from './data';
 
 /** Типизирует сущности привязанные к слою и обязывает хранить все свойства и listeners сущностей */
 export type LayerEntity = {
@@ -50,3 +52,14 @@ export type CancelAnimation =
   | 'showEntity'
   /** Убирает анимацию и стирает спрайт. */
   | 'eraseEntity';
+
+export type Coordinates = Record<GameThemeName, Record<string, any>>;
+
+export type GameTheme = Record<GameThemeName, GameThemeItem>;
+
+type GameThemeItem = {
+  spriteName: SpriteName;
+  menuTitle: string;
+  floorBg: string;
+  brickBg: SpriteName;
+};
