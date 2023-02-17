@@ -5040,6 +5040,7 @@ expect@^29.0.0:
     jest-message-util "^29.3.1"
     jest-util "^29.3.1"
 
+
 express-csp-header@5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/express-csp-header/-/express-csp-header-5.1.0.tgz#0f9923bb9d80a17593d325091e2f44c6f8da90e7"
@@ -5047,6 +5048,14 @@ express-csp-header@5.1.0:
   dependencies:
     csp-header "^5.1.0"
     psl "1.8.0"
+
+express-validator@6.14.3:
+  version "6.14.3"
+  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-6.14.3.tgz#50787258c1250ffb0e7a697f05e9f16aa2fd8084"
+  integrity sha512-c4b9NMdhskfcLbH/FchsSfCt4Vb14gKzcotG9zLS+VoOJDox57aGhCL+kmAu7cl+ytaSed+HD5jdJhel8DQsdg==
+  dependencies:
+    lodash "^4.17.21"
+    validator "^13.7.0"
 
 express@4.18.1:
   version "4.18.1"
