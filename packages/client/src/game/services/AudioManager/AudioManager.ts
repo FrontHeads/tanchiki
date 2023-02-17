@@ -2,17 +2,16 @@ import { type Entity, Powerup, Tank, Terrain } from '../../entities';
 import { type DamageSettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { type Game } from '../';
-import { type SoundPathList } from '../Resources/data';
+import { SoundPathList } from '../Resources/data';
+import { type ActivatedSounds } from './typings';
 
 export class AudioManager extends EventEmitter {
   private context: AudioContext;
   private isStopped = false;
   private isMuteKeyPressed = false;
   private isPauseKeyPressed = false;
-  /** Хранит все проигрываемые в настоящий момент звуки. */
-  public activeSounds: Set<keyof typeof SoundPathList> = new Set();
-  //TODO типизация ключа
-  public activeSounds1: Record<string, AudioBufferSourceNode> = {};
+  /** Хранит все проигрываемые звуки. */
+  public activatedSounds: ActivatedSounds = {} as ActivatedSounds;
 
   constructor(private game: Game) {
     super();
@@ -21,7 +20,7 @@ export class AudioManager extends EventEmitter {
     this.context = this.game.resources.audioContext;
   }
 
-  /** Берёт HTMLAudioElement из соответствующего сервиса. */
+  /** Берёт AudioElement из соответствующего сервиса. */
   getSound(sound: keyof typeof SoundPathList) {
     return this.game.resources.getSound(sound);
   }
@@ -37,11 +36,10 @@ export class AudioManager extends EventEmitter {
     this.reset();
   }
 
-  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
+  /** Останавливает все AudioElement из AudioManager.activeSounds */
   reset() {
-    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.stopSound(sound);
-    });
+    this.pauseSoundAll();
+    this.activatedSounds = {} as ActivatedSounds;
   }
 
   registerGlobalEvents() {
@@ -186,78 +184,86 @@ export class AudioManager extends EventEmitter {
     }
   }
 
-  isPlaying(soundResource: HTMLAudioElement) {
-    return soundResource.currentTime >= 0 && !soundResource.paused && !soundResource.ended;
-  }
-
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
-  playSound(sound: keyof typeof SoundPathList) {
-    if (this.activeSounds1[sound]) {
-      this.activeSounds1[sound].stop();
+  playSound(sound: keyof typeof SoundPathList, resumeTime = 0) {
+    if (this.isStopped) {
+      return;
     }
 
-    const soundResource = this.context.createBufferSource();
-    const gainNode = this.context.createGain();
-    soundResource.buffer = this.getSound(sound);
-    gainNode.gain.value = sound === 'idle' || sound === 'move' || sound === 'ice' ? 0.7 : 1;
-    soundResource.connect(gainNode);
-    gainNode.connect(this.context.destination);
-    // soundResource.loop = sound === 'idle' || sound === 'move' ? true : false;
-    soundResource.start(0);
-    this.activeSounds1[sound] = soundResource;
+    if (this.activatedSounds[sound]?.isPlaying) {
+      this.stopSound(sound);
+    }
 
-    // soundResource.addEventListener('ended', () => {
-    //   this.stopSound(sound);
-    //   delete this.activeSounds1[sound];
-    // });
+    const audio = this.context.createBufferSource();
+    audio.buffer = this.getSound(sound);
+    audio.loop = sound === 'idle' || sound === 'move' ? true : false;
+
+    const gainNode = this.context.createGain();
+    gainNode.gain.value = sound === 'idle' || sound === 'move' || sound === 'ice' ? 0.4 : 1;
+
+    audio.connect(gainNode);
+    gainNode.connect(this.context.destination);
+
+    audio.start(0, resumeTime);
+
+    this.activatedSounds[sound] = {
+      audio,
+      isPlaying: true,
+      startTime: this.activatedSounds[sound]?.resumeFrom
+        ? this.context.currentTime - this.activatedSounds[sound]?.resumeFrom
+        : this.context.currentTime,
+      resumeFrom: 0,
+    };
+
+    audio.onended = () => {
+      if (!this.isStopped && this.activatedSounds[sound]) {
+        this.activatedSounds[sound].isEnded = true;
+      }
+    };
   }
 
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList) {
-    // console.log(this.activeSounds1);
-    // console.log(sound);
+    const soundResource = this.activatedSounds[sound];
 
-    const soundResource = this.activeSounds1[sound];
-    // soundResource.buffer = this.getSound(sound);
-    console.log(soundResource);
-
-    soundResource.stop();
-    if (soundResource) {
-      // delete this.activeSounds1[sound];
+    if (soundResource?.isPlaying) {
+      soundResource.audio.stop();
+      soundResource.isPlaying = false;
+      soundResource.resumeFrom = this.context.currentTime - soundResource.startTime;
     }
-
-    // if (soundResource && this.isPlaying(soundResource)) {
-    //   soundResource.pause();
-    //   soundResource.currentTime = 0;
-    //   this.activeSounds.delete(sound);
-    // }
   }
 
   pauseSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (!this.isStopped && soundResource && this.isPlaying(soundResource)) {
-      soundResource.pause();
+    const soundResource = this.activatedSounds[sound];
+
+    if (!this.isStopped && soundResource.isPlaying) {
+      this.stopSound(sound);
     }
   }
 
   pauseSoundAll() {
-    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.pauseSound(sound);
+    Object.keys(this.activatedSounds).forEach(soundName => {
+      if (soundName in SoundPathList) {
+        this.pauseSound(soundName as keyof typeof SoundPathList);
+      }
     });
   }
 
   resumeSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      soundResource.play().catch(() => {
-        /* Чтобы не было ошибок в консоли */
-      });
+    const soundResource = this.activatedSounds[sound];
+
+    if (!this.isStopped && !soundResource.isPlaying && !soundResource.isEnded) {
+      console.log(soundResource.resumeFrom);
+
+      this.playSound(sound, soundResource.resumeFrom);
     }
   }
 
   resumeSoundAll() {
-    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.resumeSound(sound);
+    Object.keys(this.activatedSounds).forEach(soundName => {
+      if (soundName in SoundPathList) {
+        this.resumeSound(soundName as keyof typeof SoundPathList);
+      }
     });
   }
 }

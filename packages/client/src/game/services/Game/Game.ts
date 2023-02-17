@@ -4,11 +4,12 @@ import { Overlay } from '../../ui';
 import { ScreenType } from '../../ui/screens/data';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
 import { EventEmitter, sleep } from '../../utils';
+import { isTouchscreen } from '../../utils/isTouchscreen';
 import {
   AudioManager,
   ControllerDesktop,
-  ControllerTouchscreen,
   ControllerEvent,
+  ControllerTouchscreen,
   Loop,
   Resources,
   ResourcesEvent,
@@ -25,7 +26,6 @@ import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings
 import { type StatisticsData } from '../Statistics/typings';
 import { ViewEvents } from '../View/data';
 import { GameEvents } from './data';
-import { isTouchscreen } from '../../utils/isTouchscreen';
 
 export { GameEvents };
 
@@ -368,6 +368,7 @@ export class Game extends EventEmitter {
       this.controllerAll.reset();
       this.controllerPlayerOne.reset();
       this.controllerPlayerTwo.reset();
+      this.emit(ViewEvents.ToggleVisibilityServiceBtn);
 
       this.controllerAll.on(ControllerEvent.Escape, resolve);
       setTimeout(resolve, this.state.gameOverPopupTimeout);

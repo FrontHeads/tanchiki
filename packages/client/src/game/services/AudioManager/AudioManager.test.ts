@@ -1,6 +1,6 @@
-import { type Game } from '../';
 import { Tank } from '../../entities';
 import { type Rect } from '../../entities/Entity/typings';
+import { type Game } from '../';
 import { AudioManager } from './AudioManager';
 
 function mockEntity(rect: Rect) {
@@ -51,6 +51,6 @@ describe('game/services/AudioManager', () => {
     entity.update();
 
     expect(entity.spawned).toBeTruthy();
-    expect(audioManager.activeSounds.has('shoot')).toBeFalsy();
+    expect(audioManager.activatedSounds.has('shoot')).toBeFalsy();
   });
 });
