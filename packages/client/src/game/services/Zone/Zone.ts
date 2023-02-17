@@ -1,6 +1,6 @@
-import { type Game } from '../';
 import { type Entity, type Powerup, EntityDynamic, Projectile, Tank, TankPlayer } from '../../entities';
 import { type PosState, type Rect, EntityEvent } from '../../entities/Entity/typings';
+import { type Game } from '../';
 
 enum ZoneLayers {
   Main = 0,

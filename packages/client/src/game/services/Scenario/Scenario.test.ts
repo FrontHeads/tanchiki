@@ -1,8 +1,8 @@
 import { TankPlayer } from '../../entities';
+import { sleep } from '../../utils';
 import { Game, Scenario } from '../';
 import { Player, playerInitialSettings } from './data';
 import { ScenarioEvent } from './typings';
-import { sleep } from '../../utils';
 
 let game: Game;
 

@@ -1,11 +1,12 @@
-import { type Game, ResourcesEvent } from '../';
 import { type Entity, Tank } from '../../entities';
 import { type Rect, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
+import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
 import { Color } from './colors';
-import { ViewEvents } from './data';
+import { gameTheme, gameThemeInLS, GameThemeName, ViewEvents } from './data';
+import { toggleSpriteCoordinates } from './spriteCoordinates';
 import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
 
 export class View extends EventEmitter {
@@ -18,6 +19,8 @@ export class View extends EventEmitter {
   layers: LayerList = {};
   /** Корневой элемент, в него вложены все созданные DOM-элементы canvas-слоев. */
   root!: HTMLElement;
+  /** Нижний слой канваса, используется как фон. */
+  floorLayer!: HTMLCanvasElement;
   spriteImg: HTMLImageElement | null = null;
   /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
   canvasResizeListener = this.canvasResizeHandler.bind(this);
@@ -30,7 +33,9 @@ export class View extends EventEmitter {
     this.pixelRatio = this.getPixelRatio();
 
     this.game.resources?.on(ResourcesEvent.Loaded, () => {
-      this.spriteImg = this.game.resources.getImage('classicDesignSprite');
+      const initialSpriteName = gameTheme[this.game.state.themeName].spriteName;
+
+      this.spriteImg = this.game.resources.getImage(initialSpriteName);
     });
   }
 
@@ -56,7 +61,8 @@ export class View extends EventEmitter {
     }
     this.root = root;
     if (this.isRootEmpty()) {
-      this.createLayer('floor').style.background = this.gameBgColor;
+      this.floorLayer = this.createLayer('floor');
+      this.floorLayer.style.background = gameTheme[this.game.state.themeName]?.floorBg;
       this.createLayer('tanks');
       this.createLayer('projectiles');
       this.createLayer('ceiling');
@@ -217,6 +223,22 @@ export class View extends EventEmitter {
         context.fillRect(...this.getActualRect(entity));
       }
       return;
+    }
+
+    // Отрисовка фонового цвета или фонового спрайта для сущности.
+    if (entity.backColor || entity.backImg) {
+      if (entity.backColor) {
+        context.fillStyle = entity.backColor;
+      }
+
+      if (entity.backImg) {
+        const pattern = context.createPattern(entity.backImg, 'repeat');
+        if (pattern !== null) {
+          context.fillStyle = pattern;
+        }
+      }
+
+      context.fillRect(...this.getActualRect(entity));
     }
 
     // Отрисовка основного спрайта сущности, без анимаций.
@@ -425,6 +447,25 @@ export class View extends EventEmitter {
       this.spriteImg.width > 0 &&
       this.spriteImg.height > 0
     );
+  }
+
+  changeGameTheme() {
+    const state = this.game.state;
+    this.setNextGameTheme();
+    localStorage.setItem(gameThemeInLS, state.themeName);
+
+    this.spriteImg = this.game.resources.getImage(gameTheme[state.themeName].spriteName);
+    this.floorLayer.style.background = gameTheme[state.themeName].floorBg;
+    toggleSpriteCoordinates(state.themeName);
+  }
+
+  private setNextGameTheme() {
+    const themes = Object.values(GameThemeName);
+
+    const currentThemeIndex = themes.indexOf(this.game.state.themeName);
+    const nextThemeIndex = currentThemeIndex === themes.length - 1 ? 0 : currentThemeIndex + 1;
+
+    this.game.state.themeName = themes[nextThemeIndex];
   }
 
   //TODO: здесь нужен рефакторинг, т.к. один сервис не может эмитить события другого

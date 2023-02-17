@@ -4,11 +4,22 @@ export const timeoutMsg =
   'Не удалось загрузить данные для игры в течение минуты. Загрузка отменена. Попробуйте обновить страницу.';
 export const errorMsg = 'Не удалось загрузить данные для игры. Попробуйте обновить страницу.';
 
-// Файлы с ресурсами лежат в папке packages/client/public/assets, а vite копирует их в dist при build
-export enum ImagePathList {
-  brickBg = '/assets/img/bricks.png',
-  classicDesignSprite = '/assets/img/sprite.png',
+export enum SpriteName {
+  BrickBgClassic = 'BRICK_BG_CLASSIC',
+  BrickBgModern = 'BRICK_BG_MODERN',
+  ClassicDesignSprite = 'CLASSIC_DESIGN_SPRITE',
+  ModernDesignSprite = 'MODERN_DESIGN_SPRITE',
+  Tarmac = 'TARMAC',
 }
+
+// Файлы с ресурсами лежат в папке packages/client/public/assets, а vite копирует их в dist при build
+export const ImagePathList = {
+  [SpriteName.BrickBgClassic]: '/assets/img/bricks.png',
+  [SpriteName.BrickBgModern]: '/assets/img/bricks_modern.png',
+  [SpriteName.ClassicDesignSprite]: '/assets/img/sprite.png',
+  [SpriteName.ModernDesignSprite]: '/assets/img/sprite_modern.png',
+  [SpriteName.Tarmac]: '/assets/img/tarmac_background.png',
+};
 
 export enum SoundPathList {
   levelIntro = '/assets/sounds/level-intro.mp3',

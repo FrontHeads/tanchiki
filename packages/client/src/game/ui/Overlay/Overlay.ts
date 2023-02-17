@@ -1,9 +1,12 @@
+import { Direction } from '../../entities/Entity/typings';
 import { type Game, type View } from '../../services';
 import { Color } from '../../services/View/colors';
 import { EventEmitter } from '../../utils';
+import { isTouchscreen } from '../../utils/isTouchscreen';
 import { UIElement } from '../';
 import { type Screen } from '../screens';
 import { type ScreenType } from '../screens/data';
+import { MainMenuItem } from '../screens/UIScreens/data';
 import { type UIElementSettings } from '../UIElement/typings';
 import { screenClasses } from './typings';
 
@@ -86,5 +89,28 @@ export class Overlay extends EventEmitter {
   refreshTextEntity(entity: UIElement) {
     this.view.eraseFromLayer(entity, 'overlay');
     this.view.drawTextOnLayer(entity, 'overlay');
+  }
+
+  changeMainMenuItem(direction: Direction) {
+    const state = this.game.state;
+    const menuItems = Object.values(MainMenuItem);
+    const currentItemIndex = menuItems.indexOf(state.mainMenuItem);
+    const menuStepSize = direction === Direction.Up ? -1 : 1;
+    let nextItemIndex = currentItemIndex + menuStepSize;
+
+    if (nextItemIndex < 0) {
+      nextItemIndex = menuItems.length - 1;
+    }
+
+    if (nextItemIndex >= menuItems.length) {
+      nextItemIndex = 0;
+    }
+
+    /** На тачскрине не выводится пункт меню "2 игрока", поэтому перепрыгиваем его. */
+    if (isTouchscreen() && menuItems[nextItemIndex] === MainMenuItem.Multiplayer) {
+      nextItemIndex += menuStepSize;
+    }
+
+    state.mainMenuItem = menuItems[nextItemIndex];
   }
 }

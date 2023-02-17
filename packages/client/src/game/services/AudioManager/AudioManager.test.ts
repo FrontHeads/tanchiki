@@ -1,6 +1,6 @@
-import { type Game } from '../';
 import { Tank } from '../../entities';
 import { type Rect } from '../../entities/Entity/typings';
+import { type Game } from '../';
 import { AudioManager } from './AudioManager';
 
 function mockEntity(rect: Rect) {
