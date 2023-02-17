@@ -1,7 +1,8 @@
 import { ScreenType } from '../../ui/screens/data';
-import { MainMenuState } from '../../ui/screens/UIScreens/data';
+import { MainMenuItem } from '../../ui/screens/UIScreens/data';
 import { type GameMode } from '../Game/typings';
 import { levels } from '../MapManager/levels';
+import { gameThemeInLS, GameThemeName } from '../View/data';
 
 export class State {
   /** Запущена ли игра. */
@@ -14,7 +15,9 @@ export class State {
   /** Игровых уровней всего (35). */
   maxLevels = levels.length;
   /** Режим игры. */
-  mode: GameMode = 'SINGLEPLAYER';
+  mode: GameMode = MainMenuItem.Singleplayer;
+  /** Имя темы оформления игры. */
+  themeName = (localStorage.getItem(gameThemeInLS) || GameThemeName.Classic) as GameThemeName;
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/
@@ -51,7 +54,7 @@ export class State {
   /** Текущий игровой экран. */
   screen = ScreenType.Loading;
   /** Выбранный пункт основного меню. */
-  mainMenuState = MainMenuState.Singleplayer;
+  mainMenuItem: MainMenuItem = MainMenuItem.Singleplayer;
 
   // Настройки игрового экрана.
   /** Ширина игрового поля в игровых клетках. */

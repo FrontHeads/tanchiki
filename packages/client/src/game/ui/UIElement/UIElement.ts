@@ -5,7 +5,6 @@ import { type UIElementSettings } from './typings';
 export class UIElement extends Entity {
   text = '';
   align: CanvasTextAlign = 'left';
-  backImg: HTMLImageElement | HTMLCanvasElement | null = null;
   spawned = true;
   indicatorName = '';
 

@@ -255,6 +255,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: 3,
       height: 3,
       mainSpriteCoordinates: enemyTankSprite,
+      backColor: Color.Black,
     });
 
     if (this.mode === 'SINGLEPLAYER') {

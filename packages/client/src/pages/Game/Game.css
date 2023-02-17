@@ -14,14 +14,6 @@
       margin-top: 40px;
     }
 
-    @media (min-width: 420px) and (any-pointer: fine) {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-
     @media (any-pointer: coarse) and (orientation: landscape) {
       left: 29%;
       position: absolute;
