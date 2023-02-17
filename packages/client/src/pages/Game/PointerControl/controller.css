@@ -63,7 +63,7 @@
   right: 20px;
   z-index: 100;
 
-  @media (any-pointer: coarse) {
+  @media (pointer: coarse) {
     display: none;
   }
 }
