@@ -24,7 +24,13 @@ const CSP_REPORT_ONLY_HEADER = 'Content-Security-Policy-Report-Only';
 
 function applyNonce(req: Request, cspString: string): string {
   if (cspString.includes(NONCE)) {
-    req.nonce = crypto.randomBytes(16).toString('base64');
+    crypto.randomBytes(16, (err, buf) => {
+      if (err) {
+        throw err;
+      } else {
+        req.nonce = buf.toString('base64');
+      }
+    });
 
     return cspString.replace(new RegExp(NONCE, 'g'), nonce(req.nonce));
   }
