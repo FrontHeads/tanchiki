@@ -105,8 +105,7 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
               ${helmet.link.toString()}
             `
           )
-          .replace(`{csp.nonce}`, req.nonce)
-          .replace(/<script/g, `<script nonce="${req.nonce}"`);
+          .replaceAll(/<script/g, `<script nonce="${req.nonce}"`);
 
         res.send(responseHtml);
       });
