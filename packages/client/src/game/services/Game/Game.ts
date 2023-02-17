@@ -178,8 +178,18 @@ export class Game extends EventEmitter {
           return;
         }
 
-        this.overlay.changeMainMenuItem(direction);
-        this.overlay.show(this.state.screen, this.state.mainMenuItem);
+        if (direction === Direction.Up || direction === Direction.Down) {
+          this.overlay.changeMainMenuItem(direction);
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+        }
+
+        if (
+          (direction === Direction.Left || direction === Direction.Right) &&
+          this.state.mainMenuItem === MainMenuItem.Style
+        ) {
+          this.view.changeGameTheme();
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+        }
       })
       // Обрабатываем нажатие на указанном пункте меню
       .on(ControllerEvent.Shoot, async () => {
