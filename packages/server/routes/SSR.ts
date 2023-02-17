@@ -1,4 +1,4 @@
-import type { Request, RequestHandler } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
@@ -13,7 +13,7 @@ type SSRRouteParams = { vite: ViteDevServer | undefined; srcPath: string; distPa
 export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHandler => {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
 
-  return async (req, res, next) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     const url = req.originalUrl;
 
     try {
@@ -104,7 +104,8 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
               ${helmet.meta.toString()}
               ${helmet.link.toString()}
             `
-          );
+          )
+          .replaceAll(/<script/g, `<script nonce="${req.nonce}"`);
 
         res.send(responseHtml);
       });
