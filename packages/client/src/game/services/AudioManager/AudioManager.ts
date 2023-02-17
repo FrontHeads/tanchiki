@@ -6,18 +6,16 @@ import { SoundPathList } from '../Resources/data';
 import { type ActivatedSounds } from './typings';
 
 export class AudioManager extends EventEmitter {
-  private context: AudioContext;
   private isStopped = false;
   private isMuteKeyPressed = false;
   private isPauseKeyPressed = false;
   /** Хранит все проигрываемые звуки. */
   public activatedSounds: ActivatedSounds = {} as ActivatedSounds;
 
-  constructor(private game: Game) {
+  constructor(private game: Game, private context: AudioContext) {
     super();
 
     this.registerGlobalEvents();
-    this.context = this.game.resources.audioContext;
   }
 
   /** Берёт AudioElement из соответствующего сервиса. */

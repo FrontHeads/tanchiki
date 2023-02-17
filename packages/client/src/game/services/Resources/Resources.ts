@@ -17,10 +17,12 @@ export { ResourcesEvent };
 export class Resources extends EventEmitter<ResourcesEvent> {
   private imageList: ImageList = {};
   private soundList: SoundList = {};
-  audioContext = new window.AudioContext();
+  audioCtx: AudioContext;
 
   constructor(private game: Game) {
     super();
+    const audioContext = window.AudioContext || window.webkitAudioContext;
+    this.audioCtx = new audioContext();
   }
 
   /** Загружает все изображения и звуки из AssetsDataList */
@@ -81,14 +83,13 @@ export class Resources extends EventEmitter<ResourcesEvent> {
     });
   }
 
-  private loadSoundResource(assetName: string, assetPath: string): Promise<Resource> {
+  loadSoundResource(assetName: string, assetPath: string): Promise<Resource> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', assetPath, true);
       xhr.responseType = 'arraybuffer';
       xhr.onload = () => {
-        //TODO что такое context?
-        this.audioContext.decodeAudioData(xhr.response, resource => {
+        this.audioCtx?.decodeAudioData(xhr.response, resource => {
           this.soundList[assetName] = resource;
           resolve(resource);
         });

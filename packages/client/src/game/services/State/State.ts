@@ -1,7 +1,7 @@
-import { levels } from '../MapManager/levels';
-import { type GameMode } from '../Game/typings';
 import { ScreenType } from '../../ui/screens/data';
 import { MainMenuState } from '../../ui/screens/UIScreens/data';
+import { type GameMode } from '../Game/typings';
+import { levels } from '../MapManager/levels';
 
 export class State {
   /** Запущена ли игра. */

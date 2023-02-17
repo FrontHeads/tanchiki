@@ -12,5 +12,5 @@ export default {
     __API_HOST__: `'${process.env.API_HOST}'` || '',
     __SLACK_FEEDBACK_WEBHOOK_URL__: process.env.__SLACK_FEEDBACK_WEBHOOK_URL__ || '',
   },
-  setupFiles: ['<rootDir>/src/tests/setup.ts', 'jest-canvas-mock'],
+  setupFiles: ['<rootDir>/src/tests/setup.ts', 'jest-canvas-mock', './jest.setup.js'],
 };

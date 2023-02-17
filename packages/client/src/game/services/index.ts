@@ -1,8 +1,8 @@
 export { AudioManager } from './AudioManager/AudioManager';
-export { Game, GameEvents } from './Game/Game';
 export { ControllerEvent } from './Controller/ControllerBase';
 export { ControllerDesktop } from './Controller/ControllerDesktop';
 export { ControllerPointer as ControllerTouchscreen } from './Controller/ControllerPointer';
+export { Game, GameEvents } from './Game/Game';
 export { IndicatorManager } from './IndicatorManager/IndicatorManager';
 export { Loop } from './Loop/Loop';
 export { MapManager } from './MapManager/MapManager';

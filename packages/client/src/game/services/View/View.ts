@@ -1,8 +1,8 @@
-import { type Game, ResourcesEvent } from '../';
 import { type Entity, Tank } from '../../entities';
 import { type Rect, EntityEvent } from '../../entities/Entity/typings';
 import { type UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
+import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
 import { Color } from './colors';
 import { ViewEvents } from './data';

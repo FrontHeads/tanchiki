@@ -1,10 +1,10 @@
 import {
   type Entity,
+  type PlayerVariant,
   type Projectile,
   type Tank,
   Explosion,
   Flag,
-  type PlayerVariant,
   Powerup,
   TankEnemy,
   TankPlayer,
