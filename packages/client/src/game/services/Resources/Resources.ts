@@ -85,19 +85,15 @@ export class Resources extends EventEmitter<ResourcesEvent> {
 
   loadSoundResource(assetName: string, assetPath: string): Promise<Resource> {
     return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', assetPath, true);
-      xhr.responseType = 'arraybuffer';
-      xhr.onload = () => {
-        this.audioCtx?.decodeAudioData(xhr.response, resource => {
-          this.soundList[assetName] = resource;
-          resolve(resource);
+      fetch(assetPath)
+        .then(async response => this.audioCtx?.decodeAudioData(await response.arrayBuffer()))
+        .then(audioResource => {
+          this.soundList[assetName] = audioResource;
+          resolve(audioResource);
+        })
+        .catch(() => {
+          reject(new Error('Error loading audio file'));
         });
-      };
-      xhr.onerror = () => {
-        reject(new Error('Error loading audio file'));
-      };
-      xhr.send();
     });
   }
 

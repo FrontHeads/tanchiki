@@ -207,9 +207,7 @@ export class AudioManager extends EventEmitter {
     this.activatedSounds[sound] = {
       audio,
       isPlaying: true,
-      startTime: this.activatedSounds[sound]?.resumeFrom
-        ? this.context.currentTime - this.activatedSounds[sound]?.resumeFrom
-        : this.context.currentTime,
+      startTime: this.context.currentTime - (this.activatedSounds[sound]?.resumeFrom ?? 0),
       resumeFrom: 0,
     };
 
@@ -251,8 +249,6 @@ export class AudioManager extends EventEmitter {
     const soundResource = this.activatedSounds[sound];
 
     if (!this.isStopped && !soundResource.isPlaying && !soundResource.isEnded) {
-      console.log(soundResource.resumeFrom);
-
       this.playSound(sound, soundResource.resumeFrom);
     }
   }
