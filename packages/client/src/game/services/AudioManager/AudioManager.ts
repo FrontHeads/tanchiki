@@ -182,7 +182,7 @@ export class AudioManager extends EventEmitter {
     }
   }
 
-  /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
+  /** Проигрывает конкретный AudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList, resumeTime = 0) {
     if (this.isStopped) {
       return;
@@ -218,7 +218,7 @@ export class AudioManager extends EventEmitter {
     };
   }
 
-  /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
+  /** Останавливает конкретный AudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList) {
     const soundResource = this.activatedSounds[sound];
 
