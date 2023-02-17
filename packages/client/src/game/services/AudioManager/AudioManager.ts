@@ -5,16 +5,20 @@ import { type Game } from '../';
 import { type SoundPathList } from '../Resources/data';
 
 export class AudioManager extends EventEmitter {
+  private context: AudioContext;
   private isStopped = false;
   private isMuteKeyPressed = false;
   private isPauseKeyPressed = false;
   /** Хранит все проигрываемые в настоящий момент звуки. */
   public activeSounds: Set<keyof typeof SoundPathList> = new Set();
+  //TODO типизация ключа
+  public activeSounds1: Record<string, AudioBufferSourceNode> = {};
 
   constructor(private game: Game) {
     super();
 
     this.registerGlobalEvents();
+    this.context = this.game.resources.audioContext;
   }
 
   /** Берёт HTMLAudioElement из соответствующего сервиса. */
@@ -188,34 +192,45 @@ export class AudioManager extends EventEmitter {
 
   /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
   playSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      if (sound === 'idle' || sound === 'move' || sound === 'ice') {
-        soundResource.volume = 0.5;
-      }
-      soundResource.currentTime = 0;
-      soundResource.play().catch(() => {
-        /* Чтобы не было ошибок в консоли */
-      });
-      this.activeSounds.add(sound);
-      soundResource.addEventListener('ended', () => {
-        if (sound === 'idle' || sound === 'move') {
-          this.playSound(sound);
-        } else {
-          this.activeSounds.delete(sound);
-        }
-      });
+    if (this.activeSounds1[sound]) {
+      this.activeSounds1[sound].stop();
     }
+
+    const soundResource = this.context.createBufferSource();
+    const gainNode = this.context.createGain();
+    soundResource.buffer = this.getSound(sound);
+    gainNode.gain.value = sound === 'idle' || sound === 'move' || sound === 'ice' ? 0.7 : 1;
+    soundResource.connect(gainNode);
+    gainNode.connect(this.context.destination);
+    // soundResource.loop = sound === 'idle' || sound === 'move' ? true : false;
+    soundResource.start(0);
+    this.activeSounds1[sound] = soundResource;
+
+    // soundResource.addEventListener('ended', () => {
+    //   this.stopSound(sound);
+    //   delete this.activeSounds1[sound];
+    // });
   }
 
   /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (soundResource && this.isPlaying(soundResource)) {
-      soundResource.pause();
-      soundResource.currentTime = 0;
-      this.activeSounds.delete(sound);
+    // console.log(this.activeSounds1);
+    // console.log(sound);
+
+    const soundResource = this.activeSounds1[sound];
+    // soundResource.buffer = this.getSound(sound);
+    console.log(soundResource);
+
+    soundResource.stop();
+    if (soundResource) {
+      // delete this.activeSounds1[sound];
     }
+
+    // if (soundResource && this.isPlaying(soundResource)) {
+    //   soundResource.pause();
+    //   soundResource.currentTime = 0;
+    //   this.activeSounds.delete(sound);
+    // }
   }
 
   pauseSound(sound: keyof typeof SoundPathList) {

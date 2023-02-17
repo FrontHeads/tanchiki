@@ -17,6 +17,7 @@ export { ResourcesEvent };
 export class Resources extends EventEmitter<ResourcesEvent> {
   private imageList: ImageList = {};
   private soundList: SoundList = {};
+  audioContext = new window.AudioContext();
 
   constructor(private game: Game) {
     super();
@@ -46,46 +47,56 @@ export class Resources extends EventEmitter<ResourcesEvent> {
     return this.imageList[image];
   }
 
-  getSound(sound: keyof typeof SoundPathList): HTMLAudioElement {
+  getSound(sound: keyof typeof SoundPathList): AudioBuffer {
     return this.soundList[sound];
   }
 
   /** Загружает конкретный ресурс и кладет в объект (imageList | soundList) внутри Resources*/
   private loadResource(asset: [string, string]): Promise<Resource> {
     const [assetName, assetPath] = asset;
+    const assetType = this.getAssetType(assetPath);
 
+    if (assetType === 'image') {
+      return this.loadImgResource(assetName, assetPath);
+    } else if (assetType === 'sound') {
+      return this.loadSoundResource(assetName, assetPath);
+    } else {
+      return Promise.reject(new Error('Unknown asset type'));
+    }
+  }
+
+  private loadImgResource(assetName: string, assetPath: string): Promise<Resource> {
     return new Promise((resolve, reject) => {
-      let resource: Resource;
-      const assetType = this.getAssetType(assetPath);
+      const resource: Resource = new Image();
 
-      if (assetType === 'image') {
-        resource = new Image();
+      resource.onload = () => {
         this.imageList[assetName] = resource;
-        resource.onload = () => {
+        resolve(resource);
+      };
+
+      resource.onerror = () => {
+        reject(new Error('Error loading image file'));
+      };
+      resource.src = assetPath;
+    });
+  }
+
+  private loadSoundResource(assetName: string, assetPath: string): Promise<Resource> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', assetPath, true);
+      xhr.responseType = 'arraybuffer';
+      xhr.onload = () => {
+        //TODO что такое context?
+        this.audioContext.decodeAudioData(xhr.response, resource => {
+          this.soundList[assetName] = resource;
           resolve(resource);
-        };
-      } else if (assetType === 'sound') {
-        resource = new Audio();
-        this.soundList[assetName] = resource;
-
-        // TODO переделать загрузку звуков на Web Audio API и убрать этот костыль.
-        if (/iPad|iPhone/.test(navigator.userAgent)) {
-          resource.addEventListener('loadedmetadata', () => {
-            resolve(resource);
-          });
-        }
-
-        resource.oncanplaythrough = () => {
-          resolve(resource);
-        };
-      } else {
-        reject();
-      }
-
-      if (resource) {
-        resource.onerror = reject;
-        resource.src = assetPath;
-      }
+        });
+      };
+      xhr.onerror = () => {
+        reject(new Error('Error loading audio file'));
+      };
+      xhr.send();
     });
   }
 
