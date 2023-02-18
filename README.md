@@ -128,15 +128,31 @@
 ### Форматирование кода
 
 `yarn format` - форматирование с помощью prettier.
-Данная команда автоматически запускается перед commit изменений в git.
+Данная команда автоматически запускается перед commit изменений в git
 
 ### Docker
 
-`yarn docker` - запуск всего приложения. Не учитывает изменения в коде приложения с момента последней сборки
-`yarn docker:preview` - запуск всего приложения с принудительной пересборкой
-`yarn docker:pgadmin` - запуск контейнера c pgAdmin (порт 8080). Postgres поднимается как зависимость.
-`yarn docker:dev` - запуск контейнера pgAdmin, базы данных и dev сборки приложения (не в контейнере). Используется для разработки и hot reload изменений в коде
-`docker-compose stop` - остановка всех контейнеров после завершения работы
+Конфигурация разбита на 3 файл:
+`docker-compose.yml` - базовая конфигурация. Postgre DB, Mongo db контейнеры
+
+`docker-compose.dev.yml` - конфигурация для работы в dev режиме. PGAdmin, Mongo-express контейнеры
+
+`docker-compose.prod.yml` - конфигурация для работы в production режиме. Express сервер с приложением, Nginx, Acme-companion (для генерации SSL)
+
+
+#### Команды:
+
+`yarn docker` - production сборка и запуск приложения
+
+`yarn docker:up` - запуск production приложения без сборки
+
+`yarn docker:build` - сборка production приложения
+
+`yarn docker:dev` - запуск dev сборки с hot reload при изменениях в коде
+
+`yarn docker:stop` - остановка всех docker контейнеров
+
+
 
 ## Deploy проекта
 

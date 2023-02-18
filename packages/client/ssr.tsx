@@ -1,4 +1,5 @@
 import { createStaticHandler } from '@remix-run/router';
+import axios from 'axios';
 import type * as express from 'express';
 import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
 import { Provider } from 'react-redux';
@@ -37,6 +38,8 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
     store,
   };
 }
+
+export { axios };
 
 export function createFetchHeaders(requestHeaders: express.Request['headers']): Headers {
   const headers = new Headers();
