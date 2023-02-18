@@ -54,10 +54,6 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
         client = (await import(ssrClientPath)) as Client;
       }
 
-      console.log('-'.padEnd(100, '-'));
-
-      console.log(client.axios.interceptors);
-
       /**
        * Задаем глобальный interceptor для axios из пакета client, который достает из TLS
        * (https://pjatk.in/tls-in-node.html) куки, которые записали в requestDataSaverMiddleware,
@@ -68,13 +64,7 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
       client.axios.interceptors.request.use(config => {
         const contextStore = asyncLocalStorage.getStore() as Map<string, unknown>;
         const userCookies = contextStore?.get('userCookies');
-        console.log('userCookies', userCookies);
-        console.log(config.headers['Cookie']);
         config.headers['Cookie'] = userCookies;
-
-        console.log(config.url);
-        console.log(config.headers['Cookie']);
-        console.log(client.axios.interceptors);
         return config;
       });
 
@@ -106,13 +96,6 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
           },
         },
         req
-        // config => {
-        //   const contextStore = asyncLocalStorage.getStore() as Map<string, unknown>;
-        //   const userCookies = contextStore?.get('userCookies');
-        //   console.log('userCookies', userCookies);
-        //   config.headers['Cookie'] = userCookies;
-        //   return config;
-        // }
       );
 
       /**

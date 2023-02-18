@@ -30,7 +30,7 @@ async function startServer() {
   const srcPath = path.dirname(require.resolve('client'));
 
   app
-    // Инициализация middleware
+    /** Инициализация middleware */
     .use([corsMiddleware(), requestDataSaverMiddleware])
 
     /** Запросы к API на собственном сервере и на сервере Яндекса (проксируется через наш сервер) */

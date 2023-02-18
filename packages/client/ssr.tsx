@@ -39,8 +39,6 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
   };
 }
 
-export { axios };
-
 export function createFetchHeaders(requestHeaders: express.Request['headers']): Headers {
   const headers = new Headers();
 
@@ -82,3 +80,5 @@ export function createFetchRequest(req: express.Request): Request {
 
   return new Request(url.href, init);
 }
+
+export { axios };
