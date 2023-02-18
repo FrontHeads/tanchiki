@@ -254,6 +254,11 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
         entity.frozen = true;
         entity.stop();
       }
+      // Не даём танку игрока двигаться, когда он отспаунился после проигрыша
+      entity.on(EntityEvent.Ready, () => {
+        entity.frozen = true;
+        entity.stop();
+      });
     });
 
     const controller = this.getPlayerController(playerType);
