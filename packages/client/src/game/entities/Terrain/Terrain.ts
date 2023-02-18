@@ -80,7 +80,7 @@ export class Terrain extends Entity {
         }
 
         // Если снаряд попал во второй раз туда же, то сносим стену.
-        const cellHash = damagedRect.posX +'X'+ damagedRect.posY;
+        const cellHash = damagedRect.posX + 'X' + damagedRect.posY;
         if (this.damagedCells[cellHash]) {
           this.emit(EntityEvent.Destroyed, damagedRect);
         }

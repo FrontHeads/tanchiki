@@ -49,5 +49,5 @@ describe('game/entities/Terrain', () => {
     concreteWall.takeDamage(projectile, damagedRect);
 
     expect(destructionObserver).toHaveBeenCalledTimes(1);
-  }); 
+  });
 });
