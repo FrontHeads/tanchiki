@@ -29,7 +29,7 @@ export class Debug {
     };
 
     this.reportError(errorReport);
-  }
+  };
 
   reportError(errorReport: Record<string, string | number>) {
     let result = '';
