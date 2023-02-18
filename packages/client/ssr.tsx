@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
 
 import { routes } from './src/config/router';
-import { store } from './src/store';
+import { setupStore } from './src/store';
 
 export async function render(streamOptions: RenderToPipeableStreamOptions, request: express.Request) {
   const { query } = createStaticHandler(routes);
@@ -18,6 +18,7 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
   }
 
   const router = createStaticRouter(routes, context);
+  const store = setupStore();
 
   /**
    * В связи с тем, что в приложении используется React.Suspend-> Await -

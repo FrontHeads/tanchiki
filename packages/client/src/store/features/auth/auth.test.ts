@@ -1,6 +1,8 @@
 import { fakeUserProfile } from '../../../tests/data';
-import { store } from '../../store';
+import { setupStore } from '../../store';
 import { authThunks } from './authThunks';
+
+const store = setupStore();
 
 describe('Redux auth state', () => {
   test('should contain correct initial values', () => {

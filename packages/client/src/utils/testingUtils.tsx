@@ -12,7 +12,7 @@ import {
 
 import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
-import { store } from '../store';
+import { setupStore } from '../store';
 import { testAppRoutes } from '../tests/TestApp';
 
 type renderWithRouterArgs = {
@@ -21,6 +21,8 @@ type renderWithRouterArgs = {
   wrapWithRootLayout?: boolean;
   routeLoader?: LoaderFunction;
 };
+
+const store = setupStore();
 
 /**
  * Renders test app
