@@ -9,13 +9,15 @@ export class AudioManager extends EventEmitter {
   private isStopped = false;
   private isMuteKeyPressed = false;
   private isPauseKeyPressed = false;
+  context: AudioContext;
   /** Хранит все проигрываемые звуки. */
-  public activatedSounds: ActivatedSounds = {} as ActivatedSounds;
+  activatedSounds: ActivatedSounds = {} as ActivatedSounds;
 
-  constructor(private game: Game, private context: AudioContext) {
+  constructor(private game: Game) {
     super();
 
     this.registerGlobalEvents();
+    this.context = this.game.resources.audioContext;
   }
 
   /** Берёт AudioElement из соответствующего сервиса. */
@@ -192,18 +194,27 @@ export class AudioManager extends EventEmitter {
       this.stopSound(sound);
     }
 
+    /**  Получаем звук из списка ресурсов. */
     const audio = this.context.createBufferSource();
     audio.buffer = this.getSound(sound);
-    audio.loop = sound === 'idle' || sound === 'move' ? true : false;
 
+    /**  Закцикливаем звук, если нужно. */
+    const isLoopedSound = 'idle' || sound === 'move';
+    audio.loop = sound === isLoopedSound ? true : false;
+
+    /**  Регулировка громкости звука. */
     const gainNode = this.context.createGain();
-    gainNode.gain.value = sound === 'idle' || sound === 'move' || sound === 'ice' ? 0.4 : 1;
+    const islowVolumeSound = sound === 'idle' || sound === 'move' || sound === 'ice';
+    gainNode.gain.value = islowVolumeSound ? 0.4 : 1;
 
+    /**  Подключаем звук к выходу с учетом громкости. */
     audio.connect(gainNode);
     gainNode.connect(this.context.destination);
 
+    /**  Запускаем воспроизведение звука */
     audio.start(0, resumeTime);
 
+    /** Web Audio API не хранит данных о состоянии звука, поэтому мы должны это делать самостоятельно. */
     this.activatedSounds[sound] = {
       audio,
       isPlaying: true,

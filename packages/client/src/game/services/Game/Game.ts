@@ -52,7 +52,7 @@ export class Game extends EventEmitter {
     this.zone = new Zone(this);
     this.view = new View(this);
     this.overlay = new Overlay(this);
-    this.audioManager = new AudioManager(this, this.resources.audioCtx);
+    this.audioManager = new AudioManager(this);
     this.controllerAll = this.createController({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerPlayerOne = this.createController(KeyBindingsWasd);
     this.controllerPlayerTwo = new ControllerDesktop({ keyBindings: KeyBindingsArrows });

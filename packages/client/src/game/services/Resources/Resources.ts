@@ -17,12 +17,12 @@ export { ResourcesEvent };
 export class Resources extends EventEmitter<ResourcesEvent> {
   private imageList: ImageList = {};
   private soundList: SoundList = {};
-  audioCtx: AudioContext;
+  audioContext: AudioContext;
 
   constructor(private game: Game) {
     super();
-    const audioContext = window.AudioContext || window.webkitAudioContext;
-    this.audioCtx = new audioContext();
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    this.audioContext = new AudioContext();
   }
 
   /** Загружает все изображения и звуки из AssetsDataList */
@@ -86,7 +86,7 @@ export class Resources extends EventEmitter<ResourcesEvent> {
   loadSoundResource(assetName: string, assetPath: string): Promise<Resource> {
     return new Promise((resolve, reject) => {
       fetch(assetPath)
-        .then(async response => this.audioCtx?.decodeAudioData(await response.arrayBuffer()))
+        .then(async response => this.audioContext?.decodeAudioData(await response.arrayBuffer()))
         .then(audioResource => {
           this.soundList[assetName] = audioResource;
           resolve(audioResource);

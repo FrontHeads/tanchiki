@@ -10,10 +10,11 @@ function mockEntity(rect: Rect) {
 }
 
 describe('game/services/AudioManager', () => {
-  const mockaudioContext = {} as AudioContext;
+  const mockAudioContext = {} as AudioContext;
 
   it('should play sounds', () => {
-    const audioManager = new AudioManager({} as Game, mockaudioContext);
+    const audioManager = new AudioManager({} as Game);
+    audioManager.context = mockAudioContext;
 
     audioManager.playSound = jest.fn();
 
@@ -32,7 +33,8 @@ describe('game/services/AudioManager', () => {
   });
 
   it('should play pause sound', () => {
-    const audioManager = new AudioManager({} as Game, mockaudioContext);
+    const audioManager = new AudioManager({} as Game);
+    audioManager.context = mockAudioContext;
 
     audioManager.playSound = jest.fn();
 
@@ -42,7 +44,8 @@ describe('game/services/AudioManager', () => {
   });
 
   it('should not play sounds while paused', () => {
-    const audioManager = new AudioManager({} as Game, mockaudioContext);
+    const audioManager = new AudioManager({} as Game);
+    audioManager.context = mockAudioContext;
 
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
