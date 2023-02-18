@@ -9,8 +9,10 @@ dotenv.config();
 
 import axios from 'axios';
 import express from 'express';
+import { expressCspHeader } from 'express-csp-header';
 import * as path from 'path';
 
+import { getCspDirectives } from './config/cspDirectives';
 import { SSRRoute } from './routes/SSR';
 import { isDev } from './utils/isDev';
 
@@ -72,7 +74,7 @@ async function startServer() {
   }
 
   /** Обрабатываем все остальные запросы к серверу */
-  app.use('*', SSRRoute({ vite, srcPath, distPath }));
+  app.use('*', expressCspHeader({ directives: getCspDirectives() }), SSRRoute({ vite, srcPath, distPath }));
 
   app.listen(serverPort, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${serverPort}`);
