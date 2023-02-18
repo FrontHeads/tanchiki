@@ -23,7 +23,10 @@ export const Root: FC = () => {
   const loaderData = useLoaderData() as { user: Promise<ResponseType<UserProfile>> };
 
   if (typeof loaderData?.user?.then === 'function') {
+    console.log('loader');
+
     loaderData.user.then(response => {
+      console.log('loader 2', response);
       dispatch(authActions.setUserProfile(response?.data || null));
     });
   }

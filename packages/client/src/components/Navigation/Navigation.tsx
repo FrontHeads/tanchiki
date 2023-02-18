@@ -1,6 +1,6 @@
 import './Navigation.css';
 
-import { type FC } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -16,8 +16,12 @@ export const Navigation: FC<NavigationProps> = ({ exclude }) => {
   const navigate = useNavigate();
   const isAuthenticated = useAppSelector(authSelectors.isAuthenticated);
 
-  const onClick = (linkName: string) => {
+  const onClick = useCallback((linkName: string, e: React.MouseEvent) => {
+    dispatch(uiActions.closeBurgerMenu());
+
     if (linkName === 'logout') {
+      e.preventDefault();
+
       dispatch(authThunks.logout())
         .unwrap()
         .then(() => {
@@ -29,13 +33,15 @@ export const Navigation: FC<NavigationProps> = ({ exclude }) => {
           dispatch(authActions.setError(''));
         });
     }
+  }, []);
 
-    dispatch(uiActions.closeBurgerMenu());
-  };
-
-  const menuLinksList = getFilteredNavigationList(isAuthenticated, exclude).map(link => (
-    <MenuLink onClick={() => onClick(link.name)} key={link.name} {...link} />
-  ));
+  const menuLinksList = useMemo(
+    () =>
+      getFilteredNavigationList(isAuthenticated, exclude).map(link => (
+        <MenuLink onClick={e => onClick(link.name, e)} key={link.name} {...link} />
+      )),
+    [isAuthenticated]
+  );
 
   return (
     <nav className="menu-nav">

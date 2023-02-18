@@ -45,6 +45,8 @@ export const rootLoader: LoaderFunction = () => {
     }
   }
 
+  console.log('init loader');
+
   const user = authAPI.me().catch(() => null);
   return { user };
 };

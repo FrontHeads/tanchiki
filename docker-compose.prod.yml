@@ -9,8 +9,6 @@ services:
       dockerfile: Dockerfile.server
       args:
         SERVER_PORT: ${SERVER_PORT}
-    ports:
-      - 5000:5000
     env_file:
       - .env
     environment:
