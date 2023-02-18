@@ -381,7 +381,6 @@ export class Game extends EventEmitter {
       this.controllerAll.reset();
       this.controllerPlayerOne.reset();
       this.controllerPlayerTwo.reset();
-      this.emit(ViewEvents.ToggleVisibilityServiceBtn);
 
       this.controllerAll.on(ControllerEvent.Escape, resolve);
       setTimeout(resolve, this.state.gameOverPopupTimeout);
