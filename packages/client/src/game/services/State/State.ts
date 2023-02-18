@@ -9,6 +9,8 @@ export class State {
   inited = false;
   /** Стоит ли игра на паузе. */
   paused = false;
+  /** Режим отладки. */
+  debugging = false;
 
   /** Текущий игровой уровень. */
   level = 1;

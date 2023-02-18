@@ -10,6 +10,7 @@ import {
   ControllerDesktop,
   ControllerEvent,
   ControllerTouchscreen,
+  Debug,
   Loop,
   Resources,
   ResourcesEvent,
@@ -32,6 +33,7 @@ export { GameEvents };
 export class Game extends EventEmitter {
   static __instance: Game;
   state: State;
+  debug: Debug;
   resources: Resources;
   loop: Loop;
   zone: Zone;
@@ -47,6 +49,7 @@ export class Game extends EventEmitter {
   private constructor() {
     super();
     this.state = new State();
+    this.debug = new Debug(this);
     this.resources = new Resources(this);
     this.loop = new Loop();
     this.zone = new Zone(this);
@@ -76,6 +79,7 @@ export class Game extends EventEmitter {
 
   load(root: HTMLElement | null) {
     this.state.load();
+    this.debug.load();
     this.resources.load();
     this.view.load(root);
     this.overlay.load();
@@ -90,6 +94,7 @@ export class Game extends EventEmitter {
   unload() {
     this.clearAllListeners();
     this.state.unload();
+    this.debug.unload();
     this.loop.unload();
     this.view.unload();
     this.overlay.unload();
