@@ -2,20 +2,24 @@ import { type Game } from '../';
 
 export class Debug {
   errorOutputMethod = alert;
+  active = false;
 
   constructor(private game: Game) {
-    // Прокидываем инстанс основного сервиса игры, чтобы получить доступ к состоянию игрового движка (this.game.state)
+    // Сразу загружаем, чтобы отлавливание ошибок началось как можно раньше
+    this.load();
   }
 
   load() {
-    if (this.game.state.debugging && typeof window !== 'undefined') {
+    if (!this.active && this.game.state.debugging && typeof window !== 'undefined') {
       window.addEventListener('error', this.errorHandler);
+      this.active = true;
     }
   }
 
   unload() {
     if (this.game.state.debugging && typeof window !== 'undefined') {
       window.removeEventListener('error', this.errorHandler);
+      this.active = false;
     }
   }
 
