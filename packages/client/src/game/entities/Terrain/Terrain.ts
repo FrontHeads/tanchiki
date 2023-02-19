@@ -1,11 +1,13 @@
 import { Color } from '../../services/View/colors';
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { Entity } from '../';
-import { type EntitySettings, EntityEvent } from '../Entity/typings';
+import { type DamageSettings, type EntitySettings, EntityEvent } from '../Entity/typings';
 import { type TerrainVariant } from './typings';
 
 export class Terrain extends Entity {
   variant: TerrainVariant = 'WHOLE';
+  /** Содержит хэшированные координаты повреждённых клеток (используется для уничтожения бетонных стен). */
+  damagedCells: Record<string, boolean> = {};
 
   constructor(props: EntitySettings) {
     super(props);
@@ -60,6 +62,29 @@ export class Terrain extends Entity {
           spriteCoordinates: spriteCoordinates['terrain.water'],
           looped: true,
         });
+      });
+    }
+
+    if (this.type === 'brickWall') {
+      this.on(EntityEvent.Damaged, (damagedRect: DamageSettings) => {
+        this.emit(EntityEvent.Destroyed, damagedRect);
+      });
+    }
+
+    if (this.type === 'concreteWall') {
+      this.on(EntityEvent.Damaged, (damagedRect: DamageSettings) => {
+        // Если снаряд обычный, то бетонную стену он не возьмёт.
+        const projectilePower = damagedRect.source.explosionForce;
+        if (!projectilePower || projectilePower < 2) {
+          return;
+        }
+
+        // Если снаряд попал во второй раз туда же, то сносим стену.
+        const cellHash = damagedRect.posX + 'X' + damagedRect.posY;
+        if (this.damagedCells[cellHash]) {
+          this.emit(EntityEvent.Destroyed, damagedRect);
+        }
+        this.damagedCells[cellHash] = true;
       });
     }
   }
