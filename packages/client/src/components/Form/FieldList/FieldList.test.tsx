@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
 import { type FormInputAndHeadingList } from '../../../app.typings';
+import { Form } from '../Form';
 import { FieldList } from './FieldList';
 
 describe('FieldList', () => {
@@ -10,7 +11,6 @@ describe('FieldList', () => {
     const testFieldId = 'email';
 
     const [formData, setFormData] = [{ [testFieldId]: '' }, jest.fn()];
-    const [isFormSubmitted, setIsFormSubmitted] = [false, jest.fn()];
     const mockFn = jest.fn();
     const mockFields: FormInputAndHeadingList = [
       {
@@ -22,19 +22,14 @@ describe('FieldList', () => {
       },
       {
         heading: 'Hello',
+        id: '',
       },
     ];
 
     render(
-      <FieldList
-        fieldList={mockFields}
-        formData={formData}
-        setFormData={setFormData}
-        isFormSubmitted={isFormSubmitted}
-        onFormSubmitCallback={mockFn}
-        setIsFormSubmitted={setIsFormSubmitted}
-        validation={mockFn}
-      />
+      <Form>
+        <FieldList fieldList={mockFields} formData={formData} setFormData={setFormData} onFormSubmitCallback={mockFn} />
+      </Form>
     );
 
     const inputFieldsCount = mockFields.filter(item => !('heading' in item)).length;
