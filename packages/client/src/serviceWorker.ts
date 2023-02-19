@@ -3,7 +3,7 @@ const serviceWorker = self as unknown as ServiceWorkerGlobalScope; // чтобы
 const REPORTING = false;
 const CACHE_NAME = 'tanchiki-cache-1';
 const PRECACHE_URLS = ['/', '/index.html'];
-const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'object'];
+const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'manifest'];
 const FALLBACK_BODY = `
   <h1>Интернеты упали! Но это неточно.</h1>
   <h2>Надо бы обновить страницу...</h2>
@@ -73,8 +73,15 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
               return cachedResponse ?? new Response(FALLBACK_BODY, FALLBACK_HEADERS);
             });
 
+          /**
+           * В каких случаях сразу не отдаём ресурсы из кеша:
+           * - если запрос к HTML-странице, то ждём актуальную версию
+           *   (т.к. нам не нужен кеш страницы с устаревшим preloaded_state, сгенерированным SSR)
+           */
+          const shouldNotUseCache = event.request.destination === 'document';
+
           // Если есть кеш, возвращаем его, не дожидаясь ответа из сети
-          if (cachedResponse) {
+          if (cachedResponse && !shouldNotUseCache) {
             REPORTING && console.log('SW: return cached response', event.request.url);
             return cachedResponse;
           }
