@@ -10,8 +10,11 @@ function mockEntity(rect: Rect) {
 }
 
 describe('game/services/AudioManager', () => {
+  const mockAudioContext = {} as AudioContext;
+  const mockGame = { resources: { audioContext: mockAudioContext } } as Game;
+
   it('should play sounds', () => {
-    const audioManager = new AudioManager({} as Game);
+    const audioManager = new AudioManager(mockGame);
 
     audioManager.playSound = jest.fn();
 
@@ -30,7 +33,7 @@ describe('game/services/AudioManager', () => {
   });
 
   it('should play pause sound', () => {
-    const audioManager = new AudioManager({} as Game);
+    const audioManager = new AudioManager(mockGame);
 
     audioManager.playSound = jest.fn();
 
@@ -40,7 +43,7 @@ describe('game/services/AudioManager', () => {
   });
 
   it('should not play sounds while paused', () => {
-    const audioManager = new AudioManager({} as Game);
+    const audioManager = new AudioManager(mockGame);
 
     const entity = mockEntity({ posX: 2, posY: 2, width: 2, height: 2 });
 
@@ -51,6 +54,6 @@ describe('game/services/AudioManager', () => {
     entity.update();
 
     expect(entity.spawned).toBeTruthy();
-    expect(audioManager.activeSounds.has('shoot')).toBeFalsy();
+    expect(audioManager.activatedSounds['shoot']).toBeFalsy();
   });
 });
