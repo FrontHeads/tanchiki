@@ -59,7 +59,3 @@ ul {
 #avatar {
   padding: 30px 5px;
 }
-
-.form_has-errors .validation-errors {
-  color: var(--font-color-danger);
-}
