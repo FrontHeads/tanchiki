@@ -3,21 +3,24 @@ import { type DamageSettings, EntityEvent } from '../../entities/Entity/typings'
 import { EventEmitter } from '../../utils';
 import { type Game } from '../';
 import { type SoundPathList } from '../Resources/data';
+import { type ActivatedSounds, isSoundNameInSoundPathList as isSoundNameCorrect } from './typings';
 
 export class AudioManager extends EventEmitter {
   private isStopped = false;
   private isMuteKeyPressed = false;
   private isPauseKeyPressed = false;
-  /** Хранит все проигрываемые в настоящий момент звуки. */
-  public activeSounds: Set<keyof typeof SoundPathList> = new Set();
+  context: AudioContext;
+  /** Хранит все проигрываемые звуки. */
+  activatedSounds: ActivatedSounds = {} as ActivatedSounds;
 
   constructor(private game: Game) {
     super();
 
     this.registerGlobalEvents();
+    this.context = this.game.resources.audioContext;
   }
 
-  /** Берёт HTMLAudioElement из соответствующего сервиса. */
+  /** Берёт AudioElement из соответствующего сервиса. */
   getSound(sound: keyof typeof SoundPathList) {
     return this.game.resources.getSound(sound);
   }
@@ -33,11 +36,10 @@ export class AudioManager extends EventEmitter {
     this.reset();
   }
 
-  /** Останавливает все HTMLAudioElement из AudioManager.activeSounds */
+  /** Останавливает все AudioElement из AudioManager.activeSounds */
   reset() {
-    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.stopSound(sound);
-    });
+    this.pauseSoundAll();
+    this.activatedSounds = {} as ActivatedSounds;
   }
 
   registerGlobalEvents() {
@@ -182,67 +184,91 @@ export class AudioManager extends EventEmitter {
     }
   }
 
-  isPlaying(soundResource: HTMLAudioElement) {
-    return soundResource.currentTime >= 0 && !soundResource.paused && !soundResource.ended;
-  }
-
-  /** Проигрывает конкретный HTMLAudioElement из Resources.soundList. */
-  playSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      if (sound === 'idle' || sound === 'move' || sound === 'ice') {
-        soundResource.volume = 0.5;
-      }
-      soundResource.currentTime = 0;
-      soundResource.play().catch(() => {
-        /* Чтобы не было ошибок в консоли */
-      });
-      this.activeSounds.add(sound);
-      soundResource.addEventListener('ended', () => {
-        if (sound === 'idle' || sound === 'move') {
-          this.playSound(sound);
-        } else {
-          this.activeSounds.delete(sound);
-        }
-      });
+  /** Проигрывает конкретный AudioElement из Resources.soundList. */
+  playSound(sound: keyof typeof SoundPathList, resumeTime = 0) {
+    if (this.isStopped) {
+      return;
     }
+
+    if (this.activatedSounds[sound]?.isPlaying) {
+      this.stopSound(sound);
+    }
+
+    /**  Получаем звук из списка ресурсов. */
+    const audio = this.context.createBufferSource();
+    audio.buffer = this.getSound(sound);
+
+    /**  Закцикливаем звук, если нужно. */
+    const isLoopedSound = 'idle' || sound === 'move';
+    audio.loop = sound === isLoopedSound ? true : false;
+
+    /**  Регулировка громкости звука. */
+    const gainNode = this.context.createGain();
+    const islowVolumeSound = sound === 'idle' || sound === 'move' || sound === 'ice';
+    gainNode.gain.value = islowVolumeSound ? 0.4 : 1;
+
+    /**  Подключаем звук к выходу с учетом громкости. */
+    audio.connect(gainNode);
+    gainNode.connect(this.context.destination);
+
+    /**  Запускаем воспроизведение звука */
+    audio.start(0, resumeTime);
+
+    /** Web Audio API не хранит данных о состоянии звука, поэтому мы должны это делать самостоятельно. */
+    this.activatedSounds[sound] = {
+      audio,
+      isPlaying: true,
+      startTime: this.context.currentTime - (this.activatedSounds[sound]?.resumeFrom ?? 0),
+      resumeFrom: 0,
+    };
+
+    audio.onended = () => {
+      if (!this.isStopped && this.activatedSounds[sound]) {
+        this.activatedSounds[sound].isEnded = true;
+      }
+    };
   }
 
-  /** Останавливает конкретный HTMLAudioElement из Resources.soundList. */
+  /** Останавливает конкретный AudioElement из Resources.soundList. */
   stopSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (soundResource && this.isPlaying(soundResource)) {
-      soundResource.pause();
-      soundResource.currentTime = 0;
-      this.activeSounds.delete(sound);
+    const soundResource = this.activatedSounds[sound];
+
+    if (soundResource?.isPlaying) {
+      soundResource.audio.stop();
+      soundResource.isPlaying = false;
+      soundResource.resumeFrom = this.context.currentTime - soundResource.startTime;
     }
   }
 
   pauseSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (!this.isStopped && soundResource && this.isPlaying(soundResource)) {
-      soundResource.pause();
+    const soundResource = this.activatedSounds[sound];
+
+    if (!this.isStopped && soundResource.isPlaying) {
+      this.stopSound(sound);
     }
   }
 
   pauseSoundAll() {
-    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.pauseSound(sound);
+    Object.keys(this.activatedSounds).forEach(soundName => {
+      if (isSoundNameCorrect(soundName)) {
+        this.pauseSound(soundName);
+      }
     });
   }
 
   resumeSound(sound: keyof typeof SoundPathList) {
-    const soundResource = this.getSound(sound);
-    if (soundResource && !this.isStopped) {
-      soundResource.play().catch(() => {
-        /* Чтобы не было ошибок в консоли */
-      });
+    const soundResource = this.activatedSounds[sound];
+
+    if (!this.isStopped && !soundResource.isPlaying && !soundResource.isEnded) {
+      this.playSound(sound, soundResource.resumeFrom);
     }
   }
 
   resumeSoundAll() {
-    this.activeSounds.forEach((sound: keyof typeof SoundPathList) => {
-      this.resumeSound(sound);
+    Object.keys(this.activatedSounds).forEach(soundName => {
+      if (isSoundNameCorrect(soundName)) {
+        this.resumeSound(soundName);
+      }
     });
   }
 }
