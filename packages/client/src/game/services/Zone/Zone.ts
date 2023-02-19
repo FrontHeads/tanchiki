@@ -158,8 +158,8 @@ export class Zone {
       });
     }
 
-    if (entity.type === 'brickWall') {
-      entity.on(EntityEvent.Damaged, (rect: Rect) => {
+    if (entity.type === 'brickWall' || entity.type === 'concreteWall') {
+      entity.on(EntityEvent.Destroyed, (rect: Rect) => {
         const layer = this.getLayerByEntityType(entity);
         this.updateMatrix(layer, rect, null);
       });
