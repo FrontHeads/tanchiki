@@ -251,8 +251,14 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     // Если флаг уничтожен, останавливаем танки игроков
     this.on(ScenarioEvent.GameOver, () => {
       if (entity && entity.spawned) {
+        entity.frozen = true;
         entity.stop();
       }
+      // Не даём танку игрока двигаться, когда он отспаунился после проигрыша
+      entity.on(EntityEvent.Ready, () => {
+        entity.frozen = true;
+        entity.stop();
+      });
     });
 
     const controller = this.getPlayerController(playerType);
