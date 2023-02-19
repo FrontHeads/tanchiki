@@ -10,7 +10,7 @@ import { isTouchscreen } from '../../game/utils/isTouchscreen';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
 import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
-import { Buttons, Joystick } from './PointerControl';
+import { Buttons, Stick } from './PointerControl';
 import { type GameCreateContext } from './typings';
 
 export const GameContext = createContext<GameCreateContext>({} as GameCreateContext);
@@ -56,7 +56,7 @@ export const Game = () => {
         <div ref={gameRoot} className="game__root"></div>
         {isTouchscreen() ? (
           <div className="pointer-controller">
-            <Joystick />
+            <Stick />
             <Buttons />
           </div>
         ) : (

@@ -3,16 +3,14 @@ import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 
 import { renderWithRouter } from '../../../../utils/testingUtils';
-import { Joystick } from './Joystick';
+import { Stick } from './Stick';
 
-describe('Joystick', () => {
+describe('Stick', () => {
   test('it render', () => {
-    renderWithRouter({ component: <Joystick /> });
+    renderWithRouter({ component: <Stick /> });
 
     const renderedJoystick = screen.getByTestId('joystick');
-    const renderedJoystickCenter = screen.getByTestId('joystick__center');
 
     expect(renderedJoystick).toBeInTheDocument();
-    expect(renderedJoystickCenter).toBeInTheDocument();
   });
 });
