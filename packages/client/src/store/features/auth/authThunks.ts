@@ -15,18 +15,27 @@ export const signUp = createAsyncThunk('auth/signUp', async (data: SignupRequest
   await dispatch(me());
 });
 
-export const me = createAsyncThunk('auth/me', async () => {
-  const { data } = await authAPI.me();
-  return data;
+export const me = createAsyncThunk('auth/me', async (throwError?: boolean) => {
+  throwError = throwError === undefined ? true : throwError;
+  let response = null;
+  try {
+    response = await authAPI.me();
+  } catch (error) {
+    if (throwError) {
+      throw error;
+    }
+  }
+  return response?.data || null;
 });
 
 export const logout = createAsyncThunk('auth/logout', async (flushUserProfile?: boolean) => {
-  await authAPI.logout();
   /**
    * Typescript не дал инициализировать значение по умолчанию в аргументах функции,
    * поэтому условие добавлено сюда
    */
-  return flushUserProfile === undefined ? true : flushUserProfile;
+  flushUserProfile = flushUserProfile === undefined ? true : flushUserProfile;
+  await authAPI.logout();
+  return flushUserProfile;
 });
 
 export const authThunks = { me, signIn, signUp, logout };

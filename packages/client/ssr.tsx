@@ -5,10 +5,13 @@ import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'reac
 import { Provider } from 'react-redux';
 import { createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
 
-import { routes } from './src/config/router';
+import { getRoutes } from './src/config/router';
 import { setupStore } from './src/store';
 
 export async function render(streamOptions: RenderToPipeableStreamOptions, request: express.Request) {
+  const store = setupStore();
+  const routes = getRoutes(store.dispatch);
+
   const { query } = createStaticHandler(routes);
   const remixRequest = createFetchRequest(request);
   const context = await query(remixRequest);
@@ -18,7 +21,6 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
   }
 
   const router = createStaticRouter(routes, context);
-  const store = setupStore();
 
   /**
    * В связи с тем, что в приложении используется React.Suspend-> Await -
@@ -29,6 +31,7 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
    * Так же возвращаем store, который был сформирован на сервере, чтобы
    * на клиенте отрендерить preloadedState
    */
+
   return {
     stream: renderToPipeableStream(
       <Provider store={store}>
