@@ -51,7 +51,7 @@ export const Field: FC<FieldProps> = ({
           type={type || 'text'}
           name={id}
           placeholder={placeholder}
-          onBlur={(e) => {
+          onBlur={e => {
             if (onBlur) {
               onBlur(e);
             }
