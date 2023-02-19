@@ -3,7 +3,7 @@ import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
-import { Helmet } from 'react-helmet';
+import type { Helmet } from 'react-helmet';
 import type { ViteDevServer } from 'vite';
 
 import { asyncLocalStorage } from '../middlewares';
@@ -13,6 +13,7 @@ import { isDev } from '../utils/isDev';
 type SSRRouteParams = { vite: ViteDevServer | undefined; srcPath: string; distPath: string };
 
 type Client = {
+  Helmet: typeof Helmet;
   axios: Axios;
   render: (
     streamOptions: RenderToPipeableStreamOptions,
@@ -106,7 +107,7 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
        */
       const writable = new HtmlWritable();
       writable.on('finish', () => {
-        const helmet = Helmet.renderStatic();
+        const helmet = client.Helmet.renderStatic();
         const appHtml = writable.getHtml();
 
         const responseHtml = template

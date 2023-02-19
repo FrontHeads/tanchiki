@@ -2,6 +2,7 @@ import { createStaticHandler } from '@remix-run/router';
 import axios from 'axios';
 import type * as express from 'express';
 import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
+import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
 import { createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
 
@@ -86,3 +87,4 @@ export function createFetchRequest(req: express.Request): Request {
 }
 
 export { axios };
+export { Helmet };
