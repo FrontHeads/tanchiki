@@ -66,7 +66,7 @@ export const UserProfile: FC = () => {
           <FieldList<UserProfileForm>
             setFile={setAvatarFile}
             fieldList={userProfileFieldList}
-            hidingFields={{ passwordsTitle: true, oldPassword: false, newPassword: false }}
+            hidingFields={{ passwordsTitle: false, oldPassword: false, newPassword: false }}
             onFormSubmitCallback={onFormSubmitCallback}
             formData={formData}
             setFormData={setFormData}

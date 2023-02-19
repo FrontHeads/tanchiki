@@ -6,16 +6,16 @@ import { FormContext } from './FormContext';
 import { type FormProps } from './typings';
 
 export const Form: FC<FormProps> = ({ header = '', children, ...rest }) => {
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isFormValidating, setIsFormValidating] = useState(false);
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
-    setIsFormSubmitted(true);
+    setIsFormValidating(true);
   };
 
   const value = {
-    isFormSubmitted,
-    setIsFormSubmitted,
+    isFormValidating,
+    setIsFormValidating,
   };
 
   return (

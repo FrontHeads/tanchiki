@@ -1,10 +1,8 @@
 import cn from 'classnames';
-import { type FC, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
 import { ValidationErrors } from '../../../ValidationErrors';
 import { type FieldProps } from './typings';
-
-const createFieldId = (id: string) => `field-${id}`;
 
 export const Field: FC<FieldProps> = ({
   id,
@@ -22,12 +20,14 @@ export const Field: FC<FieldProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
+  const fieldId = useMemo(() => `field-${id}`, [id]);
+
   const fieldClassNames = cn('form__field', className, {
     form__field_active: isFocused,
   });
 
   return (
-    <div className={fieldClassNames} data-testid="form-field" id={createFieldId(id)}>
+    <div className={fieldClassNames} data-testid="form-field" id={fieldId}>
       <label className="form__field-label" htmlFor={id}>
         {title}
         {required ? <em>*</em> : null}

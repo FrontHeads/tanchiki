@@ -1,17 +1,13 @@
-import { type Dispatch, createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 
-type FormContextInitial = {
-  isFormSubmitted: boolean;
-  setIsFormSubmitted: Dispatch<boolean>;
-};
+import { type FormContextInitial } from './typings';
 
-export const FormContext = createContext<FormContextInitial | undefined>(undefined);
+export const FormContext = createContext<FormContextInitial | null>(null);
 
 export const useFormContext = () => {
   const context = useContext(FormContext);
 
-  // Проверяем, что context не пустой
-  if (!context) {
+  if (context === null) {
     throw new Error('Form context is empty');
   }
   return context;

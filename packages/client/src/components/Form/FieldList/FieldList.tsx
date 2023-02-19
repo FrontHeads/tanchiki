@@ -19,23 +19,29 @@ export const FieldList = <T extends Record<string, string>>({
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const validation = useValidation(fieldList);
   const listRef = useRef<HTMLDivElement>(null);
-  const scrollToFirstInvalidField = (errors: ValidationErrorList) => {
-    const fieldId: string = 'field-' + Object.keys(errors)[0];
 
-    if (listRef.current) {
-      const firstInvalidField = listRef.current.children.namedItem(fieldId);
-      if (firstInvalidField) {
-        firstInvalidField.scrollIntoView();
+  const scrollToFirstInvalidField = useCallback(
+    (errors: ValidationErrorList) => {
+      if (listRef.current) {
+        // Ищем первое поле в котором есть не валидный input
+        for (const field of listRef.current.children) {
+          const inputId = field.id.replace('field-', '');
+          if (inputId in errors && errors[inputId].length) {
+            field.scrollIntoView();
+            break;
+          }
+        }
       }
-    }
-  };
+    },
+    [listRef]
+  );
 
-  const { isFormSubmitted, setIsFormSubmitted } = useFormContext();
+  const { isFormValidating, setIsFormValidating } = useFormContext();
 
   const isHidden = (field: FormInputAndHeading) => hidingFields && field.id in hidingFields && hidingFields[field.id];
 
   useEffect(() => {
-    if (isFormSubmitted) {
+    if (isFormValidating) {
       const validationResponse = validation(formData);
 
       if (validationResponse.hasErrors) {
@@ -45,9 +51,9 @@ export const FieldList = <T extends Record<string, string>>({
       } else {
         onFormSubmitCallback();
       }
-      setIsFormSubmitted(false);
+      setIsFormValidating(false);
     }
-  }, [isFormSubmitted]);
+  }, [isFormValidating]);
 
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -69,13 +75,13 @@ export const FieldList = <T extends Record<string, string>>({
 
     const validationResponse = validation({ [name]: value });
 
-    if (!isFormSubmitted) {
+    if (!isFormValidating) {
       setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
     }
   }, []);
 
   return (
-    <div className="form" ref={listRef}>
+    <div className="form__fields" ref={listRef}>
       {fieldList.map(field => {
         if (isHidden(field)) {
           return null;
