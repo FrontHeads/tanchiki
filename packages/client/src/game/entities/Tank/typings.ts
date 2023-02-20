@@ -7,6 +7,8 @@ export type EnemyVariant = 'BASIC' | 'FAST' | 'POWER' | 'ARMOR';
 
 export type TankPlayerSettings = { upgradeTier?: number } & Partial<EntityDynamicSettings>;
 
-export type TankEnemySettings =
-  { variant: EnemyVariant; flashing?: boolean, difficulty?: GameDifficulty }
-  & Partial<EntityDynamicSettings>;
+export type TankEnemySettings = {
+  variant: EnemyVariant;
+  flashing?: boolean;
+  difficulty?: GameDifficulty;
+} & Partial<EntityDynamicSettings>;

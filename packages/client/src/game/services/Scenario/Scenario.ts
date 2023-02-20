@@ -123,7 +123,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
     }
 
     if (this.game.state.difficulty === GameDifficulty.Easy) {
-      // Увеличиваем время спауна врагов на простом уровне сложности
+      // Увеличиваем время между появлением врагов на простом уровне сложности
       this.enemiesSpawnDelay = this.enemiesSpawnDelay * 1.5;
     }
 
