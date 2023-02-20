@@ -12,14 +12,15 @@ import {
 
 import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
-import { store } from '../store';
+import { setupStore } from '../store';
+import { type AppDispatch } from '../store/store';
 import { testAppRoutes } from '../tests/TestApp';
 
 type renderWithRouterArgs = {
   component?: ReactElement;
   route?: string;
   wrapWithRootLayout?: boolean;
-  routeLoader?: LoaderFunction;
+  routeLoader?: (dispatch: AppDispatch) => LoaderFunction;
 };
 
 /**
@@ -37,15 +38,18 @@ export const renderWithRouter = ({
   wrapWithRootLayout = false,
   routeLoader,
 }: renderWithRouterArgs = {}) => {
+  const store = setupStore();
+
   let routes;
 
   if (!component) {
-    routes = testAppRoutes;
+    routes = testAppRoutes(store.dispatch);
   } else {
-    routes = <Route path={route} element={component} loader={routeLoader} />;
+    routes = <Route path={route} element={component} loader={routeLoader && routeLoader(store.dispatch)} />;
+
     if (wrapWithRootLayout) {
       routes = (
-        <Route element={<Root />} loader={rootLoader}>
+        <Route element={<Root />} loader={rootLoader(store.dispatch)}>
           {routes}
         </Route>
       );
@@ -58,7 +62,7 @@ export const renderWithRouter = ({
     </Provider>
   );
 
-  return { user: userEvent.setup(), ...renderResult };
+  return { user: userEvent.setup(), ...renderResult, store };
 };
 
 export const createMemoryRouterRoutes = (routes: JSX.Element, opts?: Parameters<typeof createMemoryRouter>[1]) =>

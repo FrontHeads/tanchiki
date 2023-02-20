@@ -1,25 +1,28 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import { appReducer, authReducer, leaderboardReducer, profileReducer } from '.';
-import { uiReducer } from './features/ui/uiSlice';
+import { appReducer, authReducer, leaderboardReducer, profileReducer, uiReducer } from '.';
 
-const preloadedState = typeof window !== 'undefined' ? window.__PRELOADED_STATE__ : undefined;
-
-export const store = configureStore({
-  reducer: {
-    app: appReducer,
-    profile: profileReducer,
-    auth: authReducer,
-    ui: uiReducer,
-    leaderboard: leaderboardReducer,
-  },
-  /** Загружаем начальное состояние, которое было передано из SSR сборки с сервера */
-  preloadedState,
+const rootReducer = combineReducers({
+  app: appReducer,
+  profile: profileReducer,
+  auth: authReducer,
+  ui: uiReducer,
+  leaderboard: leaderboardReducer,
 });
 
-if (typeof window !== 'undefined') {
-  delete window?.__PRELOADED_STATE__;
-}
+export const setupStore = () => {
+  const preloadedState = typeof window !== 'undefined' ? window.__PRELOADED_STATE__ : undefined;
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+  if (typeof window !== 'undefined') {
+    delete window?.__PRELOADED_STATE__;
+  }
+
+  return configureStore({
+    reducer: rootReducer,
+    /** Загружаем начальное состояние, которое было передано из SSR сборки с сервера */
+    preloadedState,
+  });
+};
+
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = ReturnType<typeof setupStore>['dispatch'];

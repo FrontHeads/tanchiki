@@ -15,9 +15,6 @@ export const leaderboardSlice = createSlice({
   } as LeaderboardState,
 
   reducers: {
-    setLeaderboardTable: (state, { payload }) => {
-      state.leaderboardTable = payload;
-    },
     setSortParams: (
       state,
       {
@@ -87,6 +84,7 @@ export const sortedLeaderboardSelector = createSelector(
 export const leaderboardSelectors = {
   sortDirection: (state: RootState) => state.leaderboard.sortDirection,
   all: (state: RootState) => state.leaderboard,
+  isLoading: (state: RootState) => state.leaderboard.isLoading,
   sortedData: sortedLeaderboardSelector,
 };
 

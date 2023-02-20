@@ -4,6 +4,7 @@ import { Link, Outlet, Route, useLocation } from 'react-router-dom';
 import { rootLoader } from '../config/router';
 import { Root } from '../layouts/Root';
 import { ErrorPage } from '../pages/ErrorPage';
+import { type AppDispatch } from '../store/store';
 
 const About: FC = () => <div>Вы на странице "О нас"</div>;
 const Home: FC = () => <div>Вы на домашней странице</div>;
@@ -30,13 +31,15 @@ export const TestAppLayout: FC = () => (
   </>
 );
 
-export const testAppRoutes = (
-  <Route element={<TestAppLayout />} errorElement={<ErrorPage />}>
-    <Route element={<Root />} loader={rootLoader}>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/game" element={<Game />} />
-      <Route path="/not-game" element={<NotAGame />} />
+export const testAppRoutes = (dispatch: AppDispatch) => {
+  return (
+    <Route element={<TestAppLayout />} errorElement={<ErrorPage />}>
+      <Route element={<Root />} loader={rootLoader(dispatch)}>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/game" element={<Game />} />
+        <Route path="/not-game" element={<NotAGame />} />
+      </Route>
     </Route>
-  </Route>
-);
+  );
+};

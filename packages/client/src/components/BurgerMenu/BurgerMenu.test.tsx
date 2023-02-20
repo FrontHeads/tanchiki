@@ -4,9 +4,11 @@ import { fireEvent, getByTestId, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-import { store } from '../../store';
+import { setupStore } from '../../store';
 import { getFilteredNavigationList } from '../../utils/navigationUtils';
 import { BurgerMenu } from './BurgerMenu';
+
+const store = setupStore();
 
 describe('Menu', () => {
   test('it renders', () => {
