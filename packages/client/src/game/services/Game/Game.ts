@@ -196,6 +196,15 @@ export class Game extends EventEmitter {
           this.view.changeGameTheme();
           this.overlay.show(this.state.screen, this.state.mainMenuItem);
         }
+
+        if (
+          (direction === Direction.Left || direction === Direction.Right) &&
+          this.state.mainMenuItem === MainMenuItem.JoystickType &&
+          this.controllerAll.changeJoystickType
+        ) {
+          this.controllerAll.changeJoystickType();
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+        }
       })
       // Обрабатываем нажатие на указанном пункте меню
       .on(ControllerEvent.Shoot, async () => {
@@ -205,6 +214,12 @@ export class Game extends EventEmitter {
 
         if (this.state.mainMenuItem === MainMenuItem.Style) {
           this.view.changeGameTheme();
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+          return;
+        }
+
+        if (this.state.mainMenuItem === MainMenuItem.JoystickType && this.controllerAll.changeJoystickType) {
+          this.controllerAll.changeJoystickType();
           this.overlay.show(this.state.screen, this.state.mainMenuItem);
           return;
         }
@@ -395,7 +410,7 @@ export class Game extends EventEmitter {
 
   private createController(keyBinding: BindingConfig) {
     if (isTouchscreen()) {
-      return new ControllerManager([
+      return new ControllerManager(this, [
         new ControllerStick(StickBindings),
         new ControllerPointer({
           pointerBindings: PointerBindings,
@@ -404,7 +419,7 @@ export class Game extends EventEmitter {
       ]);
     }
 
-    return new ControllerManager([
+    return new ControllerManager(this, [
       new ControllerKeyboard(keyBinding),
       new ControllerPointer({
         pointerBindings: PointerBindings,

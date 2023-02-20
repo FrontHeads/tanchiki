@@ -1,5 +1,6 @@
 import { ScreenType } from '../../ui/screens/data';
 import { MainMenuItem } from '../../ui/screens/UIScreens/data';
+import { JoystickType, joystickTypeInLS } from '../Controller/data';
 import { type GameMode } from '../Game/typings';
 import { levels } from '../MapManager/levels';
 import { gameThemeInLS, GameThemeName } from '../View/data';
@@ -16,8 +17,11 @@ export class State {
   maxLevels = levels.length;
   /** Режим игры. */
   mode: GameMode = MainMenuItem.Singleplayer;
+
   /** Имя темы оформления игры. */
   themeName = (localStorage.getItem(gameThemeInLS) || GameThemeName.Classic) as GameThemeName;
+  /** Игрок может выбрать тип джойстика в мобильной версии. */
+  joystickType: JoystickType = (localStorage.getItem(joystickTypeInLS) || JoystickType.Stick) as JoystickType;
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/

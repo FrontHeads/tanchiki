@@ -20,6 +20,7 @@ export type Controller = EventEmitter & {
   stopBindingAction?: (binding: Binding) => void;
   startControlByEvent: (event: ControlEvent) => void;
   stopControlByEvent: (event: ControlEvent) => void;
+  changeJoystickType?: () => void;
 };
 
 export type ControlEvent = StickDirection | MouseEvent | TouchEvent | KeyboardEvent;

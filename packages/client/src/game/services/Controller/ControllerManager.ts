@@ -1,13 +1,14 @@
 import { EventEmitter } from '../../utils';
 import { type Fn } from '../../utils/EventEmitter/typings';
-import { type ControllerEvent } from '..';
+import { type Game } from '..';
+import { type ControllerEvent, JoystickType, joystickTypeInLS } from './data';
 import { type ControlEvent, type Controller } from './typings';
 
 export class ControllerManager extends EventEmitter<ControllerEvent> implements Controller {
   /** Хранит контроллеры, методы которых вызываются при срабатывании событий. */
   controllersList: Controller[] = [];
 
-  constructor(controllers: Controller[]) {
+  constructor(private game: Game, controllers: Controller[]) {
     super();
     this.controllersList = controllers;
   }
@@ -77,5 +78,16 @@ export class ControllerManager extends EventEmitter<ControllerEvent> implements 
 
   stopControlByEvent(event: ControlEvent) {
     this.controllersList.forEach(controller => controller.stopControlByEvent(event));
+  }
+
+  changeJoystickType() {
+    const state = this.game.state;
+    const joystickTypesArr = Object.values(JoystickType);
+
+    const currentJoystickIndex = joystickTypesArr.indexOf(state.joystickType);
+    const nextJoystickIndex = currentJoystickIndex === joystickTypesArr.length - 1 ? 0 : currentJoystickIndex + 1;
+
+    state.joystickType = joystickTypesArr[nextJoystickIndex];
+    localStorage.setItem(joystickTypeInLS, state.joystickType);
   }
 }
