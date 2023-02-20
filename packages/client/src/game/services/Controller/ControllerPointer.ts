@@ -1,6 +1,6 @@
 import { ControllerBase } from './ControllerBase';
 import { type BindingConfig } from './KeyBindings';
-import { type ControllerPointerProps } from './typings';
+import { type ControlEvent, type ControllerPointerProps } from './typings';
 
 /** Контроллер для управления при помощи тачскрина или мыши. */
 export class ControllerPointer extends ControllerBase {
@@ -24,18 +24,18 @@ export class ControllerPointer extends ControllerBase {
   }
 
   registerEvents() {
-    document.addEventListener(this.startEventName, this.startPointing, { passive: false });
-    document.addEventListener(this.stopEventName, this.endPointing, { passive: false });
+    document.addEventListener(this.startEventName, this.startControlByEvent, { passive: false });
+    document.addEventListener(this.stopEventName, this.stopControlByEvent, { passive: false });
   }
 
   disableEvents() {
-    document.removeEventListener(this.startEventName, this.startPointing);
-    document.removeEventListener(this.stopEventName, this.endPointing);
+    document.removeEventListener(this.startEventName, this.startControlByEvent);
+    document.removeEventListener(this.stopEventName, this.stopControlByEvent);
   }
 
   /** Обрабатывает события mouseDown и touchStart */
-  startPointing = (event: MouseEvent | TouchEvent) => {
-    if (!event.target) {
+  startControlByEvent = (event: ControlEvent) => {
+    if (!(event instanceof Event) || !event.target) {
       return;
     }
 
@@ -48,8 +48,8 @@ export class ControllerPointer extends ControllerBase {
   };
 
   /** Обрабатывает события mouseUp и touchEnd */
-  endPointing = (event: MouseEvent | TouchEvent) => {
-    if (!event.target) {
+  stopControlByEvent = (event: ControlEvent) => {
+    if (!(event instanceof Event) || !event.target) {
       return;
     }
 

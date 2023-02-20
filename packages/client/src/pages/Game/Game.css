@@ -28,3 +28,7 @@
     }
   }
 }
+
+.layout__game {
+  user-select: none;
+}

@@ -2,10 +2,9 @@ import { type Direction } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { ControllerEvent } from './data';
 import { type Binding } from './KeyBindings';
+import { type ControlEvent, type Controller } from './typings';
 
-export { ControllerEvent };
-
-export abstract class ControllerBase extends EventEmitter<ControllerEvent> {
+export abstract class ControllerBase extends EventEmitter<ControllerEvent> implements Controller {
   activeDirection: Partial<Record<Direction, boolean>> = {};
   shootProcess: ReturnType<typeof setInterval> | null = null;
   shootIntervalMs = 200;
@@ -30,6 +29,10 @@ export abstract class ControllerBase extends EventEmitter<ControllerEvent> {
   abstract registerEvents(): void;
 
   abstract disableEvents(): void;
+
+  abstract startControlByEvent(event: ControlEvent): void;
+
+  abstract stopControlByEvent(event: ControlEvent): void;
 
   /** Запускает событие привязанное к кнопке/клику/тапу, например движение вперед или выстрел. */
   emitBindingAction([action, direction]: Binding) {

@@ -1,3 +1,5 @@
+import { StickDirection } from '../../../../game/services/Controller/KeyBindings';
+
 export type IJoystickProps = {
   size?: number;
   stickSize?: number;
@@ -24,11 +26,15 @@ export type IJoystickUpdateEvent = {
   type: 'move' | 'stop' | 'start';
   x: number | null;
   y: number | null;
-  direction: JoystickDirection | null;
+  direction: JoystickDirection | StickDirection | null;
   distance: number | null; // Percentile 0-100% of joystick
 };
 
 export enum JoystickShape {
   Circle = 'circle',
   Square = 'square',
+}
+
+export function isStickDirection(value: unknown): value is StickDirection {
+  return typeof value === 'string' ? Object.values(StickDirection).includes(value as StickDirection) : false;
 }

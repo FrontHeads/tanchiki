@@ -7,9 +7,10 @@ import { EventEmitter, sleep } from '../../utils';
 import { isTouchscreen } from '../../utils/isTouchscreen';
 import {
   AudioManager,
-  ControllerDesktop,
-  ControllerEvent,
-  ControllerTouchscreen,
+  ControllerKeyboard,
+  ControllerManager,
+  ControllerPointer,
+  ControllerStick,
   Loop,
   Resources,
   ResourcesEvent,
@@ -20,9 +21,14 @@ import {
   View,
   Zone,
 } from '../';
-import { ControllerPointer } from '../Controller/ControllerPointer';
-import { ServiceButtonsName } from '../Controller/data';
-import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
+import { type Controller, ControllerEvent, ServiceButtonsName } from '../Controller';
+import {
+  type BindingConfig,
+  KeyBindingsArrows,
+  KeyBindingsWasd,
+  PointerBindings,
+  StickBindings,
+} from '../Controller/KeyBindings';
 import { type StatisticsData } from '../Statistics/typings';
 import { ViewEvents } from '../View/data';
 import { GameEvents } from './data';
@@ -39,9 +45,9 @@ export class Game extends EventEmitter {
   audioManager: AudioManager;
   overlay: Overlay;
   scenario: Scenario | undefined;
-  controllerAll: ControllerPointer | ControllerDesktop;
-  controllerPlayerOne: ControllerPointer | ControllerDesktop;
-  controllerPlayerTwo: ControllerPointer | ControllerDesktop;
+  controllerAll: Controller;
+  controllerPlayerOne: Controller;
+  controllerPlayerTwo: Controller;
   statistics: Statistics;
 
   private constructor() {
@@ -55,7 +61,7 @@ export class Game extends EventEmitter {
     this.audioManager = new AudioManager(this);
     this.controllerAll = this.createController({ ...KeyBindingsWasd, ...KeyBindingsArrows });
     this.controllerPlayerOne = this.createController(KeyBindingsWasd);
-    this.controllerPlayerTwo = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
+    this.controllerPlayerTwo = new ControllerKeyboard(KeyBindingsArrows);
     this.statistics = new Statistics(this);
   }
 
@@ -388,17 +394,22 @@ export class Game extends EventEmitter {
   }
 
   private createController(keyBinding: BindingConfig) {
-    return isTouchscreen()
-      ? new ControllerTouchscreen({
+    if (isTouchscreen()) {
+      return new ControllerManager([
+        new ControllerStick(StickBindings),
+        new ControllerPointer({
           pointerBindings: PointerBindings,
           type: 'touchscreen',
-        })
-      : new ControllerDesktop({
-          keyBindings: keyBinding,
-          controllerMouse: new ControllerPointer({
-            pointerBindings: PointerBindings,
-            type: 'mouse',
-          }),
-        });
+        }),
+      ]);
+    }
+
+    return new ControllerManager([
+      new ControllerKeyboard(keyBinding),
+      new ControllerPointer({
+        pointerBindings: PointerBindings,
+        type: 'mouse',
+      }),
+    ]);
   }
 }

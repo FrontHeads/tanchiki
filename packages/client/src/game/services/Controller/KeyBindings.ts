@@ -49,3 +49,17 @@ export const PointerBindings: BindingConfig = {
   [ControllerElemsClassName.MuteBtn]: [ControllerEvent.Mute],
   [ControllerElemsClassName.FullscreenBtn]: [ControllerEvent.Fullscreen],
 };
+
+export enum StickDirection {
+  Forward = 'FORWARD',
+  Backward = 'BACKWARD',
+  Left = 'LEFT',
+  Right = 'RIGHT',
+}
+
+export const StickBindings: BindingConfig = {
+  [StickDirection.Forward]: [ControllerEvent.Move, Direction.Up],
+  [StickDirection.Backward]: [ControllerEvent.Move, Direction.Down],
+  [StickDirection.Left]: [ControllerEvent.Move, Direction.Left],
+  [StickDirection.Right]: [ControllerEvent.Move, Direction.Right],
+};
