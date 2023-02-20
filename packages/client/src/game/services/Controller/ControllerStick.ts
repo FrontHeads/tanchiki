@@ -1,5 +1,5 @@
 import { ControllerBase } from './ControllerBase';
-import { type BindingConfig, StickBindings } from './KeyBindings';
+import { type BindingConfig } from './KeyBindings';
 import { type ControlEvent } from './typings';
 
 /** Контроллер для управления при помощи тачскрина или мыши. */
@@ -26,7 +26,7 @@ export class ControllerStick extends ControllerBase {
       return;
     }
 
-    this.emitBindingAction(StickBindings[stickDirection]);
+    this.emitBindingAction(this.stickBindings[stickDirection]);
   };
 
   /** Обрабатывает событие отмены касания стика и соответственно остановки движения  */
@@ -35,6 +35,11 @@ export class ControllerStick extends ControllerBase {
       return;
     }
 
-    this.stopBindingAction(StickBindings[stickDirection]);
+    this.stopBindingAction(this.stickBindings[stickDirection]);
+  };
+
+  /** Удаляет все действия принудительно. */
+  stopControlForce = () => {
+    this.activeDirection = {};
   };
 }

@@ -61,6 +61,11 @@ export class ControllerPointer extends ControllerBase {
     }
   };
 
+  /** Удаляет все действия принудительно. */
+  stopControlForce = () => {
+    this.activeDirection = {};
+  };
+
   /** Проверяет существует ли соответствующее событие для клика/тапа по элементу с определенным CSS-классом. */
   getPointerBinding(target: EventTarget) {
     if (!(target instanceof HTMLElement || target instanceof SVGElement) || !this.pointerBindings) {

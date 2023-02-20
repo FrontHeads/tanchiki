@@ -40,10 +40,10 @@ export const Game = () => {
     });
 
     game.controllerAll.on(ControllerEvent.ToggleJoystickType, () => {
-      // Небольшая задержка, чтобы успел отработать метод stopControlByEvent в контроллере
+      // Небольшая задержка, чтобы переход был плавнее для глаза юзера.
       setTimeout(() => {
         setJoystickType(localStorage.getItem(joystickTypeInLS));
-      }, 300);
+      }, 100);
     });
 
     document.querySelector('.layout')?.classList.add('layout__game');

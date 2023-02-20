@@ -5,7 +5,7 @@
   --service-btn-size: 20px;
   --service-btn-margin-left: var(--service-btn-size);
 
-  width: 97%;
+  width: 99%;
   height: 100%;
   display: flex;
   justify-content: space-between;

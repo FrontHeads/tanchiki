@@ -80,6 +80,15 @@ export class ControllerManager extends EventEmitter<ControllerEvent> implements 
     this.controllersList.forEach(controller => controller.stopControlByEvent(event));
   }
 
+  /** Останавливает все действия принудительно. */
+  stopControlForce() {
+    this.controllersList.forEach(controller => {
+      if (controller.stopControlForce) {
+        controller.stopControlForce();
+      }
+    });
+  }
+
   changeJoystickType() {
     const state = this.game.state;
     const joystickTypesArr = Object.values(JoystickType);
@@ -90,5 +99,8 @@ export class ControllerManager extends EventEmitter<ControllerEvent> implements 
     state.joystickType = joystickTypesArr[nextJoystickIndex];
     localStorage.setItem(joystickTypeInLS, state.joystickType);
     this.emit(ControllerEvent.ToggleJoystickType);
+
+    // Принудительно убираем все действия с отключенного контроллера.
+    this.stopControlForce();
   }
 }
