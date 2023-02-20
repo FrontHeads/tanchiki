@@ -23,7 +23,7 @@ export class State {
   /** Имя темы оформления игры. */
   themeName = (localStorage.getItem(gameThemeInLS) || GameThemeName.Classic) as GameThemeName;
   /** Игрок может выбрать тип джойстика в мобильной версии. */
-  joystickType: JoystickType = (localStorage.getItem(joystickTypeInLS) || JoystickType.Stick) as JoystickType;
+  joystickType: JoystickType = (localStorage.getItem(joystickTypeInLS) || JoystickType.ButtonJoystick) as JoystickType;
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/
