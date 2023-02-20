@@ -327,11 +327,11 @@ export class Game extends EventEmitter {
     this.controllerAll
       .on(ControllerEvent.Pause, () => {
         this.togglePause();
-        this.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Pause);
+        this.view.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Pause);
       })
       .on(ControllerEvent.Mute, () => {
         this.audioManager.emit('pause', { isMuteKey: true });
-        this.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Mute);
+        this.view.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Mute);
       })
       .on(ControllerEvent.Fullscreen, () => {
         this.view.toggleFullScreen();
