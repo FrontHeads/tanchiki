@@ -12,7 +12,7 @@ import {
 } from '../../entities';
 import { type Direction, type EntitySettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
-import { type Game, IndicatorManager, MapManager } from '../';
+import { type Game, GameDifficulty, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
 import { Cell, spawnPlaces } from '../MapManager/data';
 import { Player, playerInitialSettings } from './data';
@@ -122,6 +122,11 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.enemiesSpawnDelay = this.game.state.multiplayerEnemiesSpawnDelay;
     }
 
+    if (this.game.state.difficulty === GameDifficulty.Easy) {
+      // Увеличиваем время спауна врагов на простом уровне сложности
+      this.enemiesSpawnDelay = this.enemiesSpawnDelay * 1.5;
+    }
+
     this.createTankEnemy();
     this.game.loop.setLoopInterval(
       () => {
@@ -149,6 +154,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       variant: this.mapManager.getMapTankEnemyVariant(this.enemiesSpawnCounter),
       // Четвёртый, одиннадцатый и восемнадцатый танки появляются переливающимися (за их уничтожение дают бонус)
       flashing: this.game.state.flashingEnemyTanksWithPowerups.includes(this.enemiesSpawnCounter),
+      difficulty: this.game.state.difficulty,
     };
 
     // Убираем с карты предыдущий бонус, если появился новый бонусный танк
