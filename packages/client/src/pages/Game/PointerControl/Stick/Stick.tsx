@@ -48,7 +48,7 @@ export const Stick: FC = () => {
         size={160}
         baseColor={Color.Black}
         stickColor={Color.White}
-        minDistance={10}
+        minDistance={45}
         throttle={40}
         move={event => handleMove(event, game)}
         stop={() => handleStop(game)}
