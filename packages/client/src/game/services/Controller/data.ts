@@ -6,6 +6,7 @@ export enum ControllerEvent {
   Fullscreen = 'FULLSCREEN',
   Mute = 'MUTE',
   Escape = 'ESCAPE',
+  ToggleJoystickType = 'TOGGLE_JOYSTICK_TYPE',
 }
 
 export enum ServiceButtonsName {

@@ -9,8 +9,8 @@ describe('Stick', () => {
   test('it render', () => {
     renderWithRouter({ component: <Stick /> });
 
-    const renderedJoystick = screen.getByTestId('joystick');
+    const renderedStick = screen.getByTestId('stick');
 
-    expect(renderedJoystick).toBeInTheDocument();
+    expect(renderedStick).toBeInTheDocument();
   });
 });

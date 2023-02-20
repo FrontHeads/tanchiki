@@ -40,7 +40,7 @@ export const Stick: FC = () => {
   };
 
   return (
-    <div className="joystick" data-testid="joystick">
+    <div className="stick" data-testid="stick">
       <Joystick
         size={160}
         baseColor={Color.Black}

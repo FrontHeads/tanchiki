@@ -1,7 +1,7 @@
 import { EventEmitter } from '../../utils';
 import { type Fn } from '../../utils/EventEmitter/typings';
 import { type Game } from '..';
-import { type ControllerEvent, JoystickType, joystickTypeInLS } from './data';
+import { ControllerEvent, JoystickType, joystickTypeInLS } from './data';
 import { type ControlEvent, type Controller } from './typings';
 
 export class ControllerManager extends EventEmitter<ControllerEvent> implements Controller {
@@ -89,5 +89,6 @@ export class ControllerManager extends EventEmitter<ControllerEvent> implements 
 
     state.joystickType = joystickTypesArr[nextJoystickIndex];
     localStorage.setItem(joystickTypeInLS, state.joystickType);
+    this.emit(ControllerEvent.ToggleJoystickType);
   }
 }
