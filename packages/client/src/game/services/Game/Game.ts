@@ -26,9 +26,10 @@ import { ServiceButtonsName } from '../Controller/data';
 import { type BindingConfig, KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from '../Controller/KeyBindings';
 import { type StatisticsData } from '../Statistics/typings';
 import { ViewEvents } from '../View/data';
-import { GameEvents } from './data';
+import { GameDifficulty, GameEvents } from './data';
 
-export { GameEvents };
+export { type GameMode } from './typings';
+export { GameDifficulty, GameEvents };
 
 export class Game extends EventEmitter {
   static __instance: Game;
@@ -188,12 +189,15 @@ export class Game extends EventEmitter {
           this.overlay.show(this.state.screen, this.state.mainMenuItem);
         }
 
-        if (
-          (direction === Direction.Left || direction === Direction.Right) &&
-          this.state.mainMenuItem === MainMenuItem.Style
-        ) {
-          this.view.changeGameTheme();
-          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+        if (direction === Direction.Left || direction === Direction.Right) {
+          if (this.state.mainMenuItem === MainMenuItem.Style) {
+            this.view.changeGameTheme();
+            this.overlay.show(this.state.screen, this.state.mainMenuItem);
+          }
+          if (this.state.mainMenuItem === MainMenuItem.Difficulty) {
+            this.changeGameDifficulty();
+            this.overlay.show(this.state.screen, this.state.mainMenuItem);
+          }
         }
       })
       // Обрабатываем нажатие на указанном пункте меню
@@ -208,6 +212,12 @@ export class Game extends EventEmitter {
           return;
         }
 
+        if (this.state.mainMenuItem === MainMenuItem.Difficulty) {
+          this.changeGameDifficulty();
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+          return;
+        }
+
         // Открываем экран выбора уровня
         await this.initLevelSelector();
 
@@ -215,6 +225,14 @@ export class Game extends EventEmitter {
         this.initGameLevel(true);
         this.emit(ViewEvents.ToggleVisibilityServiceBtn);
       });
+  }
+
+  changeGameDifficulty() {
+    if (this.state.difficulty === GameDifficulty.Easy) {
+      this.state.difficulty = GameDifficulty.Hard;
+    } else {
+      this.state.difficulty = GameDifficulty.Easy;
+    }
   }
 
   initLevelSelector() {

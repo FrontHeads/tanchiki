@@ -3,6 +3,7 @@ import { MainMenuItem } from '../../ui/screens/UIScreens/data';
 import { type GameMode } from '../Game/typings';
 import { levels } from '../MapManager/levels';
 import { gameThemeInLS, GameThemeName } from '../View/data';
+import { GameDifficulty } from '../';
 
 export class State {
   /** Запущена ли игра. */
@@ -18,6 +19,8 @@ export class State {
   maxLevels = levels.length;
   /** Режим игры. */
   mode: GameMode = MainMenuItem.Singleplayer;
+  /** Сложность игры. */
+  difficulty = GameDifficulty.Hard;
   /** Имя темы оформления игры. */
   themeName = (localStorage.getItem(gameThemeInLS) || GameThemeName.Classic) as GameThemeName;
 
