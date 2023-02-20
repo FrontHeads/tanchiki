@@ -2,7 +2,6 @@ import { ControllerBase } from './ControllerBase';
 import { type BindingConfig } from './KeyBindings';
 import { type ControlEvent } from './typings';
 
-/** Контроллер для управления с десктопа. Используется клавиатура и мышь. */
 export class ControllerKeyboard extends ControllerBase {
   /** Кнопки клавиатуры зарезервированные для управления игрой.  */
   keyBindings: BindingConfig;

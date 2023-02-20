@@ -27,7 +27,7 @@ export type IJoystickUpdateEvent = {
   x: number | null;
   y: number | null;
   direction: JoystickDirection | StickDirection | null;
-  distance: number | null; // Percentile 0-100% of joystick
+  distance: number | null;
 };
 
 export enum JoystickShape {
