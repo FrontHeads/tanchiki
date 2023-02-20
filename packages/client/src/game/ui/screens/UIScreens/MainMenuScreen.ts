@@ -12,7 +12,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
   mainMenuStateYPos = {
     [MainMenuItem.Singleplayer]: isTouchscreen() ? 31 : 28,
     [MainMenuItem.Multiplayer]: 33,
-    [MainMenuItem.Difficulty]: isTouchscreen() ? 37 : 38,
+    [MainMenuItem.Difficulty]: isTouchscreen() ? 36 : 38,
     [MainMenuItem.Style]: isTouchscreen() ? 41 : 43,
   };
 
