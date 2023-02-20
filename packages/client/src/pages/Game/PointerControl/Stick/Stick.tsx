@@ -5,7 +5,7 @@ import { type FC, useContext } from 'react';
 import { Joystick } from 'react-joystick-component';
 
 import { type Game } from '../../../../game/services';
-import { type StickDirection } from '../../../../game/services/Controller/KeyBindings';
+import { StickDirection } from '../../../../game/services/Controller/KeyBindings';
 import { Color } from '../../../../game/services/View/colors';
 import { GameContext } from '../../Game';
 import { type IJoystickUpdateEvent, isStickDirection } from './typings';
@@ -34,7 +34,9 @@ export const Stick: FC = () => {
     }
 
     if (game.controllerAll.stopControlForce) {
-      game.controllerAll.stopControlForce();
+      Object.values(StickDirection).forEach(value => {
+        game.controllerAll.stopControlByEvent(value);
+      });
     }
 
     currentDirection = null;
