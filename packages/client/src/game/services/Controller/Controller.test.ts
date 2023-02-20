@@ -1,5 +1,5 @@
 import { sleep } from '../../utils/sleepTimer';
-import { ControllerDesktop } from './ControllerDesktop';
+import { ControllerKeyboard } from './ControllerKeyboard';
 import { ControllerPointer } from './ControllerPointer';
 import { ControllerElemsClassName, ControllerEvent } from './data';
 import { KeyBindingsArrows, KeyBindingsWasd, PointerBindings } from './KeyBindings';
@@ -34,7 +34,7 @@ function mockPointerStart(className: string, eventName: 'mousedown' | 'touchstar
 
 describe('game/services/Controller', () => {
   it('should handle WASD + space move & shoot bindings', () => {
-    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerKeyboard(KeyBindingsWasd);
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -52,7 +52,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle WASD stop binding', async () => {
-    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerKeyboard(KeyBindingsWasd);
     const mockFn = jest.fn();
 
     controller.load();
@@ -71,7 +71,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows + enter move & shoot bindings', () => {
-    const controller = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
+    const controller = new ControllerKeyboard(KeyBindingsArrows);
     const mockMoveFn = jest.fn();
     const mockShootFn = jest.fn();
 
@@ -89,7 +89,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should handle arrows stop binding', async () => {
-    const controller = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
+    const controller = new ControllerKeyboard(KeyBindingsArrows);
     const mockFn = jest.fn();
 
     controller.load();
@@ -108,7 +108,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle arrow keys clicks if WASD is chosen', () => {
-    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerKeyboard(KeyBindingsWasd);
     const mockFn = jest.fn();
 
     controller.load();
@@ -120,7 +120,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should not handle WASD keys clicks if arrows are chosen', () => {
-    const controller = new ControllerDesktop({ keyBindings: KeyBindingsArrows });
+    const controller = new ControllerKeyboard(KeyBindingsArrows);
     const mockFn = jest.fn();
 
     controller.load();
@@ -132,7 +132,7 @@ describe('game/services/Controller', () => {
   });
 
   it('should auto shoot while key is pressed', async () => {
-    const controller = new ControllerDesktop({ keyBindings: KeyBindingsWasd });
+    const controller = new ControllerKeyboard(KeyBindingsWasd);
     controller.shootIntervalMs = 500;
     const mockShootFn = jest.fn();
 
@@ -152,7 +152,7 @@ describe('game/services/Controller', () => {
 
   variants.forEach(([name, bindings]) => {
     it(`${name}: should handle pause binding`, () => {
-      const controller = new ControllerDesktop({ keyBindings: bindings });
+      const controller = new ControllerKeyboard(bindings);
       const mockFn = jest.fn();
 
       controller.load();
@@ -163,7 +163,7 @@ describe('game/services/Controller', () => {
     });
 
     it(`${name}: should disable`, () => {
-      const controller = new ControllerDesktop({ keyBindings: bindings });
+      const controller = new ControllerKeyboard(bindings);
       const mockFn = jest.fn();
 
       controller.load();
@@ -178,13 +178,11 @@ describe('game/services/Controller', () => {
   });
 
   it(`it should handle bindings by mousedown`, () => {
-    const controller = new ControllerDesktop({
-      keyBindings: KeyBindingsWasd,
-      controllerMouse: new ControllerPointer({
-        pointerBindings: PointerBindings,
-        type: 'mouse',
-      }),
+    const controller = new ControllerPointer({
+      pointerBindings: PointerBindings,
+      type: 'mouse',
     });
+
     const mockPauseFn = jest.fn();
     const mockMuteFn = jest.fn();
     const mockFullscreenFn = jest.fn();
