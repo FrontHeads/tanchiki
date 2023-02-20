@@ -4,6 +4,7 @@ import { Resources, ResourcesEvent } from './Resources';
 
 describe('game/services/Resources', () => {
   const resources = new Resources({ state: { loadResourcesTimeout: 60000 } } as Game);
+  resources.loadSoundResource = jest.fn().mockResolvedValue(true);
 
   /** Jest не умеет обрабатывать события загрузки файлов. Приходится мокать таким образом. */
 
@@ -13,15 +14,6 @@ describe('game/services/Resources', () => {
       setTimeout(() => {
         // @ts-expect-error: property 'onload' does not exist on type 'Image'.
         this.onload(); // simulate success
-      }, 100);
-    }
-  };
-  // @ts-expect-error: mock doesn't have all parameters of HTMLAudioElement
-  global.Audio = class {
-    constructor() {
-      setTimeout(() => {
-        // @ts-expect-error: property 'oncanplaythrough' does not exist on type 'Audio'.
-        this.oncanplaythrough(); // simulate success
       }, 100);
     }
   };

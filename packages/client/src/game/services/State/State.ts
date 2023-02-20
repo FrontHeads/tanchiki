@@ -9,6 +9,8 @@ export class State {
   inited = false;
   /** Стоит ли игра на паузе. */
   paused = false;
+  /** Режим отладки. */
+  debugging = false;
 
   /** Текущий игровой уровень. */
   level = 1;
@@ -23,15 +25,20 @@ export class State {
    * Пустое значение, если игрок не авторизован.*/
   username = '';
 
+  /** Стартовое количество жизней у игроков. */
+  defaultPlayerLives = 2;
+  /** Стартовые апгрейды танков игроков. */
+  defaultPlayerUpgradeTier = 1;
+
   /** Состояние первого игрока (жизни, апгрейды танка). */
   playerOne = {
-    lives: 2,
-    upgradeTier: 1,
+    lives: this.defaultPlayerLives,
+    upgradeTier: this.defaultPlayerUpgradeTier,
   };
   /** Состояние второго игрока (жизни, апгрейды танка). */
   playerTwo = {
-    lives: 2,
-    upgradeTier: 1,
+    lives: this.defaultPlayerLives,
+    upgradeTier: this.defaultPlayerUpgradeTier,
   };
 
   /** Максимальное количество врагов, которые должны появиться на карте (для одиночного режима). */
@@ -89,13 +96,13 @@ export class State {
     this.paused = false;
 
     this.playerOne = {
-      lives: 2,
-      upgradeTier: 1,
+      lives: this.defaultPlayerLives,
+      upgradeTier: this.defaultPlayerUpgradeTier,
     };
 
     this.playerTwo = {
-      lives: 2,
-      upgradeTier: 1,
+      lives: this.defaultPlayerLives,
+      upgradeTier: this.defaultPlayerUpgradeTier,
     };
   }
 

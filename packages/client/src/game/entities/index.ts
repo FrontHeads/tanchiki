@@ -1,4 +1,4 @@
-export { Entity } from './Entity/Entity';
+export { Entity, EntityEvent } from './Entity/Entity';
 export { EntityDynamic } from './EntityDynamic/EntityDynamic';
 export { Explosion } from './Explosion/Explosion';
 export { Flag } from './Flag/Flag';
