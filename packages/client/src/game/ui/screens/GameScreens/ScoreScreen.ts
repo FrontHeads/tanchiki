@@ -1,4 +1,4 @@
-import { type GameMode } from '../../../services/Game/typings';
+import { type GameMode, GameDifficulty } from '../../../services';
 import { type EnemiesKilledState } from '../../../services/Statistics/typings';
 import { Color } from '../../../services/View/colors';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
@@ -156,6 +156,8 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     }
 
     this.renderFooter({ count: shouldShowTotalCountFooter ? this.mapEnemiesKilledTotal : [' ', ' '] });
+
+    this.renderNote();
 
     return true;
   }
@@ -343,5 +345,20 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       color: Color.White,
       text: `ВСЕГО`,
     });
+  }
+
+  renderNote() {
+    if (this.overlay.game.state.difficulty === GameDifficulty.Easy) {
+      /** Примечание по очкам */
+      this.overlay.renderElement({
+        posX: 0,
+        posY: this.currentPosY + 10,
+        width: this.sizing.full,
+        height: 1,
+        align: 'center',
+        color: Color.Grey,
+        text: 'За простой уровень сложности начисляется в два раза меньше очков',
+      });
+    }
   }
 }
