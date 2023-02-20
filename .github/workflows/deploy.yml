@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - task/120-deploy
+      - task/fix-ssr-auth
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

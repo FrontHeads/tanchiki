@@ -1,26 +1,14 @@
-import { type LoaderFunction, Route } from 'react-router-dom';
+import { type LoaderFunction } from 'react-router-dom';
 
-import { leaderboardAPI } from '../api/leaderboardAPI';
-import { Leaderboard } from '../pages/Leaderboard';
-import {
-  LEADERBOARD_DEFAULT_PAGE,
-  LEADERBOARD_RECORDS_DISPLAY_LIMIT,
-  LEADERBOARD_SORT_FIELD,
-  Paths,
-} from './constants';
+import { type AppDispatch } from '../store';
+import { leaderboardThunks } from '../store/features/leaderboard/leaderboardThunks';
 
 /**
  * Предзагрузка данных leaderboard
  */
-export const leaderboardLoader: LoaderFunction = () => {
-  const leaderboardData = leaderboardAPI.getLeaderboard({
-    ratingFieldName: LEADERBOARD_SORT_FIELD,
-    cursor: LEADERBOARD_DEFAULT_PAGE,
-    limit: LEADERBOARD_RECORDS_DISPLAY_LIMIT,
-  });
-  return { leaderboardData };
-};
-
-export const leaderboardRoute = () => {
-  return <Route path={Paths.Leaderboard} element={<Leaderboard />} loader={leaderboardLoader}></Route>;
+export const leaderboardLoader = (dispatch: AppDispatch): LoaderFunction => {
+  return () => {
+    const leaderboardData = dispatch(leaderboardThunks.getLeaderboard());
+    return { leaderboardData };
+  };
 };

@@ -72,9 +72,11 @@ export const authSlice = createSlice({
         state.isLoading = true;
         state.error = '';
       })
-      .addCase(authThunks.logout.fulfilled, state => {
+      .addCase(authThunks.logout.fulfilled, (state, { payload: flushUserProfile }) => {
         state.isLoading = false;
-        state.userProfile = null;
+        if (flushUserProfile) {
+          state.userProfile = null;
+        }
       })
       .addCase(authThunks.logout.rejected, state => {
         state.isLoading = false;

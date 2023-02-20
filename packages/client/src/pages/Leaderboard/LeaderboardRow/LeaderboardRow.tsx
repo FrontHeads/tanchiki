@@ -6,8 +6,7 @@ import { leaderboardSelectors, useAppSelector } from '../../../store';
 import { type LeaderboardRowProps } from './typings';
 
 export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { username, score, matches, rate }, place }) => {
-  const { sortDirection } = useAppSelector(leaderboardSelectors.all);
-
+  const sortDirection = useAppSelector(leaderboardSelectors.sortDirection);
   const leaderboardRowClassName = `leaderboard__row${sortDirection == 'desc' ? '_desc' : '_asc'}`;
 
   return (

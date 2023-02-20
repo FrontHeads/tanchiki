@@ -76,5 +76,6 @@
 
   &__home {
     position: static;
+    z-index: 1;
   }
 }

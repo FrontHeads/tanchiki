@@ -6,5 +6,6 @@ export * from './features/leaderboard/leaderboardThunks';
 export * from './features/oauth/oauthThunks';
 export * from './features/profile/profileSlice';
 export * from './features/profile/profileThunks';
+export * from './features/ui/uiSlice';
 export { useAppDispatch, useAppSelector } from './hooks';
-export { type AppDispatch, type RootState, store } from './store';
+export { type AppDispatch, type RootState, setupStore } from './store';
