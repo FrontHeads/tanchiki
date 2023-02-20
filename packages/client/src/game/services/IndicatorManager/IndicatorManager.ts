@@ -103,7 +103,8 @@ export class IndicatorManager {
 
   /** Удаляет с канваса отрендеренную сущность индикатора (иконки танков или количество оставшихся жизней). */
   removeEntity(indicatorName: string) {
-    const canvasLayerItem = [...this.game.view.layers[this.layerName].entities].findLast(item => {
+    // findLast() не работает на старых айфонах
+    const canvasLayerItem = [...this.game.view.layers[this.layerName].entities].reverse().find(item => {
       if (item.instance instanceof UIElement && item.instance.indicatorName === indicatorName) {
         return true;
       }

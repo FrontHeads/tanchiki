@@ -3,6 +3,7 @@ export { ControllerKeyboard } from './Controller/ControllerKeyboard';
 export { ControllerManager } from './Controller/ControllerManager';
 export { ControllerPointer } from './Controller/ControllerPointer';
 export { ControllerStick } from './Controller/ControllerStick';
+export { Debug } from './Debug/Debug';
 export { Game, GameEvents } from './Game/Game';
 export { IndicatorManager } from './IndicatorManager/IndicatorManager';
 export { Loop } from './Loop/Loop';

@@ -75,7 +75,7 @@ describe('game/services/Statistics', () => {
 
     game.statistics.startTimer();
 
-    await sleep(100);
+    await sleep(500);
 
     game.statistics.stopTimer();
 

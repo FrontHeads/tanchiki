@@ -2,6 +2,7 @@ import '@testing-library/jest-dom';
 
 import { screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { type LoaderFunction } from 'react-router-dom';
 
 import { forumAPI } from '../../../api/forumAPI';
 import { renderWithRouter } from '../../../utils/testingUtils';
@@ -12,7 +13,7 @@ describe('ForumTopic', () => {
     await act(async () => {
       renderWithRouter({
         component: <ForumTopic />,
-        routeLoader: async () => {
+        routeLoader: (): LoaderFunction => async () => {
           const { data: topicData } = await forumAPI.getTopicById(1);
           return topicData;
         },

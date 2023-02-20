@@ -153,8 +153,8 @@ export class View extends EventEmitter {
           this.eraseFromLayer(entity, layerId);
           this.removeEntityFromLayer(entity, layerId);
         },
-        [EntityEvent.Damaged]: (rect: Rect) => {
-          if (entity.type === 'brickWall') {
+        [EntityEvent.Destroyed]: (rect: Rect) => {
+          if (entity.type === 'brickWall' || entity.type === 'concreteWall') {
             this.eraseFromLayer(rect, layerId);
           }
         },

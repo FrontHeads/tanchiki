@@ -4,6 +4,7 @@
 - [Классы сервисов](#классы-сервисов)
   - [Game](#game)
   - [State](#state)
+  - [Debug](#debug)
   - [Resources](#resources)
   - [Loop](#loop)
   - [Zone](#zone)
@@ -58,6 +59,10 @@
 ### State
 
 Хранит состояние игры.
+
+### Debug
+
+Сервис для отладки. Выводит ошибки.
 
 ### Resources
 

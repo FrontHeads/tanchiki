@@ -1,13 +1,18 @@
 import { createStaticHandler } from '@remix-run/router';
+import axios from 'axios';
 import type * as express from 'express';
 import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
+import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
 import { createStaticRouter, StaticRouterProvider } from 'react-router-dom/server';
 
-import { routes } from './src/config/router';
-import { store } from './src/store';
+import { getRoutes } from './src/config/router';
+import { setupStore } from './src/store';
 
 export async function render(streamOptions: RenderToPipeableStreamOptions, request: express.Request) {
+  const store = setupStore();
+  const routes = getRoutes(store.dispatch);
+
   const { query } = createStaticHandler(routes);
   const remixRequest = createFetchRequest(request);
   const context = await query(remixRequest);
@@ -27,6 +32,7 @@ export async function render(streamOptions: RenderToPipeableStreamOptions, reque
    * Так же возвращаем store, который был сформирован на сервере, чтобы
    * на клиенте отрендерить preloadedState
    */
+
   return {
     stream: renderToPipeableStream(
       <Provider store={store}>
@@ -79,3 +85,6 @@ export function createFetchRequest(req: express.Request): Request {
 
   return new Request(url.href, init);
 }
+
+export { axios };
+export { Helmet };

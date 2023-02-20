@@ -11,29 +11,19 @@ import { Footer } from '../../components/Footer';
 import { Loader } from '../../components/Loader';
 import { Logo } from '../../components/Logo';
 import { Paths } from '../../config/constants';
-import { appSelectors, authActions, useAppDispatch, useAppSelector } from '../../store';
+import { appSelectors, useAppSelector } from '../../store';
 import { type ResponseType } from '../../utils/HTTP';
 
 export const Root: FC = () => {
   const isAppLoading = useAppSelector(appSelectors.isAppLoading);
   const location = useLocation();
   const printHeaderAndFooter = location?.pathname !== Paths.Game;
-  const dispatch = useAppDispatch();
-
   const loaderData = useLoaderData() as { user: Promise<ResponseType<UserProfile>> };
-
-  if (typeof loaderData?.user?.then === 'function') {
-    loaderData.user.then(response => {
-      if (response?.data) {
-        dispatch(authActions.setUserProfile(response.data));
-      }
-    });
-  }
 
   return (
     <ErrorBoundary>
       <Suspense fallback={<Loader data-testid={'fallback-loader'} />}>
-        <Await resolve={(loaderData && loaderData.user) || Promise.resolve()}>
+        <Await resolve={loaderData.user}>
           <main className="layout">
             <header>
               <BurgerMenu />

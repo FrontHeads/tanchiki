@@ -7,6 +7,7 @@
     "build:server": "lerna run build --scope=server",
     "build": "yarn build:client && yarn build:server",
     "dev": "lerna run dev --parallel",
+    "dev:network": "lerna run dev -- --host 0.0.0.0 --port 5000",
     "test": "lerna run test",
     "lint": "lerna run lint",
     "format": "lerna run format",

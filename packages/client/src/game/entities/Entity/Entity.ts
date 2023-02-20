@@ -18,6 +18,8 @@ import {
   EntityEvent,
 } from './typings';
 
+export { EntityEvent };
+
 export abstract class Entity extends EventEmitter<EntityEvent> {
   /** Расположение объекта по оси X в игровых клетках. */
   posX = 0;

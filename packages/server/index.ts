@@ -1,13 +1,12 @@
 import dotenv from 'dotenv';
 import { type ViteDevServer, createServer as createViteServer } from 'vite';
 
-import { asyncLocalStorage, corsMiddleware, requestDataSaverMiddleware } from './middlewares';
+import { corsMiddleware, requestDataSaverMiddleware } from './middlewares';
 import { apiRoute } from './routes/Api';
 import { initMongoDBConnection, initPostgreDBConnection } from './utils/databaseUtils';
 
 dotenv.config();
 
-import axios from 'axios';
 import express from 'express';
 import { expressCspHeader } from 'express-csp-header';
 import * as path from 'path';
@@ -18,19 +17,6 @@ import { isDev } from './utils/isDev';
 
 initPostgreDBConnection();
 initMongoDBConnection();
-
-/**
- * Задаем глобальный interceptor для axios, который достает из TLS (https://pjatk.in/tls-in-node.html)
- * куки, которые записали в requestDataSaverMiddleware, что дает возможность авторизоваться
- * серверу при запросах к API, но не воздействует на запросы с клиента
- **/
-
-axios.interceptors.request.use(config => {
-  const contextStore = asyncLocalStorage.getStore() as Map<string, unknown>;
-  const userCookies = contextStore?.get('userCookies');
-  config.headers['Cookie'] = userCookies;
-  return config;
-});
 
 async function startServer() {
   const app = express();
@@ -44,7 +30,7 @@ async function startServer() {
   const srcPath = path.dirname(require.resolve('client'));
 
   app
-    // Инициализация middleware
+    /** Инициализация middleware */
     .use([corsMiddleware(), requestDataSaverMiddleware])
 
     /** Запросы к API на собственном сервере и на сервере Яндекса (проксируется через наш сервер) */
