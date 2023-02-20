@@ -1,5 +1,7 @@
-import { store } from '../../store';
+import { setupStore } from '../../store';
 import { appActions } from './appSlice';
+
+const store = setupStore();
 
 describe('Redux app state', () => {
   test('should contain correct initial values', () => {

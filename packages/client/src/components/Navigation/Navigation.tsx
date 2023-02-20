@@ -1,6 +1,6 @@
 import './Navigation.css';
 
-import { type FC } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -16,26 +16,46 @@ export const Navigation: FC<NavigationProps> = ({ exclude }) => {
   const navigate = useNavigate();
   const isAuthenticated = useAppSelector(authSelectors.isAuthenticated);
 
-  const onClick = (linkName: string) => {
+  const onClick = useCallback((linkName: string, e: React.MouseEvent) => {
+    dispatch(uiActions.closeBurgerMenu());
+
     if (linkName === 'logout') {
-      dispatch(authThunks.logout())
+      /**
+       * 1. Предотвращаем стандартный редирект на главную
+       * 2. Затем в logout указываем параметр false, который сообщает в thunk,
+       *    что не нужно обнулять userProfile в store. Если этого не сделать, то
+       *    обнуление userProfile произойдет до выхода из текущего роута (до
+       *    редиректа на главную) и если этот роут protected, то помимо сообщения
+       *    "будем скучать" будет еще сообщение "вам необходимо авторизоваться" и
+       *    лишний редирект на главную. Каждый редирект на главную провоцирует
+       *    запуск запроса из loader, что влечет за собой нестабильную работу
+       *    приложения
+       * 3. При успешном логауте делаем редирект на главную и затем уже обнуляем
+       *    профиль пользователя
+       */
+      e.preventDefault();
+
+      dispatch(authThunks.logout(false))
         .unwrap()
         .then(() => {
           toast.success('Будем скучать!');
-          return navigate(Paths.Home);
+          navigate(Paths.Home);
+          return dispatch(authActions.setUserProfile(null));
         })
         .catch(e => {
           toast.error(e.message);
           dispatch(authActions.setError(''));
         });
     }
+  }, []);
 
-    dispatch(uiActions.closeBurgerMenu());
-  };
-
-  const menuLinksList = getFilteredNavigationList(isAuthenticated, exclude).map(link => (
-    <MenuLink onClick={() => onClick(link.name)} key={link.name} {...link} />
-  ));
+  const menuLinksList = useMemo(
+    () =>
+      getFilteredNavigationList(isAuthenticated, exclude).map(link => (
+        <MenuLink onClick={e => onClick(link.name, e)} key={link.name} {...link} />
+      )),
+    [isAuthenticated]
+  );
 
   return (
     <nav className="menu-nav">

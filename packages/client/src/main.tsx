@@ -5,8 +5,8 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { routes } from './config/router';
-import { store } from './store';
+import { getRoutes } from './config/router';
+import { setupStore } from './store';
 import { registerServiceWorker, unregisterServiceWorker } from './utils/serviceWorkerUtils';
 
 /**
@@ -19,6 +19,8 @@ if (import.meta.env.PROD) {
   unregisterServiceWorker();
 }
 
+const store = setupStore();
+const routes = getRoutes(store.dispatch);
 const router = createBrowserRouter(routes);
 
 const rootElement = document.getElementById('root') as HTMLElement;

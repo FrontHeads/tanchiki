@@ -1,5 +1,7 @@
-import { store } from '../../store';
+import { setupStore } from '../../store';
 import { profileActions } from './profileSlice';
+
+const store = setupStore();
 
 describe('Redux profile state', () => {
   test('should contain correct initial values', () => {

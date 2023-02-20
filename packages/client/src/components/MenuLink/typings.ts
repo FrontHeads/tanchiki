@@ -11,7 +11,7 @@ type MenuLinkProps = {
   title: string;
   to: string;
   accessLevel?: MenuLinkAccessLevel;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
 };
 
 export type { MenuLinkProps };

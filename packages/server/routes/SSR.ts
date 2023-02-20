@@ -1,14 +1,33 @@
+import type { Axios } from 'axios';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { renderToPipeableStream, RenderToPipeableStreamOptions } from 'react-dom/server';
-import { Helmet } from 'react-helmet';
+import type { Helmet } from 'react-helmet';
 import type { ViteDevServer } from 'vite';
 
+import { asyncLocalStorage } from '../middlewares';
 import { HtmlWritable } from '../utils/HtmlWritable';
 import { isDev } from '../utils/isDev';
 
 type SSRRouteParams = { vite: ViteDevServer | undefined; srcPath: string; distPath: string };
+
+type Client = {
+  Helmet: typeof Helmet;
+  axios: Axios;
+  render: (
+    streamOptions: RenderToPipeableStreamOptions,
+    request: Request
+  ) => Promise<{
+    /**
+     * Не подключаю сюда полноценную типизацию, чтобы не подключать пакет
+     * Redux toolkit в пакет server ради типизации одного объекта. Нам нужен
+     * только один метод getState
+     */
+    store: { getState: () => Record<string, unknown> };
+    stream: ReturnType<typeof renderToPipeableStream>;
+  }>;
+};
 
 export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHandler => {
   const ssrClientPath = require.resolve('client/dist-ssr/ssr.cjs');
@@ -18,19 +37,7 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
 
     try {
       let template: string;
-
-      let render: (
-        streamOptions: RenderToPipeableStreamOptions,
-        request: Request
-      ) => Promise<{
-        /**
-         * Не подключаю сюда полноценную типизацию, чтобы не подключать пакет
-         * Redux toolkit в пакет server ради типизации одного объекта. Нам нужен
-         * только один метод getState
-         */
-        store: { getState: () => Record<string, unknown> };
-        stream: ReturnType<typeof renderToPipeableStream>;
-      }>;
+      let client: Client;
       /**
        * Считываем index.html и render функцию из клиентского пакета
        */
@@ -41,12 +48,26 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
          **/
         template = fs.readFileSync(path.resolve(srcPath, 'index.html'), 'utf-8');
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx'))).render;
+        client = (await vite.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx'))) as Client;
       } else {
         /** Для production режима берем файлы и модули из сборки */
         template = fs.readFileSync(path.resolve(distPath, 'index.html'), 'utf-8');
-        render = (await import(ssrClientPath)).render;
+        client = (await import(ssrClientPath)) as Client;
       }
+
+      /**
+       * Задаем глобальный interceptor для axios из пакета client, который достает из TLS
+       * (https://pjatk.in/tls-in-node.html) куки, которые записали в requestDataSaverMiddleware,
+       * что дает возможность авторизоваться серверу при запросах к API, но не воздействует
+       * на запросы с клиента
+       **/
+      client.axios.interceptors.request.clear();
+      client.axios.interceptors.request.use(config => {
+        const contextStore = asyncLocalStorage.getStore() as Map<string, unknown>;
+        const userCookies = contextStore?.get('userCookies');
+        config.headers['Cookie'] = userCookies;
+        return config;
+      });
 
       /**
        * В ssr.tsx используется renderToPipeableStream вместо renderToString.
@@ -55,7 +76,7 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
        */
       let didError = false;
 
-      const { stream, store } = await render(
+      const { stream, store } = await client.render(
         {
           /**
            * В случае завершения работы stream указываем статус ответа в зависимости
@@ -86,7 +107,7 @@ export const SSRRoute = ({ vite, srcPath, distPath }: SSRRouteParams): RequestHa
        */
       const writable = new HtmlWritable();
       writable.on('finish', () => {
-        const helmet = Helmet.renderStatic();
+        const helmet = client.Helmet.renderStatic();
         const appHtml = writable.getHtml();
 
         const responseHtml = template
