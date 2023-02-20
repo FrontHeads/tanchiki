@@ -102,7 +102,7 @@ export class Overlay extends EventEmitter {
       nextItemIndex = menuItems.length - 1;
     }
 
-    /** На тачскрине не выводится пункт меню "2 игрока", поэтому перепрыгиваем его. */
+    /** Перепрыгиваем через пункты меню которые не выводятся юзеру при определенных условиях. */
     if (
       (isTouchscreen() && menuItems[nextItemIndex] === MainMenuItem.Multiplayer) ||
       (!isTouchscreen() && menuItems[nextItemIndex] === MainMenuItem.JoystickType)

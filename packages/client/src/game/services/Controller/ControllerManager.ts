@@ -100,7 +100,7 @@ export class ControllerManager extends EventEmitter<ControllerEvent> implements 
     localStorage.setItem(joystickTypeInLS, state.joystickType);
     this.emit(ControllerEvent.ToggleJoystickType);
 
-    // Принудительно убираем все действия с отключенного контроллера.
+    // Принудительно убираем все действия с отключенного джойстика.
     this.stopControlForce();
   }
 }
