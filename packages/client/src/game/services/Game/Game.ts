@@ -192,7 +192,6 @@ export class Game extends EventEmitter {
 
         if (direction === Direction.Up || direction === Direction.Down) {
           this.overlay.changeMainMenuItem(direction);
-          this.overlay.show(this.state.screen, this.state.mainMenuItem);
         }
 
         if (direction === Direction.Left || direction === Direction.Right) {
@@ -202,13 +201,12 @@ export class Game extends EventEmitter {
           if (this.state.mainMenuItem === MainMenuItem.Difficulty) {
             this.changeGameDifficulty();
           }
-          if (this.state.mainMenuItem === MainMenuItem.JoystickType) {
-            if (this.controllerAll.changeJoystickType) {
-              this.controllerAll.changeJoystickType();
-            }
+          if (this.state.mainMenuItem === MainMenuItem.JoystickType && this.controllerAll.changeJoystickType) {
+            this.controllerAll.changeJoystickType();
           }
-          this.overlay.show(this.state.screen, this.state.mainMenuItem);
         }
+
+        this.overlay.show(this.state.screen, this.state.mainMenuItem);
       })
       // Обрабатываем нажатие на указанном пункте меню
       .on(ControllerEvent.Shoot, async () => {
@@ -221,6 +219,17 @@ export class Game extends EventEmitter {
           this.overlay.show(this.state.screen, this.state.mainMenuItem);
           return;
         }
+        if (this.state.mainMenuItem === MainMenuItem.Difficulty) {
+          this.changeGameDifficulty();
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+          return;
+        }
+        if (this.state.mainMenuItem === MainMenuItem.JoystickType && this.controllerAll.changeJoystickType) {
+          this.controllerAll.changeJoystickType();
+          this.overlay.show(this.state.screen, this.state.mainMenuItem);
+          return;
+        }
+
         // Открываем экран выбора уровня
         await this.initLevelSelector();
 

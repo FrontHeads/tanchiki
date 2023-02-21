@@ -8,13 +8,13 @@ import { type Game } from '../../../../game/services';
 import { StickDirection } from '../../../../game/services/Controller/KeyBindings';
 import { Color } from '../../../../game/services/View/colors';
 import { GameContext } from '../../Game';
-import { type IJoystickUpdateEvent, isStickDirection } from './typings';
+import { type StickUpdateEvent, isStickDirection } from './typings';
 
 export const Stick: FC = () => {
   const { game } = useContext(GameContext);
   let currentDirection: StickDirection | null = null;
 
-  const handleMove = (event: IJoystickUpdateEvent, game: Game) => {
+  const handleMove = (event: StickUpdateEvent, game: Game) => {
     const isEventDirectionCorrect = event.direction && event.direction !== currentDirection;
 
     if (!isEventDirectionCorrect) {
@@ -48,7 +48,7 @@ export const Stick: FC = () => {
         size={160}
         baseColor={Color.Black}
         stickColor={Color.White}
-        minDistance={45}
+        minDistance={40}
         throttle={40}
         move={event => handleMove(event, game)}
         stop={() => handleStop(game)}

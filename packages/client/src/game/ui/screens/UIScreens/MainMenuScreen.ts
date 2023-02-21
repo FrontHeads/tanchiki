@@ -9,25 +9,14 @@ import { MainMenuItem } from './data';
 export class MainMenuScreen extends Screen<MainMenuItem> {
   tankElemInterval: string | null = null;
   mainMenuStateXPos = isTouchscreen() ? 19 : 23;
-  mainMenuStateYPosDesktop = {
+
+  mainMenuStateYPos = {
     [MainMenuItem.Singleplayer]: 26,
-    [MainMenuItem.Multiplayer]: 31,
+    [MainMenuItem.Multiplayer]: isTouchscreen() ? 0 : 31,
+    [MainMenuItem.JoystickType]: isTouchscreen() ? 31 : 0,
     [MainMenuItem.Difficulty]: 36,
     [MainMenuItem.Style]: 41,
-    // Не выводится в десктопной версии
-    [MainMenuItem.JoystickType]: 0,
   };
-
-  mainMenuStateYPosMobile = {
-    [MainMenuItem.Singleplayer]: 26,
-    [MainMenuItem.Difficulty]: 31,
-    [MainMenuItem.Style]: 36,
-    [MainMenuItem.JoystickType]: 41,
-    // Не выводится в мобильной версии
-    [MainMenuItem.Multiplayer]: 0,
-  };
-
-  mainMenuStateYPos = isTouchscreen() ? this.mainMenuStateYPosMobile : this.mainMenuStateYPosDesktop;
 
   show(state: MainMenuItem) {
     const verticalCenteringCorrection = -1;

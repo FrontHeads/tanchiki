@@ -1,6 +1,6 @@
 import { StickDirection } from '../../../../game/services/Controller/KeyBindings';
 
-export type IJoystickProps = {
+export type StickProps = {
   size?: number;
   stickSize?: number;
   baseColor?: string;
@@ -11,26 +11,26 @@ export type IJoystickProps = {
   stickImage?: string;
   baseImage?: string;
   followCursor?: boolean;
-  move?: (event: IJoystickUpdateEvent) => void;
-  stop?: (event: IJoystickUpdateEvent) => void;
-  start?: (event: IJoystickUpdateEvent) => void;
-  baseShape?: JoystickShape;
-  stickShape?: JoystickShape;
-  controlPlaneShape?: JoystickShape;
+  move?: (event: StickUpdateEvent) => void;
+  stop?: (event: StickUpdateEvent) => void;
+  start?: (event: StickUpdateEvent) => void;
+  baseShape?: StickShape;
+  stickShape?: StickShape;
+  controlPlaneShape?: StickShape;
   minDistance?: number;
 };
 
-export type JoystickDirection = 'FORWARD' | 'RIGHT' | 'LEFT' | 'BACKWARD';
+export type StickDirectionStr = 'FORWARD' | 'RIGHT' | 'LEFT' | 'BACKWARD';
 
-export type IJoystickUpdateEvent = {
+export type StickUpdateEvent = {
   type: 'move' | 'stop' | 'start';
   x: number | null;
   y: number | null;
-  direction: JoystickDirection | StickDirection | null;
+  direction: StickDirectionStr | StickDirection | null;
   distance: number | null;
 };
 
-export enum JoystickShape {
+export enum StickShape {
   Circle = 'circle',
   Square = 'square',
 }
