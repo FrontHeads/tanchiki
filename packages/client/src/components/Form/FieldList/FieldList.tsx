@@ -1,8 +1,9 @@
-import cn from 'classnames';
-import { type PropsWithChildren, useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import React, { type PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 
+import { type FormInputAndHeading } from '../../../app.typings';
+import { useValidation } from '../../../utils/validation';
 import { type ValidationErrorList } from '../../../utils/validation/typings';
+import { useFormContext } from '../FormContext';
 import { Field } from './Field';
 import { type FieldListProps } from './typings';
 
@@ -12,32 +13,47 @@ export const FieldList = <T extends Record<string, string>>({
   formData,
   setFormData,
   onFormSubmitCallback,
-  setIsFormSubmitted,
-  isFormSubmitted,
-  validation,
+  hidingFields,
   disabled,
 }: PropsWithChildren<FieldListProps<T>>) => {
-  const [formHasErrors, setFormHasErrors] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
-  const formClassNames = cn('form', {
-    'form_has-errors': formHasErrors,
-  });
+  const validation = useValidation(fieldList);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const scrollToFirstInvalidField = useCallback(
+    (errors: ValidationErrorList) => {
+      if (listRef.current) {
+        // Ищем первое поле в котором есть не валидный input
+        for (const field of listRef.current.children) {
+          const inputId = field.id.replace('field-', '');
+          if (inputId in errors && errors[inputId].length) {
+            field.scrollIntoView();
+            break;
+          }
+        }
+      }
+    },
+    [listRef]
+  );
+
+  const { isFormValidating, setIsFormValidating } = useFormContext();
+
+  const isHidden = (field: FormInputAndHeading) => hidingFields && field.id in hidingFields && hidingFields[field.id];
 
   useEffect(() => {
-    if (isFormSubmitted) {
+    if (isFormValidating) {
       const validationResponse = validation(formData);
-
-      setFormHasErrors(validationResponse.hasErrors);
 
       if (validationResponse.hasErrors) {
         setValidationErrors(validationResponse.errors);
-        toast.error('Поля заполнены некорректно');
+
+        scrollToFirstInvalidField(validationResponse.errors);
       } else {
         onFormSubmitCallback();
       }
-      setIsFormSubmitted(false);
+      setIsFormValidating(false);
     }
-  }, [isFormSubmitted]);
+  }, [isFormValidating]);
 
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -54,19 +70,22 @@ export const FieldList = <T extends Record<string, string>>({
     []
   );
 
-  const inputBlurHandler = useCallback((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const inputBlurHandler = useCallback((event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
 
     const validationResponse = validation({ [name]: value });
 
-    if (!isFormSubmitted) {
+    if (!isFormValidating) {
       setValidationErrors(oldState => ({ ...oldState, ...validationResponse.errors }));
     }
   }, []);
 
   return (
-    <div className={formClassNames}>
+    <div className="form__fields" ref={listRef}>
       {fieldList.map(field => {
+        if (isHidden(field)) {
+          return null;
+        }
         if ('heading' in field) {
           return (
             <h3 key={field.heading} data-testid="form-input-header" className="form__input-header">
