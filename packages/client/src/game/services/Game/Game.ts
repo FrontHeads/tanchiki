@@ -203,7 +203,9 @@ export class Game extends EventEmitter {
             this.changeGameDifficulty();
           }
           if (this.state.mainMenuItem === MainMenuItem.JoystickType) {
-            this.controllerAll.changeJoystickType();
+            if (this.controllerAll.changeJoystickType) {
+              this.controllerAll.changeJoystickType();
+            }
           }
           this.overlay.show(this.state.screen, this.state.mainMenuItem);
         }

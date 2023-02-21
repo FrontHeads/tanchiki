@@ -1,5 +1,5 @@
-import { type EntityDynamicSettings } from '../EntityDynamic/typings';
 import { type GameDifficulty } from '../../services';
+import { type EntityDynamicSettings } from '../EntityDynamic/typings';
 
 export type PlayerVariant = 'PLAYER1' | 'PLAYER2';
 
