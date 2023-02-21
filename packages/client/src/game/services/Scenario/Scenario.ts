@@ -12,7 +12,7 @@ import {
 } from '../../entities';
 import { type Direction, type EntitySettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
-import { type Game, GameDifficulty, IndicatorManager, MapManager } from '../';
+import { type Game, IndicatorManager, MapManager } from '../';
 import { ControllerEvent } from '../Controller/data';
 import { Cell, spawnPlaces } from '../MapManager/data';
 import { Player, playerInitialSettings } from './data';
@@ -120,11 +120,6 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       this.maxTotalEnemies = this.game.state.multiplayerMaxTotalEnemies;
       this.maxActiveEnemies = this.game.state.multiplayerMaxActiveEnemies;
       this.enemiesSpawnDelay = this.game.state.multiplayerEnemiesSpawnDelay;
-    }
-
-    if (this.game.state.difficulty === GameDifficulty.Easy) {
-      // Увеличиваем время между появлением врагов на простом уровне сложности
-      this.enemiesSpawnDelay = this.enemiesSpawnDelay * 1.5;
     }
 
     this.createTankEnemy();
