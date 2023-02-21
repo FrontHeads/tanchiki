@@ -1,5 +1,6 @@
 import { ScreenType } from '../../ui/screens/data';
 import { MainMenuItem } from '../../ui/screens/UIScreens/data';
+import { GameDifficulty } from '../';
 import { JoystickType, joystickTypeInLS } from '../Controller/data';
 import { type GameMode } from '../Game/typings';
 import { levels } from '../MapManager/levels';
@@ -19,7 +20,8 @@ export class State {
   maxLevels = levels.length;
   /** Режим игры. */
   mode: GameMode = MainMenuItem.Singleplayer;
-
+  /** Сложность игры. */
+  difficulty = GameDifficulty.Hard;
   /** Имя темы оформления игры. */
   themeName = (localStorage.getItem(gameThemeInLS) || GameThemeName.Classic) as GameThemeName;
   /** Игрок может выбрать тип джойстика в мобильной версии. */

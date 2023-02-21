@@ -1,3 +1,4 @@
+import { GameDifficulty } from '../../../services';
 import { Color } from '../../../services/View/colors';
 import { gameTheme } from '../../../services/View/data';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
@@ -7,12 +8,23 @@ import { MainMenuItem } from './data';
 
 export class MainMenuScreen extends Screen<MainMenuItem> {
   tankElemInterval: string | null = null;
-  mainMenuStateYPos = {
-    [MainMenuItem.Singleplayer]: isTouchscreen() ? 29 : 30,
-    [MainMenuItem.Multiplayer]: 35,
-    [MainMenuItem.Style]: isTouchscreen() ? 35 : 40,
-    [MainMenuItem.JoystickType]: isTouchscreen() ? 41 : 46,
+  mainMenuStateXPos = 22;
+  mainMenuStateYPosDesktop = {
+    [MainMenuItem.Singleplayer]: 28,
+    [MainMenuItem.Multiplayer]: 34,
+    [MainMenuItem.Difficulty]: 40,
+    [MainMenuItem.Style]: 46,
   };
+
+  mainMenuStateYPosMobile = {
+    [MainMenuItem.Singleplayer]: 28,
+    [MainMenuItem.Difficulty]: 34,
+    [MainMenuItem.Style]: 40,
+    [MainMenuItem.JoystickType]: 46,
+  };
+
+  mainMenuStateYPos = isTouchscreen() ? this.mainMenuStateYPosMobile : this.mainMenuStateYPosDesktop;
+
   menuElemPosX = isTouchscreen() ? 19 : 23;
 
   show(state: MainMenuItem) {
@@ -21,7 +33,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     this.render();
 
     const tankElem = this.overlay.renderElement({
-      posX: this.menuElemPosX - 6,
+      posX: 17,
       posY: this.mainMenuStateYPos[state] + verticalCenteringCorrection,
       width: 4,
       height: 4,
@@ -67,7 +79,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     });
 
     this.overlay.renderElement({
-      posX: this.menuElemPosX,
+      posX: 23,
       posY: this.mainMenuStateYPos[MainMenuItem.Singleplayer],
       width: 24,
       height: 2.2,
@@ -77,7 +89,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     if (!isTouchscreen()) {
       this.overlay.renderElement({
-        posX: this.menuElemPosX,
+        posX: 23,
         posY: this.mainMenuStateYPos[MainMenuItem.Multiplayer],
         width: 20,
         height: 2.2,
@@ -87,7 +99,16 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     }
 
     this.overlay.renderElement({
-      posX: this.menuElemPosX,
+      posX: this.mainMenuStateXPos,
+      posY: this.mainMenuStateYPos[MainMenuItem.Difficulty],
+      width: 24,
+      height: 2.2,
+      color: Color.White,
+      text: 'ВРАГИ: ' + (state.difficulty === GameDifficulty.Easy ? 'ПРОСТЫЕ' : 'СЛОЖНЫЕ'),
+    });
+
+    this.overlay.renderElement({
+      posX: 23,
       posY: this.mainMenuStateYPos[MainMenuItem.Style],
       width: 24,
       height: 2.2,

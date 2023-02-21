@@ -6,6 +6,7 @@ import { Direction, EntityEvent } from '../Entity/typings';
 import { Speed } from '../EntityDynamic/data';
 import { Tank } from './Tank';
 import { type EnemyVariant, type TankEnemySettings } from './typings';
+import { GameDifficulty } from '../../services';
 
 export class TankEnemy extends Tank {
   lastDirection = Direction.Down;
@@ -13,6 +14,22 @@ export class TankEnemy extends Tank {
   variant: EnemyVariant = 'BASIC';
   /** Переливающийся танк, за уничтожение которого дают бонус. */
   flashing = false;
+  /** Сложность ИИ. */
+  difficulty = GameDifficulty.Hard;
+  /** Быстрота реакции ИИ (минимум мс). */
+  minReactionTime = 500;
+  /** Быстрота реакции ИИ (максимум мс). */
+  maxReactionTime = 1000;
+  /** Вероятность решения ИИ повернуть. */
+  turnChance = 1;
+  /** Вероятность решения ИИ двигаться дальше. */
+  keepMovingChance = 5;
+  /** Вероятность решения ИИ двигаться вверх. */
+  moveUpChance = 1;
+  /** Вероятность решения ИИ двигаться вниз. */
+  moveDownChance = 6;
+  /** Вероятность решения ИИ двигаться вправо или влево. */
+  moveSidewaysChance = 3;
   /** Альтернативный спрайт (используется для переливающихся танков). */
   secondarySpriteCoordinates: SpriteCoordinatesNoAnimations | SpriteCoordinatesWithAnimations = null;
 
@@ -21,6 +38,14 @@ export class TankEnemy extends Tank {
     this.color = Color.Aqua;
     this.role = 'enemy';
     Object.assign(this, props);
+
+    if (this.difficulty === GameDifficulty.Easy) {
+      this.minReactionTime = 1000;
+      this.maxReactionTime = 2000;
+      this.moveUpChance = 2;
+      this.moveDownChance = 3;
+      this.keepMovingChance = 3;
+    }
 
     switch (this.variant) {
       case 'FAST':
@@ -104,7 +129,7 @@ export class TankEnemy extends Tank {
         this.move(this.getMoveDirection());
         this.autoMove();
       }
-    }, rand(500, 1000));
+    }, rand(this.minReactionTime, this.maxReactionTime));
   }
 
   autoShoot() {
@@ -113,22 +138,22 @@ export class TankEnemy extends Tank {
         this.shoot();
         this.autoShoot();
       }
-    }, rand(500, 1000));
+    }, rand(this.minReactionTime, this.maxReactionTime));
   }
 
   getRandomDirection() {
     const directions = [
-      ...new Array(1).fill(Direction.Up),
-      ...new Array(6).fill(Direction.Down),
-      ...new Array(3).fill(Direction.Left),
-      ...new Array(3).fill(Direction.Right),
+      ...new Array(this.moveUpChance).fill(Direction.Up),
+      ...new Array(this.moveDownChance).fill(Direction.Down),
+      ...new Array(this.moveSidewaysChance).fill(Direction.Left),
+      ...new Array(this.moveSidewaysChance).fill(Direction.Right),
     ];
 
     return directions[Math.floor(Math.random() * directions.length)];
   }
 
   getRandomAction() {
-    const actions = [...new Array(1).fill('turn'), ...new Array(5).fill('move')];
+    const actions = [...new Array(this.turnChance).fill('turn'), ...new Array(this.keepMovingChance).fill('move')];
 
     return actions[Math.floor(Math.random() * actions.length)];
   }

@@ -1,8 +1,7 @@
 import { type Entity, Explosion, Powerup, Projectile, Score, TankEnemy, TankPlayer } from '../../entities';
 import { EntityEvent } from '../../entities/Entity/typings';
 import { type EnemyVariant, type PlayerVariant } from '../../entities/Tank/typings';
-import { type Game } from '../';
-import { type GameMode } from '../Game/typings';
+import { type Game, type GameMode, GameDifficulty } from '../';
 import { type EnemiesKilledState } from './typings';
 
 export class Statistics {
@@ -43,6 +42,14 @@ export class Statistics {
     this.mapElapsedTime = 0;
   }
 
+  /** Пересчёт очков в зависимости от сложности игры. */
+  recountScoreBasedOnDifficulty(score: number) {
+    if (this.game.state.difficulty === GameDifficulty.Easy) {
+      return score / 2;
+    }
+    return score;
+  }
+
   /** Отправляет данные для обновления лидерборда. */
   sendRecord() {
     // Если не синглплеер, то лидерборд не обновляем
@@ -51,7 +58,7 @@ export class Statistics {
     }
 
     this.game.updateLeaderboard({
-      score: this.sessionScore[0],
+      score: this.recountScoreBasedOnDifficulty(this.sessionScore[0]),
       matches: this.sessionCompletedMaps,
       time: this.sessionElapsedTime,
     });
@@ -67,7 +74,7 @@ export class Statistics {
     Object.entries(mapEnemiesKilledCount).forEach(entry => {
       const enemyVariant = entry[0] as EnemyVariant;
       const [enemyCountForPlayerOne, enemyCountForPlayerTwo] = entry[1];
-      const scoreMultiplier = this.getScoreByEnemyVariant(enemyVariant);
+      const scoreMultiplier = this.recountScoreBasedOnDifficulty(this.getScoreByEnemyVariant(enemyVariant));
 
       mapEnemiesKilledScore[enemyVariant] = [
         enemyCountForPlayerOne * scoreMultiplier,
@@ -78,7 +85,18 @@ export class Statistics {
       mapEnemiesKilledTotal[1] += enemyCountForPlayerTwo;
     });
 
-    return { mode, sessionScore, mapEnemiesKilledScore, mapEnemiesKilledCount, mapEnemiesKilledTotal };
+    const actualSessionScore = [
+      this.recountScoreBasedOnDifficulty(sessionScore[0]),
+      this.recountScoreBasedOnDifficulty(sessionScore[1]),
+    ];
+
+    return {
+      mode,
+      sessionScore: actualSessionScore,
+      mapEnemiesKilledScore,
+      mapEnemiesKilledCount,
+      mapEnemiesKilledTotal,
+    };
   }
 
   /** Возвращает множитель с очками за конкретный тип вражеского танка. */

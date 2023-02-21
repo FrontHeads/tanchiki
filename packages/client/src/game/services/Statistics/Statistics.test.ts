@@ -1,11 +1,13 @@
 import { Explosion, Projectile, TankEnemy, TankPlayer } from '../../entities';
 import { sleep } from '../../utils';
-import { Game } from '../';
-import { GameEvents } from '../Game/data';
-
-let game: Game;
+import { Game, GameEvents } from '../';
 
 describe('game/services/Statistics', () => {
+  let game: Game;
+
+  /** Jest не умеет обрабатывать alert. Его приходится мокать. */
+  global.alert = jest.fn();
+
   it('should start session', () => {
     game = Game.create();
     game.init(document.body);
