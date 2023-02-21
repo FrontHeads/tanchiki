@@ -8,24 +8,26 @@ import { MainMenuItem } from './data';
 
 export class MainMenuScreen extends Screen<MainMenuItem> {
   tankElemInterval: string | null = null;
-  mainMenuStateXPos = 22;
+  mainMenuStateXPos = isTouchscreen() ? 19 : 23;
   mainMenuStateYPosDesktop = {
-    [MainMenuItem.Singleplayer]: 28,
-    [MainMenuItem.Multiplayer]: 34,
-    [MainMenuItem.Difficulty]: 40,
-    [MainMenuItem.Style]: 46,
+    [MainMenuItem.Singleplayer]: 26,
+    [MainMenuItem.Multiplayer]: 31,
+    [MainMenuItem.Difficulty]: 36,
+    [MainMenuItem.Style]: 41,
+    // Не выводится в десктопной версии
+    [MainMenuItem.JoystickType]: 0,
   };
 
   mainMenuStateYPosMobile = {
-    [MainMenuItem.Singleplayer]: 28,
-    [MainMenuItem.Difficulty]: 34,
-    [MainMenuItem.Style]: 40,
-    [MainMenuItem.JoystickType]: 46,
+    [MainMenuItem.Singleplayer]: 26,
+    [MainMenuItem.Difficulty]: 31,
+    [MainMenuItem.Style]: 36,
+    [MainMenuItem.JoystickType]: 41,
+    // Не выводится в мобильной версии
+    [MainMenuItem.Multiplayer]: 0,
   };
 
   mainMenuStateYPos = isTouchscreen() ? this.mainMenuStateYPosMobile : this.mainMenuStateYPosDesktop;
-
-  menuElemPosX = isTouchscreen() ? 19 : 23;
 
   show(state: MainMenuItem) {
     const verticalCenteringCorrection = -1;
@@ -33,7 +35,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     this.render();
 
     const tankElem = this.overlay.renderElement({
-      posX: 17,
+      posX: this.mainMenuStateXPos - 6,
       posY: this.mainMenuStateYPos[state] + verticalCenteringCorrection,
       width: 4,
       height: 4,
@@ -60,7 +62,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     this.overlay.renderElement({
       posX: 0,
-      posY: 5,
+      posY: 4,
       width: view.width,
       height: 7,
       backImg: this.overlay.game.resources.getImage(BrickBgName),
@@ -70,7 +72,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     this.overlay.renderElement({
       posX: 0,
-      posY: 14,
+      posY: 13,
       width: view.width,
       height: 7,
       backImg: this.overlay.game.resources.getImage(BrickBgName),
@@ -79,7 +81,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     });
 
     this.overlay.renderElement({
-      posX: 23,
+      posX: this.mainMenuStateXPos,
       posY: this.mainMenuStateYPos[MainMenuItem.Singleplayer],
       width: 24,
       height: 2.2,
@@ -89,7 +91,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     if (!isTouchscreen()) {
       this.overlay.renderElement({
-        posX: 23,
+        posX: this.mainMenuStateXPos,
         posY: this.mainMenuStateYPos[MainMenuItem.Multiplayer],
         width: 20,
         height: 2.2,
@@ -108,7 +110,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     });
 
     this.overlay.renderElement({
-      posX: 23,
+      posX: this.mainMenuStateXPos,
       posY: this.mainMenuStateYPos[MainMenuItem.Style],
       width: 24,
       height: 2.2,
@@ -118,7 +120,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     if (isTouchscreen()) {
       this.overlay.renderElement({
-        posX: this.menuElemPosX,
+        posX: this.mainMenuStateXPos,
         posY: this.mainMenuStateYPos[MainMenuItem.JoystickType],
         width: 22,
         height: 2.2,
