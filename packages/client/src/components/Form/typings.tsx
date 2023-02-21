@@ -1,7 +1,11 @@
-import { type FormEvent, type FormHTMLAttributes } from 'react';
+import { type Dispatch, type FormHTMLAttributes } from 'react';
 
 export type FormProps = {
   header?: string;
-  onSubmitHandler: (e: FormEvent<HTMLFormElement>) => void;
   children?: JSX.Element | JSX.Element[];
 } & FormHTMLAttributes<HTMLFormElement>;
+
+export type FormContextInitial = {
+  isFormValidating: boolean;
+  setIsFormValidating: Dispatch<boolean>;
+};

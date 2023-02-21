@@ -1,7 +1,7 @@
 .validation-errors {
   white-space: pre-wrap;
   margin-top: 12px;
-  color: var(--font-color-secondary);
+  color: var(--font-color-danger);
   display: flex;
   padding-left: 15px;
   list-style: circle;

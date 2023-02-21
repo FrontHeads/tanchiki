@@ -9,5 +9,6 @@ export type FieldProps = {
   labelText?: string;
   inputHeader?: string;
   errorList?: string[] | null;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   pattern?: string;
 } & React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;

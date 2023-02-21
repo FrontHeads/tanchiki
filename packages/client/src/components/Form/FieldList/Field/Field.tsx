@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'react';
+import { type FC, useState } from 'react';
 
 import { ValidationErrors } from '../../../ValidationErrors';
 import { type FieldProps } from './typings';
@@ -18,8 +18,14 @@ export const Field: FC<FieldProps> = ({
   className,
   errorList,
 }) => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const fieldClassNames = cn('form__field', className, {
+    form__field_active: isFocused,
+  });
+
   return (
-    <div className={cn('form__field', className)} data-testid="form-field">
+    <div className={fieldClassNames} data-testid="form-field" id={`field-${id}`}>
       <label className="form__field-label" htmlFor={id}>
         {title}
         {required ? <em>*</em> : null}
@@ -43,9 +49,16 @@ export const Field: FC<FieldProps> = ({
           type={type || 'text'}
           name={id}
           placeholder={placeholder}
-          onBlur={onBlur}
+          onBlur={e => {
+            if (onBlur) {
+              onBlur(e);
+            }
+            setIsFocused(false);
+          }}
           onChange={onChange}
-          onFocus={onFocus}
+          onFocus={() => {
+            setIsFocused(true);
+          }}
           value={value}
           disabled={disabled}
         />

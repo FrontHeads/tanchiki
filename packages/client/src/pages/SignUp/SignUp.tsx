@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -9,7 +9,6 @@ import { FieldList } from '../../components/Form/FieldList';
 import { Paths } from '../../config/constants';
 import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
-import { useValidation } from '../../utils/validation';
 import { signUpFieldList, signUpFormInitialState } from './data';
 import { type SignUpForm } from './typings';
 
@@ -18,19 +17,11 @@ export const SignUp: FC = () => {
   // + хуки можно вызывать только на верхнем уровне компонента.
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const validation = useValidation(signUpFieldList);
   const pageTitle = 'Регистрация';
 
   const { error, isLoading, isAuthenticated } = useAppSelector(authSelectors.all);
 
   const [formData, setFormData] = useState<SignUpForm>(signUpFormInitialState);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-
-  const onFormSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setIsFormSubmitted(true);
-  }, []);
 
   const onFormSubmitCallback = () => {
     dispatch(authThunks.signUp(formData));
@@ -54,15 +45,12 @@ export const SignUp: FC = () => {
   return (
     <>
       {generateMetaTags({ title: pageTitle })}
-      <Form onSubmitHandler={onFormSubmit} header={pageTitle}>
+      <Form header={pageTitle}>
         <FieldList<SignUpForm>
           fieldList={signUpFieldList}
-          isFormSubmitted={isFormSubmitted}
-          setIsFormSubmitted={setIsFormSubmitted}
           onFormSubmitCallback={onFormSubmitCallback}
           formData={formData}
           setFormData={setFormData}
-          validation={validation}
           disabled={isLoading}
         />
         <div className="form__buttons-wrapper">

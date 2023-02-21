@@ -7,9 +7,8 @@ import { Form } from './Form';
 describe('Form', () => {
   test('it render form header', () => {
     const header = 'Форма';
-    const handleClick = jest.fn();
 
-    render(<Form header={header} onSubmitHandler={handleClick} />);
+    render(<Form header={header} />);
 
     const renderedForm = screen.getByText(header);
 
@@ -18,7 +17,7 @@ describe('Form', () => {
 
   test('it call handle function', async () => {
     const handleSubmit = jest.fn();
-    const { container } = render(<Form onSubmitHandler={handleSubmit} />);
+    const { container } = render(<Form onSubmit={handleSubmit} />);
 
     fireEvent.submit(screen.getByTestId('form'));
     expect(container.querySelector('form')).toBeInTheDocument();

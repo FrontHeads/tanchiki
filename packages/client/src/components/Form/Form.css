@@ -62,6 +62,10 @@
         padding: 30px 5px;
       }
     }
+
+    &_active .validation-errors {
+      color: var(--font-color-secondary);
+    }
   }
 
   &__round-wrapper {
@@ -74,10 +78,6 @@
     &-row {
       width: 100%;
     }
-  }
-
-  &_has-errors .validation-errors {
-    color: var(--font-color-danger);
   }
 
   &__oauth {
