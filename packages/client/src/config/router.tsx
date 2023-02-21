@@ -1,8 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { type LoaderFunction, createRoutesFromElements, Link, Route } from 'react-router-dom';
 
-import { authAPI } from '../api/authAPI';
-import { oauthAPI } from '../api/oauthAPI';
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
@@ -15,7 +13,7 @@ import { SignUp } from '../pages/SignUp';
 import { UserProfile } from '../pages/UserProfile';
 import { type AppDispatch } from '../store';
 import { authThunks } from '../store/features/auth/authThunks';
-import { PATH, Paths } from './constants';
+import { Paths } from './constants';
 import { forumRoutes } from './forumRoutes';
 import { leaderboardLoader } from './leaderboardRoute';
 
@@ -30,25 +28,6 @@ const Game = lazy(() => import('../pages/Game').then(module => ({ default: modul
 
 export const rootLoader = (dispatch: AppDispatch): LoaderFunction => {
   return () => {
-    let oauthCode: string | null = null;
-
-    // Получаем код только при работе в браузере
-    if (typeof window !== 'undefined') {
-      oauthCode = new URLSearchParams(window.location.search).get('code');
-
-      if (oauthCode) {
-        // Меняем url страницы на чистый, без code
-        window.history.pushState({}, '', PATH.oauthRedirect);
-
-        // Отправляем запрос на oauth авторизацию
-        const user = oauthAPI
-          .postOAuth({ code: oauthCode, redirect_uri: PATH.oauthRedirect })
-          .then(() => authAPI.me().catch(() => null))
-          .catch(() => null);
-        return { user };
-      }
-    }
-
     const user = dispatch(authThunks.me(false)).unwrap();
     return { user };
   };
