@@ -149,6 +149,7 @@ export class Scenario extends EventEmitter<ScenarioEvent> {
       variant: this.mapManager.getMapTankEnemyVariant(this.enemiesSpawnCounter),
       // Четвёртый, одиннадцатый и восемнадцатый танки появляются переливающимися (за их уничтожение дают бонус)
       flashing: this.game.state.flashingEnemyTanksWithPowerups.includes(this.enemiesSpawnCounter),
+      difficulty: this.game.state.difficulty,
     };
 
     // Убираем с карты предыдущий бонус, если появился новый бонусный танк

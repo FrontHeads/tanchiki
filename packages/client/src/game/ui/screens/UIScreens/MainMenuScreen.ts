@@ -4,13 +4,16 @@ import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
 import { isTouchscreen } from '../../../utils/isTouchscreen';
 import { Screen } from '../Screen';
 import { MainMenuItem } from './data';
+import { GameDifficulty } from '../../../services';
 
 export class MainMenuScreen extends Screen<MainMenuItem> {
   tankElemInterval: string | null = null;
+  mainMenuStateXPos = 22;
   mainMenuStateYPos = {
-    [MainMenuItem.Singleplayer]: isTouchscreen() ? 32 : 30,
-    [MainMenuItem.Multiplayer]: 35,
-    [MainMenuItem.Style]: isTouchscreen() ? 38 : 40,
+    [MainMenuItem.Singleplayer]: isTouchscreen() ? 31 : 28,
+    [MainMenuItem.Multiplayer]: 33,
+    [MainMenuItem.Difficulty]: isTouchscreen() ? 36 : 38,
+    [MainMenuItem.Style]: isTouchscreen() ? 41 : 43,
   };
 
   show(state: MainMenuItem) {
@@ -19,7 +22,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     this.render();
 
     const tankElem = this.overlay.renderElement({
-      posX: 17,
+      posX: this.mainMenuStateXPos - 6,
       posY: this.mainMenuStateYPos[state] + verticalCenteringCorrection,
       width: 4,
       height: 4,
@@ -65,7 +68,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     });
 
     this.overlay.renderElement({
-      posX: 23,
+      posX: this.mainMenuStateXPos,
       posY: this.mainMenuStateYPos[MainMenuItem.Singleplayer],
       width: 24,
       height: 2.2,
@@ -75,7 +78,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     if (!isTouchscreen()) {
       this.overlay.renderElement({
-        posX: 23,
+        posX: this.mainMenuStateXPos,
         posY: this.mainMenuStateYPos[MainMenuItem.Multiplayer],
         width: 20,
         height: 2.2,
@@ -85,7 +88,16 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     }
 
     this.overlay.renderElement({
-      posX: 23,
+      posX: this.mainMenuStateXPos,
+      posY: this.mainMenuStateYPos[MainMenuItem.Difficulty],
+      width: 24,
+      height: 2.2,
+      color: Color.White,
+      text: 'ВРАГИ: ' + (state.difficulty === GameDifficulty.Easy ? 'ПРОСТЫЕ' : 'СЛОЖНЫЕ'),
+    });
+
+    this.overlay.renderElement({
+      posX: this.mainMenuStateXPos,
       posY: this.mainMenuStateYPos[MainMenuItem.Style],
       width: 24,
       height: 2.2,
