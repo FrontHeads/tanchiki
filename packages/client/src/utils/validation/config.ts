@@ -1,7 +1,7 @@
 export const ValidationRegex = {
   LoginCompound: /^[a-zA-Z0-9\-_]+$/i,
   nameCompound: /^[а-яёА-ЯЁa-zA-Z-]+$/i,
-  EmailCompound: /^[a-zA-Z0-9\-.@]+$/i,
+  EmailCompound: /^[a-zA-Z0-9\-.@_]+$/i,
   PhoneFormat: /^(\+|\d)[0-9]+$/i,
   EmailFormat: /@\w+\./,
   onlyNumbers: /^[\d]+$/,

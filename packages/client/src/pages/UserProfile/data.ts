@@ -51,6 +51,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
   },
   {
     heading: 'Если хотите поменять пароль:',
+    id: 'passwordsTitle',
   },
   {
     title: 'Текущий пароль',
@@ -70,6 +71,7 @@ export const userProfileFieldList: FormInputAndHeadingList = [
   },
   {
     heading: 'Если хотите поменять аватар:',
+    id: 'changeAvatarTitle',
   },
   {
     title: 'Фото',

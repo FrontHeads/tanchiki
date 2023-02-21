@@ -1,6 +1,6 @@
 import './UserProfile.css';
 
-import React, { type FC, useCallback, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { Button } from '../../components/Button';
@@ -11,13 +11,11 @@ import { API_ENDPOINTS, DEFAULT_AVATAR } from '../../config/constants';
 import { authSelectors, profileSelectors, profileThunks, useAppDispatch, useAppSelector } from '../../store';
 import { buildPath, determineAPIHost } from '../../utils/HTTP';
 import { generateMetaTags } from '../../utils/seoUtils';
-import { useValidation } from '../../utils/validation';
 import { userProfileFieldList } from './data';
 import { type AvatarFile, type UserProfileForm } from './typings';
 
 export const UserProfile: FC = () => {
   const dispatch = useAppDispatch();
-  const validation = useValidation(userProfileFieldList);
 
   const userProfile = useAppSelector(authSelectors.userProfile);
   const { updateResult, isProfileLoading } = useAppSelector(profileSelectors.all);
@@ -36,7 +34,6 @@ export const UserProfile: FC = () => {
 
   const [formData, setFormData] = useState<UserProfileForm>(userFormData);
   const [avatarFile, setAvatarFile] = useState<AvatarFile>(null);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   useEffect(() => {
     if (updateResult) {
@@ -45,12 +42,6 @@ export const UserProfile: FC = () => {
       });
     }
   }, [updateResult]);
-
-  const onFormSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setIsFormSubmitted(true);
-  }, []);
 
   const onFormSubmitCallback = () => {
     dispatch(profileThunks.updateProfile({ ...formData, avatarFile: avatarFile }));
@@ -71,16 +62,13 @@ export const UserProfile: FC = () => {
       <div className="user-profile">
         <img src={avatarPath} alt={`Аватар пользователя ${header}`} className="avatar-img avatar-img__big" />
 
-        <Form onSubmitHandler={onFormSubmit} header={header}>
+        <Form header={header}>
           <FieldList<UserProfileForm>
             setFile={setAvatarFile}
             fieldList={userProfileFieldList}
-            isFormSubmitted={isFormSubmitted}
-            setIsFormSubmitted={setIsFormSubmitted}
             onFormSubmitCallback={onFormSubmitCallback}
             formData={formData}
             setFormData={setFormData}
-            validation={validation}
             disabled={isProfileLoading}
           />
           <div className="form__buttons-wrapper">

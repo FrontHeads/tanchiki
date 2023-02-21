@@ -2,9 +2,11 @@ import { type Params } from 'react-router-dom';
 
 import { type FieldProps } from './components/Form/FieldList/Field/typings';
 
-export type FormHeading = { heading: string };
+export type FormHeading = { heading: string; id: string };
 
-export type FormInputAndHeadingList = (FieldProps | FormHeading)[];
+export type FormInputAndHeading = FieldProps | FormHeading;
+
+export type FormInputAndHeadingList = FormInputAndHeading[];
 
 export type APIError = {
   reason: string;
