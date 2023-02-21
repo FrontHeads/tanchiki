@@ -1,3 +1,4 @@
+import { GameDifficulty } from '../../services';
 import { Color } from '../../services/View/colors';
 import { spriteCoordinates } from '../../services/View/spriteCoordinates';
 import { type SpriteCoordinatesNoAnimations, type SpriteCoordinatesWithAnimations } from '../../services/View/typings';
@@ -6,7 +7,6 @@ import { Direction, EntityEvent } from '../Entity/typings';
 import { Speed } from '../EntityDynamic/data';
 import { Tank } from './Tank';
 import { type EnemyVariant, type TankEnemySettings } from './typings';
-import { GameDifficulty } from '../../services';
 
 export class TankEnemy extends Tank {
   lastDirection = Direction.Down;

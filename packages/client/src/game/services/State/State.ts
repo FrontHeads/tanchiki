@@ -1,9 +1,10 @@
 import { ScreenType } from '../../ui/screens/data';
 import { MainMenuItem } from '../../ui/screens/UIScreens/data';
+import { GameDifficulty } from '../';
+import { JoystickType, joystickTypeInLS } from '../Controller/data';
 import { type GameMode } from '../Game/typings';
 import { levels } from '../MapManager/levels';
 import { gameThemeInLS, GameThemeName } from '../View/data';
-import { GameDifficulty } from '../';
 
 export class State {
   /** Запущена ли игра. */
@@ -23,6 +24,8 @@ export class State {
   difficulty = GameDifficulty.Hard;
   /** Имя темы оформления игры. */
   themeName = (localStorage.getItem(gameThemeInLS) || GameThemeName.Classic) as GameThemeName;
+  /** Игрок может выбрать тип джойстика в мобильной версии. */
+  joystickType: JoystickType = (localStorage.getItem(joystickTypeInLS) || JoystickType.ButtonJoystick) as JoystickType;
 
   /** Используется при отправке статистики на сервер и отображается на экране с очками.
    * Пустое значение, если игрок не авторизован.*/

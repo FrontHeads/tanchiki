@@ -1,19 +1,21 @@
+import { GameDifficulty } from '../../../services';
 import { Color } from '../../../services/View/colors';
 import { gameTheme } from '../../../services/View/data';
 import { spriteCoordinates } from '../../../services/View/spriteCoordinates';
 import { isTouchscreen } from '../../../utils/isTouchscreen';
 import { Screen } from '../Screen';
 import { MainMenuItem } from './data';
-import { GameDifficulty } from '../../../services';
 
 export class MainMenuScreen extends Screen<MainMenuItem> {
   tankElemInterval: string | null = null;
-  mainMenuStateXPos = 22;
+  mainMenuStateXPos = isTouchscreen() ? 19 : 23;
+
   mainMenuStateYPos = {
-    [MainMenuItem.Singleplayer]: isTouchscreen() ? 31 : 28,
-    [MainMenuItem.Multiplayer]: 33,
-    [MainMenuItem.Difficulty]: isTouchscreen() ? 36 : 38,
-    [MainMenuItem.Style]: isTouchscreen() ? 41 : 43,
+    [MainMenuItem.Singleplayer]: 26,
+    [MainMenuItem.Multiplayer]: isTouchscreen() ? 0 : 31,
+    [MainMenuItem.JoystickType]: isTouchscreen() ? 31 : 0,
+    [MainMenuItem.Difficulty]: 36,
+    [MainMenuItem.Style]: 41,
   };
 
   show(state: MainMenuItem) {
@@ -49,7 +51,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     this.overlay.renderElement({
       posX: 0,
-      posY: 7,
+      posY: 4,
       width: view.width,
       height: 7,
       backImg: this.overlay.game.resources.getImage(BrickBgName),
@@ -59,7 +61,7 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
 
     this.overlay.renderElement({
       posX: 0,
-      posY: 16,
+      posY: 13,
       width: view.width,
       height: 7,
       backImg: this.overlay.game.resources.getImage(BrickBgName),
@@ -104,6 +106,17 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
       color: Color.White,
       text: 'СТИЛЬ: ' + gameTheme[state.themeName].menuTitle,
     });
+
+    if (isTouchscreen()) {
+      this.overlay.renderElement({
+        posX: this.mainMenuStateXPos,
+        posY: this.mainMenuStateYPos[MainMenuItem.JoystickType],
+        width: 22,
+        height: 2.2,
+        color: Color.White,
+        text: 'УПРАВЛЕНИЕ: ' + state.joystickType,
+      });
+    }
 
     this.overlay.renderElement({
       posX: 0,

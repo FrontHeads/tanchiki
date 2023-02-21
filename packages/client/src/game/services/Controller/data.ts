@@ -6,6 +6,7 @@ export enum ControllerEvent {
   Fullscreen = 'FULLSCREEN',
   Mute = 'MUTE',
   Escape = 'ESCAPE',
+  ToggleJoystickType = 'TOGGLE_JOYSTICK_TYPE',
 }
 
 export enum ServiceButtonsName {
@@ -27,3 +28,11 @@ export enum ControllerElemsClassName {
   ActivatedServiceBtn = 'controller__service-btn_activated',
   FullscreenWrapper = 'game__fullscreen-wrapper',
 }
+
+export enum JoystickType {
+  Stick = 'СТИК',
+  ButtonJoystick = 'КНОПКИ',
+}
+
+/** Имя ключа в local storage, где хранится тип выбранного юзером джойстика. */
+export const joystickTypeInLS = 'JoystickType';

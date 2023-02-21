@@ -22,7 +22,7 @@ export const Buttons: FC = () => {
       return;
     }
 
-    game.on(ViewEvents.ToggleColorServiceBtn, (buttonName: ServiceButtonsName) => {
+    game.view.on(ViewEvents.ToggleColorServiceBtn, (buttonName: ServiceButtonsName) => {
       if (buttonName === ServiceButtonsName.Pause) {
         setIsActivePauseButton(prevState => !prevState);
       } else if (buttonName === ServiceButtonsName.Mute) {

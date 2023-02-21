@@ -102,13 +102,16 @@ export class Overlay extends EventEmitter {
       nextItemIndex = menuItems.length - 1;
     }
 
-    if (nextItemIndex >= menuItems.length) {
-      nextItemIndex = 0;
+    /** Перепрыгиваем через пункты меню которые не выводятся юзеру при определенных условиях. */
+    if (
+      (isTouchscreen() && menuItems[nextItemIndex] === MainMenuItem.Multiplayer) ||
+      (!isTouchscreen() && menuItems[nextItemIndex] === MainMenuItem.JoystickType)
+    ) {
+      nextItemIndex += menuStepSize;
     }
 
-    /** На тачскрине не выводится пункт меню "2 игрока", поэтому перепрыгиваем его. */
-    if (isTouchscreen() && menuItems[nextItemIndex] === MainMenuItem.Multiplayer) {
-      nextItemIndex += menuStepSize;
+    if (nextItemIndex >= menuItems.length) {
+      nextItemIndex = 0;
     }
 
     state.mainMenuItem = menuItems[nextItemIndex];

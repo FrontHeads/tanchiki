@@ -1,0 +1,24 @@
+.stick {
+  --joystick-background-color: #000;
+  --joystick-font-color: #737477;
+
+  div {
+    background-color: var(--joystick-background-color) !important;
+    user-select: none;
+  }
+
+  button {
+    background-color: var(--joystick-font-color) !important;
+    user-select: none;
+  }
+
+  @media (min-width: 1000px) {
+    opacity: 0.7;
+  }
+
+  background-color: var(--joystick-background-color);
+  border-radius: 100px;
+  box-shadow: 0 0 30px var(--section-light-shadow);
+  color: var(--joystick-font-color);
+  padding: 3px;
+}

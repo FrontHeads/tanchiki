@@ -11,11 +11,12 @@
     align-items: center;
     justify-content: center;
     @media (any-pointer: coarse) and (orientation: portrait) {
-      margin-top: 40px;
+      margin-top: 70px;
     }
 
     @media (any-pointer: coarse) and (orientation: landscape) {
-      left: 29%;
+      left: 57%;
+      right: 43%;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -31,4 +32,8 @@
       }
     }
   }
+}
+
+.layout__game {
+  user-select: none;
 }

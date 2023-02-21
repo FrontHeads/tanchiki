@@ -468,8 +468,7 @@ export class View extends EventEmitter {
     this.game.state.themeName = themes[nextThemeIndex];
   }
 
-  //TODO: здесь нужен рефакторинг, т.к. один сервис не может эмитить события другого
   private toggleFullscreenListener = () => {
-    this.game.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Fullscreen);
+    this.emit(ViewEvents.ToggleColorServiceBtn, ServiceButtonsName.Fullscreen);
   };
 }

@@ -4,13 +4,19 @@ import { createContext, useEffect, useRef, useState } from 'react';
 
 import { Tanchiki } from '../../game';
 import { GameEvents } from '../../game/services/';
-import { ControllerElemsClassName } from '../../game/services/Controller/data';
+import {
+  ControllerElemsClassName,
+  ControllerEvent,
+  JoystickType,
+  joystickTypeInLS,
+} from '../../game/services/Controller/data';
 import { ScreenType } from '../../game/ui/screens/data';
 import { isTouchscreen } from '../../game/utils/isTouchscreen';
 import { usePageVisibility } from '../../hooks/usePageVisibility';
 import { authSelectors, leaderboardThunks, useAppDispatch, useAppSelector } from '../../store';
 import { generateMetaTags } from '../../utils/seoUtils';
-import { Buttons, Joystick } from './PointerControl';
+import { Buttons, Stick } from './PointerControl';
+import { Joystick } from './PointerControl/ButtonJoystick/Joystick';
 import { type GameCreateContext } from './typings';
 
 export const GameContext = createContext<GameCreateContext>({} as GameCreateContext);
@@ -23,6 +29,7 @@ export const Game = () => {
   const game = Tanchiki.create();
   game.state.username = useAppSelector(authSelectors.userProfile)?.login || '';
   const [isGameInited, setIsGameInited] = useState(game.state.inited);
+  const [isJoystickType, setJoystickType] = useState(localStorage.getItem(joystickTypeInLS));
 
   useEffect(() => {
     game.init(gameRoot.current);
@@ -30,6 +37,13 @@ export const Game = () => {
 
     game.on(GameEvents.UpdateLeaderboard, data => {
       dispatch(leaderboardThunks.addScore(data));
+    });
+
+    game.controllerAll.on(ControllerEvent.ToggleJoystickType, () => {
+      // Небольшая задержка, чтобы переход был плавнее для глаза юзера.
+      setTimeout(() => {
+        setJoystickType(localStorage.getItem(joystickTypeInLS));
+      }, 100);
     });
 
     document.querySelector('.layout')?.classList.add('layout__game');
@@ -56,7 +70,7 @@ export const Game = () => {
         <div ref={gameRoot} className="game__root"></div>
         {isTouchscreen() ? (
           <div className="pointer-controller">
-            <Joystick />
+            {isJoystickType === JoystickType.Stick ? <Stick /> : <Joystick />}
             <Buttons />
           </div>
         ) : (
