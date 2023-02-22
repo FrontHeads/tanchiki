@@ -26,7 +26,10 @@ export const LOCAL_CLIENT_PORT = 3000;
 export const LOCAL_SERVER_PORT = 5000;
 
 export const PATH = {
-  oauthRedirect: `http://localhost:${LOCAL_SERVER_PORT}`,
+  oauthRedirect:
+    process.env.NODE_ENV === 'development'
+      ? `http://localhost:${LOCAL_SERVER_PORT}`
+      : `https://frontheads-tanchiki-20.ya-praktikum.tech`,
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
