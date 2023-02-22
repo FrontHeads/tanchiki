@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 
 import { oauthAPI } from '../../../api/oauthAPI';
 import { PATH } from '../../../config/constants';
@@ -20,6 +21,8 @@ export const getOAuthCode = createAsyncThunk('oauth/getOauthCode', async () => {
 export const signInOauth = createAsyncThunk('auth/signInOauth', async (oauthCode: string, { dispatch }) => {
   await oauthAPI.postOAuth({ code: oauthCode, redirect_uri: PATH.oauthRedirect });
   await dispatch(me());
+  toast.success('Вы авторизованы!');
+
 });
 
 export const oauthThunks = { getOAuthCode, signInOauth };
