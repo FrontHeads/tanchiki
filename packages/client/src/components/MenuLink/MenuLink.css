@@ -16,12 +16,22 @@
   &__item {
     text-decoration: none;
 
+    &_disabled {
+      opacity: 0.3;
+      color: inherit !important;
+      pointer-events: none;
+    }
+
     &:hover {
       color: var(--accent-color);
     }
 
     &:hover + .menu-link__tank-wrapper {
       opacity: 1;
+    }
+
+    &_disabled:hover + .menu-link__tank-wrapper {
+      display: none;
     }
   }
 

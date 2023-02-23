@@ -1,4 +1,6 @@
 import { NAVIGATION_LIST } from '../components/Navigation/data';
+import { isClientOnlyHost } from './HTTP';
+import { type MenuLinkProps } from '../components/MenuLink/typings';
 
 /**
  * Фильтруем пункты меню в зависимости от того - достуен ли
@@ -22,5 +24,11 @@ export const getFilteredNavigationList = (
     }
 
     return true;
+  }).map((link: MenuLinkProps) => {
+    if ('displayOption' in link && link.displayOption === 'disableIfClientOnly' && isClientOnlyHost()) {
+      link.disabled = true;
+    }
+
+    return link;
   });
 };
