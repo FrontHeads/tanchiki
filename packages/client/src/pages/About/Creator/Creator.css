@@ -1,0 +1,45 @@
+.creator {
+  padding: 20px 18px;
+  background-color: var(--section-background-color);
+  border-bottom: 1px solid #737477;
+  display: flex;
+
+  &:last-child {
+    border-bottom: none;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  &:nth-child(odd) {
+    background-color: var(--background-color);
+  }
+
+  &__meta {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  &__info {
+    color: var(--font-color-secondary);
+  }
+
+  &__avatar {
+    margin-right: 18px;
+
+    &-image {
+      width: 60px;
+      height: 60px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+  }
+
+  &__name {
+    font-weight: bold;
+  }
+
+  &__content {
+    width: 100%;
+  }
+}

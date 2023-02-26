@@ -13,6 +13,7 @@ export enum Paths {
   Forum = '/forum',
   Section = '/forum/section',
   Topic = '/topic',
+  About = '/about',
   NewTopic = '/new-topic',
   UserProfile = '/profile',
   UserProfileEdit = '/profile/edit',
@@ -27,9 +28,7 @@ export const LOCAL_SERVER_PORT = 5000;
 
 export const PATH = {
   oauthRedirect:
-    process.env.NODE_ENV === 'development'
-      ? `http://localhost:${LOCAL_SERVER_PORT}`
-      : `https://frontheads-tanchiki-20.ya-praktikum.tech`,
+    process.env.NODE_ENV === 'development' ? `http://localhost:${LOCAL_SERVER_PORT}` : `https://frontheads.github.io/`,
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
@@ -77,6 +76,9 @@ export const API_ENDPOINTS = {
     CREATE_MESSAGE: 'forum/message',
     EDIT_MESSAGE: (messageId: number) => `forum/message/${messageId}`,
     DELETE_MESSAGE: (messageId: number) => `forum/message/${messageId}`,
+  },
+  GITHUB: {
+    GET_ALL_COLLABORATORS: 'repos/frontheads/tanchiki/contributors',
   },
 };
 

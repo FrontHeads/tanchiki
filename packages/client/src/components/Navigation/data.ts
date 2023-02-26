@@ -19,5 +19,6 @@ export const NAVIGATION_LIST = createPairsArray(
   { name: 'sign-up', title: 'Регистрация', to: Paths.SignUp, accessLevel: 'guest' },
   { name: 'profile', title: 'Профиль игрока', to: Paths.UserProfile, accessLevel: 'protected' },
   { name: 'contact-us', title: 'Обратная связь', to: Paths.ContactUs },
+  { name: 'about', title: 'О проекте', to: Paths.About },
   { name: 'logout', title: 'Выход', to: Paths.Home, accessLevel: 'protected' }
 );
