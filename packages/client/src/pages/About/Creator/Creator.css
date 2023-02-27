@@ -1,5 +1,7 @@
 .creator {
-  padding: 20px 18px;
+  --avatar-size: 100px;
+
+  padding: 30px 20px;
   background-color: var(--section-background-color);
   border-bottom: 1px solid #737477;
   display: flex;
@@ -14,13 +16,21 @@
     background-color: var(--background-color);
   }
 
+  &__username {
+    font-weight: bold;
+    font-size: 25px;
+    color: var(--font-color-primary);
+  }
+
   &__meta {
     display: flex;
     gap: 12px;
     margin-bottom: 20px;
+    flex-direction: column;
+    color: var(--font-color-secondary);
   }
 
-  &__info {
+  &__contact {
     color: var(--font-color-secondary);
   }
 
@@ -28,8 +38,8 @@
     margin-right: 18px;
 
     &-image {
-      width: 60px;
-      height: 60px;
+      width: var(--avatar-size);
+      height: var(--avatar-size);
       overflow: hidden;
       border-radius: 50%;
     }
@@ -41,5 +51,18 @@
 
   &__content {
     width: 100%;
+  }
+
+  &__text {
+    line-height: 1.5;
+
+    &_list {
+      margin-left: 20px;
+      list-style: circle;
+
+      li {
+        margin-bottom: 7px;
+      }
+    }
   }
 }

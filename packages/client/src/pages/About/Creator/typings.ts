@@ -6,7 +6,8 @@ export type CreatorProps = {
 export type Creator = {
   id: number;
   name: string;
-  email: string;
+  partOne: string;
+  partTwo: string;
   content: string;
 };
 

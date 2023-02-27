@@ -16,4 +16,11 @@
     text-align: center;
     margin-top: 0;
   }
+
+  &__introduction {
+    p {
+      margin: 40px;
+      line-height: 2;
+    }
+  }
 }
