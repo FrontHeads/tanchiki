@@ -4,6 +4,7 @@ import { type LoaderFunction, createRoutesFromElements, Link, Route } from 'reac
 import { ProtectedRoutes } from '../components/ProtectedRoutes';
 import { PublicRoutes } from '../components/PublicRoutes';
 import { Root as RootLayout } from '../layouts/Root';
+import { About } from '../pages/About';
 import { Contact } from '../pages/Contact';
 import { ErrorPage } from '../pages/ErrorPage';
 import { Home } from '../pages/Home';
@@ -13,6 +14,7 @@ import { SignUp } from '../pages/SignUp';
 import { UserProfile } from '../pages/UserProfile';
 import { type AppDispatch } from '../store';
 import { authThunks } from '../store/features/auth/authThunks';
+import { aboutLoader } from './aboutRoute';
 import { Paths } from './constants';
 import { forumRoutes } from './forumRoutes';
 import { leaderboardLoader } from './leaderboardRoute';
@@ -63,6 +65,7 @@ export function getRoutes(dispatch: AppDispatch) {
             {forumRoutes()}
           </Route>
         </Route>
+        <Route path={Paths.About} element={<About />} loader={aboutLoader()}></Route>
       </Route>
       <Route path={Paths.Error500} element={<ErrorPage status="500" message="Что-то пошло не так" />}></Route>
     </>

@@ -22,7 +22,6 @@ export const signInOauth = createAsyncThunk('auth/signInOauth', async (oauthCode
   await oauthAPI.postOAuth({ code: oauthCode, redirect_uri: PATH.oauthRedirect });
   await dispatch(me());
   toast.success('Вы авторизованы!');
-
 });
 
 export const oauthThunks = { getOAuthCode, signInOauth };

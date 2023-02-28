@@ -1,0 +1,68 @@
+.creator {
+  --avatar-size: 100px;
+
+  padding: 30px 20px;
+  background-color: var(--section-background-color);
+  border-bottom: 1px solid #737477;
+  display: flex;
+
+  &:last-child {
+    border-bottom: none;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  &:nth-child(odd) {
+    background-color: var(--background-color);
+  }
+
+  &__username {
+    font-weight: bold;
+    font-size: 25px;
+    color: var(--font-color-primary);
+  }
+
+  &__meta {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-direction: column;
+    color: var(--font-color-secondary);
+  }
+
+  &__contact {
+    color: var(--font-color-secondary);
+  }
+
+  &__avatar {
+    margin-right: 18px;
+
+    &-image {
+      width: var(--avatar-size);
+      height: var(--avatar-size);
+      overflow: hidden;
+      border-radius: 50%;
+    }
+  }
+
+  &__name {
+    font-weight: bold;
+  }
+
+  &__content {
+    width: 100%;
+  }
+
+  &__text {
+    line-height: 1.5;
+
+    &_list {
+      margin-left: 20px;
+      list-style: circle;
+
+      li {
+        margin-bottom: 7px;
+      }
+    }
+  }
+}
