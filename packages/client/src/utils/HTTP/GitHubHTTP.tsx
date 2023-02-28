@@ -1,3 +1,4 @@
+import { GITHUB_API_HOST } from '../../../../server/config/constants';
 import { buildPath } from './';
 import { HTTPClient } from './httpClient';
 
@@ -29,7 +30,7 @@ export class GitHubHTTP {
   }
 
   private static _send<T>(path: string, options: Options = { method: Method.GET }): Promise<GitHubResponseType<T>> {
-    const { method, headers = {}, baseUrl = 'https://api.github.com/', withCredentials = false, ...rest } = options;
+    const { method, headers = {}, baseUrl = GITHUB_API_HOST, withCredentials = false, ...rest } = options;
 
     const url = buildPath(baseUrl, path);
 

@@ -29,7 +29,7 @@ export const Creators: Creator[] = [
     content: `
     <ul class="creator__text_list">
       <li> Реализация SSR в связке с React Router 6</li>
-      <li> Интеграция Redux (@Redux<li>Tolikit) + Redux Thunk</li>
+      <li> Интеграция Redux (@Redux-Toolkit) + Redux Thunk</li>
       <li> Настройка роутинга</li>
       <li> Подключение Postgres и MongoDB</li>
       <li> Настройка деплоя в облако</li>

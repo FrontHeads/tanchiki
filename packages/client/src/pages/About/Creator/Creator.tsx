@@ -1,7 +1,6 @@
 import './Creator.css';
 
 import { type FC } from 'react';
-import { Link } from 'react-router-dom';
 
 import defaultAvatarPath from '/assets/img/default-avatar.png';
 
@@ -45,9 +44,9 @@ export const Creator: FC<CreatorProps> = ({ creator, githubCreator }) => {
           {githubCreator ? (
             <span>
               Github:{' '}
-              <Link to={githubCreator.html_url} className="creator__contact">
+              <a href={githubCreator.html_url} className="creator__contact">
                 @{githubCreator.login}
-              </Link>
+              </a>
             </span>
           ) : null}
           {creator.partOne && creator.partTwo ? (
