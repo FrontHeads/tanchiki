@@ -19,7 +19,6 @@
     &_disabled {
       opacity: 0.3;
       color: inherit !important;
-      pointer-events: none;
     }
 
     &:hover {

@@ -15,6 +15,7 @@ type MenuLinkProps = {
   accessLevel?: MenuLinkAccessLevel;
   displayOption?: MenuLinkDisplayOption;
   disabled?: boolean;
+  disabledNote?: string;
   onClick?: React.MouseEventHandler;
 };
 
