@@ -24,9 +24,7 @@ export default defineConfig({
     react(),
     // Создаёт файл 404.html, идентичный index.html, чтобы на Github Pages приложение было доступно с любых путей
     copy({
-      targets: [
-        { src: './dist/index.html', dest: './dist/', rename: '404.html' },
-      ],
+      targets: [{ src: './dist/index.html', dest: './dist/', rename: '404.html' }],
       hook: 'writeBundle', // запускается после записи бандла на диск
       verbose: true,
     }),
