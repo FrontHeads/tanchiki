@@ -18,7 +18,8 @@ html {
   height: 100%;
 }
 
-h1 {
+h1,
+h2 {
   font-size: 24px;
   font-weight: 400;
   font-family: "Press Start 2P", cursive;
