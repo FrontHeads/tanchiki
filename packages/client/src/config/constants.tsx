@@ -28,7 +28,9 @@ export const LOCAL_SERVER_PORT = 5000;
 
 export const PATH = {
   oauthRedirect:
-    process.env.NODE_ENV === 'development' ? `http://localhost:${LOCAL_SERVER_PORT}` : `https://frontheads.github.io/`,
+    (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development')
+      ? `http://localhost:${LOCAL_SERVER_PORT}`
+      : `https://frontheads.github.io/`,
   yandexOAuthUrl: `https://oauth.yandex.ru/authorize?response_type=code`,
 };
 
