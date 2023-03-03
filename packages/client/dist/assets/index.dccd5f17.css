@@ -1,0 +1,445 @@
+.game__fullscreen-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  height: 100%;
+}
+.game__root {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .game__root {
+    margin-top: 70px;
+  }
+}
+@media (any-pointer: coarse) and (orientation: landscape) {
+  .game__root {
+    left: 57%;
+    right: 43%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+  @media (min-width: 750px) {
+    .game__root {
+      left: 55%;
+      right: 45%;
+    }
+  }
+  @media (min-width: 1000px) {
+    .game__root {
+      left: 0;
+      right: 0;
+    }
+  }
+}
+.layout__game {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.pointer-controller {
+  --controllers-buttons-font-color: #fff;
+  --controllers-buttons-extra-background-color: #afb2b6;
+  --shoot-btn-size: 65px;
+  --service-btn-size: 20px;
+  --service-btn-margin-left: var(--service-btn-size);
+  width: 99%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  z-index: 900;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+@media (min-width: 700px) {
+  .pointer-controller {
+    --shoot-btn-size: 90px;
+  }
+}
+@media (any-pointer: coarse) and (orientation: landscape) {
+  .pointer-controller {
+    height: 90vh;
+    position: absolute;
+    top: 16px;
+  }
+  @media (min-width: 650px) {
+    .pointer-controller {
+      width: 97%;
+    }
+  }
+  @media (min-width: 730px) and (max-width: 1000px) {
+    .pointer-controller {
+      width: 90%;
+    }
+  }
+  @media (min-width: 1000px) {
+    .pointer-controller {
+      width: 97%;
+    }
+  }
+  @media (min-height: 600px) {
+    .pointer-controller {
+      --service-btn-size: 30px;
+    }
+  }
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .pointer-controller {
+    --shoot-btn-size: 90px;
+    width: 97%;
+  }
+  @media (min-width: 730px) {
+    .pointer-controller {
+      width: 90%;
+    }
+  }
+}
+@media (any-pointer: fine) {
+  .pointer-controller {
+    display: none;
+  }
+}
+.desktop-controller {
+  --service-btn-size: 30px;
+  --service-btn-margin-left: 35px;
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 100;
+}
+@media (pointer: coarse) {
+  .desktop-controller {
+    display: none;
+  }
+}
+.controller {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  min-height: 166px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+}
+@media (any-pointer: coarse) and (orientation: landscape) {
+  .controller {
+    min-height: 230px;
+    height: 100%;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
+  @media (min-height: 730px) {
+    .controller {
+      -ms-flex-item-align: center;
+      align-self: center;
+    }
+  }
+}
+.controller__service {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .controller__service {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+}
+@media (any-pointer: coarse) and (orientation: landscape) {
+  .controller__service {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+    position: absolute;
+    right: 0;
+    left: 0;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    z-index: 900;
+  }
+}
+.controller__service-btn {
+  margin-left: var(--service-btn-margin-left);
+  width: var(--service-btn-size);
+  height: var(--service-btn-size);
+  fill: var(--font-color-primary);
+  stroke: var(--font-color-primary);
+  -webkit-filter: drop-shadow(0 0 5px var(--service-btn-shadow-color));
+  filter: drop-shadow(0 0 5px var(--service-btn-shadow-color));
+  cursor: pointer;
+  margin-bottom: calc(var(--service-btn-size) - 5px);
+}
+@media (any-pointer: coarse) and (orientation: landscape) {
+  .controller__service-btn {
+    margin-left: 0;
+  }
+}
+.controller__service-btn_pause {
+  fill: none;
+  stroke: var(--font-color-primary);
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .controller__service-btn:nth-child(1) {
+    margin-left: 0;
+  }
+}
+.controller__service-btn:hover,
+.controller__service-btn_activated {
+  fill: var(--dendy-button-primary-color);
+  stroke: var(--dendy-button-primary-color);
+}
+.controller__service-btn:hover {
+  opacity: 0.5;
+}
+.controller__service-btn_pause svg {
+  fill: none;
+}
+.controller__shoot {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  z-index: 990;
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .controller__shoot {
+    min-width: 105px;
+  }
+}
+@media (any-pointer: coarse) and (orientation: landscape) {
+  .controller__shoot {
+    display: block;
+  }
+}
+@media (any-pointer: fine) {
+  .controller__shoot {
+    display: none;
+  }
+}
+.controller__shoot-btn {
+  background-color: var(--dendy-button-primary-color);
+  margin: 7px;
+  border-radius: 100px;
+  padding: 5px;
+  width: var(--shoot-btn-size);
+  height: var(--shoot-btn-size);
+  color: var(--joystick-buttons-font-color);
+  font-family: "Press Start 2P", cursive;
+  -webkit-box-shadow: 0 0 10px var(--section-light-shadow);
+  box-shadow: 0 0 10px var(--section-light-shadow);
+  fill: var(--font-color-third);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.controller__shoot svg {
+  width: 30px;
+  height: 30px;
+}
+.stick {
+  --joystick-background-color: #000;
+  --joystick-font-color: #737477;
+}
+.stick div {
+  background-color: var(--joystick-background-color) !important;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.stick button {
+  background-color: var(--joystick-font-color) !important;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+@media (min-width: 1000px) {
+  .stick {
+    opacity: 0.7;
+  }
+}
+.stick {
+  background-color: var(--joystick-background-color);
+  border-radius: 100px;
+  -webkit-box-shadow: 0 0 30px var(--section-light-shadow);
+  box-shadow: 0 0 30px var(--section-light-shadow);
+  color: var(--joystick-font-color);
+  padding: 3px;
+}
+.joystick {
+  --joystick-background-color: #000;
+  --joystick-font-color: #737477;
+}
+@media (min-width: 1000px) {
+  .joystick {
+    opacity: 0.7;
+  }
+}
+.joystick {
+  background-color: var(--joystick-background-color);
+  border-radius: 100px;
+  -webkit-box-shadow: 0 0 30px var(--section-light-shadow);
+  box-shadow: 0 0 30px var(--section-light-shadow);
+  color: var(--joystick-font-color);
+  padding: 3px;
+}
+.joystick__button {
+  background-color: var(--joystick-background-color);
+  color: var(--border-color);
+  font-size: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.joystick__row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.joystick__vertical-buttons {
+  height: 60px;
+}
+.joystick__horizontal-buttons {
+  width: 60px;
+}
+.joystick__up {
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.joystick__up-button {
+  width: 40px;
+  height: 100%;
+  border-radius: 10px;
+}
+.joystick__left {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+.joystick__left-button {
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+}
+.joystick__left-button_arrow {
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+.joystick__center {
+  width: 40px;
+  height: 40px;
+  -webkit-box-shadow: inset 1px 1px 6px 0 rgb(255 255 255 / 50%), inset -9px 0 20px -7px rgb(0 0 0 / 50%);
+  box-shadow: inset 1px 1px 6px #ffffff7f, inset -9px 0 20px -7px #0000007f;
+  border-radius: 100px;
+}
+.joystick__right {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+.joystick__right-button {
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+}
+.joystick__right-button_arrow {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.joystick__bottom {
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.joystick__bottom-button {
+  width: 40px;
+  height: 100%;
+  border-radius: 10px;
+}
+.joystick__bottom-button_arrow {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
