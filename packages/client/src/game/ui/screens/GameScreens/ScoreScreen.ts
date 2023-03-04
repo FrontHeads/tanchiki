@@ -180,7 +180,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     /** Название уровня */
     this.overlay.renderElement({
       posX: 0,
-      posY:  this.currentPosY,
+      posY: this.currentPosY,
       width: this.sizing.full,
       height: 2,
       align: 'center',
