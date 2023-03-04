@@ -5,10 +5,10 @@ export function determineAPIHost() {
   const API_HOST = __API_HOST__ ? `${__API_HOST__}/api` : `http://localhost:${LOCAL_SERVER_PORT}/api`;
 
   if (typeof document !== 'undefined') {
-    const { host, hostname } = document.location;
+    const { hostname } = document.location;
 
     // На локальной клиентской сборке обращаемся к API Яндекса напрямую
-    if (host && CLIENT_ONLY_HOSTS.includes(host)) {
+    if (isClientOnlyHost()) {
       return YANDEX_API_HOST;
     }
 
@@ -19,4 +19,14 @@ export function determineAPIHost() {
   }
 
   return API_HOST;
+}
+
+export function isClientOnlyHost() {
+  if (typeof document !== 'undefined') {
+    const { host } = document.location;
+    if (host && CLIENT_ONLY_HOSTS.includes(host)) {
+      return true;
+    }
+  }
+  return false;
 }

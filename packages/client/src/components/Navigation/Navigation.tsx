@@ -10,16 +10,19 @@ import { uiActions } from '../../store/features/ui/uiSlice';
 import { getFilteredNavigationList } from '../../utils/navigationUtils';
 import { MenuLink } from '../MenuLink';
 import { type NavigationProps } from './typings';
+import { type MenuLinkProps } from '../MenuLink/typings';
 
 export const Navigation: FC<NavigationProps> = ({ exclude }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useAppSelector(authSelectors.isAuthenticated);
 
-  const onClick = useCallback((linkName: string, e: React.MouseEvent) => {
+  const disabledNote = 'В демо-версии приложения этот функционал недоступен';
+
+  const onClick = useCallback((link: MenuLinkProps, e: React.MouseEvent) => {
     dispatch(uiActions.closeBurgerMenu());
 
-    if (linkName === 'logout') {
+    if (link.name === 'logout') {
       /**
        * 1. Предотвращаем стандартный редирект на главную
        * 2. Затем в logout указываем параметр false, который сообщает в thunk,
@@ -47,12 +50,17 @@ export const Navigation: FC<NavigationProps> = ({ exclude }) => {
           dispatch(authActions.setError(''));
         });
     }
+
+    if (link.disabled) {
+      toast.error(disabledNote);
+      e.preventDefault();
+    }
   }, []);
 
   const menuLinksList = useMemo(
     () =>
       getFilteredNavigationList(isAuthenticated, exclude).map(link => (
-        <MenuLink onClick={e => onClick(link.name, e)} key={link.name} {...link} />
+        <MenuLink onClick={e => onClick(link, e)} key={link.name} {...link} disabledNote={disabledNote} />
       )),
     [isAuthenticated]
   );

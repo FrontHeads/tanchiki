@@ -4,7 +4,7 @@ export const GITHUB_API_HOST = 'https://api.github.com';
 
 export const GITHUB_AVATARS_API_HOST = 'https://avatars.githubusercontent.com';
 
-export const API_HOST = process.env.API_HOST || 'http://localhost:5000';
+export const API_HOST = (typeof process !== 'undefined' ? process.env?.API_HOST : '') || 'http://localhost:5000';
 
 /** Хосты, с которых можно ходить на API Яндекса */
 

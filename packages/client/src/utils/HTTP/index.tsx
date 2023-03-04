@@ -1,4 +1,4 @@
 export { buildPath } from './buildPath';
-export { determineAPIHost } from './determineAPIHost';
+export { determineAPIHost, isClientOnlyHost } from './determineHost';
 export { type ResponseType, HTTP } from './HTTP';
 export { HTTPClient } from './httpClient';

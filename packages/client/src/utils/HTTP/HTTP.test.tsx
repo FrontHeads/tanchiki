@@ -1,9 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 
-import { buildPath } from './buildPath';
-import { determineAPIHost } from './determineAPIHost';
-import { HTTP } from './HTTP';
-import { HTTPClient } from './httpClient';
+import { buildPath, determineAPIHost, HTTP, HTTPClient } from './';
 
 const mock = new MockAdapter(HTTPClient.getInstance().httpClient);
 const baseUrl = determineAPIHost();

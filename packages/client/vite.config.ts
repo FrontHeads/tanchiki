@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { defineConfig } from 'vite';
+import copy from 'rollup-plugin-copy';
 
 dotenv.config();
 
@@ -19,7 +20,15 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Создаёт файл 404.html, идентичный index.html, чтобы на Github Pages приложение было доступно с любых путей
+    copy({
+      targets: [{ src: './dist/index.html', dest: './dist/', rename: '404.html' }],
+      hook: 'writeBundle', // запускается после записи бандла на диск
+      verbose: true,
+    }),
+  ],
   build: {
     rollupOptions: {
       input: {

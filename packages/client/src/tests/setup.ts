@@ -3,8 +3,7 @@ import 'jest-fix-undefined';
 import MockAdapter from 'axios-mock-adapter';
 
 import { API_ENDPOINTS, LEADERBOARD_TEAM_NAME } from '../config/constants';
-import { buildPath, HTTPClient } from '../utils/HTTP';
-import { determineAPIHost } from '../utils/HTTP/determineAPIHost';
+import { buildPath, determineAPIHost, HTTPClient } from '../utils/HTTP';
 import {
   fakeForumSectionData,
   fakeForumSectionListData,
