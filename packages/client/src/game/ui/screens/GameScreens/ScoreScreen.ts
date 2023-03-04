@@ -81,9 +81,10 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     this.overlay.clearScreen();
     this.overlay.renderSplashScreen();
 
+    this.currentPosY = 11;
+
     this.renderHeader();
 
-    this.currentPosY = 20;
     let shouldShowTotalCountFooter = false;
 
     for (let categoryIndex = 0; categoryIndex < this.categories; ++categoryIndex) {
@@ -164,10 +165,22 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
 
   /** Отображает название уровня, игроков, их текущие очки. */
   renderHeader() {
+    const state = this.overlay.game.state;
+
+    this.overlay.renderElement({
+      posX: 0,
+      posY: 3,
+      width: this.overlay.view.width,
+      height: 1.5,
+      color: Color.NormalGrey,
+      text: !state.username ? 'ЗАЛОГИНЬСЯ, ЧТОБЫ ПОПАСТЬ В ЛИДЕРБОРД' : ' ',
+      align: 'center',
+    });
+
     /** Название уровня */
     this.overlay.renderElement({
       posX: 0,
-      posY: 12,
+      posY:  this.currentPosY,
       width: this.sizing.full,
       height: 2,
       align: 'center',
@@ -176,9 +189,10 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     });
 
     /** Игрок 1: имя */
+    this.currentPosY += 4;
     this.overlay.renderElement({
       posX: 0,
-      posY: 16,
+      posY: this.currentPosY,
       width: this.sizing.third,
       height: 2,
       align: 'right',
@@ -187,9 +201,10 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     });
 
     /** Игрок 1: очки */
+    this.currentPosY += 4;
     this.overlay.renderElement({
       posX: 0,
-      posY: 20,
+      posY: this.currentPosY,
       width: this.sizing.third,
       height: 2,
       align: 'right',
@@ -204,7 +219,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     /** Игрок 2: имя */
     this.overlay.renderElement({
       posX: this.sizing.third * 2,
-      posY: 16,
+      posY: this.currentPosY - 4,
       width: this.sizing.third,
       height: 2,
       align: 'left',
@@ -215,7 +230,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
     /** Игрок 2: очки */
     this.overlay.renderElement({
       posX: this.sizing.third * 2,
-      posY: 20,
+      posY: this.currentPosY,
       width: this.sizing.third,
       height: 2,
       align: 'left',
@@ -352,12 +367,12 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       /** Примечание по очкам */
       this.overlay.renderElement({
         posX: 0,
-        posY: this.currentPosY + 10,
+        posY: this.currentPosY + 13,
         width: this.sizing.full,
         height: 1,
         align: 'center',
-        color: Color.Grey,
-        text: 'За простой уровень сложности начисляется в два раза меньше очков',
+        color: Color.NormalGrey,
+        text: 'За простой уровень сложности даётся в 2 раза меньше очков',
       });
     }
   }

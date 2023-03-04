@@ -5,8 +5,20 @@ import { type LevelSelectorScreenProps } from './typings';
 
 export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
   show({ level, showHints = true }: LevelSelectorScreenProps) {
-    this.overlay.renderSplashScreen(Color.Grey);
+    const state = this.overlay.game.state;
     const text = `УРОВЕНЬ ${level.toString().padStart(2, ' ')}`;
+
+    this.overlay.renderSplashScreen(Color.Grey);
+
+    this.overlay.renderElement({
+      posX: 0,
+      posY: 3,
+      width: this.overlay.view.width,
+      height: 1.5,
+      color: Color.NormalGrey,
+      text: !state.username ? 'ЗАЛОГИНЬСЯ, ЧТОБЫ ПОПАСТЬ В ЛИДЕРБОРД' : ' ',
+      align: 'center',
+    });
 
     this.overlay.renderElement({
       posX: 0,
@@ -35,7 +47,7 @@ export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
         width: this.overlay.view.width,
         height: isTouchscreen() ? 1.5 : 1,
         color: Color.Black,
-        text: 'СТРЕЛКАМИ ВВЕРХ И ВНИЗ',
+        text: 'СТРЕЛКАМИ ВВЕРХ/ВПРАВО И ВНИЗ/ВЛЕВО',
         align: 'center',
       });
     }

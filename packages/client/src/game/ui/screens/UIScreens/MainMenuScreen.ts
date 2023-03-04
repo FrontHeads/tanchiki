@@ -8,24 +8,24 @@ import { MainMenuItem } from './data';
 
 export class MainMenuScreen extends Screen<MainMenuItem> {
   tankElemInterval: string | null = null;
-  mainMenuStateXPos = isTouchscreen() ? 19 : 23;
+  mainMenuStateXPos = 19;
 
   mainMenuStateYPos = {
-    [MainMenuItem.Singleplayer]: 26,
-    [MainMenuItem.Multiplayer]: isTouchscreen() ? 0 : 31,
-    [MainMenuItem.JoystickType]: isTouchscreen() ? 31 : 0,
-    [MainMenuItem.Difficulty]: 36,
-    [MainMenuItem.Style]: 41,
+    [MainMenuItem.Singleplayer]: 28,
+    [MainMenuItem.Multiplayer]: isTouchscreen() ? 0 : 33,
+    [MainMenuItem.JoystickType]: isTouchscreen() ? 33 : 0,
+    [MainMenuItem.Difficulty]: 38,
+    [MainMenuItem.Style]: 43,
   };
 
-  show(state: MainMenuItem) {
+  show(menuItem: MainMenuItem) {
     const verticalCenteringCorrection = -1;
 
-    this.render();
+    this.render(menuItem);
 
     const tankElem = this.overlay.renderElement({
       posX: this.mainMenuStateXPos - 6,
-      posY: this.mainMenuStateYPos[state] + verticalCenteringCorrection,
+      posY: this.mainMenuStateYPos[menuItem] + verticalCenteringCorrection,
       width: 4,
       height: 4,
       color: Color.Yellow,
@@ -42,29 +42,29 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
     });
   }
 
-  render() {
+  render(menuItem: MainMenuItem) {
     const { view } = this.overlay;
     const state = this.overlay.game.state;
-    const BrickBgName = gameTheme[state.themeName].brickBg;
+    const brickBgName = gameTheme[state.themeName].brickBg;
 
     this.overlay.renderSplashScreen();
 
     this.overlay.renderElement({
       posX: 0,
-      posY: 4,
+      posY: 7,
       width: view.width,
       height: 7,
-      backImg: this.overlay.game.resources.getImage(BrickBgName),
+      backImg: this.overlay.game.resources.getImage(brickBgName),
       text: 'ТАНЧИКИ',
       align: 'center',
     });
 
     this.overlay.renderElement({
       posX: 0,
-      posY: 13,
+      posY: 16,
       width: view.width,
       height: 7,
-      backImg: this.overlay.game.resources.getImage(BrickBgName),
+      backImg: this.overlay.game.resources.getImage(brickBgName),
       text: '2023',
       align: 'center',
     });
@@ -76,6 +76,15 @@ export class MainMenuScreen extends Screen<MainMenuItem> {
       height: 2.2,
       color: Color.White,
       text: isTouchscreen() ? 'СТАРТ' : '1 ИГРОК',
+    });
+
+    this.overlay.renderElement({
+      posX: this.mainMenuStateXPos + 17,
+      posY: this.mainMenuStateYPos[MainMenuItem.Singleplayer] + 0.6,
+      width: view.width,
+      height: 1,
+      color: Color.LightGrey,
+      text: menuItem === MainMenuItem.Singleplayer && state.username ? `(${state.username})` : ' ',
     });
 
     if (!isTouchscreen()) {
