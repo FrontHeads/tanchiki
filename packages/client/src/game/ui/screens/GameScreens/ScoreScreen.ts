@@ -173,7 +173,7 @@ export class ScoreScreen extends Screen<ScoreScreenState> {
       width: this.overlay.view.width,
       height: 1.5,
       color: Color.NormalGrey,
-      text: !state.username ? 'ЗАЛОГИНЬСЯ, ЧТОБЫ ПОПАСТЬ В ЛИДЕРБОРД' : ' ',
+      text: !state.username ? 'ЗАЛОГИНЬСЯ, ЧТОБЫ ПОПАСТЬ В ТОП ИГРОКОВ' : ' ',
       align: 'center',
     });
 

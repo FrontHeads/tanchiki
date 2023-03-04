@@ -15,8 +15,8 @@ export class LevelSelectorScreen extends Screen<LevelSelectorScreenProps> {
       posY: 3,
       width: this.overlay.view.width,
       height: 1.5,
-      color: Color.NormalGrey,
-      text: !state.username ? 'ЗАЛОГИНЬСЯ, ЧТОБЫ ПОПАСТЬ В ЛИДЕРБОРД' : ' ',
+      color: Color.LightGrey,
+      text: !state.username ? 'ЗАЛОГИНЬСЯ, ЧТОБЫ ПОПАСТЬ В ТОП ИГРОКОВ' : ' ',
       align: 'center',
     });
 
