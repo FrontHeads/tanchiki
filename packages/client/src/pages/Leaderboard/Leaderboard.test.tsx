@@ -6,7 +6,8 @@ import { act } from 'react-dom/test-utils';
 import { leaderboardLoader } from '../../config/leaderboardRoute';
 import { fakeLeaderboardData } from '../../tests/data';
 import { renderWithRouter } from '../../utils/testingUtils';
-import { headerText, Leaderboard } from './Leaderboard';
+import { headerText } from './data';
+import { Leaderboard } from './Leaderboard';
 
 describe('Leaderboard', () => {
   test('it renders header', async () => {

@@ -1,0 +1,36 @@
+.leaderboard {
+  &__filter {
+    z-index: 0;
+    margin-bottom: 0;
+
+    .form {
+      background-color: transparent;
+      transition: 0.5s ease-out, transform 0.7s ease-out;
+      margin-bottom: 0;
+
+      @media (min-width: 520px) {
+        display: flex;
+        flex-flow: row wrap;
+        width: 100%;
+
+        &__field {
+          width: 40%;
+        }
+      }
+    }
+
+    .input {
+      box-sizing: border-box;
+    }
+
+    .form__field_double-input {
+      display: flex;
+    }
+
+    .input__delimiter {
+      line-height: 40px;
+      margin: 0 10px;
+      font-size: 20px;
+    }
+  }
+}

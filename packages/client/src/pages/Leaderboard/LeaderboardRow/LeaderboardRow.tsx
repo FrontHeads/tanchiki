@@ -12,7 +12,7 @@ export const LeaderboardRow: FC<LeaderboardRowProps> = ({ data: { username, scor
   return (
     <tr className={leaderboardRowClassName} data-testid="leaderboard-row">
       <td>{place}</td>
-      <td>{username}</td>
+      <td>{username.length < 13 ? username : username.slice(0, 12) + '...'}</td>
       <td>{score}</td>
       <td>{rate}</td>
       <td>{matches}</td>
