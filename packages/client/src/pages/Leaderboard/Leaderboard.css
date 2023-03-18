@@ -38,7 +38,6 @@
     &_hide {
       opacity: 0;
       max-height: 0;
-      margin-bottom: 0;
     }
 
     &_title {

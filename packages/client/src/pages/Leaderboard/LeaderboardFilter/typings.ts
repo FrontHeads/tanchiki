@@ -4,7 +4,12 @@ export type LeaderboardFilterProps = {
 
 export type Filters = {
   username: string;
-  score: { min: number; max: number };
-  rate: { min: number; max: number };
-  match: { min: number; max: number };
+  score: MinMaxRange;
+  rate: MinMaxRange;
+  match: MinMaxRange;
+};
+
+type MinMaxRange = {
+  min: number;
+  max: number;
 };

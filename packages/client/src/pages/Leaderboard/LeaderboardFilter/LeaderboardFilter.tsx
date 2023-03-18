@@ -1,17 +1,21 @@
 import './LeaderboardFilter.css';
 
-import { type FC, useState } from 'react';
+import { type FC, useRef, useState } from 'react';
 
+import { Button } from '../../../components/Button';
+import { ButtonVariant } from '../../../components/Button/data';
 import { type LeaderboardFilterProps } from './typings';
 
 export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) => {
   const [showFilters, setShowFilters] = useState(false);
+  const inputsRef = useRef([]) as React.MutableRefObject<HTMLInputElement[]>;
 
   const showFiltersHandler = () => {
     setShowFilters(!showFilters);
   };
 
   const inputFilterHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    inputsRef.current = [...inputsRef.current, event.target];
     const { name, value } = event.target;
 
     if (name === 'username') {
@@ -30,14 +34,27 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
     }));
   };
 
-  const filterFormClassName = `form ${showFilters ? 'leaderboard__section_show' : 'leaderboard__section_hide'}`;
+  const clickClearBtnHandler = () => {
+    setFilters({
+      username: '',
+      score: { min: 0, max: Infinity },
+      rate: { min: 0, max: Infinity },
+      match: { min: 0, max: Infinity },
+    });
+
+    inputsRef.current.forEach(input => (input.value = ''));
+  };
+
+  const filterFormClassName = `${
+    showFilters ? 'leaderboard__section_show' : 'leaderboard__section_hide leaderboard__filter_no-margin'
+  }`;
 
   return (
     <div className="leaderboard__section leaderboard__filter">
       <h3 className="leaderboard__section_title" onClick={showFiltersHandler}>
         ФИЛЬТР
       </h3>
-      <form className={filterFormClassName}>
+      <form className={`form ${filterFormClassName}`}>
         <div className="form__field">
           <label className="form__field-label">Имя игрока:</label>
           <input
@@ -109,6 +126,9 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
           </div>
         </div>
       </form>
+      <div className={`leaderboard__filter_clear-btn-wrapper ${filterFormClassName}`}>
+        <Button text="Очистить" variant={ButtonVariant.Secondary} onClick={clickClearBtnHandler} />
+      </div>
     </div>
   );
 };

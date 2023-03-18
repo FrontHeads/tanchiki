@@ -2,6 +2,14 @@ import { type ChartOptions } from 'chart.js';
 
 import { type ChartDataArgs } from './typings';
 
+enum Color {
+  orange = '#d84000',
+  yellow = '#ffa825',
+  gray = 'gray',
+  darkgray = '#343434',
+  white = 'white',
+}
+
 export const getChartData = ({ usernames, rates, matches, scores }: ChartDataArgs) => {
   return {
     labels: usernames,
@@ -10,7 +18,7 @@ export const getChartData = ({ usernames, rates, matches, scores }: ChartDataArg
         type: 'line' as const,
         label: 'Очки/минута',
         data: rates,
-        borderColor: '#d84000',
+        borderColor: Color.orange,
         borderWidth: 2,
         fill: false,
         offset: 10,
@@ -22,7 +30,7 @@ export const getChartData = ({ usernames, rates, matches, scores }: ChartDataArg
         type: 'line' as const,
         label: 'Уровни',
         data: matches,
-        borderColor: '#ffa825',
+        borderColor: Color.yellow,
         borderWidth: 2,
         fill: false,
         yAxisID: 'matches',
@@ -32,9 +40,9 @@ export const getChartData = ({ usernames, rates, matches, scores }: ChartDataArg
       {
         type: 'bar' as const,
         label: 'Очки',
-        backgroundColor: 'gray',
+        backgroundColor: Color.gray,
         data: scores,
-        borderColor: 'white',
+        borderColor: Color.white,
         borderWidth: 1,
         yAxisID: 'score',
       },
@@ -50,7 +58,7 @@ export const options = {
   scales: {
     score: {
       position: 'left',
-      grid: { color: '#343434' },
+      grid: { color: Color.darkgray },
       ticks: {
         beginAtZero: true,
       },

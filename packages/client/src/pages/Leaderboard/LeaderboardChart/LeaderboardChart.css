@@ -1,7 +1,7 @@
 .leaderboard {
   &__chart {
     z-index: 1;
-    transition: 0.5s ease-out, transform 0.7s ease-out;
+    transition: 0.5s ease-in-out, transform 0.7s ease-in-out;
 
     &_show {
       height: 600px;
