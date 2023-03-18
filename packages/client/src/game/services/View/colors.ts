@@ -3,6 +3,7 @@ export enum Color {
   Lime = 'LIME',
   Black = 'BLACK',
   Grey = '#636363',
+  NormalGrey = 'GREY',
   LightGrey = 'LIGHTGREY',
   Orange = 'ORANGE',
   Red = 'RED',

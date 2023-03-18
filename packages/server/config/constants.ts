@@ -7,7 +7,7 @@ export const GITHUB_AVATARS_API_HOST = 'https://avatars.githubusercontent.com';
 export const API_HOST = (typeof process !== 'undefined' ? process.env?.API_HOST : '') || 'http://localhost:5000';
 
 /** Хосты, с которых можно ходить на API Яндекса */
+export const allowedHosts = ['localhost', '127.0.0.1', new URL(API_HOST).hostname];
 
 export const NONCE = '%nonce%';
 export const TLD = '%tld%';
-export const allowedHosts = ['localhost', '127.0.0.1', new URL(API_HOST).hostname];
