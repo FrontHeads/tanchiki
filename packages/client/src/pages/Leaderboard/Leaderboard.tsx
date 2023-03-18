@@ -56,7 +56,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
           {header}
         </h1>
         <LeaderboardFilter setFilters={setFilters} />
-        <LeaderboardChart data={leaderboard} />
+        <LeaderboardChart filteredData={leaderboardRows} />
         <Suspense
           fallback={
             <span data-testid="leaderboard-table-loader" className="leaderboard__table-loader">

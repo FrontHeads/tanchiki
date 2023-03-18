@@ -1,5 +1,10 @@
-import { type LeaderboardRecord } from '../../../api/leaderboardAPI/typings';
-
 export type LeaderboardChartProps = {
-  data: LeaderboardRecord[];
+  filteredData: (JSX.Element | undefined)[];
+};
+
+export type ChartDataArgs = {
+  usernames: string[];
+  rates: number[];
+  matches: number[];
+  scores: number[];
 };

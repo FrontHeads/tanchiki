@@ -1,6 +1,6 @@
+import { type MenuLinkProps } from '../components/MenuLink/typings';
 import { NAVIGATION_LIST } from '../components/Navigation/data';
 import { isClientOnlyHost } from './HTTP';
-import { type MenuLinkProps } from '../components/MenuLink/typings';
 
 /**
  * Фильтруем пункты меню в зависимости от того - достуен ли

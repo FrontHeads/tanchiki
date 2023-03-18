@@ -1,8 +1,8 @@
 import './MenuLink.css';
 
+import cn from 'classnames';
 import { type FC } from 'react';
 import { NavLink } from 'react-router-dom';
-import cn from 'classnames';
 
 import linkTank from '/assets/img/link_tank.png';
 

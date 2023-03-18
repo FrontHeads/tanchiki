@@ -9,6 +9,9 @@ import { renderWithRouter } from '../../utils/testingUtils';
 import { headerText } from './data';
 import { Leaderboard } from './Leaderboard';
 
+//ES6 import syntax is not working in this case
+global.ResizeObserver = require('resize-observer-polyfill');
+
 describe('Leaderboard', () => {
   test('it renders header', async () => {
     await act(async () => {

@@ -37,7 +37,6 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
       <h3 className="leaderboard__section_title" onClick={showFiltersHandler}>
         ФИЛЬТР
       </h3>
-
       <form className={filterFormClassName}>
         <div className="form__field">
           <label className="form__field-label">Имя игрока:</label>
