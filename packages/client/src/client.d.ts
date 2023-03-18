@@ -1,5 +1,5 @@
 declare global {
-  const __API_HOST__: number;
+  const __API_HOST__: string;
   const __SLACK_FEEDBACK_WEBHOOK_URL__: string;
 
   // We can't use type here to define additional Window properties
