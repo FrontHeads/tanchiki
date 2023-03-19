@@ -4,6 +4,7 @@ import { type FC, useRef, useState } from 'react';
 
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
+import { filtersInitialState } from '../data';
 import { type LeaderboardFilterProps } from './typings';
 
 export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) => {
@@ -35,13 +36,7 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
   };
 
   const clickClearBtnHandler = () => {
-    setFilters({
-      username: '',
-      score: { min: 0, max: Infinity },
-      rate: { min: 0, max: Infinity },
-      match: { min: 0, max: Infinity },
-    });
-
+    setFilters(filtersInitialState);
     inputsRef.current.forEach(input => (input.value = ''));
   };
 
