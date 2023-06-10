@@ -66,8 +66,10 @@ export const Navigation: FC<NavigationProps> = ({ exclude }) => {
   );
 
   return (
-    <nav className="menu-nav">
-      <ul className="navigation-list">{menuLinksList}</ul>
+    <nav role="navigation" className="menu-nav" aria-label="Основное меню сайта">
+      <ul role="menu" className="navigation-list">
+        {menuLinksList}
+      </ul>
     </nav>
   );
 };

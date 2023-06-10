@@ -1,9 +1,10 @@
+import { hasKey } from '../../../app.typings';
 import { type Entity, Powerup, Tank, Terrain } from '../../entities';
 import { type DamageSettings, EntityEvent } from '../../entities/Entity/typings';
 import { EventEmitter } from '../../utils';
 import { type Game } from '../';
-import { type SoundPathList } from '../Resources/data';
-import { type ActivatedSounds, isSoundNameInSoundPathList as isSoundNameCorrect } from './typings';
+import { SoundPathList } from '../Resources/data';
+import { type ActivatedSounds } from './typings';
 
 export class AudioManager extends EventEmitter {
   private isStopped = false;
@@ -250,7 +251,7 @@ export class AudioManager extends EventEmitter {
 
   pauseSoundAll() {
     Object.keys(this.activatedSounds).forEach(soundName => {
-      if (isSoundNameCorrect(soundName)) {
+      if (hasKey(SoundPathList, soundName)) {
         this.pauseSound(soundName);
       }
     });
@@ -266,7 +267,7 @@ export class AudioManager extends EventEmitter {
 
   resumeSoundAll() {
     Object.keys(this.activatedSounds).forEach(soundName => {
-      if (isSoundNameCorrect(soundName)) {
+      if (hasKey(SoundPathList, soundName)) {
         this.resumeSound(soundName);
       }
     });

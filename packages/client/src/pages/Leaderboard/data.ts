@@ -1,4 +1,5 @@
 import { type LeaderboardFieldProps } from './LeaderboardField/typings';
+import { type Filters } from './LeaderboardFilter/typings';
 
 export const headerText = 'Рейтинг игроков';
 
@@ -35,4 +36,4 @@ export const filtersInitialState = {
   score: { min: 0, max: Infinity },
   rate: { min: 0, max: Infinity },
   match: { min: 0, max: Infinity },
-};
+} as Filters;

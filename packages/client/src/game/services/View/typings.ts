@@ -1,5 +1,6 @@
 import { type Entity } from '../../entities';
-import { type Rect } from '../../entities/Entity/typings';
+import { type EntityEvent, type Rect } from '../../entities/Entity/typings';
+import { type UIElement } from '../../ui';
 import { type SpriteName } from '../Resources/data';
 import { type GameThemeName } from './data';
 
@@ -62,4 +63,11 @@ type GameThemeItem = {
   menuTitle: string;
   floorBg: string;
   brickBg: SpriteName;
+};
+
+export type LayerObject<T extends Entity | UIElement> = {
+  instance: T;
+  listeners: {
+    [K in EntityEvent]?: (rect: Rect) => void;
+  };
 };

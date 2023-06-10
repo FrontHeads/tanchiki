@@ -35,21 +35,37 @@ export const BurgerMenu: FC = () => {
         closeHandler();
       }
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeHandler();
+      }
+    };
     if (isBurgerMenuVisible) {
       document.addEventListener('mousedown', handler);
+      document.addEventListener('keydown', handleKeyDown);
     }
-    return () => document.removeEventListener('mousedown', handler);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isBurgerMenuVisible]);
 
   return (
     <div data-testid="menu" className="menu" ref={menuRef}>
-      <button data-testid="menu__button" className="menu__button" onClick={toggleHandler}>
+      <button
+        data-testid="menu__button"
+        className="menu__button"
+        onClick={toggleHandler}
+        aria-expanded={isBurgerMenuVisible}
+        aria-controls="menu__list"
+        aria-label="Кнопка открытия или закрытия основного меню">
         <div className={iconLineClassName}></div>
         <div className={iconLineClassName}></div>
         <div className={iconLineClassName}></div>
       </button>
       <div
         data-testid="menu__list"
+        id="menu__list"
         data-test={isBurgerMenuVisible ? 'menu-list-on' : 'menu-list-off'}
         className={menuListClassName}>
         <ThemeToggle />

@@ -70,7 +70,7 @@ export const LeaderboardChart: FC<LeaderboardChartProps> = ({ filteredData }) =>
       <h3 className="leaderboard__section_title" onClick={showChartClickHandler}>
         ГРАФИК
       </h3>
-      <div className={chartClassName}>
+      <div className={chartClassName} data-testid="leaderboard__chart">
         <p className="leaderboard__chart_top20">ТОП-{maxLimitUsersOnChart} игроков</p>
         <Chart
           type="bar"

@@ -30,7 +30,7 @@ export const ThemeToggle: FC = () => {
 
   /** Переключатель темы. */
   const toggleTheme = ({ currentThemeName, skipServerRequest }: toggleThemeArgs) => {
-    const themeNameIsValid = currentThemeName && Object.values(ThemeNames).includes(currentThemeName as ThemeNames);
+    const themeNameIsValid = currentThemeName && Object.values(ThemeNames).includes(currentThemeName);
 
     if (!themeNameIsValid) {
       return;
@@ -74,7 +74,7 @@ export const ThemeToggle: FC = () => {
           }
         } catch (error) {
           if (error instanceof Error) {
-            console.log('Get theme error. Server response:', error.message);
+            console.error('Get theme error. Server response:', error.message);
           }
         }
       }
@@ -96,7 +96,7 @@ export const ThemeToggle: FC = () => {
   ));
 
   return (
-    <div className="theme-toggle__wrapper">
+    <div className="theme-toggle__wrapper" aria-hidden="true">
       <div data-testid="theme-toggle" className="theme-toggle" title="Переключатель темы визуального оформления сайта.">
         {themeList}
       </div>

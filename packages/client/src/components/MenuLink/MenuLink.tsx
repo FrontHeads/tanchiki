@@ -12,11 +12,15 @@ export const MenuLink: FC<MenuLinkProps> = ({ title, to, disabled, disabledNote,
   const disabledClassName = disabled ? 'menu-link__item_disabled' : '';
 
   return (
-    <li data-testid="navigation-list__row" className="navigation-list__row" title={disabled ? disabledNote : ''}>
+    <li
+      role="menuitem"
+      data-testid="navigation-list__row"
+      className="navigation-list__row"
+      title={disabled ? disabledNote : ''}>
       <NavLink onClick={onClick} className={cn('menu-link__item', disabledClassName)} to={disabled ? '#' : to}>
         {title}
       </NavLink>
-      <span className="menu-link__tank-wrapper">
+      <span className="menu-link__tank-wrapper" aria-hidden="true">
         <img src={linkTank} alt=">" className={cn('menu-link__tank-img', disabledClassName)} width="40px" />
       </span>
     </li>

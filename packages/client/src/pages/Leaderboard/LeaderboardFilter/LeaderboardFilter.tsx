@@ -2,10 +2,11 @@ import './LeaderboardFilter.css';
 
 import { type FC, useRef, useState } from 'react';
 
+import { hasKey } from '../../../app.typings';
 import { Button } from '../../../components/Button';
 import { ButtonVariant } from '../../../components/Button/data';
 import { filtersInitialState } from '../data';
-import { type LeaderboardFilterProps } from './typings';
+import { type Filters, type LeaderboardFilterProps } from './typings';
 
 export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) => {
   const [showFilters, setShowFilters] = useState(false);
@@ -18,26 +19,32 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
   const inputFilterHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     inputsRef.current = [...inputsRef.current, event.target];
     const { name, value } = event.target;
+    const [fieldName, type] = name.split('_');
 
-    if (name === 'username') {
+    if (!hasKey(filtersInitialState, fieldName)) {
+      return;
+    }
+
+    if (fieldName === 'username') {
       setFilters(prevState => ({
         ...prevState,
         [name]: value.toLowerCase(),
       }));
-      return;
+    } else {
+      setFilters((prevState: Filters) => ({
+        ...prevState,
+        [fieldName]: {
+          ...prevState[fieldName],
+          [type]: type === 'max' ? value || Infinity : value,
+        },
+      }));
     }
-
-    const [fieldName, type] = name.split('_');
-
-    setFilters(prevState => ({
-      ...prevState,
-      [fieldName]: { [type]: type === 'max' ? value || Infinity : value },
-    }));
   };
 
   const clickClearBtnHandler = () => {
     setFilters(filtersInitialState);
     inputsRef.current.forEach(input => (input.value = ''));
+    inputsRef.current = [];
   };
 
   const filterFormClassName = `${
@@ -49,7 +56,7 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
       <h3 className="leaderboard__section_title" onClick={showFiltersHandler}>
         ФИЛЬТР
       </h3>
-      <form className={`form ${filterFormClassName}`}>
+      <form className={`form ${filterFormClassName}`} data-testid="leaderboard__filter__form">
         <div className="form__field">
           <label className="form__field-label">Имя игрока:</label>
           <input
@@ -69,6 +76,7 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
               onInput={inputFilterHandler}
               name="score_min"
               placeholder="Не менее"
+              data-testid="leaderboard__filter__score-input-min"
             />
             <div className="input__delimiter">–</div>
             <input
@@ -77,6 +85,7 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
               onInput={inputFilterHandler}
               name="score_max"
               placeholder="Не более"
+              data-testid="leaderboard__filter__score-input-max"
             />
           </div>
         </div>
@@ -122,7 +131,12 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = ({ setFilters }) =>
         </div>
       </form>
       <div className={`leaderboard__filter_clear-btn-wrapper ${filterFormClassName}`}>
-        <Button text="Очистить" variant={ButtonVariant.Secondary} onClick={clickClearBtnHandler} />
+        <Button
+          text="Очистить"
+          variant={ButtonVariant.Secondary}
+          onClick={clickClearBtnHandler}
+          data-testid="leaderboard__filter__clear-btn"
+        />
       </div>
     </div>
   );

@@ -9,6 +9,6 @@ export type ThemeList = {
 };
 
 export type toggleThemeArgs = {
-  currentThemeName: string;
+  currentThemeName: ThemeNames;
   skipServerRequest?: boolean;
 };

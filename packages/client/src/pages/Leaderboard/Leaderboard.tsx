@@ -1,6 +1,6 @@
 import './Leaderboard.css';
 
-import { type FC, Suspense, useState } from 'react';
+import { type FC, Suspense, useEffect, useRef, useState } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 
 import { type GetLeaderboardResponseData } from '../../api/leaderboardAPI';
@@ -20,6 +20,12 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
   const loaderData = useLoaderData() as { leaderboardData: Promise<ResponseType<GetLeaderboardResponseData>> };
   const leaderboard = useAppSelector(leaderboardSelectors.sortedData);
   const [filters, setFilters] = useState<Filters>(filtersInitialState);
+  const isNarrowScreenRef = useRef(true);
+
+  // Обернул в useEffect, т.к. при SSR рендеринге window недоступен
+  useEffect(() => {
+    isNarrowScreenRef.current = window.innerWidth < 500;
+  }, []);
 
   const leaderboardHeadFields = leaderboardFields.map(({ fieldId, fieldName, title }) => (
     <LeaderboardField key={fieldId} fieldName={fieldName} fieldId={fieldId} title={title} />
@@ -44,6 +50,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ header = headerText }) => {
         key={data.username}
         data={data}
         place={sortDirection === 'desc' ? index + 1 : leaderboard.length - index}
+        isNarrowScreen={() => isNarrowScreenRef.current}
       />
     );
   });

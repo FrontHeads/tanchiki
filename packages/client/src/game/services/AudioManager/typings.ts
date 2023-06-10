@@ -1,4 +1,4 @@
-import { SoundPathList } from '../Resources/data';
+import { type SoundPathList } from '../Resources/data';
 
 export type ActivatedSounds = Record<keyof typeof SoundPathList, ActiveSound>;
 
@@ -9,7 +9,3 @@ type ActiveSound = {
   resumeFrom: number;
   isEnded?: boolean;
 };
-
-export function isSoundNameInSoundPathList(soundName: string): soundName is keyof typeof SoundPathList {
-  return soundName in SoundPathList;
-}
