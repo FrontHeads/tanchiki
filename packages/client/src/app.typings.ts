@@ -30,3 +30,7 @@ export type HandledMatch = {
   data: unknown;
   handle: Record<string, (data: unknown) => JSX.Element>;
 };
+
+export function hasKey<O extends object>(obj: O, key: PropertyKey): key is keyof O {
+  return key in obj && key !== 'username';
+}

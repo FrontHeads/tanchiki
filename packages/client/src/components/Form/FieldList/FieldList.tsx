@@ -19,26 +19,23 @@ export const FieldList = <T extends Record<string, string>>({
   const [validationErrors, setValidationErrors] = useState<ValidationErrorList>({});
   const validation = useValidation(fieldList);
   const listRef = useRef<HTMLDivElement>(null);
-
-  const scrollToFirstInvalidField = useCallback(
-    (errors: ValidationErrorList) => {
-      if (listRef.current) {
-        // Ищем первое поле в котором есть не валидный input
-        for (const field of listRef.current.children) {
-          const inputId = field.id.replace('field-', '');
-          if (inputId in errors && errors[inputId].length) {
-            field.scrollIntoView();
-            break;
-          }
-        }
-      }
-    },
-    [listRef]
-  );
-
   const { isFormValidating, setIsFormValidating } = useFormContext();
-
   const isHidden = (field: FormInputAndHeading) => hidingFields && field.id in hidingFields && hidingFields[field.id];
+
+  const scrollToFirstInvalidField = () => {
+    if (listRef.current) {
+      const firstInvalidField = listRef.current.querySelector('.validation-errors');
+
+      if (!firstInvalidField) {
+        return;
+      }
+
+      firstInvalidField.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  };
 
   useEffect(() => {
     if (isFormValidating) {
@@ -46,12 +43,15 @@ export const FieldList = <T extends Record<string, string>>({
 
       if (validationResponse.hasErrors) {
         setValidationErrors(validationResponse.errors);
-
-        scrollToFirstInvalidField(validationResponse.errors);
       } else {
         onFormSubmitCallback();
       }
       setIsFormValidating(false);
+    }
+
+    // Если есть ошибки валидации - прокручиваем к первому невалидному полю
+    if (Object.keys(validationErrors).length) {
+      scrollToFirstInvalidField();
     }
   }, [isFormValidating]);
 

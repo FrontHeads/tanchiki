@@ -1,0 +1,67 @@
+.leaderboard {
+  &__filter {
+    z-index: 0;
+    margin-bottom: 0;
+
+    .form {
+      background-color: transparent;
+      transition: 0.5s ease-in-out, transform 0.7s ease-in-out;
+      margin-bottom: 0;
+
+      @media (min-width: 520px) {
+        display: flex;
+        flex-flow: row wrap;
+        width: 100%;
+
+        &__field {
+          width: 40%;
+        }
+      }
+    }
+
+    .input {
+      box-sizing: border-box;
+
+      &[type="number"]::-webkit-outer-spin-button,
+      &[type="number"]::-webkit-inner-spin-button {
+        appearance: none;
+      }
+
+      &[type="number"],
+      &[type="number"]:hover,
+      &[type="number"]:focus {
+        appearance: none;
+        appearance: textfield;
+      }
+    }
+
+    .form__field_double-input {
+      display: flex;
+    }
+
+    .input__delimiter {
+      line-height: 40px;
+      margin: 0 10px;
+      font-size: 20px;
+    }
+
+    &_clear-btn-wrapper {
+      width: 140px;
+      margin: 0 auto 23px;
+      transition: 0.5s ease-in-out, transform 0.7s ease-in-out;
+
+      button {
+        transition: margin 0.5s ease-in-out;
+        margin-top: 10px;
+      }
+    }
+
+    &_no-margin {
+      margin: 0 auto;
+
+      button {
+        margin: 0 auto;
+      }
+    }
+  }
+}

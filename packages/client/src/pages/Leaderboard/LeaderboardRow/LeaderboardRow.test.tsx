@@ -9,6 +9,7 @@ import { LeaderboardRow } from './LeaderboardRow';
 describe('LeaderboardRow', () => {
   const place = 1;
   const row = { place: place, username: 'John', score: 1234, time: 2000000, rate: 400, matches: 99 };
+  const isNarrowScreen = () => false;
 
   test('it renders', async () => {
     await act(async () => {
@@ -16,7 +17,7 @@ describe('LeaderboardRow', () => {
         component: (
           <table>
             <tbody>
-              <LeaderboardRow data={row} place={place} />
+              <LeaderboardRow data={row} place={place} isNarrowScreen={isNarrowScreen} />
             </tbody>
           </table>
         ),
@@ -34,7 +35,7 @@ describe('LeaderboardRow', () => {
         component: (
           <table>
             <tbody>
-              <LeaderboardRow data={row} place={place} />
+              <LeaderboardRow data={row} place={place} isNarrowScreen={isNarrowScreen} />
             </tbody>
           </table>
         ),

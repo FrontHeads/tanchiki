@@ -1,0 +1,20 @@
+.leaderboard {
+  &__chart {
+    z-index: 1;
+    transition: 0.5s ease-in-out, transform 0.7s ease-in-out;
+
+    &_show {
+      height: 600px;
+      padding-bottom: 40px;
+
+      @media (max-width: 420px) {
+        height: 400px;
+      }
+    }
+
+    &_top20 {
+      text-align: center;
+      margin-top: 0;
+    }
+  }
+}

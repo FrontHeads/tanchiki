@@ -1,4 +1,7 @@
 import { type LeaderboardFieldProps } from './LeaderboardField/typings';
+import { type Filters } from './LeaderboardFilter/typings';
+
+export const headerText = 'Рейтинг игроков';
 
 export const leaderboardFields: LeaderboardFieldProps[] = [
   {
@@ -27,3 +30,10 @@ export const leaderboardFields: LeaderboardFieldProps[] = [
     title: 'Сколько уровней пройдено',
   },
 ];
+
+export const filtersInitialState = {
+  username: '',
+  score: { min: 0, max: Infinity },
+  rate: { min: 0, max: Infinity },
+  match: { min: 0, max: Infinity },
+} as Filters;

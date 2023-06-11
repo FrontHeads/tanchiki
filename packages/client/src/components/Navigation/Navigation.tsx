@@ -9,8 +9,8 @@ import { authActions, authSelectors, authThunks, useAppDispatch, useAppSelector 
 import { uiActions } from '../../store/features/ui/uiSlice';
 import { getFilteredNavigationList } from '../../utils/navigationUtils';
 import { MenuLink } from '../MenuLink';
-import { type NavigationProps } from './typings';
 import { type MenuLinkProps } from '../MenuLink/typings';
+import { type NavigationProps } from './typings';
 
 export const Navigation: FC<NavigationProps> = ({ exclude }) => {
   const dispatch = useAppDispatch();
@@ -66,8 +66,10 @@ export const Navigation: FC<NavigationProps> = ({ exclude }) => {
   );
 
   return (
-    <nav className="menu-nav">
-      <ul className="navigation-list">{menuLinksList}</ul>
+    <nav role="navigation" className="menu-nav" aria-label="Основное меню сайта">
+      <ul role="menu" className="navigation-list">
+        {menuLinksList}
+      </ul>
     </nav>
   );
 };

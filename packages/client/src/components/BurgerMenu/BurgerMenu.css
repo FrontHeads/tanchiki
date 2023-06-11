@@ -60,6 +60,7 @@
     overflow-x: hidden;
     overflow-y: overlay;
     transition: 0.5s ease-in-out;
+    visibility: visible;
     @media (max-height: 620px) {
       height: 80vh;
     }
@@ -72,6 +73,7 @@
 
   &__list_hide {
     left: -1000px;
+    visibility: hidden;
   }
 
   &__home {

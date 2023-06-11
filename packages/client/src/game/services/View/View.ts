@@ -1,13 +1,19 @@
 import { type Entity, Tank } from '../../entities';
 import { type Rect, EntityEvent } from '../../entities/Entity/typings';
-import { type UIElement } from '../../ui';
+import { UIElement } from '../../ui';
 import { EventEmitter } from '../../utils';
 import { type Game, ResourcesEvent } from '../';
 import { ControllerElemsClassName, ServiceButtonsName } from '../Controller/data';
 import { Color } from './colors';
 import { gameTheme, gameThemeInLS, GameThemeName, ViewEvents } from './data';
 import { toggleSpriteCoordinates } from './spriteCoordinates';
-import { type AnimationSettings, type GetSpriteCoordinates, type LayerEntity, type LayerList } from './typings';
+import {
+  type AnimationSettings,
+  type GetSpriteCoordinates,
+  type LayerEntity,
+  type LayerList,
+  type LayerObject,
+} from './typings';
 
 export class View extends EventEmitter {
   width = 0;
@@ -22,8 +28,6 @@ export class View extends EventEmitter {
   /** Нижний слой канваса, используется как фон. */
   floorLayer!: HTMLCanvasElement;
   spriteImg: HTMLImageElement | null = null;
-  /** Слушатель события изменения размера окна. Автоматически ресайзит размер канваса. */
-  canvasResizeListener = this.canvasResizeHandler.bind(this);
 
   constructor(private game: Game) {
     super();
@@ -71,14 +75,14 @@ export class View extends EventEmitter {
     }
 
     // Автоматический ресайз игрового поля. Изменяет размер канваса при изменении размера окна.
-    window.addEventListener('resize', this.canvasResizeListener);
+    window.addEventListener('resize', this.canvasResizeHandler);
 
     // Переключение в полноэкранный режим.
     document.addEventListener('fullscreenchange', this.toggleFullscreenListener);
   }
 
   unload() {
-    window.removeEventListener('resize', this.canvasResizeListener);
+    window.removeEventListener('resize', this.canvasResizeHandler);
     document.removeEventListener('fullscreenchange', this.toggleFullscreenListener);
   }
 
@@ -134,7 +138,7 @@ export class View extends EventEmitter {
 
   /** Привязывает сущность к конкретному слою, а к сущности привязывает listeners рендеринга. */
   bindEntityToLayer(entity: Entity | UIElement, layerId: keyof LayerList) {
-    const layerObject = {
+    const layerObject: LayerObject<Entity | UIElement> = {
       instance: entity,
       listeners: {
         [EntityEvent.ShouldUpdate]: () => {
@@ -147,7 +151,9 @@ export class View extends EventEmitter {
           this.drawOnLayer(entity, layerId);
         },
         [EntityEvent.ShouldRenderText]: () => {
-          this.drawTextOnLayer(entity as UIElement, layerId);
+          if (entity instanceof UIElement) {
+            this.drawTextOnLayer(entity, layerId);
+          }
         },
         [EntityEvent.ShouldBeDestroyed]: () => {
           this.eraseFromLayer(entity, layerId);
@@ -256,10 +262,12 @@ export class View extends EventEmitter {
           return;
         }
 
+        // Отрисовка основного спрайта сущности.
         if (animation.showMainSprite) {
           this.drawMainEntitySprite(entity, context);
         }
 
+        // Отрисовка спрайта анимации (поверх основного спрайта сущности).
         context.drawImage(
           this.spriteImg,
           spriteCoordinates[0],
@@ -427,7 +435,7 @@ export class View extends EventEmitter {
   }
 
   /** Обработчик для события изменения размера окна. Автоматически ресайзит размер канваса. */
-  canvasResizeHandler() {
+  canvasResizeHandler = () => {
     if (!(this.root.firstChild instanceof HTMLCanvasElement) || !this.root.firstChild.width) {
       return;
     }
@@ -438,7 +446,7 @@ export class View extends EventEmitter {
     const scaleRatio = requiredWidth / currentWidth;
 
     this.root.style.transform = 'scale(' + scaleRatio * 100 + '%)';
-  }
+  };
 
   isSpriteImgLoaded() {
     return (
