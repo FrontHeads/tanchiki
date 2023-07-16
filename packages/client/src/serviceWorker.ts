@@ -34,11 +34,14 @@ const FALLBACK_BODY = `
   <h2>Обнови страницу или вернись на главную</h2>
 `;
 const FALLBACK_HEADERS = { headers: { 'Content-Type': 'text/html; charset=utf-8' } };
+// Таймауты запросов в зависимости от наличия кеша
+const FETCH_CACHED_TIMEOUT = 5000;
+const FETCH_NETWORK_TIMEOUT = 15000;
 
 /** Для логирования. */
-function logStatus(msg: string, obj?: unknown) {
+function logStatus<T>(msg: string, obj: T | null = null) {
   if (REPORTING) {
-    console.log(msg, obj || null);
+    console.log(msg, obj);
   }
 }
 
@@ -50,7 +53,7 @@ function shouldUseCache(req: Request) {
   }
 
   // Запросы к API не кешируются
-  if (req.url.indexOf('/api/') !== -1) {
+  if (req.url.includes('/api/')) {
     return false;
   }
 
@@ -117,10 +120,13 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
       .open(CACHE_NAME)
       .then(cache =>
         cache.match(event.request).then(cachedResponse => {
-          // Делаем запрос для обновления кеша с таймаутом 5 секунд
-          const controller = new AbortController();
-          const abortTimeout = setTimeout(() => controller.abort(), 5000);
-          const fetchedResponse = fetch(event.request, { signal: controller.signal })
+          // Делаем запрос для обновления кеша с таймаутом
+          const abortController = new AbortController();
+          const abortTimeout = setTimeout(
+            () => abortController.abort(),
+            cachedResponse ? FETCH_CACHED_TIMEOUT : FETCH_NETWORK_TIMEOUT
+          );
+          const fetchedResponse = fetch(event.request, { signal: abortController.signal })
             .then(networkResponse => {
               clearTimeout(abortTimeout);
               // Кладём ответ в кеш, если он содержит что-то субстантивное
@@ -132,6 +138,7 @@ serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
               return networkResponse;
             })
             .catch(fetchedError => {
+              clearTimeout(abortTimeout);
               logStatus('SW: network problem', fetchedError);
               return cachedResponse ?? new Response(FALLBACK_BODY, FALLBACK_HEADERS);
             });
