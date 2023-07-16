@@ -56,10 +56,17 @@
     font-size: 1.6rem;
     position: relative;
 
-    @media (max-width: 430px) {
+    @media (max-width: 640px) {
+      margin: 32px 0;
       font-size: 1.2rem;
       max-width: 80%;
-      line-height: 1.5rem;
+      line-height: 1.4rem;
+    }
+
+    @media (max-width: 430px) {
+      margin: 24px 0;
+      font-size: 1rem;
+      line-height: 1.2rem;
     }
   }
 

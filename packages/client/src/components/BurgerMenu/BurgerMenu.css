@@ -1,5 +1,4 @@
 .menu {
-  overflow-y: hidden;
   font-family: "Press Start 2P", cursive;
   display: flex;
   flex-direction: column;
@@ -21,6 +20,16 @@
     left: 20px;
     width: 80px;
 
+    @media (max-width: 640px) {
+      left: 5px;
+      transform: scale(0.7);
+    }
+
+    @media (max-width: 430px) {
+      left: 0;
+      transform: scale(0.5);
+    }
+
     &-line {
       transition: 0.2s ease;
       background-color: var(--burger-menu-lines-color);
@@ -36,7 +45,7 @@
         }
 
         &:nth-child(2) {
-          transform: translate(-200%);
+          transform: translate(-300%);
           transition: ease-out 0.5s;
         }
 
