@@ -12,6 +12,10 @@
     display: flex;
     margin-bottom: 70px;
     justify-content: flex-end;
+
+    @media (max-width: 640px) {
+      margin-bottom: 50px;
+    }
   }
 
   &__icon {

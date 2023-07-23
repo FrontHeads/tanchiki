@@ -2,17 +2,86 @@ const serviceWorker = self as unknown as ServiceWorkerGlobalScope; // чтобы
 
 const REPORTING = false;
 const CACHE_NAME = 'tanchiki-cache-1';
-const PRECACHE_URLS = ['/', '/index.html'];
-const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'manifest'];
+// Импорты в SW не работают, поэтому список игровых ресурсов нельзя забрать из game/services/Resources
+// Теперь игра грузится быстрее
+const GAME_ASSETS = [
+  '/assets/img/bricks.png',
+  '/assets/img/bricks_modern.png',
+  '/assets/img/sprite.png',
+  '/assets/img/sprite_modern.png',
+  '/assets/img/tarmac_background.png',
+  '/assets/sounds/level-intro.mp3',
+  '/assets/sounds/game-over.mp3',
+  '/assets/sounds/pause.mp3',
+  '/assets/sounds/tank-move.mp3',
+  '/assets/sounds/tank-idle.mp3',
+  '/assets/sounds/ice.mp3',
+  '/assets/sounds/shoot.mp3',
+  '/assets/sounds/hit-enemy.mp3',
+  '/assets/sounds/hit-brick.mp3',
+  '/assets/sounds/hit-steel.mp3',
+  '/assets/sounds/player-explosion.mp3',
+  '/assets/sounds/enemy-explosion.mp3',
+  '/assets/sounds/powerup-appear.mp3',
+  '/assets/sounds/powerup-pickup.mp3',
+  '/assets/sounds/life.mp3',
+  '/assets/sounds/score.mp3',
+];
+const PRECACHE_URLS = ['/', '/index.html', '/game', '/about', '/leaderboard', '/profile', ...GAME_ASSETS];
+const CACHE_CONTENT_TYPES = ['script', 'style', 'font', 'image', 'audio', 'manifest'];
 const FALLBACK_BODY = `
-  <h1>Интернеты упали! Но это неточно.</h1>
-  <h2>Надо бы обновить страницу...</h2>
+  <h1>Интернеты упали! Но это неточно...</h1>
+  <h2>Обнови страницу или вернись на главную</h2>
 `;
 const FALLBACK_HEADERS = { headers: { 'Content-Type': 'text/html; charset=utf-8' } };
+// Таймауты запросов в зависимости от наличия кеша
+const FETCH_CACHED_TIMEOUT = 5000;
+const FETCH_NETWORK_TIMEOUT = 15000;
+
+/** Для логирования. */
+function logStatus<T>(msg: string, obj: T | null = null) {
+  if (REPORTING) {
+    console.log(msg, obj);
+  }
+}
+
+/** Проверяет нужно ли кешировать запрос. */
+function shouldUseCache(req: Request) {
+  // Чтобы не проходили запросы типа chrome-extension://
+  if (!req.url.match(/^http/)) {
+    return false;
+  }
+
+  // Запросы к API не кешируются
+  if (req.url.includes('/api/')) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Проверяет, нужно ли отдавать кеш сразу или попробовать дождаться ответа из сети.
+ * Если запрос к HTML-странице, то лучше получить её актуальную версию
+ * (т.к. нам не нужен кеш страницы с устаревшим preloaded_state, сгенерированным SSR)
+ * */
+function shouldServeCacheInstantly(req: Request) {
+  // Проверка на тип контента (upd: некоторые браузеры не считают mp3 за audio)
+  if (CACHE_CONTENT_TYPES.includes(req.destination)) {
+    return true;
+  }
+
+  // Запросы к страницам (upd: некоторые браузеры не относят html к типу document)
+  if (req.destination === 'document' || req.url[req.url.length - 1] === '/' || req.url.match(/\/[A-Za-z0-9_-]+$/)) {
+    return false;
+  }
+
+  return true;
+}
 
 // При установке воркера кешируем часть данных (статику)
 serviceWorker.addEventListener('install', (event: ExtendableEvent) => {
-  REPORTING && console.log('SW: installing', event);
+  logStatus('SW: installing', event);
 
   event.waitUntil(
     caches
@@ -22,14 +91,14 @@ serviceWorker.addEventListener('install', (event: ExtendableEvent) => {
       // `skipWaiting()` для активации SW сразу, а не после перезагрузки страницы
       .then(() => {
         serviceWorker.skipWaiting();
-        REPORTING && console.log('SW: cache added & skipped waiting');
+        logStatus('SW: cache added & skipped waiting');
       })
   );
 });
 
 // Активация происходит только после того, как предыдущая версия SW была удалена из браузера
 serviceWorker.addEventListener('activate', (event: ExtendableEvent) => {
-  REPORTING && console.log('SW: activating', event);
+  logStatus('SW: activating', event);
 
   event.waitUntil(
     // `clients.claim()` позволяет SW начать перехватывать запросы с самого начала,
@@ -38,61 +107,55 @@ serviceWorker.addEventListener('activate', (event: ExtendableEvent) => {
   );
 });
 
-// Стратегия `stale-while-revalidate`
+// Стратегия `stale-while-revalidate` (сначала отдаём кеш, а если есть свежее из сети - обновляем кеш и досылаем)
 serviceWorker.addEventListener('fetch', (event: FetchEvent) => {
-  REPORTING && console.log('SW: fetch', event.request.destination, event);
-
-  // Проверка на тип контента
-  if (!CACHE_CONTENT_TYPES.includes(event.request.destination)) {
+  if (!shouldUseCache(event.request)) {
     return;
   }
 
-  // Чтобы не проходили запросы типа chrome-extension://
-  if (!event.request.url.match(/^http/)) {
-    return;
-  }
+  logStatus('SW: fetching', event.request.url);
 
   event.respondWith(
     caches
       .open(CACHE_NAME)
-      .then(cache => {
-        return cache.match(event.request).then(cachedResponse => {
-          // Делаем запрос для обновления кеша
-          const fetchedResponse = fetch(event.request)
+      .then(cache =>
+        cache.match(event.request).then(cachedResponse => {
+          // Делаем запрос для обновления кеша с таймаутом
+          const abortController = new AbortController();
+          const abortTimeout = setTimeout(
+            () => abortController.abort(),
+            cachedResponse ? FETCH_CACHED_TIMEOUT : FETCH_NETWORK_TIMEOUT
+          );
+          const fetchedResponse = fetch(event.request, { signal: abortController.signal })
             .then(networkResponse => {
+              clearTimeout(abortTimeout);
               // Кладём ответ в кеш, если он содержит что-то субстантивное
-              if (networkResponse.status === 200) {
+              if (networkResponse.status >= 200 && networkResponse.status < 300) {
                 cache.put(event.request, networkResponse.clone()).catch(cacheError => {
-                  REPORTING && console.warn('SW: cache put error', cacheError);
+                  logStatus('SW: cache put error', cacheError);
                 });
               }
               return networkResponse;
             })
             .catch(fetchedError => {
-              REPORTING && console.warn('SW: network problem', fetchedError);
+              clearTimeout(abortTimeout);
+              logStatus('SW: network problem', fetchedError);
               return cachedResponse ?? new Response(FALLBACK_BODY, FALLBACK_HEADERS);
             });
 
-          /**
-           * В каких случаях сразу не отдаём ресурсы из кеша:
-           * - если запрос к HTML-странице, то ждём актуальную версию
-           *   (т.к. нам не нужен кеш страницы с устаревшим preloaded_state, сгенерированным SSR)
-           */
-          const shouldNotUseCache = event.request.destination === 'document';
-
-          // Если есть кеш, возвращаем его, не дожидаясь ответа из сети
-          if (cachedResponse && !shouldNotUseCache) {
-            REPORTING && console.log('SW: return cached response', event.request.url);
+          // Если есть кеш, возвращаем его, не дожидаясь ответа из сети (кроме определённых случаев)
+          if (cachedResponse && shouldServeCacheInstantly(event.request)) {
+            logStatus('SW: return cached response', event.request.url);
             return cachedResponse;
           }
 
           // Если нет кеша, ждём и возвращаем ответ из сети
-          REPORTING && console.log('SW: return network response', event.request.url);
+          logStatus('SW: return network response', event.request.url);
           return fetchedResponse;
-        });
-      })
+        })
+      )
       .catch(cacheError => {
-        REPORTING && console.warn('SW: cache open error', cacheError);
+        logStatus('SW: cache open error', cacheError);
         return new Response(FALLBACK_BODY, FALLBACK_HEADERS);
       })
   );
