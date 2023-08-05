@@ -3,11 +3,19 @@ import { EntityEvent } from '../../entities/Entity/typings';
 import { type LoopDelays, type LoopIntervals } from './typings';
 
 export class Loop {
+  /** Минимальное время игрового цикла в миллисекундах */
   loopTimeMs = 16;
+  /** Количество игровых циклов, которые могут быть выполнены за раз в случае задержек */
+  maxConsecutiveLoops = 4;
+  /** Счётчик игровых циклов */
   loopCount = 0;
+  /** Список внутриигровых таймаутов */
   loopDelays: LoopDelays = {};
+  /** Список внутриигровых интервалов */
   loopIntervals: LoopIntervals = {};
+  /** Список динамических игровых сущностей */
   loopEntities: Set<Tank | Projectile> = new Set();
+  /** Запущен ли данный сервис */
   active = false;
   lastTimestamp = 0;
 
@@ -28,6 +36,7 @@ export class Loop {
 
   start() {
     this.active = true;
+    this.lastTimestamp = 0;
     this.loop();
   }
 
@@ -53,6 +62,18 @@ export class Loop {
     this.loopEntities = new Set();
   }
 
+  tick() {
+    ++this.loopCount;
+    this.checkLoopDelays();
+    this.checkLoopIntervals();
+    for (const entity of this.loopEntities) {
+      entity.update();
+      if (entity.shouldBeDestroyed) {
+        this.loopEntities.delete(entity);
+      }
+    }
+  }
+
   loop(timestamp = 0) {
     if (!this.active) {
       return;
@@ -60,16 +81,16 @@ export class Loop {
 
     if (timestamp) {
       const timeDifference = timestamp - this.lastTimestamp;
+
       if (timeDifference >= this.loopTimeMs) {
-        ++this.loopCount;
-        this.checkLoopDelays();
-        this.checkLoopIntervals();
-        for (const entity of this.loopEntities) {
-          entity.update();
-          if (entity.shouldBeDestroyed) {
-            this.loopEntities.delete(entity);
+        if (this.lastTimestamp !== 0) {
+          const ticksCount = Math.min(Math.round(timeDifference / this.loopTimeMs), this.maxConsecutiveLoops);
+
+          for (let i = ticksCount; i > 0; --i) {
+            this.tick();
           }
         }
+
         this.lastTimestamp = timestamp;
       }
     }
